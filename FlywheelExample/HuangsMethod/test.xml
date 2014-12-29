@@ -1,0 +1,102 @@
+<CHART_FRAMES>
+  <CHART class="it.esteco.frontier.charts.plugins.designs.multihistory.MultiHistoryChart" id="i1rysm4m" model="Designs Table">
+    <PROPERTY name="AXIS_NAMES">
+      <ELEMENT value="Energy"/>
+      <ELEMENT value="obj_stress"/>
+      <ELEMENT value="mass_constraint"/>
+    </PROPERTY>
+    <PROPERTY name="AUTOSCALE" value="true"/>
+    <PROPERTY name="FRAME_WIDTH" value="450"/>
+    <PROPERTY name="FRAME_HEIGHT" value="300"/>
+    <PROPERTY name="FRAME_X" value="20"/>
+    <PROPERTY name="FRAME_Y" value="20"/>
+    <PROPERTY name="ANTIALIAS" value="false"/>
+    <PROPERTY name="PALETTE_BW" value="false"/>
+    <PROPERTY name="BACKGROUNDCOLOR" value="#FFFFFF"/>
+    <PROPERTY name="FOREGROUNDCOLOR" value="#0D0B4A"/>
+    <PROPERTY name="OPAQUED" value="false"/>
+    <PROPERTY name="CHARTAREACOLOR" value="#FFFFFF"/>
+    <PROPERTY name="PLOTAREACOLOR" value="#FFFFFF"/>
+    <PROPERTY name="CHART_AREA_BORDER" value="0"/>
+    <PROPERTY name="FONT_NAME" value="Dialog-plain-10"/>
+    <PROPERTY name="PAINTMARKEDDESIGN" value="true"/>
+    <PROPERTY name="PAINTONLYMARKED" value="false"/>
+    <PROPERTY name="MARKEDDESIGNCOLOR" value="#00FF00"/>
+    <PROPERTY name="PAINTLABELMARKED" value="true"/>
+    <PROPERTY name="PAINTCATEGORIES" value="false"/>
+    <PROPERTY name="FRAMEDAXIS" value="true"/>
+    <PROPERTY name="DRILL" value="false"/>
+    <PROPERTY name="WINDOW_SCROLLING" value="false|||0.0:10.0:0"/>
+    <PROPERTY name="LEGEND" value="true"/>
+    <PROPERTY name="FONT_LEGEND" value="Dialog-plain-10"/>
+    <PROPERTY name="L_ANCHOR" value="0"/>
+    <PROPERTY name="L_BORDER" value="0"/>
+    <PROPERTY name="L_BGCOLOR" value="#FFFFFF"/>
+    <PROPERTY name="L_FGCOLOR" value="#0D0B4A"/>
+    <PROPERTY name="HEADERCHART" value="false"/>
+    <PROPERTY name="H_FONT" value="Dialog-plain-12"/>
+    <PROPERTY name="H_BORDER" value="0"/>
+    <PROPERTY name="H_BGCOLOR" value="#FFFFFF"/>
+    <PROPERTY name="H_FGCOLOR" value="#0D0B4A"/>
+    <PROPERTY name="INFOCHART" value="false"/>
+    <PROPERTY name="F_FONT" value="Dialog-plain-8"/>
+    <PROPERTY name="F_BORDER" value="0"/>
+    <PROPERTY name="F_BGCOLOR" value="#FFFFFF"/>
+    <PROPERTY name="F_FGCOLOR" value="#0D0B4A"/>
+    <PROPERTY name="X_AXIS_SHOW" value="true"/>
+    <PROPERTY name="X_AXIS_LABEL" value="Design ID"/>
+    <PROPERTY name="X_AXIS_LOGARITHM" value="false"/>
+    <PROPERTY name="X_GRIDPATTERN" value="NONE,DOTTED,11,#646496,1"/>
+    <PROPERTY name="Y_AXIS_SHOW" value="true"/>
+    <PROPERTY name="NORMALIZED" value="false"/>
+    <PROPERTY name="Y_AXIS_LOGARITHM" value="false"/>
+    <PROPERTY name="Y_GRIDPATTERN" value="NONE,DOTTED,11,#646496,1"/>
+    <PROPERTY name="Y2_AXIS_SHOW" value="false"/>
+    <PROPERTY name="Y2_AXIS_LOGARITHM" value="false"/>
+    <PROPERTY name="Y2_GRID_PATTERN" value="NONE,DOTTED,11,#646496,1"/>
+    <PROPERTY name="RF_SYMBOL" value="true|||SQUARE,NONE,7,#666666,1"/>
+    <PROPERTY name="RU_SYMBOL" value="true|||DIAMOND,NONE,7,#FF9900,1"/>
+    <PROPERTY name="ER_SYMBOL" value="true|||CROSS,NONE,7,#FF3232,1"/>
+    <PROPERTY name="VF_SYMBOL" value="true|||SQUARE,NONE,7,#666666,1,#666666"/>
+    <PROPERTY name="VU_SYMBOL" value="true|||DIAMOND,NONE,7,#FF9900,1,#FF9900"/>
+    <PROPERTY name="EV_SYMBOL" value="true|||X,NONE,7,#FF3232,1"/>
+    <PROPERTY name="VARVISIBLE_0" value="true"/>
+    <PROPERTY name="LINEPATTERN_0" value="NONE,SOLID,11,#0000FF,1"/>
+    <PROPERTY name="SYMBOL_NAME_0" value="SQUARE,NONE,7,#0000FF,1"/>
+    <PROPERTY name="ASSIGN_TO_AXIS_Y2_0" value="false"/>
+    <PROPERTY name="VARVISIBLE_1" value="true"/>
+    <PROPERTY name="LINEPATTERN_1" value="NONE,SOLID,11,#00FFFF,1"/>
+    <PROPERTY name="SYMBOL_NAME_1" value="SQUARE,NONE,7,#00FFFF,1"/>
+    <PROPERTY name="ASSIGN_TO_AXIS_Y2_1" value="false"/>
+    <PROPERTY name="VARVISIBLE_2" value="true"/>
+    <PROPERTY name="LINEPATTERN_2" value="NONE,SOLID,11,#FFFF00,1"/>
+    <PROPERTY name="SYMBOL_NAME_2" value="SQUARE,NONE,7,#FFFF00,1"/>
+    <PROPERTY name="ASSIGN_TO_AXIS_Y2_2" value="false"/>
+    <PROPERTY name="MODEL" value="Designs Table"/>
+    <PROPERTY name="TITLE" value="Multi-History -  { Energy  obj_stress  mass_constraint } on Designs Table"/>
+    <PROPERTY name="H_TEXT" value="Multi-History -  { Energy  obj_stress  mass_constraint } on Designs Table"/>
+    <PROPERTY name="F_TEXT" value="&lt;html&gt;&lt;center&gt;Shift+Drag to Zoom. Shift+Ctrl+Drag to Translate. Press &apos;r&apos; to reset. &lt;BR&gt;Right Mouse Click for properties. +/- to Zoom In/Out.&lt;/center&gt;&lt;/html&gt;"/>
+    <PROPERTY name="Y2_AXIS_LABEL" value="&lt;html&gt;2&lt;small&gt;&lt;sup&gt;nd&lt;/small&gt;&lt;/sup&gt; Y Axis&lt;/html&gt;"/>
+    <PROPERTY name="Y2_AXIS_BOUNDS" value="6.917033040967865:2.041426600165038E8:0.E0"/>
+    <PROPERTY name="X_FORMAT" value="0"/>
+    <PROPERTY name="X_STEP" value="30.0"/>
+    <PROPERTY name="X_TICKSTEP" value="15.0"/>
+    <PROPERTY name="Y_AXIS_LABEL" value="Absolute Values"/>
+    <PROPERTY name="NUM_DESIGNS" value="281"/>
+    <PROPERTY name="NUM_EVDESIGNS" value="0"/>
+    <PROPERTY name="NUM_ERDESIGNS" value="1"/>
+    <PROPERTY name="NUM_RFDESIGNS" value="233"/>
+    <PROPERTY name="NUM_RUDESIGNS" value="47"/>
+    <PROPERTY name="NUM_VFDESIGNS" value="0"/>
+    <PROPERTY name="NUM_VUDESIGNS" value="0"/>
+    <PROPERTY name="Y2_FORMAT" value="0.E0"/>
+    <PROPERTY name="Y2_STEP" value="3.0E7"/>
+    <PROPERTY name="Y2_TICKSTEP" value="1.5E7"/>
+    <PROPERTY name="X_AXIS_BOUNDS" value="0.0:280.0:0"/>
+    <PROPERTY name="Y_AXIS_BOUNDS" value="0.0:2.1E8:0.E0"/>
+    <PROPERTY name="Y_FORMAT" value="0.E0"/>
+    <PROPERTY name="Y_STEP" value="3.0E7"/>
+    <PROPERTY name="Y_TICKSTEP" value="1.5E7"/>
+    <LABELS/>
+  </CHART>
+</CHART_FRAMES>

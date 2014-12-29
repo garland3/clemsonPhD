@@ -1,0 +1,13 @@
+#!/bin/bash
+#PBS -N {NAME}
+#PBS -l select=1:ncpus=8:mem=8gb,walltime=10:00:00
+#PBS -j oe
+
+source /etc/profile.d/modules.sh
+module purge
+module add matlab/2013a
+
+cd $PBS_O_WORKDIR
+
+./run_optimize.sh $MATLAB {ARGS_SCRPT_CALL}
+
