@@ -30,6 +30,7 @@ for i = firsgraphNums
     [hpoints,VolFractpoints] = InputsToHpointsAndVolFractPoints(input(i,:));
      h =  bezierInter(hpoints,t);
      generateCurveForOpenSCAD(h,i)
+   
    plot(h(1,:),h(2,:));
    hold all
 end
@@ -53,6 +54,7 @@ for i = firsgraphNums
     [hpoints,VolFractpoints] = InputsToHpointsAndVolFractPoints(input(i,:));
      h =  bezierInter(hpoints,t);   
     volFrac =  bezierInter(VolFractpoints,t);
+     saveVolFractionPointsInFile(volFrac,  i)
      plot(volFrac(1,:),volFrac(2,:));
        hold all
 end
