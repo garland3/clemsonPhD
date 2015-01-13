@@ -1,7 +1,7 @@
 numlayers = 1
 
-originalFile = 'nylonTestPartGV2.gco'
-outFile ='nylonTestPartG_withGV2.gco'
+originalFile = 'mockoKnob2.gco'
+outFile ='mockoKnob2_v2.gco'
 
 with open(outFile, "wt") as fout:
     with open(originalFile, "rt") as fin:

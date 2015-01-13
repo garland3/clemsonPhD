@@ -19,12 +19,16 @@ from scipy.interpolate import interp1d
 #---------NO, then keep going and do nothing.
 
 #extrusionMultiplier = 0.053425 # 0.045
-extrusionMultiplier = 0.39 # 0.045
-firstLayerMultiplier=1.2
+
+# 0.053425 was too much
+# 0.045 worked, but still too much
+# 0.39 was not enough
+extrusionMultiplier = 0.045
+firstLayerMultiplier=1.5
 ff = 1200 # 3000
 XOffset = 100
 YOffset = 100
-scale = .2 # scale 10%
+scale = .15 # scale 15%
 
 # -----------
 # Radius  Parameters
@@ -38,8 +42,8 @@ extrudeThickness = .4 # mm # 0.4479999999999933
 # ------------
 # Z Parameters
 # -----------
-layerThickness = 0.22 # 0.2 mm
-startZ = layerThickness #
+layerThickness = 0.20 # 0.2 mm
+startZ = layerThickness*0.5 #
 endZ = 100*scale # 0.01 meter
 
 def depositeloop(radius,volfrac,height,fileHandle,radiuscount,layerCount):
@@ -93,10 +97,12 @@ def depositeloop(radius,volfrac,height,fileHandle,radiuscount,layerCount):
     xOld = xcurrent
     yOld = ycurrent
 
-    if(radius <=8):
+    if(radius <=4):
         ff = 1000
-    else:
-        ff = 5000
+    elif(radius<8):
+        ff = 2000
+    else :
+        ff = 6000
 
     for xvalu in x:
         xcurrent = xvalu
@@ -119,9 +125,9 @@ def depositeloop(radius,volfrac,height,fileHandle,radiuscount,layerCount):
     #print y
 
 def cleanNozzle(f):
-    ff =4000
+    ff =3000
     cmd = '\n'
-    e = 15
+    e = 20
     cmd+= 'T1\n'
     cmd+= 'G92 E0\n'
     cmd +=  'G1 X{0:.2f} Y{1:.2f} Z{2:.2f} E{3:.2f} F{4:.2f}\n'.format(10, 10,0, 0, ff)
@@ -130,7 +136,7 @@ def cleanNozzle(f):
     cmd +=  'G1 X{0:.2f} Y{1:.2f} Z{2:.2f} E{3:.2f} F{4:.2f}\n'.format(10, 180,0, e*3, ff)
     cmd +=  'G1 X{0:.2f} Y{1:.2f} Z{2:.2f} E{3:.2f} F{4:.2f}\n'.format(10, 10,0, e*4, ff)
 
-    e = 10
+    e = 15
     cmd+= 'T0\n'
     cmd+= 'G92 E0\n'
     cmd +=  'G1 X{0:.2f} Y{1:.2f} Z{2:.2f} E{3:.2f} F{4:.2f}\n'.format(11, 11,0, 0, ff)
@@ -149,6 +155,9 @@ def cleanNozzle(f):
 
     f.write(cmd)
 
+def retract(amoutExtrude, filehandle):
+    cmd = 'G1 E{0:.2f}\n'.format(amoutExtrude)
+    filehandle.write(cmd)
 
 def changeZHeight(file, newZ):
     cmd = 'G1 Z{0:.2f}\n'.format(newZ)
@@ -159,6 +168,22 @@ def moveToCenter():
     cmd+='G1 X100 Y100 F12000 \n'
     cmd+='G92 X0 Y0 E0 \n'
     return cmd
+
+def endingCode(fileHandle):
+    cmdEnd = """
+;End GCode
+M104 S0                     ;extruder heater off
+M140 S0                     ;heated bed heater off (if you have it)
+G91                                    ;relative positioning
+G1 E-1 F300                            ;retract the filament a bit before lifting the nozzle, to release some of the pressure
+G1 Z+0.5 E-5 X-20 Y-20 F9000 ;move Z up a bit and retract filament even more
+G28 X0 Y0                              ;move X/Y to min endstops, so the head is out of the way
+M84                         ;steppers off
+G90                         ;absolute positioning """
+    cmd  = "G0 F9000 X82.82 Y85.67 Z{0}\n".format(endZ+10)
+
+    fileHandle.write(cmd)
+    fileHandle.write(cmdEnd)
 
 
 def writeBeginningCode(filehandle):
@@ -233,9 +258,6 @@ print VolFraction
 # ---------------------------------
 # Begin actually doing stuff
 # --------------------------------
-f = open('cylinder.gco','w')
-writeBeginningCode(f)
-cleanNozzle(f)
 
 
 
@@ -265,10 +287,18 @@ print 'VolFract at each radius {0}'.format(volFractAtEachRadiusList)
 
 layerCount = 0
 print 'Number of layers is ' + str(layerHeightList.size)
+
+f = open('cylinder.gco','w')
+writeBeginningCode(f)
+cleanNozzle(f)
+# retract(-1,f)
+
 for zheight in layerHeightList:
     count = 0
     print layerCount
     changeZHeight(f,zheight)
+    # retract(1,f)
+
     for i in radiusList:
 
         radius = i
@@ -283,8 +313,9 @@ for zheight in layerHeightList:
             f.write(commands)
         count+=1
 
+    # retract(-1,f)
     layerCount+=1
 
-
+endingCode(f)
 f.close()
 
