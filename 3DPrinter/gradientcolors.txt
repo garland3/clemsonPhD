@@ -1,0 +1,16 @@
+endRed=91
+endGreen=155
+endBlue=213
+
+startRed=255
+startGreen=192
+startBlue=0
+
+diffRed=endRed-startRed
+diffGreen=endGreen-startGreen
+diffBlue=endBlue-startBlue
+
+numSections =11
+div = numSections-1
+
+for i in range(0,div):

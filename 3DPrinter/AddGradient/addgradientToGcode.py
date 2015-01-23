@@ -1,7 +1,7 @@
 numlayers = 1
 
-originalFile = 'mockoKnob2.gco'
-outFile ='mockoKnob2_v2.gco'
+originalFile = 'testSpecimenGcode.gco'
+outFile ='testSpecimenGcode_withGradient.gco'
 
 with open(outFile, "wt") as fout:
     with open(originalFile, "rt") as fin:
