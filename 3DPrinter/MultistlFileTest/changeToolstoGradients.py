@@ -4,6 +4,9 @@ numlayers = 1
 originalFile = 'halfbyhalfbyoneBox11.amf.gcode'
 outFile ='halfbyhalfbyoneBoxV3_withGradient.gco'
 
+originalFile = 'circular.amf.gcode'
+outFile ='circular_gradient.gco'
+
 # with open(outFile, "wt") as fout:
     # with open(originalFile, "rt") as fin:
         # for line in fin:
@@ -32,7 +35,7 @@ with open(outFile, "wt") as fout:
                 currentRatio = 0
                 fout.write('G93 R%.1f \n' % currentRatio )
             # elif(line.find("T1") != -1):
-            elif(re.findall('\\bT1\\b', line) != []):
+            elif(re.findall('\\bT1\\b', line) != []): # avoid comflict with finding T10 by using a regular expression search with boundaries
                 currentRatio = float(100/numExtruders)*1
                 fout.write('G93 R%.1f \n' % currentRatio )
             elif(line.find("T2") != -1):

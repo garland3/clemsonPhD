@@ -1,10 +1,17 @@
 import subprocess
+
+# write several .pbs scripts,
+# where each one has a slightly different name
+# and where each on sends different args to the matblab code. 
+# Submit the .pbs file to job queue on the cluster using 'qsub'
+
 for x in range(0, 11):
     pbsname = "job%imatlab.pbs"  % x
   
     print pbsname
     name = "job%i" % x
    
+    # Make different weightings of the objective functions
     w1 = x/10.
     w2 = 1-w1
     args = "  %f %f %i" % (w1, w2, x)
@@ -23,7 +30,5 @@ for x in range(0, 11):
     cmd = "qsub "+ pbsname
     subprocess.call(["qsub",pbsname])
 
-            # write several .pbs scripts,
-            # where each one has a slightly different name
-            # and where each on sends differnet args to the matblab code. 
+            
         

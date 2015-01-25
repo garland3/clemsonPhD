@@ -1,0 +1,55 @@
+ <instance objectid="0"> 
+  <deltax>-63.50</deltax> 
+   <deltay>0.00 </deltay>
+   <rz>0</rz>
+ </instance>
+ <instance objectid="1"> 
+  <deltax>-53.42</deltax> 
+   <deltay>-34.33 </deltay>
+   <rz>0</rz>
+ </instance>
+ <instance objectid="2"> 
+  <deltax>-26.38</deltax> 
+   <deltay>-57.76 </deltay>
+   <rz>0</rz>
+ </instance>
+ <instance objectid="3"> 
+  <deltax>9.04</deltax> 
+   <deltay>-62.85 </deltay>
+   <rz>0</rz>
+ </instance>
+ <instance objectid="4"> 
+  <deltax>41.58</deltax> 
+   <deltay>-47.99 </deltay>
+   <rz>0</rz>
+ </instance>
+ <instance objectid="5"> 
+  <deltax>60.93</deltax> 
+   <deltay>-17.89 </deltay>
+   <rz>0</rz>
+ </instance>
+ <instance objectid="6"> 
+  <deltax>60.93</deltax> 
+   <deltay>17.89 </deltay>
+   <rz>0</rz>
+ </instance>
+ <instance objectid="7"> 
+  <deltax>41.58</deltax> 
+   <deltay>47.99 </deltay>
+   <rz>0</rz>
+ </instance>
+ <instance objectid="8"> 
+  <deltax>9.04</deltax> 
+   <deltay>62.85 </deltay>
+   <rz>0</rz>
+ </instance>
+ <instance objectid="9"> 
+  <deltax>-26.38</deltax> 
+   <deltay>57.76 </deltay>
+   <rz>0</rz>
+ </instance>
+ <instance objectid="10"> 
+  <deltax>-53.42</deltax> 
+   <deltay>34.33 </deltay>
+   <rz>0</rz>
+ </instance>

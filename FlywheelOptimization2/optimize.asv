@@ -1,6 +1,7 @@
 function  [history,searchdir] = optimize(w1,w2,iterationNum)
 LASTN = maxNumCompThreads(8)
 
+% convert the command line arguments from strings to doubles
 w1 = str2double(w1)
 w2 = str2double(w2)
 
