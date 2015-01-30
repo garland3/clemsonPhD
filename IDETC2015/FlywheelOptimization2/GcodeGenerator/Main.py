@@ -13,7 +13,7 @@ from scipy.interpolate import interp1d
 # loop from layer 1 to max, where max reaches the tallest incrememnt
 # --- loop from inner to outer radius
 # --- Test if the height at each radius is below the given set of input points
-#-------- YES, then
+#-------- YES, then 
 #----------------- Calculate the correct volume fraction based on the radius
 # ----------------  call loop(x,x,x)
 #---------NO, then keep going and do nothing.
