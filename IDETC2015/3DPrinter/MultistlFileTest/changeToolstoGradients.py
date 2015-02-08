@@ -1,25 +1,14 @@
+# Copyright Anthony Garland 2015
+# Changes tool change Gcodes to gradients for the Big Builder 3D printer
+
 import re
 numlayers = 1
 
+# Change these to references to your gcode and gcode output
 originalFile = 'halfbyhalfbyoneBox11.amf.gcode'
 outFile ='halfbyhalfbyoneBoxV3_withGradient.gco'
 
-originalFile = 'circular.amf.gcode'
-outFile ='circular_gradient.gco'
 
-# with open(outFile, "wt") as fout:
-    # with open(originalFile, "rt") as fin:
-        # for line in fin:
-            # if (line.find("Z")  != -1):
-                # numlayers+=1
-                
-# print numlayers
-
-# ratio = float(100)/numlayers
-
-# print ratio
-
-# index = 1;
 
 numExtruders = 10
 

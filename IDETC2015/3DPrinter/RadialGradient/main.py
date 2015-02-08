@@ -1,4 +1,6 @@
 __author__ = 'Anthony G'
+# Copyright Anthony Garland
+#  Generates Gcode to print a radial gradient ring
 import math
 import numpy as np
 

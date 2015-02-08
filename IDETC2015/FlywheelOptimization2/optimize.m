@@ -1,3 +1,4 @@
+% Copyright Anthony Garland 2015
 function  [history,searchdir] = optimize(w1,w2,iterationNum)
 LASTN = maxNumCompThreads(8)
 

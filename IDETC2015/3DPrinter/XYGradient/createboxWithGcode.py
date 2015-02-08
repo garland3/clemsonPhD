@@ -1,3 +1,6 @@
+# Copyright Anthony Garland 2015
+# Generates Gcode to make a bar using  a zigzag pattern tool path. A material gradient is created within the bar. 
+
 import math
 import numpy as np
 

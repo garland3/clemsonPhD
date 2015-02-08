@@ -1,3 +1,5 @@
+# Copyright Anthony Garland 2015
+
 __author__ = 'Anthony G'
 import math
 import numpy as np

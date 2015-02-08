@@ -1,8 +1,13 @@
-numlayers = 1
+# Copyright Anthony Garland 2015
+# Adds a gradient in the Z direction existing code. 
 
+
+# Change these two lines in order to add the gradient
 originalFile = 'testSpecimenGcode.gco'
 outFile ='testSpecimenGcode_withGradient.gco'
 
+
+numlayers = 1
 with open(outFile, "wt") as fout:
     with open(originalFile, "rt") as fin:
         for line in fin:
