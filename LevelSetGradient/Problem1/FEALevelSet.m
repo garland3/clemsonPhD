@@ -1,9 +1,27 @@
 % Copyright Anthony Garland 2015
-function [displacmentY,strainEnergyInRegion,maxVonMisesInRegion,maxDisplacementInRegion] = FEALevelSet(xpoints,ypoints)
+% ------------------------
+% version 1-2: 100% PLA was specified when psi  = 1 and 100% Nylon when
+% psi = 0. This helped the gradient based methods of optimization because
+% when going from 1 to -1, then elastic mod was always decreasing
+% ------------------------
+%  current version 3: 100% Nylon was specified when psi  = 1 and 100% Pla when
+% psi = 0. I will use a genetic algorithm, so it doesn't matter if the
+% elastic mod is always decreasing. Also added a cost function where no
+% material costs the least, PLA cost medium, and Nylon costs the most. This
+% cost represents actual $ and manufacturability (because nylon is harder
+% to print with). Also, I changed the outputs of the function. 
+function [displacmentY,cost] = FEALevelSet(xpoints,ypoints,doplot)
 
+% Old function
+%function [displacmentY,strainEnergyInRegion,maxVonMisesInRegion,maxDisplacementInRegion] = FEALevelSet(xpoints,ypoints,doplot)
 
-figure(1)
-clf
+% doplot = 0; % Set to 1 to show plots
+doplotDisplacement = doplot; % Set to 1 to show. Runs much slower
+
+if(doplot ==1)
+    figure(1)
+    clf
+end
 numberOfRegions = size(xpoints,2) -1 ; % minus one so wee have points on the ends
 
 
@@ -37,6 +55,8 @@ Enylon = 246564; % elastic mod of nylon
 Epla =  488487; % elastic mod of pla
 E_empty = 1; % elastic mod for the region with no material to prevent sigularity of the FEA
 v = 0.3; % Assume 0.3 for Poisson's ratio for both materials
+CostNylon = 2;
+CostPLA = 1;
 
 % Handle the problem 1 mapping between nodes and elements and node
 % locations
@@ -69,6 +89,8 @@ if(problem ==1)
     
     l = size(splineYY,2);
     
+   
+    
     for i = 1:l
         yy = splineYY(i);
         if(yy <-1)
@@ -76,30 +98,39 @@ if(problem ==1)
         elseif(yy>1)
             splineYY(i) = 1;
         end
+        
+        
     end
-    figure(1)
-    subplot(subplotX,subplotY,subplotCount); subplotCount=subplotCount+1;
-    plot(splineXX,splineYY,'b*')
-    title('level set function at each column')
+    if(doplot ==1)
+        figure(1)
+        subplot(subplotX,subplotY,subplotCount); subplotCount=subplotCount+1;
+        plot(splineXX,splineYY,'b*')
+        title('level set function at each column')
+    end
     
     % ---------------
     % Calcualte the Elastic mod at each x column
     % ---------------
     E_atColumns = ones(1,nelx);
+    cost = 0;
     
     for i = 1:l
         yy = splineYY(i);
         if(yy <0)
             E_atColumns(i) = E_empty; % below level set
+            cost = cost +0; % no added cost for no material
         else
-             E_atColumns(i)= Epla*yy+(1-yy)*Enylon;  % simple mixture ratio
+             E_atColumns(i)= Enylon*yy+(1-yy)*Epla;  % simple mixture ratio
+             cost = cost + CostNylon*yy+(1-yy)*CostPLA % 1 = nylon, 0 = PLA
         end
     end
     
-     figure(1)
-    subplot(subplotX,subplotY,subplotCount); subplotCount=subplotCount+1;
-    plot(splineXX,E_atColumns,'b*')
-    title('Elastic mod of each column')
+    if(doplot ==1)
+         figure(1)
+        subplot(subplotX,subplotY,subplotCount); subplotCount=subplotCount+1;
+        plot(splineXX,E_atColumns,'b*')
+        title('Elastic mod of each column')
+    end
   
     
     
@@ -398,8 +429,10 @@ vonM_stored = zeros(ne,1);
 
 elemcenterLocations = zeros(ne,2);
 
+if(doplot ==1)
 figure(1)
 subplot(subplotX,subplotY,subplotCount); subplotCount=subplotCount+1;
+end
 
 % loop over the elements
  %subplot(2,2,1)
@@ -493,24 +526,29 @@ subplot(subplotX,subplotY,subplotCount); subplotCount=subplotCount+1;
     % ---------------------------------------
     % plot the element outline and the displacments
     % ---------------------------------------
-     hold on
-     coordD = zeros(5,1);   
-     for temp = 1:4
-        coordD(temp,1) =  coord(temp,1) + multiplierScale*U(2*arrayCoordNumber(temp)-1); % X value
-        coordD(temp,2) =  coord(temp,2) + multiplierScale*U(2*arrayCoordNumber(temp)); % Y value
-     end    
+    
+    if(doplotDisplacement ==1)
+         hold on
+         coordD = zeros(5,1);   
+         for temp = 1:4
+            coordD(temp,1) =  coord(temp,1) + multiplierScale*U(2*arrayCoordNumber(temp)-1); % X value
+            coordD(temp,2) =  coord(temp,2) + multiplierScale*U(2*arrayCoordNumber(temp)); % Y value
+         end    
+
+         coord2 = coord;
+         coordD(5,:) = coordD(1,:) ;
+         coord2(5,:) = coord2(1,:); 
+         plot(coord2(:,1),coord2(:,2),'-g');  
+         plot(coordD(:,1),coordD(:,2), '-b');   
+    end
      
-     coord2 = coord;
-     coordD(5,:) = coordD(1,:) ;
-     coord2(5,:) = coord2(1,:); 
-     plot(coord2(:,1),coord2(:,2),'-g');  
-     plot(coordD(:,1),coordD(:,2), '-b');   
-     
-end
+ end
+if(doplot ==1)
 axis equal
 tti= strcat('Displacement of the elements shown in Blue');
 title(tti);
 hold off 
+end
 
 % Calculate the deflection in the bottom middle
 d = L/2;

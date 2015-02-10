@@ -1,9 +1,23 @@
 % Copyright Anthony Garland 2015
-function [displacmentY,strainEnergyInRegion,maxVonMisesInRegion] = FEALevelSet(xpoints,ypoints)
+% ------------------------
+% version 1.0-1.1: 100% PLA was specified when psi  = 1 and 100% Nylon when
+% psi = 0. This helped the gradient based methods of optimization because
+% when going from 1 to -1, then elastic mod was always decreasing
+% ------------------------
+%  current version 1.2 100% Nylong was specified when psi  = 1 and 100% Pla when
+% psi = 0. I will use a genetic algorithm, so it doesn't matter if the
+% elastic mod is always decreasing. Also added a cost function where no
+% material costs the least, PLA cost medium, and Nylon costs the most. This
+% cost represents actual $ and 
+function [displacmentY,strainEnergyInRegion,maxVonMisesInRegion,maxDisplacementInRegion] = FEALevelSet(xpoints,ypoints,doplot)
 
+% doplot = 0; % Set to 1 to show plots
+doplotDisplacement = doplot; % Set to 1 to show. Runs much slower
 
-figure(1)
-clf
+if(doplot ==1)
+    figure(1)
+    clf
+end
 numberOfRegions = size(xpoints,2) -1 ; % minus one so wee have points on the ends
 
 
@@ -77,10 +91,12 @@ if(problem ==1)
             splineYY(i) = 1;
         end
     end
-    figure(1)
-    subplot(subplotX,subplotY,subplotCount); subplotCount=subplotCount+1;
-    plot(splineXX,splineYY,'b*')
-    title('level set function at each column')
+    if(doplot ==1)
+        figure(1)
+        subplot(subplotX,subplotY,subplotCount); subplotCount=subplotCount+1;
+        plot(splineXX,splineYY,'b*')
+        title('level set function at each column')
+    end
     
     % ---------------
     % Calcualte the Elastic mod at each x column
@@ -92,14 +108,16 @@ if(problem ==1)
         if(yy <0)
             E_atColumns(i) = E_empty; % below level set
         else
-             E_atColumns(i)= Epla*yy+(1-yy)*Enylon;  % simple mixture ratio
+             E_atColumns(i)= Enylon*yy+(1-yy)*Epla;  % simple mixture ratio
         end
     end
     
-     figure(1)
-    subplot(subplotX,subplotY,subplotCount); subplotCount=subplotCount+1;
-    plot(splineXX,E_atColumns,'b*')
-    title('Elastic mod of each column')
+    if(doplot ==1)
+         figure(1)
+        subplot(subplotX,subplotY,subplotCount); subplotCount=subplotCount+1;
+        plot(splineXX,E_atColumns,'b*')
+        title('Elastic mod of each column')
+    end
   
     
     
@@ -150,8 +168,9 @@ if(problem ==1)
     E_atElementsArray = zeros(ne,1);
     elementRegionArray = zeros(ne,1); % store which region each element is within
     numElementsInRegion = zeros(numberOfRegions+1,1); % store how many elements each region has so we can normalize values later. 
-    strainEnergyInRegion = ones(numberOfRegions+1,1);
-    maxVonMisesInRegion = ones(numberOfRegions+1,1);
+    strainEnergyInRegion = zeros(numberOfRegions+1,1);
+    maxVonMisesInRegion = zeros(numberOfRegions+1,1);
+    maxDisplacementInRegion = zeros(numberOfRegions+1,1);
     
     count = 1;
     numNodesInRow = nelx+1;
@@ -397,8 +416,10 @@ vonM_stored = zeros(ne,1);
 
 elemcenterLocations = zeros(ne,2);
 
+if(doplot ==1)
 figure(1)
 subplot(subplotX,subplotY,subplotCount); subplotCount=subplotCount+1;
+end
 
 % loop over the elements
  %subplot(2,2,1)
@@ -464,8 +485,9 @@ subplot(subplotX,subplotY,subplotCount); subplotCount=subplotCount+1;
      stress = D*strain;
      
      % Sum up the strain energy for each region
+     energy = stress'*strain;
      regionNum= elementRegionArray(e);
-     strainEnergyInRegion(regionNum) =  strainEnergyInRegion(regionNum)+ sum(sum(stress));
+     strainEnergyInRegion(regionNum) =  strainEnergyInRegion(regionNum)+ energy;
      
      % Store the transpose, to make things work nice. 
      stress_stored(e,:) = stress';
@@ -479,7 +501,11 @@ subplot(subplotX,subplotY,subplotCount); subplotCount=subplotCount+1;
      vonM = sqrt(stress(1)^2  +   stress(2)^2 -  stress(1)*stress(2)  +   3*(stress(3))^2);
      % vonM2 = sqrt(p1^2-p1*p2+p2^2);
      
-     if(maxVonMisesInRegion(
+     % if the current vonM is greater than the highest record for this
+     % region, then replace it. 
+     if(vonM>maxVonMisesInRegion(regionNum))
+         maxVonMisesInRegion(regionNum)=vonM;
+     end
      
      % note: vonM and vonM2 should be the same. 
      vonM_stored(e) = vonM;    
@@ -487,24 +513,29 @@ subplot(subplotX,subplotY,subplotCount); subplotCount=subplotCount+1;
     % ---------------------------------------
     % plot the element outline and the displacments
     % ---------------------------------------
-     hold on
-     coordD = zeros(5,1);   
-     for temp = 1:4
-        coordD(temp,1) =  coord(temp,1) + multiplierScale*U(2*arrayCoordNumber(temp)-1); % X value
-        coordD(temp,2) =  coord(temp,2) + multiplierScale*U(2*arrayCoordNumber(temp)); % Y value
-     end    
+    
+    if(doplotDisplacement ==1)
+         hold on
+         coordD = zeros(5,1);   
+         for temp = 1:4
+            coordD(temp,1) =  coord(temp,1) + multiplierScale*U(2*arrayCoordNumber(temp)-1); % X value
+            coordD(temp,2) =  coord(temp,2) + multiplierScale*U(2*arrayCoordNumber(temp)); % Y value
+         end    
+
+         coord2 = coord;
+         coordD(5,:) = coordD(1,:) ;
+         coord2(5,:) = coord2(1,:); 
+         plot(coord2(:,1),coord2(:,2),'-g');  
+         plot(coordD(:,1),coordD(:,2), '-b');   
+    end
      
-     coord2 = coord;
-     coordD(5,:) = coordD(1,:) ;
-     coord2(5,:) = coord2(1,:); 
-     plot(coord2(:,1),coord2(:,2),'-g');  
-     plot(coordD(:,1),coordD(:,2), '-b');   
-     
-end
+ end
+if(doplot ==1)
 axis equal
 tti= strcat('Displacement of the elements shown in Blue');
 title(tti);
 hold off 
+end
 
 % Calculate the deflection in the bottom middle
 d = L/2;
