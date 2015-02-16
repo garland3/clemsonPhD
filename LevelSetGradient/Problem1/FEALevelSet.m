@@ -4,12 +4,17 @@
 % psi = 0. This helped the gradient based methods of optimization because
 % when going from 1 to -1, then elastic mod was always decreasing
 % ------------------------
-%  current version 3: 100% Nylon was specified when psi  = 1 and 100% Pla when
+%   version 3: 100% Nylon was specified when psi  = 1 and 100% Pla when
 % psi = 0. I will use a genetic algorithm, so it doesn't matter if the
 % elastic mod is always decreasing. Also added a cost function where no
 % material costs the least, PLA cost medium, and Nylon costs the most. This
 % cost represents actual $ and manufacturability (because nylon is harder
 % to print with). Also, I changed the outputs of the function. 
+% -------------------------------------------
+% Version 4: t is changed from 0.1 to 0.5 inches. 
+% ----------------------
+% Version 5: if the spline goes above 1 then it is also void material. This
+% enables going from nylon to void. 
 function [displacmentY,cost] = FEALevelSet(xpoints,ypoints,doplot)
 
 % Old function
@@ -34,10 +39,10 @@ problem = 1;
 a = 4; % in
 d = 7.5; % in
 L = 10; % in
-t = 0.1; % in 
+t = 0.5; % in 
 h = 1; % in
 
-FappliedLoad = 1; % lb. 
+FappliedLoad = 20; % lb. 
 
 % % % When plotting the diplaced elements, exaggerate the displacements by
 % % % this scale
@@ -95,6 +100,7 @@ if(problem ==1)
         yy = splineYY(i);
         if(yy <-1)
             splineYY(i) = -1;
+        
         elseif(yy>1)
             splineYY(i) = 1;
         end
@@ -104,7 +110,7 @@ if(problem ==1)
     if(doplot ==1)
         figure(1)
         subplot(subplotX,subplotY,subplotCount); subplotCount=subplotCount+1;
-        plot(splineXX,splineYY,'b*')
+        plot(splineXX,splineYY,'b',xpoints,ypoints,'r*')
         title('level set function at each column')
     end
     
@@ -112,6 +118,7 @@ if(problem ==1)
     % Calcualte the Elastic mod at each x column
     % ---------------
     E_atColumns = ones(1,nelx);
+    Cost_atColumns = ones(1,nelx);
     cost = 0;
     
     for i = 1:l
@@ -119,17 +126,30 @@ if(problem ==1)
         if(yy <0)
             E_atColumns(i) = E_empty; % below level set
             cost = cost +0; % no added cost for no material
+            Cost_atColumns(i) = 0;
+        elseif(yy>1)
+            E_atColumns(i) = E_empty; % below level set
+            cost = cost +0; % no added cost for no material
+            Cost_atColumns(i) = 0;            
         else
              E_atColumns(i)= Enylon*yy+(1-yy)*Epla;  % simple mixture ratio
-             cost = cost + CostNylon*yy+(1-yy)*CostPLA % 1 = nylon, 0 = PLA
+             localCost = CostNylon*yy+(1-yy)*CostPLA; % 1 = nylon, 0 = PLA
+             Cost_atColumns(i) = localCost;
+             cost = cost + localCost;
         end
     end
+    
+    cost = cost/l % normalize the cost
     
     if(doplot ==1)
          figure(1)
         subplot(subplotX,subplotY,subplotCount); subplotCount=subplotCount+1;
-        plot(splineXX,E_atColumns,'b*')
-        title('Elastic mod of each column')
+        plot(splineXX,E_atColumns,'b')
+        title('Elastic mod as function of distance')
+        
+        subplot(subplotX,subplotY,subplotCount); subplotCount=subplotCount+1;
+        plot(splineXX,Cost_atColumns,'b')
+        title('Cost as function of distance')
     end
   
     
@@ -560,8 +580,8 @@ right = ceil(j);
 averageXDisplacement = (U(left*2-1)+U(right*2-1))/2;
 averageYDisplacement = (U(left*2)+U(right*2))/2;
 
-disp('Displacement at d is , (x,y)');
-[averageXDisplacement, averageYDisplacement] %#ok<NOPTS>
+%disp('Displacement at d is , (x,y)');
+%[averageXDisplacement, averageYDisplacement] %#ok<NOPTS>
 displacmentY = averageYDisplacement;
 
 
