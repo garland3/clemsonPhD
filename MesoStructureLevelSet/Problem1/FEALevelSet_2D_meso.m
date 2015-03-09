@@ -1,9 +1,9 @@
 % Copyright Anthony Garland 2015
 % ------------------------
-% Version 6, 2D instead of 1D
+% Version 1, 2D meso structure, optimization
 % ----------------------
 
-function [displacmentY,cost,maxDisplacement] = FEALevelSet_2D(xpoints,ypoints,zpoints, doplot)
+function [displacmentY,cost,maxDisplacement] = FEALevelSet_2D_meso(xpoints,ypoints,zpoints, doplot)
 
 % 2D grid with a 3D function 
 % http://www.mathworks.com/help/matlab/ref/interp2.html
@@ -30,23 +30,17 @@ subplotCount = 1;
 problem = 1;
 a = 4; % in
 d = 7.5; % in
-L = 10; % in
-t = 0.5; % in 
-h = 1; % in
+L = 10; % in Length
+t = 0.5; % in Thickenss
+h = 1; % in height
 
 FappliedLoad = 20; % lb. 
 
 % % % When plotting the diplaced elements, exaggerate the displacements by
 % % % this scale
  multiplierScale = 2;
-% % 
-% % % Assume AISI 1020 Steel
-% % % Material properties are from Solidworks material repository
-% % E = 29007547; % psi,  Young's mod
-% % v = 0.29; % Piossons ratio
-% % % G = E/(2*(1+v));
-% % 
-% % % The density of the steel is given in the problem
+
+
 density = 0.2; %0.28; % lb/in^3
 Enylon = 246564; % elastic mod of nylon
 Epla =  488487; % elastic mod of pla
@@ -65,8 +59,8 @@ if(problem ==1)
     % ==========================================================
     
     
-    nelx = 100; % 100 Number of elements in the x direction
-    nely = 10; %  10 Number of elements in the y direction
+    nelx = 120; % 100 Number of elements in the x direction
+    nely = 12; %  10 Number of elements in the y direction
     nn = (nelx+1)*(nely+1); % number of nodes
     ne = nelx*nely; % number of elements
     

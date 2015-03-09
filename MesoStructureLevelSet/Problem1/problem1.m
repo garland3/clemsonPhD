@@ -1,59 +1,32 @@
-% Copyright Anthony Garland 2015
-% ------------------------
-% Version 6, 2D instead of 1D
-% ----------------------
-
-function [displacmentY,cost,maxDisplacement] = FEALevelSet_2D(xpoints,ypoints,zpoints, doplot)
-
-% 2D grid with a 3D function 
-% http://www.mathworks.com/help/matlab/ref/interp2.html
-
-% doplot = 0; % Set to 1 to show plots
-doplotDisplacement = doplot; % Set to 1 to show. Runs much slower
-
-imageXaxis = 0:10;
-imageYaxis = 0:0.1:1;
-
-
-if(doplot ==1)
-    figure(1)
-    clf
-end
-% numberOfRegions = size(xpoints,2) -1 ; % minus one so wee have points on the ends
-
-
-subplotX = 3;
-subplotY = 2;
-subplotCount = 1;
+% FEA
+% Anthony G and Marus Yonder
+% 
+% Take home exam
+% Problem #1 and 2
 
 % clear; clc;  close all
-problem = 1;
+problem = 1
+;
 a = 4; % in
 d = 7.5; % in
 L = 10; % in
-t = 0.5; % in 
+t = 0.1; % in 
 h = 1; % in
 
-FappliedLoad = 20; % lb. 
+FappliedLoad = 0.25; % lb. 
 
-% % % When plotting the diplaced elements, exaggerate the displacements by
-% % % this scale
- multiplierScale = 2;
-% % 
-% % % Assume AISI 1020 Steel
-% % % Material properties are from Solidworks material repository
-% % E = 29007547; % psi,  Young's mod
-% % v = 0.29; % Piossons ratio
-% % % G = E/(2*(1+v));
-% % 
-% % % The density of the steel is given in the problem
-density = 0.2; %0.28; % lb/in^3
-Enylon = 246564; % elastic mod of nylon
-Epla =  488487; % elastic mod of pla
-E_empty = 1; % elastic mod for the region with no material to prevent sigularity of the FEA
-v = 0.3; % Assume 0.3 for Poisson's ratio for both materials
-CostNylon = 2;
-CostPLA = 1;
+% When plotting the diplaced elements, exaggerate the displacements by
+% this scale
+multiplierScale = 1000;
+
+% Assume AISI 1020 Steel
+% Material properties are from Solidworks material repository
+E = 29007547; % psi,  Young's mod
+v = 0.29; % Piossons ratio
+% G = E/(2*(1+v));
+
+% The density of the steel is given in the problem
+density = 0.28; % lb/in^3
 
 % Handle the problem 1 mapping between nodes and elements and node
 % locations
@@ -65,126 +38,12 @@ if(problem ==1)
     % ==========================================================
     
     
-    nelx = 100; % 100 Number of elements in the x direction
-    nely = 10; %  10 Number of elements in the y direction
+    nelx = 100; % Number of elements in the x direction
+    nely = 10; % Number of elements in the y direction
+
+  
     nn = (nelx+1)*(nely+1); % number of nodes
     ne = nelx*nely; % number of elements
-    
-    
-    % -----------
-    % Region divisions
-    % nelePerRegion = nelx/numberOfRegions; % number Of Elements Per Region
-    % regionBoundaryList  = 0:nelePerRegion:nelx; % Make a list of region bondaries in terms of elements in the x direction
-    
-    % -------------------------------
-    % Level Set volume Fraction setup
-    % -------------------------------
-    stepX = L/nelx;
-    splineXX = 0:stepX:L; % columns
-    stepY = h/nely; 
-    splineYY = 0:stepY:h; % rows
-    
-    [splineXX_v2,splineYY_v2]=meshgrid(splineXX,splineYY);
-    splineZZ_v2 =  interp2(xpoints,ypoints,zpoints,splineXX_v2,splineYY_v2,'cubic'); % spline value at each x column
-    
-    [xLength,yLength] = size(splineZZ_v2); % get the size of the array in the first and second dimension
-    % l = xt*yt; % multiple these together to get the overall size of the array. 
-    
-   
-    
-    for i = 1:xLength
-        for j = 1:yLength
-            zz = splineZZ_v2(i,j);
-            if(zz <-1)
-                splineZZ_v2(i,j) = -1;
-
-            elseif(zz>1)
-                splineZZ_v2(i,j) = 1;
-            end        
-        end
-    end
-    if(doplot ==1)
-        figure(1)
-        subplot(subplotX,subplotY,subplotCount); subplotCount=subplotCount+1;
-        % plot(splineXX,splineYY,'b',xpoints,ypoints,'r*')
-       % surf(splineXX_v2,splineYY_v2,splineZZ_v2);
-       % axis equal 
-       
-        imagesc(imageXaxis,imageYaxis,splineZZ_v2);
-        set(gca,'YDir','normal'); % http://www.mathworks.com/matlabcentral/answers/94170-how-can-i-reverse-the-y-axis-when-i-use-the-image-or-imagesc-function-to-display-an-image-in-matlab
-         axis equal 
-       colorbar
-        title('level set function')
-        hold on
-        xtemp = reshape(xpoints,[1,18])
-        ytemp = reshape(ypoints,[1,18])
-        scatter(xtemp,ytemp,'r*')
-        
-        hold off
-        
-        % iso curve data using the contour plot
-        figure(2)
-        iso = -1:0.5:1
-        % subplot(subplotX,subplotY,subplotCount); subplotCount=subplotCount+1;
-        [contourData,h5]=contour(splineXX_v2,splineYY_v2,splineZZ_v2,iso);
-          colorbar
-          axis equal 
-        csvwrite('contours2D.csv',contourData);
-    end
-    
-    % ---------------
-    % Calcualte the Elastic mod at each x column
-    % ---------------
-    E_atElement = splineZZ_v2;
-    Cost_atElement = splineZZ_v2;
-    cost = 0;
-    
-     for i = 1:xLength
-        for j = 1:yLength
-            zz = splineZZ_v2(i,j);
-            if(zz <0)
-                E_atElement(i,j) = E_empty; % below level set
-                cost = cost +0; % no added cost for no material
-                Cost_atElement(i,j) = 0;
-            elseif(zz>1)
-                E_atElement(i,j) = E_empty; % below level set
-                cost = cost +0; % no added cost for no material
-                Cost_atElement(i,j) = 0;            
-            else
-                 E_atElement(i,j)= Enylon*zz+(1-zz)*Epla;  % simple mixture ratio
-                 localCost = CostNylon*zz+(1-zz)*CostPLA; % 1 = nylon, 0 = PLA
-                 Cost_atElement(i,j) = localCost;
-                 cost = cost + localCost;
-            end
-        end
-     end
-    
-    cost = cost/(xLength*yLength) %#ok<NOPRT> % normalize the cost
-    
-    if(doplot ==1)
-         figure(1)
-        subplot(subplotX,subplotY,subplotCount); subplotCount=subplotCount+1;
-        % plot(splineXX,E_atElement,'b')
-        %surf(splineXX_v2,splineYY_v2,E_atElement);
-        imagesc(imageXaxis,imageYaxis,E_atElement);
-        set(gca,'YDir','normal'); % http://www.mathworks.com/matlabcentral/answers/94170-how-can-i-reverse-the-y-axis-when-i-use-the-image-or-imagesc-function-to-display-an-image-in-matlab
-         axis equal 
-       colorbar
-        title('Elastic mod over the domain')
-        
-        subplot(subplotX,subplotY,subplotCount); subplotCount=subplotCount+1;
-        imagesc(imageXaxis,imageYaxis,Cost_atElement);
-        
-         set(gca,'YDir','normal'); 
-          axis equal 
-            colorbar
-        title('Cost over the domain')
-        
-        
-        
-    end
-  
-    
     
     % ------------------------------------
     % -- Make a mapping between elements and global matrixes
@@ -230,13 +89,7 @@ if(problem ==1)
     % |            |         |         |             |            |
     % 0*row+1 - 0*row+2 - 0*row+3 - 0*row+4 ... 0*row+row-1 - 0*row+row
 
-    E_atElementsArray = zeros(ne,1);
-    %elementRegionArray = zeros(ne,1); % store which region each element is within
-    %numElementsInRegion = zeros(numberOfRegions+1,1); % store how many elements each region has so we can normalize values later. 
-    %strainEnergyInRegion = zeros(numberOfRegions+1,1);
-    %maxVonMisesInRegion = zeros(numberOfRegions+1,1);
-    %maxDisplacementInRegion = zeros(numberOfRegions+1,1);
-    
+
     count = 1;
     numNodesInRow = nelx+1;
     numNodesInColumn = nely+1;
@@ -245,19 +98,7 @@ if(problem ==1)
     for i = 1:nely
          rowMultiplier = i-1;
         % Each column, so nelx # of row
-        for j= 1:nelx  
-            
-            % Store the E value for this element
-            E_atElementsArray(count) = E_atElement(i,j);
-            
-            %div = nelx/numberOfRegions;
-            
-            % Store region information
-            % regionNumber = (round(j/ div)) +1; % Add one to disallow region '0'. So region counts start at 1
-            % numElementsInRegion(regionNumber) = numElementsInRegion(regionNumber) +1; % increment the count for this region
-            % elementRegionArray(count) = regionNumber;
-             
-             % Store node mapping
+        for j= 1:nelx        
             IEN(count,:)=[rowMultiplier*numNodesInRow+j, ...
                           rowMultiplier*numNodesInRow+j+1, ...
                           (rowMultiplier +1)*numNodesInRow+j+1, ...
@@ -339,8 +180,8 @@ for i = 1:nn
         end
     end
     
-    % if in the top middle corner, add the point force
-    if(yLoc == 1 && xLoc == 5)
+    % if in the top right corner, add the point force
+    if(yLoc == 1 && xLoc == 10)
          F2(i*2) = -FappliedLoad;
     end
         
@@ -359,8 +200,10 @@ Free    = setdiff(alldofs,Essential2);
 % ---------------------------------------------
 
 % plane stress
-
-
+% Define D outside the loop
+  D = [ 1 v 0;
+      v 1 0;
+      0 0 1/2*(1-v)]*E/(1-v^2);
   
 % % loop over the elements
 for e = 1:ne         
@@ -382,13 +225,6 @@ for e = 1:ne
       weight = [ 1 1 1 1];
       
       ke = zeros(8,8);
-      
-      % find out which column we are in, then use the E for the column that
-      % was calculated earlier based off the level set function
-      E = E_atElementsArray(e);
-      D = [ 1 v 0;
-              v 1 0;
-              0 0 1/2*(1-v)]*E/(1-v^2);
           
       % Loop over the guass points
       for gu = 1:4
@@ -462,9 +298,7 @@ for e = 1:ne
       
       % multiply t*ke and add to global matrix. t = thickness or t_z
       K(dofNumbers,dofNumbers) = K(dofNumbers,dofNumbers) + t*ke;
-      
-      % Don't hadd the body force right now
-      % F2(dofNumbers,1) = F2(dofNumbers,1) +f_element;        
+      F2(dofNumbers,1) = F2(dofNumbers,1) +f_element;        
 end
   
 K_ff = K(Free,Free);
@@ -474,19 +308,12 @@ F_f = F2(Free);
 U(Free) = K_ff \ F_f;
 U(Essential2) = u0;  
 
-maxDisplacement = max(max(U))
-
 stress_stored = zeros(ne,3);
 
 XYStressLocationsStored = zeros(ne,1);
 vonM_stored = zeros(ne,1);
 
 elemcenterLocations = zeros(ne,2);
-
-if(doplot ==1)
-figure(1)
-subplot(subplotX,subplotY,subplotCount); subplotCount=subplotCount+1;
-end
 
 % loop over the elements
  %subplot(2,2,1)
@@ -541,20 +368,9 @@ end
      
      d_local = U(dofNumbers);
      
-     % Compute D
-     E = E_atElementsArray(e);
-      D = [ 1 v 0;
-              v 1 0;
-              0 0 1/2*(1-v)]*E/(1-v^2);
-     
      % Strain is B*d, NOTE: d is transposed
      strain = B*d_local';    
      stress = D*strain;
-     
-     % Sum up the strain energy for each region
-     %energy = stress'*strain;
-     %regionNum= elementRegionArray(e);
-     %strainEnergyInRegion(regionNum) =  strainEnergyInRegion(regionNum)+ energy;
      
      % Store the transpose, to make things work nice. 
      stress_stored(e,:) = stress';
@@ -568,63 +384,30 @@ end
      vonM = sqrt(stress(1)^2  +   stress(2)^2 -  stress(1)*stress(2)  +   3*(stress(3))^2);
      % vonM2 = sqrt(p1^2-p1*p2+p2^2);
      
-     % if the current vonM is greater than the highest record for this
-     % region, then replace it. 
-    % if(vonM>maxVonMisesInRegion(regionNum))
-    %     maxVonMisesInRegion(regionNum)=vonM;
-     %end
-     
      % note: vonM and vonM2 should be the same. 
      vonM_stored(e) = vonM;    
      
     % ---------------------------------------
     % plot the element outline and the displacments
     % ---------------------------------------
-    
-    if(doplotDisplacement ==1)
-         hold on
-         coordD = zeros(5,1);   
-         for temp = 1:4
-            coordD(temp,1) =  coord(temp,1) + multiplierScale*U(2*arrayCoordNumber(temp)-1); % X value
-            coordD(temp,2) =  coord(temp,2) + multiplierScale*U(2*arrayCoordNumber(temp)); % Y value
-         end    
-
-         coord2 = coord;
-         coordD(5,:) = coordD(1,:) ;
-         coord2(5,:) = coord2(1,:); 
-         plot(coord2(:,1),coord2(:,2),'-g');  
-         plot(coordD(:,1),coordD(:,2), '-b');   
-    end
+     hold on
+     coordD = zeros(5,1);   
+     for temp = 1:4
+        coordD(temp,1) =  coord(temp,1) + multiplierScale*U(2*arrayCoordNumber(temp)-1); % X value
+        coordD(temp,2) =  coord(temp,2) + multiplierScale*U(2*arrayCoordNumber(temp)); % Y value
+     end    
      
- end
-if(doplot ==1)
+     coord2 = coord;
+     coordD(5,:) = coordD(1,:) ;
+     coord2(5,:) = coord2(1,:); 
+     plot(coord2(:,1),coord2(:,2),'-g');  
+     plot(coordD(:,1),coordD(:,2), '-b');   
+     
+end
 axis equal
 tti= strcat('Displacement of the elements shown in Blue');
 title(tti);
 hold off 
-end
-
-% Calculate the deflection in the bottom middle
-d = L/2;
-
-j =  d*nelx/L+1 ;
-left = floor(j);
-right = ceil(j);
-
-averageXDisplacement = (U(left*2-1)+U(right*2-1))/2;
-averageYDisplacement = (U(left*2)+U(right*2))/2;
-
-%disp('Displacement at d is , (x,y)');
-%[averageXDisplacement, averageYDisplacement] %#ok<NOPTS>
-displacmentY = averageYDisplacement;
-
-
-% Normalize the strain energy
-%l = size(strainEnergyInRegion,1);
-%for i = 1:l
-%    strainEnergyInRegion(i)=strainEnergyInRegion(i)/numElementsInRegion(i);
-%end
-
 
 if(1==0)
 
@@ -642,8 +425,8 @@ if(1==0)
     % http://www.mathworks.com/matlabcentral/fileexchange/38858-contour-plot-for-scattered-data
     tri=delaunay(x,y);           % triangulate scattered data
     vonMax = max(vonM_stored);
-    stepX = floor(vonMax/30);
-     v=0:stepX:vonMax; % contour levels
+    step = floor(vonMax/30);
+     v=0:step:vonMax; % contour levels
     [C,h]=tricontour(tri,x,y,z,v);
     %clabel(C,h)
     xlim([0,L])

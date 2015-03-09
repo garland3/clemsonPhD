@@ -1,28 +1,36 @@
 % Copyright Anthony Garland 2015
 % ------------------------
-% Version 6, 2D instead of 1D
+% version 1-2: 100% PLA was specified when psi  = 1 and 100% Nylon when
+% psi = 0. This helped the gradient based methods of optimization because
+% when going from 1 to -1, then elastic mod was always decreasing
+% ------------------------
+%   version 3: 100% Nylon was specified when psi  = 1 and 100% Pla when
+% psi = 0. I will use a genetic algorithm, so it doesn't matter if the
+% elastic mod is always decreasing. Also added a cost function where no
+% material costs the least, PLA cost medium, and Nylon costs the most. This
+% cost represents actual $ and manufacturability (because nylon is harder
+% to print with). Also, I changed the outputs of the function. 
+% -------------------------------------------
+% Version 4: t is changed from 0.1 to 0.5 inches. 
 % ----------------------
+% Version 5: if the spline goes above 1 then it is also void material. This
+% enables going from nylon to void. 
+function [displacmentY,cost] = FEALevelSet(xpoints,ypoints,doplot)
 
-function [displacmentY,cost,maxDisplacement] = FEALevelSet_2D(xpoints,ypoints,zpoints, doplot)
-
-% 2D grid with a 3D function 
-% http://www.mathworks.com/help/matlab/ref/interp2.html
+% Old function
+%function [displacmentY,strainEnergyInRegion,maxVonMisesInRegion,maxDisplacementInRegion] = FEALevelSet(xpoints,ypoints,doplot)
 
 % doplot = 0; % Set to 1 to show plots
 doplotDisplacement = doplot; % Set to 1 to show. Runs much slower
-
-imageXaxis = 0:10;
-imageYaxis = 0:0.1:1;
-
 
 if(doplot ==1)
     figure(1)
     clf
 end
-% numberOfRegions = size(xpoints,2) -1 ; % minus one so wee have points on the ends
+numberOfRegions = size(xpoints,2) -1 ; % minus one so wee have points on the ends
 
 
-subplotX = 3;
+subplotX = 2;
 subplotY = 2;
 subplotCount = 1;
 
@@ -73,115 +81,75 @@ if(problem ==1)
     
     % -----------
     % Region divisions
-    % nelePerRegion = nelx/numberOfRegions; % number Of Elements Per Region
-    % regionBoundaryList  = 0:nelePerRegion:nelx; % Make a list of region bondaries in terms of elements in the x direction
+    nelePerRegion = nelx/numberOfRegions; % number Of Elements Per Region
+    regionBoundaryList  = 0:nelePerRegion:nelx; % Make a list of region bondaries in terms of elements in the x direction
     
     % -------------------------------
     % Level Set volume Fraction setup
     % -------------------------------
-    stepX = L/nelx;
-    splineXX = 0:stepX:L; % columns
-    stepY = h/nely; 
-    splineYY = 0:stepY:h; % rows
+    step = L/nelx;
+    splineXX = 0:step:L; % number of columns
     
-    [splineXX_v2,splineYY_v2]=meshgrid(splineXX,splineYY);
-    splineZZ_v2 =  interp2(xpoints,ypoints,zpoints,splineXX_v2,splineYY_v2,'cubic'); % spline value at each x column
+    splineYY =  spline(xpoints,ypoints,splineXX); % spline value at each x column
     
-    [xLength,yLength] = size(splineZZ_v2); % get the size of the array in the first and second dimension
-    % l = xt*yt; % multiple these together to get the overall size of the array. 
+    l = size(splineYY,2);
     
    
     
-    for i = 1:xLength
-        for j = 1:yLength
-            zz = splineZZ_v2(i,j);
-            if(zz <-1)
-                splineZZ_v2(i,j) = -1;
-
-            elseif(zz>1)
-                splineZZ_v2(i,j) = 1;
-            end        
+    for i = 1:l
+        yy = splineYY(i);
+        if(yy <-1)
+            splineYY(i) = -1;
+        
+        elseif(yy>1)
+            splineYY(i) = 1;
         end
+        
+        
     end
     if(doplot ==1)
         figure(1)
         subplot(subplotX,subplotY,subplotCount); subplotCount=subplotCount+1;
-        % plot(splineXX,splineYY,'b',xpoints,ypoints,'r*')
-       % surf(splineXX_v2,splineYY_v2,splineZZ_v2);
-       % axis equal 
-       
-        imagesc(imageXaxis,imageYaxis,splineZZ_v2);
-        set(gca,'YDir','normal'); % http://www.mathworks.com/matlabcentral/answers/94170-how-can-i-reverse-the-y-axis-when-i-use-the-image-or-imagesc-function-to-display-an-image-in-matlab
-         axis equal 
-       colorbar
-        title('level set function')
-        hold on
-        xtemp = reshape(xpoints,[1,18])
-        ytemp = reshape(ypoints,[1,18])
-        scatter(xtemp,ytemp,'r*')
-        
-        hold off
-        
-        % iso curve data using the contour plot
-        figure(2)
-        iso = -1:0.5:1
-        % subplot(subplotX,subplotY,subplotCount); subplotCount=subplotCount+1;
-        [contourData,h5]=contour(splineXX_v2,splineYY_v2,splineZZ_v2,iso);
-          colorbar
-          axis equal 
-        csvwrite('contours2D.csv',contourData);
+        plot(splineXX,splineYY,'b',xpoints,ypoints,'r*')
+        title('level set function at each column')
     end
     
     % ---------------
     % Calcualte the Elastic mod at each x column
     % ---------------
-    E_atElement = splineZZ_v2;
-    Cost_atElement = splineZZ_v2;
+    E_atColumns = ones(1,nelx);
+    Cost_atColumns = ones(1,nelx);
     cost = 0;
     
-     for i = 1:xLength
-        for j = 1:yLength
-            zz = splineZZ_v2(i,j);
-            if(zz <0)
-                E_atElement(i,j) = E_empty; % below level set
-                cost = cost +0; % no added cost for no material
-                Cost_atElement(i,j) = 0;
-            elseif(zz>1)
-                E_atElement(i,j) = E_empty; % below level set
-                cost = cost +0; % no added cost for no material
-                Cost_atElement(i,j) = 0;            
-            else
-                 E_atElement(i,j)= Enylon*zz+(1-zz)*Epla;  % simple mixture ratio
-                 localCost = CostNylon*zz+(1-zz)*CostPLA; % 1 = nylon, 0 = PLA
-                 Cost_atElement(i,j) = localCost;
-                 cost = cost + localCost;
-            end
+    for i = 1:l
+        yy = splineYY(i);
+        if(yy <0)
+            E_atColumns(i) = E_empty; % below level set
+            cost = cost +0; % no added cost for no material
+            Cost_atColumns(i) = 0;
+        elseif(yy>1)
+            E_atColumns(i) = E_empty; % below level set
+            cost = cost +0; % no added cost for no material
+            Cost_atColumns(i) = 0;            
+        else
+             E_atColumns(i)= Enylon*yy+(1-yy)*Epla;  % simple mixture ratio
+             localCost = CostNylon*yy+(1-yy)*CostPLA; % 1 = nylon, 0 = PLA
+             Cost_atColumns(i) = localCost;
+             cost = cost + localCost;
         end
-     end
+    end
     
-    cost = cost/(xLength*yLength) %#ok<NOPRT> % normalize the cost
+    cost = cost/l % normalize the cost
     
     if(doplot ==1)
          figure(1)
         subplot(subplotX,subplotY,subplotCount); subplotCount=subplotCount+1;
-        % plot(splineXX,E_atElement,'b')
-        %surf(splineXX_v2,splineYY_v2,E_atElement);
-        imagesc(imageXaxis,imageYaxis,E_atElement);
-        set(gca,'YDir','normal'); % http://www.mathworks.com/matlabcentral/answers/94170-how-can-i-reverse-the-y-axis-when-i-use-the-image-or-imagesc-function-to-display-an-image-in-matlab
-         axis equal 
-       colorbar
-        title('Elastic mod over the domain')
+        plot(splineXX,E_atColumns,'b')
+        title('Elastic mod as function of distance')
         
         subplot(subplotX,subplotY,subplotCount); subplotCount=subplotCount+1;
-        imagesc(imageXaxis,imageYaxis,Cost_atElement);
-        
-         set(gca,'YDir','normal'); 
-          axis equal 
-            colorbar
-        title('Cost over the domain')
-        
-        
-        
+        plot(splineXX,Cost_atColumns,'b')
+        title('Cost as function of distance')
     end
   
     
@@ -231,11 +199,11 @@ if(problem ==1)
     % 0*row+1 - 0*row+2 - 0*row+3 - 0*row+4 ... 0*row+row-1 - 0*row+row
 
     E_atElementsArray = zeros(ne,1);
-    %elementRegionArray = zeros(ne,1); % store which region each element is within
-    %numElementsInRegion = zeros(numberOfRegions+1,1); % store how many elements each region has so we can normalize values later. 
-    %strainEnergyInRegion = zeros(numberOfRegions+1,1);
-    %maxVonMisesInRegion = zeros(numberOfRegions+1,1);
-    %maxDisplacementInRegion = zeros(numberOfRegions+1,1);
+    elementRegionArray = zeros(ne,1); % store which region each element is within
+    numElementsInRegion = zeros(numberOfRegions+1,1); % store how many elements each region has so we can normalize values later. 
+    strainEnergyInRegion = zeros(numberOfRegions+1,1);
+    maxVonMisesInRegion = zeros(numberOfRegions+1,1);
+    maxDisplacementInRegion = zeros(numberOfRegions+1,1);
     
     count = 1;
     numNodesInRow = nelx+1;
@@ -248,14 +216,14 @@ if(problem ==1)
         for j= 1:nelx  
             
             % Store the E value for this element
-            E_atElementsArray(count) = E_atElement(i,j);
+            E_atElementsArray(count) = E_atColumns(j);
             
-            %div = nelx/numberOfRegions;
+            div = nelx/numberOfRegions;
             
             % Store region information
-            % regionNumber = (round(j/ div)) +1; % Add one to disallow region '0'. So region counts start at 1
-            % numElementsInRegion(regionNumber) = numElementsInRegion(regionNumber) +1; % increment the count for this region
-            % elementRegionArray(count) = regionNumber;
+             regionNumber = (round(j/ div)) +1; % Add one to disallow region '0'. So region counts start at 1
+             numElementsInRegion(regionNumber) = numElementsInRegion(regionNumber) +1; % increment the count for this region
+             elementRegionArray(count) = regionNumber;
              
              % Store node mapping
             IEN(count,:)=[rowMultiplier*numNodesInRow+j, ...
@@ -474,8 +442,6 @@ F_f = F2(Free);
 U(Free) = K_ff \ F_f;
 U(Essential2) = u0;  
 
-maxDisplacement = max(max(U))
-
 stress_stored = zeros(ne,3);
 
 XYStressLocationsStored = zeros(ne,1);
@@ -552,9 +518,9 @@ end
      stress = D*strain;
      
      % Sum up the strain energy for each region
-     %energy = stress'*strain;
-     %regionNum= elementRegionArray(e);
-     %strainEnergyInRegion(regionNum) =  strainEnergyInRegion(regionNum)+ energy;
+     energy = stress'*strain;
+     regionNum= elementRegionArray(e);
+     strainEnergyInRegion(regionNum) =  strainEnergyInRegion(regionNum)+ energy;
      
      % Store the transpose, to make things work nice. 
      stress_stored(e,:) = stress';
@@ -570,9 +536,9 @@ end
      
      % if the current vonM is greater than the highest record for this
      % region, then replace it. 
-    % if(vonM>maxVonMisesInRegion(regionNum))
-    %     maxVonMisesInRegion(regionNum)=vonM;
-     %end
+     if(vonM>maxVonMisesInRegion(regionNum))
+         maxVonMisesInRegion(regionNum)=vonM;
+     end
      
      % note: vonM and vonM2 should be the same. 
      vonM_stored(e) = vonM;    
@@ -620,10 +586,10 @@ displacmentY = averageYDisplacement;
 
 
 % Normalize the strain energy
-%l = size(strainEnergyInRegion,1);
-%for i = 1:l
-%    strainEnergyInRegion(i)=strainEnergyInRegion(i)/numElementsInRegion(i);
-%end
+l = size(strainEnergyInRegion,1);
+for i = 1:l
+    strainEnergyInRegion(i)=strainEnergyInRegion(i)/numElementsInRegion(i);
+end
 
 
 if(1==0)
@@ -642,8 +608,8 @@ if(1==0)
     % http://www.mathworks.com/matlabcentral/fileexchange/38858-contour-plot-for-scattered-data
     tri=delaunay(x,y);           % triangulate scattered data
     vonMax = max(vonM_stored);
-    stepX = floor(vonMax/30);
-     v=0:stepX:vonMax; % contour levels
+    step = floor(vonMax/30);
+     v=0:step:vonMax; % contour levels
     [C,h]=tricontour(tri,x,y,z,v);
     %clabel(C,h)
     xlim([0,L])
