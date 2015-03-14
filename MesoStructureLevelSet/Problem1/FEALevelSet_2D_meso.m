@@ -11,9 +11,11 @@ function [displacmentY,cost,maxDisplacement] = FEALevelSet_2D_meso(xpoints,ypoin
 % doplot = 0; % Set to 1 to show plots
 doplotDisplacement = doplot; % Set to 1 to show. Runs much slower
 
-imageXaxis = 0:10;
-imageYaxis = 0:0.1:1;
+imageXaxisMeso = 0:1/10:1;
+imageYaxisMeso = 0:1/10:1;
 
+imageXaxisBeam = 0:0.5:10;
+imageYaxisBeam = 0:0.5:1;
 
 if(doplot ==1)
     figure(1)
@@ -29,12 +31,12 @@ subplotCount = 1;
 % clear; clc;  close all
 problem = 1;
 a = 4; % in
-d = 7.5; % in
+d = 10; % in, Position where to measure the dispalcement
 L = 10; % in Length
 t = 0.5; % in Thickenss
 h = 1; % in height
 
-FappliedLoad = 20; % lb. 
+FappliedLoad = 10; % lb. 
 
 % % % When plotting the diplaced elements, exaggerate the displacements by
 % % % this scale
@@ -58,29 +60,21 @@ if(problem ==1)
     % ----------------------------------------------------------
     % ==========================================================
     
-    
     nelx = 120; % 100 Number of elements in the x direction
     nely = 12; %  10 Number of elements in the y direction
     nn = (nelx+1)*(nely+1); % number of nodes
-    ne = nelx*nely; % number of elements
-    
-    
-    % -----------
-    % Region divisions
-    % nelePerRegion = nelx/numberOfRegions; % number Of Elements Per Region
-    % regionBoundaryList  = 0:nelePerRegion:nelx; % Make a list of region bondaries in terms of elements in the x direction
+    ne = nelx*nely; % number of elements  
     
     % -------------------------------
-    % Level Set volume Fraction setup
+    % Level Set volume Fraction setup for meso-structure
     % -------------------------------
-    stepX = L/nelx;
-    splineXX = 0:stepX:L; % columns
-    stepY = h/nely; 
-    splineYY = 0:stepY:h; % rows
+    
+    % This is for a 1 by 1 square. It needs to be scaled up before use. 
+    splineXX = [3/10 5/10 7/10];    
+    splineYY = [3/10 5/10 7/10];
     
     [splineXX_v2,splineYY_v2]=meshgrid(splineXX,splineYY);
-    splineZZ_v2 =  interp2(xpoints,ypoints,zpoints,splineXX_v2,splineYY_v2,'cubic'); % spline value at each x column
-    
+    splineZZ_v2 =  interp2(xpoints,ypoints,zpoints,splineXX_v2,splineYY_v2,'cubic'); % spline value at each x column    
     [xLength,yLength] = size(splineZZ_v2); % get the size of the array in the first and second dimension
     % l = xt*yt; % multiple these together to get the overall size of the array. 
     
@@ -99,31 +93,32 @@ if(problem ==1)
     end
     if(doplot ==1)
         figure(1)
-        subplot(subplotX,subplotY,subplotCount); subplotCount=subplotCount+1;
+       % subplot(subplotX,subplotY,subplotCount); subplotCount=subplotCount+1;
         % plot(splineXX,splineYY,'b',xpoints,ypoints,'r*')
        % surf(splineXX_v2,splineYY_v2,splineZZ_v2);
        % axis equal 
        
-        imagesc(imageXaxis,imageYaxis,splineZZ_v2);
-        set(gca,'YDir','normal'); % http://www.mathworks.com/matlabcentral/answers/94170-how-can-i-reverse-the-y-axis-when-i-use-the-image-or-imagesc-function-to-display-an-image-in-matlab
-         axis equal 
-       colorbar
-        title('level set function')
-        hold on
-        xtemp = reshape(xpoints,[1,18])
-        ytemp = reshape(ypoints,[1,18])
-        scatter(xtemp,ytemp,'r*')
+        %imagesc(imageXaxis,imageYaxis,splineZZ_v2);
+        %set(gca,'YDir','normal'); % http://www.mathworks.com/matlabcentral/answers/94170-how-can-i-reverse-the-y-axis-when-i-use-the-image-or-imagesc-function-to-display-an-image-in-matlab
+        % axis equal 
+       %colorbar
+       % title('level set function')
+       % hold on
+       % xtemp = reshape(xpoints,[1,18])
+       % ytemp = reshape(ypoints,[1,18])
+       % scatter(xtemp,ytemp,'r*')
         
-        hold off
+       % hold off
         
         % iso curve data using the contour plot
-        figure(2)
-        iso = -1:0.5:1
+      %  figure(2)
+       % iso = -1:0.1:1
         % subplot(subplotX,subplotY,subplotCount); subplotCount=subplotCount+1;
-        [contourData,h5]=contour(splineXX_v2,splineYY_v2,splineZZ_v2,iso);
-          colorbar
-          axis equal 
-        csvwrite('contours2D.csv',contourData);
+       % [contourData,h5]=contour(splineXX_v2,splineYY_v2,splineZZ_v2,iso);
+       %   colorbar
+       %   axis equal 
+       % csvwrite('contours2D.csv',contourData);
+       %surf(splineXX_v2,splineYY_v2,splineZZ_v2);
     end
     
     % ---------------
@@ -160,14 +155,14 @@ if(problem ==1)
         subplot(subplotX,subplotY,subplotCount); subplotCount=subplotCount+1;
         % plot(splineXX,E_atElement,'b')
         %surf(splineXX_v2,splineYY_v2,E_atElement);
-        imagesc(imageXaxis,imageYaxis,E_atElement);
+        imagesc(imageXaxisMeso,imageYaxisMeso,E_atElement);
         set(gca,'YDir','normal'); % http://www.mathworks.com/matlabcentral/answers/94170-how-can-i-reverse-the-y-axis-when-i-use-the-image-or-imagesc-function-to-display-an-image-in-matlab
          axis equal 
        colorbar
         title('Elastic mod over the domain')
         
         subplot(subplotX,subplotY,subplotCount); subplotCount=subplotCount+1;
-        imagesc(imageXaxis,imageYaxis,Cost_atElement);
+        imagesc(imageXaxisMeso,imageYaxisMeso,Cost_atElement);
         
          set(gca,'YDir','normal'); 
           axis equal 
@@ -235,6 +230,9 @@ if(problem ==1)
     numNodesInRow = nelx+1;
     numNodesInColumn = nely+1;
     IEN = zeros(nn,4); % Index of element nodes (IEN)
+    E_atElement_2DArray = ones(nely,nelx);
+    
+    
     % Each row, so nely # of row
     for i = 1:nely
          rowMultiplier = i-1;
@@ -242,7 +240,13 @@ if(problem ==1)
         for j= 1:nelx  
             
             % Store the E value for this element
-            E_atElementsArray(count) = E_atElement(i,j);
+            % loop over the 4 guass points
+           xTemp=  mod(i-1,xLength)+1;
+           yTemp = mod(j-1,yLength)+1;
+            
+             E_atElementsArray(count) = E_atElement(xTemp,yTemp);
+             E_atElement_2DArray(i,j) = E_atElement(xTemp,yTemp);
+            
             
             %div = nelx/numberOfRegions;
             
@@ -259,6 +263,19 @@ if(problem ==1)
             count = count+1;
         end
     end
+    
+     if(doplot ==1)
+         figure(1)
+        subplot(subplotX,subplotY,subplotCount); subplotCount=subplotCount+1;
+        % plot(splineXX,E_atElement,'b')
+        %surf(splineXX_v2,splineYY_v2,E_atElement);
+        imagesc(imageXaxisBeam,imageYaxisBeam,E_atElement_2DArray);
+        set(gca,'YDir','normal'); % http://www.mathworks.com/matlabcentral/answers/94170-how-can-i-reverse-the-y-axis-when-i-use-the-image-or-imagesc-function-to-display-an-image-in-matlab
+         axis equal 
+       colorbar
+        title('Meso Applied over domain')
+        
+         end
 
     % Find and store the global positions of each node
     % Each element rectangle. The aspect ratio is determined by the 
@@ -334,7 +351,7 @@ for i = 1:nn
     end
     
     % if in the top middle corner, add the point force
-    if(yLoc == 1 && xLoc == 5)
+    if(yLoc == 1 && xLoc == 10)
          F2(i*2) = -FappliedLoad;
     end
         
@@ -379,10 +396,12 @@ for e = 1:ne
       
       % find out which column we are in, then use the E for the column that
       % was calculated earlier based off the level set function
+      %E = E_atElementsArray(e);
       E = E_atElementsArray(e);
+        
       D = [ 1 v 0;
-              v 1 0;
-              0 0 1/2*(1-v)]*E/(1-v^2);
+             v 1 0;
+             0 0 1/2*(1-v)]*E/(1-v^2);
           
       % Loop over the guass points
       for gu = 1:4
@@ -413,6 +432,8 @@ for e = 1:ne
 
          B(3,[1,3,5,7]) = B_2by4_v2(2,1:4);
          B(3,[2,4,6,8]) = B_2by4_v2(1,1:4);   
+         
+        
           
          tempK = transpose(B)*D*B*J_det*wght;          
          ke = ke + tempK; 
@@ -468,7 +489,13 @@ F_f = F2(Free);
 U(Free) = K_ff \ F_f;
 U(Essential2) = u0;  
 
-maxDisplacement = max(max(U))
+% Get the min and max to see which is greatest. 
+% in other wordss, get the abs of the displacement and find the max
+maxDisplacement = max(max(U));
+minDisplacement = min(min(U));
+if(-minDisplacement>maxDisplacement)
+    maxDisplacement = -minDisplacement;
+end
 
 stress_stored = zeros(ne,3);
 
@@ -598,8 +625,8 @@ title(tti);
 hold off 
 end
 
-% Calculate the deflection in the bottom middle
-d = L/2;
+% Calculate the deflection in the bottom row at distance d
+
 
 j =  d*nelx/L+1 ;
 left = floor(j);
