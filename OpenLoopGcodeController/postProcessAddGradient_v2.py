@@ -297,6 +297,7 @@ def main():
 
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
+    # ax.scatter(XPointList, YPointList,c=FractionPointList)
     ax.scatter(XPointList, YPointList,FractionPointList)
 
     plt.show()

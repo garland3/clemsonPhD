@@ -1,7 +1,7 @@
 %%%% A 99 LINE TOPOLOGY OPTIMIZATION CODE BY OLE SIGMUND, JANUARY 2000 %%%
 %%%% CODE MODIFIED FOR INCREASED SPEED, September 2002, BY OLE SIGMUND %%%
 function top_original();
-topActual(80,40,.3,3,2);
+topActual(60,20,.5,3,2);
 function topActual(nelx,nely,volfrac,penal,rmin);
 % INITIALIZE
 x(1:nely,1:nelx) = volfrac; 
