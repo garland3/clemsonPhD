@@ -4,6 +4,8 @@ clear
 clc
 close all
 rng default % for reproducibility
+numCpusToUsePalmetto = 15; 
+
 
 runningLocal = 0; % set equal to 1 if running on my local machine. Otherwise, set settings for Palmetto
 
@@ -71,7 +73,7 @@ if(runParallel == 1)
         if(runningLocal ==1)
             numWorkersValue = 5;
         else
-            numWorkersValue = 23; % minus 1 the number of cpus. Level one cpu for the main program. 
+            numWorkersValue = numCpusToUsePalmetto; % minus 1 the number of cpus. Level one cpu for the main program. 
         end
 
         c = parcluster;

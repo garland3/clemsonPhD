@@ -1,6 +1,6 @@
 #!/bin/bash
-#PBS -N GA
-#PBS -l select=1:ncpus=24:mem=24gb,walltime=8:00:00
+#PBS -N GASingle
+#PBS -l select=1:ncpus=16:mem=16gb,walltime=8:00:00
 #PBS -j oe
 
 source /etc/profile.d/modules.sh

@@ -5,7 +5,7 @@ import numpy as np
 class Config:
     def __init__(self):
         self.originalFile = 'block100InfillForGradient.gco'
-        self.outFile = 'blockWithGradient3.gco'
+        self.outFile = 'blockWithGradientStrip.gco'
 
         # X60.260 Y80.260
         self.OriginOfPart = ( 60.260, 80.260,0.260);
@@ -137,8 +137,14 @@ def volumeFractionFunction(X,Y,Z):
 
     X = X-60.260 # normalize to be at 0,0
     Y = Y - 80.260
-
+    
+    # if(np.mod(X,30) <=15):
+    #    F = 100
+    # else:
+    #    F = 0
     F = (X+Y)*100/148.954
+
+    
     return F
 
 
@@ -293,12 +299,16 @@ def main():
 
     import matplotlib.pyplot as plt
     from mpl_toolkits.mplot3d import Axes3D
+    from pylab import *
 
 
     fig = plt.figure()
-    ax = fig.add_subplot(111, projection='3d')
-    # ax.scatter(XPointList, YPointList,c=FractionPointList)
-    ax.scatter(XPointList, YPointList,FractionPointList)
+    #ax = fig.add_subplot(111, projection='3d')
+    #ax.scatter(XPointList, YPointList,FractionPointList)
+    plt.scatter(XPointList, YPointList,c=FractionPointList, marker='o')
+    plt.colorbar()
+    
+    
 
     plt.show()
 

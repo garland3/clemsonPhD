@@ -3,8 +3,8 @@
 
 
 # Change these two lines in order to add the gradient
-originalFile = 'testSpecimenGcode.gco'
-outFile ='testSpecimenGcode_withGradient.gco'
+originalFile = 'cylinder.gco'
+outFile ='cylinder_gradient.gco'
 
 
 numlayers = 1

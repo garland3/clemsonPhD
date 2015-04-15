@@ -1,16 +1,21 @@
-function GAOptimizationWrapper_v2()
+function GAOptimizationWrapper_v2(args)
 % version 2 is the truss design similar to the classical Bendose paper
-clear
-clc
-close all
-rng default % for reproducibility
 
-runningLocal = 0; % set equal to 1 if running on my local machine. Otherwise, set settings for Palmetto
+% convert the command line arguments from strings to doubles, this allows
+% arguments to be passed to the program when it runs as a program. 
+% on the palmetto job script, I will pass it the "1" as an arg
+input = str2double(args);
+numCpusToUsePalmetto = 15; 
+runningLocal = 1; % set equal to 1 if running on my local machine. Otherwise, set settings for Palmetto
+
+if(input ==1)
+    runningLocal = 0; % if 1 was an arg sent to the command line program, then run on the palmetto
+end
 
 if (runningLocal ==1)
-    runParallel = 0; % Set equal to 1 to run the algorithm in parallel
+    runParallel = 0 % Set equal to 1 to run the algorithm in parallel
 else
-    runParallel = 1; % Set equal to 1 to run the algorithm in parallel
+    runParallel = 1 % Set equal to 1 to run the algorithm in parallel
 end
 manualStartWorkers = 0; % set to 1 to manuall start works. 
 
@@ -60,7 +65,8 @@ else
     % actual values, I want to use. 
     % population size = 5*23 where 23 is number of worker threads
     gaoptions = gaoptimset('Generations',2000,'Display','diagnose','HybridFcn',@fmincon,  ...
-        'PopulationSize',100, 'Elitecount', 1,'StallGenLimit',20,'OutputFcns',outPutFuct,'MutationFcn',{@mutationadaptfeasible, scale, shrink});
+        'PopulationSize',100,'InitialPopulation',initialP, ...
+        'Elitecount', 3,'StallGenLimit',50,'OutputFcns',outPutFuct,'MutationFcn',{@mutationadaptfeasible, scale, shrink});
 end
 
 
@@ -71,7 +77,7 @@ if(runParallel == 1)
         if(runningLocal ==1)
             numWorkersValue = 5;
         else
-            numWorkersValue = 23; % minus 1 the number of cpus. Level one cpu for the main program. 
+            numWorkersValue = numCpusToUsePalmetto; % minus 1 the number of cpus. Level one cpu for the main program. 
         end
 
         c = parcluster;
