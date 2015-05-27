@@ -4,14 +4,22 @@ import numpy as np
 
 class Config:
     def __init__(self):
-        self.originalFile = 'block100InfillForGradient.gco'
-        self.outFile = 'blockWithGradientStrip.gco'
+        #self.originalFile = 'block100InfillForGradient.gco'
+        self.originalFile = '50by100by50/50by100by50.gco'
+        #self.outFile = 'blockWithGradientStrip.gco'
+        self.outFile = '50by100by50/50by100by50_gradient.gco'
 
         # X60.260 Y80.260
-        self.OriginOfPart = ( 60.260, 80.260,0.260);
+        #self.OriginOfPart = ( 60.260, 80.260,0.260);
+        
+        self.OriginOfPart = ( 55.845,73.777,0.260);
+        
+        self.debug = False
+       
 
         # The first few lines of code are used to print around the perimeter to initialize the extrusion.
-        self.linesOfInitializatin = 93
+        # self.linesOfInitializatin = 93
+        self.linesOfInitializatin = 104
 
         self.CrossSectionArea = (1.75/2)*(1.75/2)*np.pi  # pi*r^2
         self.VolResponseDelay = 2.524468763  # based of the testing I did
@@ -158,6 +166,7 @@ def main():
     oldG = GcodeLine(';first gcode',0,config)
     oldG.SetValuesManually(config.OriginOfPart[0], config.OriginOfPart[1], config.OriginOfPart[2], 0, 0, 0, 0, 0, 0.05, 0)
 
+    
     print '(g.ECumulative, g.ExtrudedVolume, g.ExtrusionMultiplier, g.text)'
 
     # Part 1, Recording the Gcodes
@@ -171,7 +180,8 @@ def main():
             g.analyze(oldG)
             g.CalculateExtrudedVolumue()
             GcodeList.append(g) # store the gcode object in a list
-            print (g.ECumulative, g.ExtrudedVolume, g.ExtrusionMultiplier, g.text)
+            if config.debug == True:
+                print (g.ECumulative, g.ExtrudedVolume, g.ExtrusionMultiplier, g.text)
 
             oldG = g
 
@@ -180,7 +190,8 @@ def main():
 
     # make a list of E increments that
     Elist = np.arange(config.responseE,maxE, config.stepE )
-    print 'Elist size'+str(Elist.size)
+    if config.debug == True:
+        print 'Elist size'+str(Elist.size)
 
 
 
@@ -205,7 +216,8 @@ def main():
         for ETarget in Elist:
             code = '; extruded target = %.4f  \n' % ETarget
             fout.write(code)
-            print ETarget
+            if config.debug == True:
+                print ETarget
             for g1 in GcodeList[count:]:
 
                 if g1.ECumulative >= ETarget:
@@ -304,7 +316,7 @@ def main():
 
     fig = plt.figure()
     #ax = fig.add_subplot(111, projection='3d')
-    #ax.scatter(XPointList, YPointList,FractionPointList)
+        #ax.scatter(XPointList, YPointList,FractionPointList)
     plt.scatter(XPointList, YPointList,c=FractionPointList, marker='o')
     plt.colorbar()
     
