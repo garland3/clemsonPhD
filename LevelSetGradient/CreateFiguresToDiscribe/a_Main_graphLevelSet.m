@@ -23,7 +23,7 @@ y3 = vertcat(y,y2);
 % ---------------------------
 
 x2 = 0:0.1:6
-y2 = 0:0.1:3
+y2 = 0:0.1:2
 
 [xMesh, yMesh]=meshgrid(x2,y2);
 % Z = np.sin(R)-0.4+X/4+Y/4
@@ -79,11 +79,33 @@ for i = 1:xl
         end
     end
 end
-figure(3)
-contourf(xMesh,yMesh,zMesh,30)
-colormap winter
 
-view(az,el)
+% Set the values in in ches and give mm label
+% X axis
+ax = gca;
+mmPerInch = 25.4;
+step = 0.590551; % inches (15 mm)
+inchTicks = 0:step:6;
+set(ax,'XTick',inchTicks ); % 50 mm = 1.9685 inches
+mmTicks = inchTicks*mmPerInch;
+set(ax,'XTickLabel',mmTicks );
 
-hold off
+% Set the values in in ches and give mm label
+% Y axis
+ax = gca;
+mmPerInch = 25.4;
+step = 0.590551; % inches (15 mm)
+inchTicks = 0:step:2;
+set(ax,'YTick',inchTicks ); % 50 mm = 1.9685 inches
+mmTicks = inchTicks*mmPerInch;
+set(ax,'YTickLabel',mmTicks );
+
+
+lsfProjection_v2(xMesh,yMesh,zMesh)
+%contourf(xMesh,yMesh,zMesh,30)
+%colormap winter
+
+%view(az,el)
+
+%hold off
 

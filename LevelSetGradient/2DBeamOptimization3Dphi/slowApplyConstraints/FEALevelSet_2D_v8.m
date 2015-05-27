@@ -2,7 +2,6 @@
 % ------------------------
 % Version 7, 2D instead of 1D
 % ----------------------
-
 function [maxVonMisesStress,cost,maxDisplacement,strainEnergy] = FEALevelSet_2D_v8(xpoints,ypoints,zpoints, doplot)
 
 % 2D grid with a 3D function 
@@ -11,8 +10,10 @@ function [maxVonMisesStress,cost,maxDisplacement,strainEnergy] = FEALevelSet_2D_
 % doplot = 0; % Set to 1 to show plots
 doplotDisplacement = doplot; % Set to 1 to show. Runs much slower
 plotStress = doplot; % Set to 1 to plot the stress graphs
+plotElasticMod = doplot;
 doplotDisplacement =0;
 plotStress = 0; % Set to 1 to plot the stress graphs
+ plotElasticMod = 0; % set to 1 to plot elastic mod plot
 singleMaterial = 0; % Set equal to 1 in order to preform a single material problem
 
 imageXaxis = 0:6;
@@ -28,8 +29,8 @@ end
 % numberOfRegions = size(xpoints,2) -1 ; % minus one so wee have points on the ends
 
 
-subplotX = 4;
-subplotY = 2;
+subplotX = 2;
+subplotY = 1;
 subplotCount = 1;
 
 % clear; clc;  close all
@@ -112,6 +113,9 @@ if(problem ==1)
         end
     end
     if(doplot ==1)
+        % --------------------------------------------------------------------
+        % Plot the 3D surface which is the LSF
+        % --------------------------------------------------------------------
         figure(1)
         subplot(subplotX,subplotY,subplotCount); subplotCount=subplotCount+1;
         % plot(splineXX,splineYY,'b',xpoints,ypoints,'r*')
@@ -132,12 +136,38 @@ if(problem ==1)
         set(gca,'YDir','normal'); % http://www.mathworks.com/matlabcentral/answers/94170-how-can-i-reverse-the-y-axis-when-i-use-the-image-or-imagesc-function-to-display-an-image-in-matlab
         axis equal 
      
-        title('level set function')
+        title('Level set function')
         hold on
         xtemp = reshape(xpoints,[1,numbControlPoints]);
         ytemp = reshape(ypoints,[1,numbControlPoints]);
         scatter(xtemp,ytemp,'r*')
         
+    
+        
+        % Set the values in in ches and give mm label
+        % X axis
+        ax = gca;
+        mmPerInch = 25.4;
+        step = 0.590551; % inches (15 mm)
+        inchTicks = 0:step:6;
+        set(ax,'XTick',inchTicks ); % 50 mm = 1.9685 inches
+        mmTicks = inchTicks*mmPerInch;
+        set(ax,'XTickLabel',mmTicks );
+
+        % Set the values in in ches and give mm label
+        % Y axis
+        ax = gca;
+        mmPerInch = 25.4;
+        step = 0.590551; % inches (15 mm)
+        inchTicks = 0:step:2;
+        set(ax,'YTick',inchTicks ); % 50 mm = 1.9685 inches
+        mmTicks = inchTicks*mmPerInch;
+        set(ax,'YTickLabel',mmTicks );
+
+        % Set the X and Y axis labels
+        xlabel('X (mm)','FontSize',10, 'FontName','Arial')
+        ylabel('Y (mm)','FontSize',10, 'FontName','Arial')
+
         hold off
         
         % iso curve data using the contour plot
@@ -154,6 +184,7 @@ if(problem ==1)
     % Calcualte the Elastic mod at each x column
     % ---------------
     E_atElement = splineZZ_v2;
+    VolFractionAtElements = splineZZ_v2; voidVolFraction = -0.1;
     Cost_atElement = splineZZ_v2;
     cost = 0;
     
@@ -165,14 +196,17 @@ if(problem ==1)
            
                 if(zz <0)
                     E_atElement(i,j) = E_empty; % below level set
+                    VolFractionAtElements(i,j) = voidVolFraction;
                     cost = cost +0; % no added cost for no material
                     Cost_atElement(i,j) = 0;
                 elseif(zz>1)
                     E_atElement(i,j) = E_empty; % above level set
+                     VolFractionAtElements(i,j) = voidVolFraction;
                     cost = cost +0; % no added cost for no material
                     Cost_atElement(i,j) = 0;            
                 else
                      E_atElement(i,j)= Epla*zz+(1-zz)*Enylon;  % simple mixture ratio 
+                      VolFractionAtElements(i,j) = zz*100;
                      localCost = CostPLA*zz+(1-zz)*CostNylon; % 0 = nylon, 1 = PLA
                      Cost_atElement(i,j) = localCost;
                      cost = cost + localCost;
@@ -183,12 +217,14 @@ if(problem ==1)
                 % Single material problem
                 if (zz>=0)
                      E_atElement(i,j)= Epla ;%*zz+(1-zz)*Enylon;  % simple mixture ratio 
+                        VolFractionAtElements(i,j) = 100;
                      localCost = CostPLA; %*zz+(1-zz)*CostNylon; % 0 = nylon, 1 = PLA
                      Cost_atElement(i,j) = localCost;
                      cost = cost + localCost;
 
                 else
                     E_atElement(i,j)= E_empty ;%*zz+(1-zz)*Enylon;  % simple mixture ratio 
+                       VolFractionAtElements(i,j) = voidVolFraction;
                      localCost = 0; %*zz+(1-zz)*CostNylon; % 0 = nylon, 1 = PLA
                      Cost_atElement(i,j) = localCost;
                      cost = cost + localCost;
@@ -199,12 +235,38 @@ if(problem ==1)
     
     cost = cost/(xLength*yLength); %#ok<NOPRT> % normalize the cost
     
-    if(doplot ==1)
+    if(plotElasticMod ==1)
+        
+        % --------------------------
+        % Plot Elastic mod
+        % --------------------------
          figure(1)
-        subplot(subplotX,subplotY,subplotCount); subplotCount=subplotCount+1;
-        % plot(splineXX,E_atElement,'b')
-        %surf(splineXX_v2,splineYY_v2,E_atElement);
+        subplot(subplotX,subplotY,subplotCount); subplotCount=subplotCount+1;       
         imagesc(imageXaxis,imageYaxis,E_atElement);
+        
+            % Set the values in in ches and give mm label
+        % X axis
+        ax = gca;
+        mmPerInch = 25.4;
+        step = 0.590551; % inches (15 mm)
+        inchTicks = 0:step:6;
+        set(ax,'XTick',inchTicks ); % 50 mm = 1.9685 inches
+        mmTicks = inchTicks*mmPerInch;
+        set(ax,'XTickLabel',mmTicks );
+
+        % Set the values in in ches and give mm label
+        % Y axis
+        ax = gca;
+        mmPerInch = 25.4;
+        step = 0.590551; % inches (15 mm)
+        inchTicks = 0:step:2;
+        set(ax,'YTick',inchTicks ); % 50 mm = 1.9685 inches
+        mmTicks = inchTicks*mmPerInch;
+        set(ax,'YTickLabel',mmTicks );
+
+        % Set the X and Y axis labels
+        xlabel('X','FontSize',10, 'FontName','Arial')
+        ylabel('Y','FontSize',10, 'FontName','Arial')
         
         % http://www.mathworks.com/help/matlab/ref/colormap.html    
         colormap winter
@@ -217,21 +279,61 @@ if(problem ==1)
         title('Elastic mod over the domain')
          xlim([0,L])
         ylim([0,h])
+    end
+    
+     if(doplot ==1)
+        % --------------------------
+        % Plot Volume Fraction
+        % --------------------------
         
-        subplot(subplotX,subplotY,subplotCount); subplotCount=subplotCount+1;
-        imagesc(imageXaxis,imageYaxis,Cost_atElement);
-         xlim([0,L])
-        ylim([0,h])
+        figure(1)
+        subplot(subplotX,subplotY,subplotCount); subplotCount=subplotCount+1;       
+        imagesc(imageXaxis,imageYaxis,VolFractionAtElements);
         
-         set(gca,'YDir','normal'); 
+            % Set the values in in ches and give mm label
+        % X axis
+        ax1 = gca;
+         set(ax1, 'XLim', [0 L],'YLim', [0 h] );
+       % set(ax1, );
+       
+        
+        mmPerInch = 25.4;
+        step = 0.590551; % inches (15 mm)
+        inchTicks = 0:step:6;
+        set(ax1,'XTick',inchTicks ); % 50 mm = 1.9685 inches
+        mmTicks = inchTicks*mmPerInch;
+        set(ax1,'XTickLabel',mmTicks );
+
+        % Set the values in inches and give mm label
+        % Y axis
+     
+        mmPerInch = 25.4;
+        step = 0.590551; % inches (15 mm)
+        inchTicks = 0:step:2;
+        set(ax1,'YTick',inchTicks ); % 50 mm = 1.9685 inches
+        mmTicks = inchTicks*mmPerInch;
+        set(ax1,'YTickLabel',mmTicks );
+
+        % Set the X and Y axis labels
+        xlabel('X (mm)','FontSize',10, 'FontName','Arial')
+        ylabel('Y (mm)','FontSize',10, 'FontName','Arial')
+        
+        % http://www.mathworks.com/help/matlab/ref/colormap.html    
+         colormap winter
+         cmap = colormap;
+         cmap(1,:) = 1;
+         colormap(cmap);
+         set(ax1,'YDir','normal'); % http://www.mathworks.com/matlabcentral/answers/94170-how-can-i-reverse-the-y-axis-when-i-use-the-image-or-imagesc-function-to-display-an-image-in-matlab
           axis equal 
-            colorbar
-        title('Material-Void Graph over the Domain')
-         xlim([0,L])
-        ylim([0,h])
+        h = colorbar
+        ylabel(h, '% PLA')
         
+         
+             
+        title('Volume Fraction Composition')
         
-        
+        %xlim([0,L])
+       %ylim([0,h])
     end
   
     
@@ -543,7 +645,7 @@ vonM_stored = zeros(ne,1);
 
 elemcenterLocations = zeros(ne,2);
 
-if(doplot ==1)
+if(doplotDisplacement ==1)
     figure(1)
     subplot(subplotX,subplotY,subplotCount); subplotCount=subplotCount+1;
 end
@@ -663,7 +765,7 @@ strainEnergy = 0;
     end
      
  end
-if(doplot ==1)
+if(doplotDisplacement ==1)
     axis equal
     tti= strcat('Displacement of the elements shown in Blue');
     title(tti);
