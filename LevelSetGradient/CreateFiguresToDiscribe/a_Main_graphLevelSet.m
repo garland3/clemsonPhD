@@ -17,6 +17,11 @@ y2 = x*0
 
 y3 = vertcat(y,y2);
  createfigureLevelSet(x, y3); % actually does the plotting
+ 
+
+
+
+
 
 % ---------------------------
 % 2D level set, 3d phi function. 

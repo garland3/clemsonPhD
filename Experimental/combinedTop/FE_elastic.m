@@ -311,10 +311,10 @@ if(1==0)
     subplot(1,2,2)
     surf(XLocations,YLocations,TcontourMatrix);
 end
- subplot(2,2,1);
-  surf(XLocations,YLocations,TcontourMatrix);
+%  subplot(2,2,1);
+%   surf(XLocations,YLocations,TcontourMatrix);
   
-if(1==1)
+if(1==0)
      subplot(2,2,2);
      surf(XLocations,YLocations,TcontourMatrixX);
       subplot(2,2,3);

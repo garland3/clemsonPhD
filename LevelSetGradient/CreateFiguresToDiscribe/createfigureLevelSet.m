@@ -8,6 +8,8 @@ function createfigureLevelSet(X1, YMatrix1)
 % Create figure
 figure1 = figure;
 
+
+
 % Create axes
 axes1 = axes('Parent',figure1,'FontSize',24,'FontName','Arial');
 box(axes1,'on');
@@ -79,3 +81,11 @@ annotation(figure1,'textarrow',[0.806734992679356 0.769399707174231],...
     'HeadStyle','plain',...
     'LineWidth',5);
 
+
+
+
+
+figure1.PaperUnits = 'inches';
+figure1.PaperPositionMode = [0 0 4 4];
+figure1.PaperPositionMode = 'manual';
+print('fig1_5_points','-dpng')

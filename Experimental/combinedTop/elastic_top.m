@@ -1,6 +1,7 @@
 function elastic_top()
 
-actualTopElastic(60,30,0.7,3,2)
+% actualTopElastic(60,30,0.7,3,2)
+actualTopElastic(60,30,0.5,3.0,1.5)
 %%%% A 99 LINE TOPOLOGY OPTIMIZATION CODE BY OLE SIGMUND, JANUARY 2000 %%%
 %%%% CODE MODIFIED FOR INCREASED SPEED, September 2002, BY OLE SIGMUND %%%
 function [x] =  actualTopElastic(nelx,nely,volfrac,penal,rmin)
@@ -70,7 +71,7 @@ end
        ' Vol.: ' sprintf('%6.3f',sum(sum(x))/(nelx*nely)) ...
         ' ch.: ' sprintf('%6.3f',change )])
 % PLOT DENSITIES  
- subplot(2,2,4);
+% subplot(2,2,4);
   colormap(winter); 
   imagesc(x); 
   set(gca,'YDir','normal'); % Flips the image so that row 1 is not at the top

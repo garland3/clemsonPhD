@@ -5,8 +5,7 @@
 % Problem #1 and 2
 
 clear; clc;  close all
-problem = 1
-;
+problem = 1;
 a = 4; % in
 d = 7.5; % in
 L = 10; % in
