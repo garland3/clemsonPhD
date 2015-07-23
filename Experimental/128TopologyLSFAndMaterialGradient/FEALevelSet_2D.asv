@@ -19,7 +19,7 @@ plotVolFraction = 1; % override
 subplotY = 2; % Suplot matrix setup
 subplotX = 2;
 subplotCount = 1;
-multiplierScale = 10; % When plotting the diplaced elements, exaggerate the displacements by this scale
+multiplierScale = 2; % When plotting the diplaced elements, exaggerate the displacements by this scale
 
 [nely,nelx] = size(volFracArray);
 h = nely;
@@ -111,8 +111,7 @@ if(plotElasticMod ==1)
           %cmap = colormap;
           %cmap(1,:) = 1;
           %colormap(cmap);
-          % freezeColors
-          caxis([Enylon Epla ])
+           freezeColors
          set(gca,'YDir','normal'); % http://www.mathworks.com/matlabcentral/answers/94170-how-can-i-reverse-the-y-axis-when-i-use-the-image-or-imagesc-function-to-display-an-image-in-matlab
           axis equal 
          colorbar
@@ -137,7 +136,6 @@ if(plotVolFraction ==1)
     xlabel('X (mm)','FontSize',10, 'FontName','Arial')
     ylabel('Y (mm)','FontSize',10, 'FontName','Arial')
     title('Volume Fraction Composition')
-     caxis([0 1 ])
      colorbar
     xlim([0,L])
     ylim([0,h])
@@ -241,7 +239,7 @@ K = zeros(ndof,ndof);
 u0 = 0; % value at essential boundaries
 row = nelx+1;
 Essential2 = [1 2]; % bottom left corner is fixed
-Essential2 = [Essential2 row*2 row*2-1]; % bottom right corner is only fixed in the y direction
+Essential2 = [Essential2 row*2]; % bottom right corner is only fixed in the y direction
 F2( floor(row/2)*2) = -FappliedLoad; % force down in the bottom middle
 
 % for i = 1:nn
@@ -525,27 +523,27 @@ end
 % Show final results
 if(plotStress ==1)
 
-     x = elemcenterLocations(:,1)';
-     y = elemcenterLocations(:,2)';
-     z = vonM_stored'; 
-% 
-%     subplot(subplotY,subplotX,subplotCount); subplotCount=subplotCount+1;
-%     scatter(x,y,[],z)
-%     xlim([0,L])
-%     ylim([0,h])
-%     axis equal
+    x = elemcenterLocations(:,1)';
+    y = elemcenterLocations(:,2)';
+    z = vonM_stored'; 
 
     subplot(subplotY,subplotX,subplotCount); subplotCount=subplotCount+1;
-  %  http://www.mathworks.com/matlabcentral/fileexchange/38858-contour-plot-for-scattered-data
-        tri=delaunay(x,y);           % triangulate scattered data
-        vonMax = max(vonM_stored);
-        stepX = 2;
-         v=0:stepX:vonMax; % contour levels
-        [C,hh]=tricontour(tri,x,y,z,v);
-        %clabel(C,h)
-        xlim([0,L])
-        ylim([0,h])
-        axis equal
+    scatter(x,y,[],z)
+    xlim([0,L])
+    ylim([0,h])
+    axis equal
+
+    % subplot(subplotY,subplotX,subplotCount); subplotCount=subplotCount+1;
+    % http://www.mathworks.com/matlabcentral/fileexchange/38858-contour-plot-for-scattered-data
+%         tri=delaunay(x,y);           % triangulate scattered data
+%         vonMax = max(vonM_stored);
+%         stepX = floor(vonMax/30);
+%          v=0:stepX:vonMax; % contour levels
+%         [C,h]=tricontour(tri,x,y,z,v);
+%         %clabel(C,h)
+%         xlim([0,L])
+%         %ylim([0,h])
+%         axis equal
 
    
 end
@@ -561,31 +559,5 @@ for i = 1:nely
         count = count+1;
     end
 end
-
-plotSensitivity = 0;
-if(plotSensitivity ==1)   
-    figure(1)
-    subplot(subplotY,subplotX,subplotCount); subplotCount=subplotCount+1;       
-    imagesc(imageXaxis,imageYaxis,g1_local_square);      
-
-        % Set the X and Y axis labels
-        xlabel('X','FontSize',10, 'FontName','Arial')
-        ylabel('Y','FontSize',10, 'FontName','Arial')
-         
-         % http://www.mathworks.com/help/matlab/ref/colormap.html    
-         colormap winter
-          %cmap = colormap;
-          %cmap(1,:) = 1;
-          %colormap(cmap);
-          % freezeColors
-          caxis([min(min(g1_local_square)) max(max(g1_local_square)) ])
-         set(gca,'YDir','normal'); % http://www.mathworks.com/matlabcentral/answers/94170-how-can-i-reverse-the-y-axis-when-i-use-the-image-or-imagesc-function-to-display-an-image-in-matlab
-          axis equal 
-         colorbar
-         title('Sensitivity')
-          xlim([0,L])
-         ylim([0,h])
-end
-
 
 end

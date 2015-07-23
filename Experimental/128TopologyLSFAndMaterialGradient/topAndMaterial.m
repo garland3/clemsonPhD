@@ -38,26 +38,26 @@ subplotCount = 1;
 doPlot = 0;
 
 
-nelx = 12;
-nely = 6;
+nelx = 20;
+nely = 10;
 time = 0;
 v1 = 0.5; % amount of material 1 to allow where  1 = 100%
 v2 = 0.5; % amount of mateiral 2 to allow
-lambda1  = -5; % Set the lambda1 penalty/ lagrangian
-lambda2 = 0.01; % set the lambda2 penality/lagrangian
-mu1 = 0.1; % set the penality term close to zero
+lambda1  = 0.5; % Set the lambda1 penalty/ lagrangian
+lambda2 = 0.1; % set the lambda2 penality/lagrangian
+mu1 = 5; % set the penality term close to zero
 mu2 = 0.2; % set the second penality close to zero.     
 omegaMin = 0.1; % set the minimum allowed vol fraction of material 1 (stronger)
 omegaMax = 0.9; % set the max allowed vol fraction of material 2 (weaker)
-alpha = 0.2; % set the term that influenes the smoothness of the vol fraction
+alpha = 1; % set the term that influenes the smoothness of the vol fraction
 beta = 5; % set the perimeter regularization term. 
-timestep = 0.04; 
+timestep = 0.1; 
 
 
 % initialize the domain as ones
 structure = ones(nely, nelx); 
 volFraction = structure*0; % initialize the volfraction composition
- volFraction(1:3:nely, 1:3:nelx) = 1;
+% volFraction(1:3:nely, 1:3:nelx) = 1;
 
 % plotting stuff
 if(doPlot ==1)
@@ -84,7 +84,7 @@ end
 % method to find the displacement u. Calculate the sensitivity G1.
 % Update omega according to Eq. (26).
 
-for count = 1:100
+for count = 1:60
 
     [U, g1_local_square, volFracV1, volFracV2]  =  FEALevelSet_2D(structure,volFraction,  doPlot, alpha);
     G1 = g1_local_square - lambda1 +1/(mu1)*(v1-volFracV1);
