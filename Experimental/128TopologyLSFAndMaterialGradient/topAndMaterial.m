@@ -6,13 +6,14 @@ function [  ] = topAndMaterial(  )
 % page 9. 
 % Also, I plan to reuse some parts of the short level set top optimization
 % presented in A discrete level-set topology optimization code.pdf
+% Copyright Anthony Garland 2015
 
 
 clear
 clc
 close all
 
-recvid = 1; % record view, 1 = yes
+recvid = 0; % record view, 1 = yes
 if recvid==1
     vidObj = VideoWriter('results.avi');    %Prepare the new file for video
     vidObj.FrameRate = 5;
@@ -38,12 +39,12 @@ subplotCount = 1;
 doPlot = 0;
 
 
-nelx = 20;
-nely = 10;
+nelx = 10;
+nely = 5;
 time = 0;
 v1 = 0.5; % amount of material 1 to allow where  1 = 100%
 v2 = 0.5; % amount of mateiral 2 to allow
-lambda1  = 0.5; % Set the lambda1 penalty/ lagrangian
+lambda1  = 0.1; % Set the lambda1 penalty/ lagrangian
 lambda2 = 0.1; % set the lambda2 penality/lagrangian
 mu1 = 5; % set the penality term close to zero
 mu2 = 0.2; % set the second penality close to zero.     
@@ -56,7 +57,7 @@ timestep = 0.1;
 
 % initialize the domain as ones
 structure = ones(nely, nelx); 
-volFraction = structure*0; % initialize the volfraction composition
+volFraction = structure*0.5; % initialize the volfraction composition
 % volFraction(1:3:nely, 1:3:nelx) = 1;
 
 % plotting stuff
@@ -83,28 +84,22 @@ end
 %  Solve the state equation (9) via the finite element
 % method to find the displacement u. Calculate the sensitivity G1.
 % Update omega according to Eq. (26).
-
-for count = 1:60
-
-    [U, g1_local_square, volFracV1, volFracV2]  =  FEALevelSet_2D(structure,volFraction,  doPlot, alpha);
+stepUpdateLambda = 5; 
+for count = 1:100
+    [U, g1_local_square,g2_local_square, volFracV1, volFracV2] =  FEALevelSet_2D(structure,lsf,volFraction,  doPlot, alpha,beta);
     G1 = g1_local_square - lambda1 +1/(mu1)*(v1-volFracV1);
     volFraction_proposedUpdate = volFraction+timestep*G1;
-
     volFraction = max(min(volFraction_proposedUpdate,omegaMax),omegaMin);
-
-    lambda1 =  lambda1 -1/(mu1)*(v1-volFracV1);
-    [volFracV1, count, lambda1]
-   
-    drawnow
-    
+    %if(mod(count, stepUpdateLambda) ==0)
+     lambda1 =  lambda1 -1/(mu1)*(v1-volFracV1);
+    %end
+    [volFracV1, count, lambda1]   
+    drawnow    
     if recvid==1
         F(vid) = getframe(figure(1)); %Get frame of the topology in each iteration
         writeVideo(vidObj,F(vid)); %Save the topology in the video
         vid=vid+1;
-    end
-    
-    
-
+    end  
 end
 
 

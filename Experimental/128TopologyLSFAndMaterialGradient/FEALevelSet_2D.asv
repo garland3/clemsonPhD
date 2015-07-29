@@ -1,6 +1,13 @@
 % Copyright Anthony Garland 2015
 % ------------------------
-function [U, g1_local_square, volFracV1, volFracV2] = FEALevelSet_2D(structure,volFracArray,  doplot, alphaPenalty)
+function [U, g1_local_square,g2_local_square, volFracV1, volFracV2] = FEALevelSet_2D(structure,lsf, volFracArray,  doplot, alphaPenalty)
+% structure - shows the structure's boundary by a binary relationship, 0 = void, 1 = material
+% lsf - is the level set function. I need this level set function so that I
+% can calcualte the normal direction and mean curvature
+% volFracArray - tells the volume fraction at each element in the domain
+% doplot - indicates if we should plot or not
+% alphaPenalty - indicates the strength of the alpha penalty function which
+% penalizes the volume fraction to encourage smoothness
 
 % --------------------------
 % Plotting information
@@ -19,7 +26,7 @@ plotVolFraction = 1; % override
 subplotY = 2; % Suplot matrix setup
 subplotX = 2;
 subplotCount = 1;
-multiplierScale = 2; % When plotting the diplaced elements, exaggerate the displacements by this scale
+multiplierScale = 10; % When plotting the diplaced elements, exaggerate the displacements by this scale
 
 [nely,nelx] = size(volFracArray);
 h = nely;
@@ -58,6 +65,22 @@ Aomega = D_dd;
 % term calculation)
 stepSize = 1;
 LaplaceVolFract = del2(volFracArray,stepSize);
+
+% Calculate the gradient as well ofr the volume fraction, this is neededd
+% for the G2 term)
+[gvolFracX gvolFracY] = gradient(volFracArray,stepSize);
+volFracGradientSquared = gvolFracX.^2+gvolFracY.^2;
+
+
+% Find the normal direction of the lsf,  = nabla(lsf)/abs(nabla(lsf))
+[gx_lsf gy_lsf] = gradient(lsf);
+denominator_g_lsf = (gx_lsf.^2 +gy_lsf.^2).^(1/2);
+gx_lsf = gx_lsf./denominator_g_lsf;
+gy_lsf = gy_lsf./denominator_g_lsf;
+
+curvature_lsf = divergence(gx_lsf,gy_lsf); % calculate the divergence
+curvature_lsf(isnan(curvature_lsf)) = 0 ; % remove the NaN
+
 
 % Handle the mapping between nodes and elements and node
 % locations
@@ -111,7 +134,8 @@ if(plotElasticMod ==1)
           %cmap = colormap;
           %cmap(1,:) = 1;
           %colormap(cmap);
-           freezeColors
+          % freezeColors
+          caxis([Enylon Epla ])
          set(gca,'YDir','normal'); % http://www.mathworks.com/matlabcentral/answers/94170-how-can-i-reverse-the-y-axis-when-i-use-the-image-or-imagesc-function-to-display-an-image-in-matlab
           axis equal 
          colorbar
@@ -136,6 +160,7 @@ if(plotVolFraction ==1)
     xlabel('X (mm)','FontSize',10, 'FontName','Arial')
     ylabel('Y (mm)','FontSize',10, 'FontName','Arial')
     title('Volume Fraction Composition')
+     caxis([0 1 ])
      colorbar
     xlim([0,L])
     ylim([0,h])
@@ -187,6 +212,8 @@ end
 
 E_atElementsArray = zeros(ne,1);
 LaplaceVolFrac_atElementsArray = zeros(ne,1);
+GradientSquredVolFact_atElementsArray = zeros(ne,1);
+normal_lsf_atElements = 
 
 
 count = 1;
@@ -201,6 +228,7 @@ for i = 1:nely
         % Store the E value for this element
         E_atElementsArray(count) = E_atElement(i,j);    
         LaplaceVolFrac_atElementsArray(count) = LaplaceVolFract(i,j); % store the laplace of the vol fraction in a single column matrix
+        GradientSquredVolFact_atElementsArray(count) = volFracGradientSquared(i,j);
          % Store node mapping
         ElemToNodeMap(count,:)=[rowMultiplier*numNodesInRow+j, ...
                       rowMultiplier*numNodesInRow+j+1, ...
@@ -239,7 +267,7 @@ K = zeros(ndof,ndof);
 u0 = 0; % value at essential boundaries
 row = nelx+1;
 Essential2 = [1 2]; % bottom left corner is fixed
-Essential2 = [Essential2 row*2]; % bottom right corner is only fixed in the y direction
+Essential2 = [Essential2 row*2 row*2-1]; % bottom right corner is only fixed in the y direction
 F2( floor(row/2)*2) = -FappliedLoad; % force down in the bottom middle
 
 % for i = 1:nn
@@ -401,6 +429,7 @@ U(Essential2) = u0;
 stress_stored = zeros(ne,3);
 vonM_stored = zeros(ne,1);
 g1_localstored = zeros(ne,1);
+g2_localstored = zeros(ne,1);
 elemcenterLocations = zeros(ne,2);
 
 if(doplotDisplacement ==1)
@@ -481,10 +510,15 @@ strainEnergy = 0;
      
      % G1_local
      g1_local = alphaPenalty*LaplaceVolFrac_atElementsArray(e)+ strain'*(Aomega*(strain));
-     g1_localstored(e) = g1_local;
+     g1_localstored(e) = g1_local;     
+    
      
      localStrainE = strain'*stress;
      strainEnergy = strainEnergy+localStrainE;
+     
+      % G2_local
+     g2_local = localStrainE-alphaPenalty*GradientSquredVolFact_atElementsArray(e) - beta*;
+     g2_localstored(2) = g2_local;
              
     % Store the transpose, to make things work nice. 
     stress_stored(e,:) = stress';
@@ -523,27 +557,27 @@ end
 % Show final results
 if(plotStress ==1)
 
-    x = elemcenterLocations(:,1)';
-    y = elemcenterLocations(:,2)';
-    z = vonM_stored'; 
+     x = elemcenterLocations(:,1)';
+     y = elemcenterLocations(:,2)';
+     z = vonM_stored'; 
+% 
+%     subplot(subplotY,subplotX,subplotCount); subplotCount=subplotCount+1;
+%     scatter(x,y,[],z)
+%     xlim([0,L])
+%     ylim([0,h])
+%     axis equal
 
     subplot(subplotY,subplotX,subplotCount); subplotCount=subplotCount+1;
-    scatter(x,y,[],z)
-    xlim([0,L])
-    ylim([0,h])
-    axis equal
-
-    % subplot(subplotY,subplotX,subplotCount); subplotCount=subplotCount+1;
-    % http://www.mathworks.com/matlabcentral/fileexchange/38858-contour-plot-for-scattered-data
-%         tri=delaunay(x,y);           % triangulate scattered data
-%         vonMax = max(vonM_stored);
-%         stepX = floor(vonMax/30);
-%          v=0:stepX:vonMax; % contour levels
-%         [C,h]=tricontour(tri,x,y,z,v);
-%         %clabel(C,h)
-%         xlim([0,L])
-%         %ylim([0,h])
-%         axis equal
+  %  http://www.mathworks.com/matlabcentral/fileexchange/38858-contour-plot-for-scattered-data
+        tri=delaunay(x,y);           % triangulate scattered data
+        vonMax = max(vonM_stored);
+        stepX = 2;
+         v=0:stepX:vonMax; % contour levels
+        [C,hh]=tricontour(tri,x,y,z,v);
+        %clabel(C,h)
+        xlim([0,L])
+        ylim([0,h])
+        axis equal
 
    
 end
@@ -559,5 +593,31 @@ for i = 1:nely
         count = count+1;
     end
 end
+
+plotSensitivity = 0;
+if(plotSensitivity ==1)   
+    figure(1)
+    subplot(subplotY,subplotX,subplotCount); subplotCount=subplotCount+1;       
+    imagesc(imageXaxis,imageYaxis,g1_local_square);      
+
+        % Set the X and Y axis labels
+        xlabel('X','FontSize',10, 'FontName','Arial')
+        ylabel('Y','FontSize',10, 'FontName','Arial')
+         
+         % http://www.mathworks.com/help/matlab/ref/colormap.html    
+         colormap winter
+          %cmap = colormap;
+          %cmap(1,:) = 1;
+          %colormap(cmap);
+          % freezeColors
+          caxis([min(min(g1_local_square)) max(max(g1_local_square)) ])
+         set(gca,'YDir','normal'); % http://www.mathworks.com/matlabcentral/answers/94170-how-can-i-reverse-the-y-axis-when-i-use-the-image-or-imagesc-function-to-display-an-image-in-matlab
+          axis equal 
+         colorbar
+         title('Sensitivity')
+          xlim([0,L])
+         ylim([0,h])
+end
+
 
 end

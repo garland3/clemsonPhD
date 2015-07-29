@@ -1,6 +1,13 @@
 % Copyright Anthony Garland 2015
 % ------------------------
-function [U, g1_local_square, volFracV1, volFracV2] = FEALevelSet_2D(structure,volFracArray,  doplot, alphaPenalty)
+function [U, g1_local_square,g2_local_square, volFracV1, volFracV2] = FEALevelSet_2D(structure,lsf, volFracArray,  doplot, alphaPenalty,beta)
+% structure - shows the structure's boundary by a binary relationship, 0 = void, 1 = material
+% lsf - is the level set function. I need this level set function so that I
+% can calcualte the normal direction and mean curvature
+% volFracArray - tells the volume fraction at each element in the domain
+% doplot - indicates if we should plot or not
+% alphaPenalty - indicates the strength of the alpha penalty function which
+% penalizes the volume fraction to encourage smoothness
 
 % --------------------------
 % Plotting information
@@ -58,6 +65,22 @@ Aomega = D_dd;
 % term calculation)
 stepSize = 1;
 LaplaceVolFract = del2(volFracArray,stepSize);
+
+% Calculate the gradient as well ofr the volume fraction, this is neededd
+% for the G2 term)
+[gvolFracX gvolFracY] = gradient(volFracArray,stepSize);
+volFracGradientSquared = gvolFracX.^2+gvolFracY.^2;
+
+
+% Find the normal direction of the lsf,  = nabla(lsf)/abs(nabla(lsf))
+[gx_lsf gy_lsf] = gradient(lsf);
+denominator_g_lsf = (gx_lsf.^2 +gy_lsf.^2).^(1/2);
+gx_lsf = gx_lsf./denominator_g_lsf;
+gy_lsf = gy_lsf./denominator_g_lsf;
+
+curvature_lsf = divergence(gx_lsf,gy_lsf); % calculate the divergence
+curvature_lsf(isnan(curvature_lsf)) = 0 ; % remove the NaN
+
 
 % Handle the mapping between nodes and elements and node
 % locations
@@ -189,6 +212,8 @@ end
 
 E_atElementsArray = zeros(ne,1);
 LaplaceVolFrac_atElementsArray = zeros(ne,1);
+GradientSquredVolFact_atElementsArray = zeros(ne,1);
+normal_lsf_atElements = zeros(ne,1);
 
 
 count = 1;
@@ -203,6 +228,8 @@ for i = 1:nely
         % Store the E value for this element
         E_atElementsArray(count) = E_atElement(i,j);    
         LaplaceVolFrac_atElementsArray(count) = LaplaceVolFract(i,j); % store the laplace of the vol fraction in a single column matrix
+        GradientSquredVolFact_atElementsArray(count) = volFracGradientSquared(i,j);
+        normal_lsf_atElements(count) = curvature_lsf(i,j);
          % Store node mapping
         ElemToNodeMap(count,:)=[rowMultiplier*numNodesInRow+j, ...
                       rowMultiplier*numNodesInRow+j+1, ...
@@ -403,6 +430,7 @@ U(Essential2) = u0;
 stress_stored = zeros(ne,3);
 vonM_stored = zeros(ne,1);
 g1_localstored = zeros(ne,1);
+g2_localstored = zeros(ne,1);
 elemcenterLocations = zeros(ne,2);
 
 if(doplotDisplacement ==1)
@@ -483,10 +511,15 @@ strainEnergy = 0;
      
      % G1_local
      g1_local = alphaPenalty*LaplaceVolFrac_atElementsArray(e)+ strain'*(Aomega*(strain));
-     g1_localstored(e) = g1_local;
+     g1_localstored(e) = g1_local;     
+    
      
      localStrainE = strain'*stress;
      strainEnergy = strainEnergy+localStrainE;
+     
+      % G2_local
+     g2_local = localStrainE-alphaPenalty*GradientSquredVolFact_atElementsArray(e) - beta*normal_lsf_atElements(e);
+     g2_localstored(2) = g2_local;
              
     % Store the transpose, to make things work nice. 
     stress_stored(e,:) = stress';
@@ -554,10 +587,12 @@ end
 % Convert the g1_local into a matrix rather than just a long column
 % -----------------------
 g1_local_square = zeros(nely, nelx);
+g2_local_square = zeros(nely,nelx);
 count = 1;
 for i = 1:nely   
     for j= 1:nelx  
         g1_local_square(i,j) = g1_localstored(count);
+        g2_local_square(i,j)=g2_localstored(count);
         count = count+1;
     end
 end
