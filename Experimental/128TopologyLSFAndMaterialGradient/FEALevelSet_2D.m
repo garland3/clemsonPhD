@@ -1,6 +1,6 @@
 % Copyright Anthony Garland 2015
 % ------------------------
-function [U, g1_local_square,g2_local_square, volFracV1, volFracV2] = FEALevelSet_2D(structure,lsf, volFracArray,  doplot, alphaPenalty,beta)
+function [U, g1_local_square,g2_local_square, volFracV1, volFracV2] = FEALevelSet_2D(structure,lsf, volFracArray,  doplot, alphaPenalty,beta, count, mode)
 % structure - shows the structure's boundary by a binary relationship, 0 = void, 1 = material
 % lsf - is the level set function. I need this level set function so that I
 % can calcualte the normal direction and mean curvature
@@ -18,15 +18,34 @@ function [U, g1_local_square,g2_local_square, volFracV1, volFracV2] = FEALevelSe
 
 doplotDisplacement = doplot; % Set to 1 to show. Runs much slower
 plotStress = doplot; % Set to 1 to plot the stress graphs
-plotStress = 1; % Set to 1 to plot the stress graphs
+%plotStress = 1; % Set to 1 to plot the stress graphs
 plotElasticMod = doplot;
-plotElasticMod = 1;
+%plotElasticMod = 1;
 plotVolFraction = doplot;
-plotVolFraction = 1; % override
+%plotVolFraction = 1; % override
+plotStructure = doplot;
+%plotStructure = 1; % override
+plotLSF = doplot; 
+%plotLSF = 1; % override
+plotNormalDirection = doplot;
+
+
 subplotY = 2; % Suplot matrix setup
 subplotX = 2;
 subplotCount = 1;
 multiplierScale = 10; % When plotting the diplaced elements, exaggerate the displacements by this scale
+
+if (mode ==1) % optimize material only
+    plotStress = 1; % Set to 1 to plot the stress graphs
+    plotElasticMod = 1;
+    plotVolFraction = 1; % override
+elseif( mode ==2) % optimize topology only
+    plotStructure = 1;
+    plotLSF = 1;
+    plotStress = 1; % Set to 1 to plot the stress graphs
+    plotNormalDirection = 1; % override
+    
+end
 
 [nely,nelx] = size(volFracArray);
 h = nely;
@@ -68,19 +87,27 @@ LaplaceVolFract = del2(volFracArray,stepSize);
 
 % Calculate the gradient as well ofr the volume fraction, this is neededd
 % for the G2 term)
-[gvolFracX gvolFracY] = gradient(volFracArray,stepSize);
+[gvolFracX, gvolFracY] = gradient(volFracArray,stepSize);
 volFracGradientSquared = gvolFracX.^2+gvolFracY.^2;
 
 
 % Find the normal direction of the lsf,  = nabla(lsf)/abs(nabla(lsf))
-[gx_lsf gy_lsf] = gradient(lsf);
+[gx_lsf, gy_lsf] = gradient(lsf);
 denominator_g_lsf = (gx_lsf.^2 +gy_lsf.^2).^(1/2);
 gx_lsf = gx_lsf./denominator_g_lsf;
 gy_lsf = gy_lsf./denominator_g_lsf;
 
-curvature_lsf = divergence(gx_lsf,gy_lsf); % calculate the divergence
+curvature_lsf = divergence(gx_lsf,gy_lsf); % calculate the divergence of the normal direction to get the curvature
 curvature_lsf(isnan(curvature_lsf)) = 0 ; % remove the NaN
+curvature_lsf = curvature_lsf(2:end-1,2:end-1);
 
+% if (plotNormalDirection == 1)
+%      figure(1)
+%     subplot(subplotY,subplotX,subplotCount); subplotCount=subplotCount+1; 
+%     quiver(gx_lsf, gy_lsf);
+%     title('Normal direction of lsf');
+% end
+    
 
 % Handle the mapping between nodes and elements and node
 % locations
@@ -100,8 +127,7 @@ volFracV2 = 0;
 
  for i = 1:nelx
     for j = 1:nely           
-         structureLocal = structure(j,i);          
-
+         structureLocal = structure(j,i);
             if(structureLocal == 0) % if void region
                 E_atElement(j,i) = E_empty;                     
             else % if a filled region
@@ -115,7 +141,17 @@ volFracV2 = 0;
  
  % normalize the volume fraction by the number of elements
  volFracV1 = volFracV1/ne;
- volFracV2 = volFracV1/ne;
+ volFracV2 = volFracV2/ne;
+ 
+ if(plotLSF ==1)
+    figure(1)
+    subplot(subplotX,subplotY,subplotCount); subplotCount=subplotCount+1;
+   imagesc(lsf); axis equal; axis tight; axis off;
+   colormap winter
+    colorbar 
+   % caxis([-1 1 ]);
+   title('LSF')
+end
 
 % --------------------------
 % Plot Elastic mod
@@ -131,9 +167,9 @@ if(plotElasticMod ==1)
          
          % http://www.mathworks.com/help/matlab/ref/colormap.html    
          colormap winter
-          %cmap = colormap;
-          %cmap(1,:) = 1;
-          %colormap(cmap);
+%           cmap = colormap;
+%           cmap(1,:) = 1;
+%           colormap(cmap);
           % freezeColors
           caxis([Enylon Epla ])
          set(gca,'YDir','normal'); % http://www.mathworks.com/matlabcentral/answers/94170-how-can-i-reverse-the-y-axis-when-i-use-the-image-or-imagesc-function-to-display-an-image-in-matlab
@@ -142,6 +178,19 @@ if(plotElasticMod ==1)
          title('Elastic mod over the domain')
           xlim([0,L])
          ylim([0,h])
+end
+
+% --------------------------
+% Plot structure
+% --------------------------
+
+if(plotStructure ==1)
+    figure(1)
+    subplot(subplotX,subplotY,subplotCount); subplotCount=subplotCount+1;
+    imagesc(structure); axis equal; axis tight; axis off;
+      set(gca,'YDir','normal');
+       colorbar;
+    title('Structure')
 end
 
 % --------------------------
@@ -213,7 +262,7 @@ end
 E_atElementsArray = zeros(ne,1);
 LaplaceVolFrac_atElementsArray = zeros(ne,1);
 GradientSquredVolFact_atElementsArray = zeros(ne,1);
-normal_lsf_atElements = zeros(ne,1);
+curvature_lsf_atElements = zeros(ne,1);
 
 
 count = 1;
@@ -229,7 +278,7 @@ for i = 1:nely
         E_atElementsArray(count) = E_atElement(i,j);    
         LaplaceVolFrac_atElementsArray(count) = LaplaceVolFract(i,j); % store the laplace of the vol fraction in a single column matrix
         GradientSquredVolFact_atElementsArray(count) = volFracGradientSquared(i,j);
-        normal_lsf_atElements(count) = curvature_lsf(i,j);
+        curvature_lsf_atElements(count) = curvature_lsf(i,j);
          % Store node mapping
         ElemToNodeMap(count,:)=[rowMultiplier*numNodesInRow+j, ...
                       rowMultiplier*numNodesInRow+j+1, ...
@@ -269,7 +318,7 @@ u0 = 0; % value at essential boundaries
 row = nelx+1;
 Essential2 = [1 2]; % bottom left corner is fixed
 Essential2 = [Essential2 row*2 row*2-1]; % bottom right corner is only fixed in the y direction
-F2( floor(row/2)*2) = -FappliedLoad; % force down in the bottom middle
+F2( (floor(row/2)+1)*2) = -FappliedLoad; % force down in the bottom middle
 
 % for i = 1:nn
 %     % get the xy locations as a row
@@ -518,8 +567,8 @@ strainEnergy = 0;
      strainEnergy = strainEnergy+localStrainE;
      
       % G2_local
-     g2_local = localStrainE-alphaPenalty*GradientSquredVolFact_atElementsArray(e) - beta*normal_lsf_atElements(e);
-     g2_localstored(2) = g2_local;
+     g2_local = localStrainE-alphaPenalty*GradientSquredVolFact_atElementsArray(e) - beta*curvature_lsf_atElements(e);
+     g2_localstored(e) = g2_local;
              
     % Store the transpose, to make things work nice. 
     stress_stored(e,:) = stress';
@@ -592,16 +641,16 @@ count = 1;
 for i = 1:nely   
     for j= 1:nelx  
         g1_local_square(i,j) = g1_localstored(count);
-        g2_local_square(i,j)=g2_localstored(count);
+        g2_local_square(i,j) = g2_localstored(count);
         count = count+1;
     end
 end
 
-plotSensitivity = 0;
+plotSensitivity = 1;
 if(plotSensitivity ==1)   
     figure(1)
     subplot(subplotY,subplotX,subplotCount); subplotCount=subplotCount+1;       
-    imagesc(imageXaxis,imageYaxis,g1_local_square);      
+    imagesc(imageXaxis,imageYaxis,g2_local_square);      
 
         % Set the X and Y axis labels
         xlabel('X','FontSize',10, 'FontName','Arial')
@@ -613,7 +662,7 @@ if(plotSensitivity ==1)
           %cmap(1,:) = 1;
           %colormap(cmap);
           % freezeColors
-          caxis([min(min(g1_local_square)) max(max(g1_local_square)) ])
+          caxis([min(min(g2_local_square)) max(max(g2_local_square)) ])
          set(gca,'YDir','normal'); % http://www.mathworks.com/matlabcentral/answers/94170-how-can-i-reverse-the-y-axis-when-i-use-the-image-or-imagesc-function-to-display-an-image-in-matlab
           axis equal 
          colorbar
