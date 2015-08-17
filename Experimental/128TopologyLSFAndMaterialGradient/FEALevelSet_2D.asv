@@ -31,9 +31,6 @@ plotLSF = doplot;
 %plotLSF = 1; % override
 plotNormalDirection = doplot;
 
-plotSensitivity = doplot;
-
-
 
 subplotY = 2; % Suplot matrix setup
 subplotX = 2;
@@ -48,7 +45,7 @@ elseif( mode ==2) % optimize topology only
     plotStructure = 1;
     plotLSF = 1;
     plotStress = 1; % Set to 1 to plot the stress graphs
-    plotSensitivity = 1; % override
+    plotNormalDirection = 1; % override
 elseif (mode ==3)
     plotStructure = 1;
     plotLSF = 1;

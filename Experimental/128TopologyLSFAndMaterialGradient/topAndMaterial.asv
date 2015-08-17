@@ -30,7 +30,7 @@ recvid = 0; % Record a video of the figure 1, record view, 1 = yes
 % Algorithm configurations
 % ------------------------
 
-mode = 1; % 1 = optimize only material, 2 optimize only topology, 3 = both
+mode = 2; % 1 = optimize only material, 2 optimize only topology, 3 = both
 nelx = 40; % number of elements in the x direction
 nely = 10; % number of elements in the y direction
 v1 = 0.5; % amount of material 1 to allow where  1 = 100%
@@ -39,9 +39,9 @@ lambda1  = 0; % Set the lambda1 penalty/ lagrangian
 dampingLambda1 = 0.5;
 timestep = 0.1; % step size for vol fraction update, influenced by lambda1
 
-lambda2 = -0.1; % set the lambda2 penality/lagrangian
+lambda2 = 50; % set the lambda2 penality/lagrangian
 mu1 = 1; % set the penality term close to zero
-mu2 = 20; % set the second penality close to zero.
+mu2 = 1; % set the second penality close to zero.
 omegaMin = 0.1; % set the minimum allowed vol fraction of material 1 (stronger)
 omegaMax = 0.9; % set the max allowed vol fraction of material 2 (weaker)
 alpha = 5; % set the term that influenes the smoothness of the vol fraction
@@ -100,7 +100,7 @@ end
 % method to find the displacement u. Calculate the sensitivity G1.
 % Update omega according to Eq. (26).
 
-for count = 1:500
+for count = 1:100
     % --------------------
     % Run the FEA
     % --------------------
@@ -110,13 +110,11 @@ for count = 1:500
     % Update the volume fraction composition
     % --------------------
     if (mode ==1 || mode ==3)
-        if(mod(count, 5) ==0)
            G1 = g1_local_square - lambda1 +1/(mu1)*(v1-volFracV1)^2;
            volFraction_proposedUpdate = volFraction+timestep*G1;
            volFraction = max(min(volFraction_proposedUpdate,omegaMax),omegaMin);
            
            lambda1 =  lambda1 -1/(mu1)*(v1-volFracV1)*dampingLambda1;
-        end
     end
    
     
@@ -125,24 +123,13 @@ for count = 1:500
     % Calculate the propogation of the levelset boundary
     % --------------------
     if (mode ==2 || mode ==3)   
-        if (count < 1)
-            G2 = g2_local_square+1/(mu2)*(v2-volFracV2);
-         
-            
-        else
-                 G2 = g2_local_square-lambda2+1/(mu2)*(v2-volFracV2);
-                damping = 5;
-                lambda2 =  lambda2 -1/(mu2)*(v2-volFracV2)*damping;
-        end
+        
+%         G2 = g2_local_square-lambda2+1/(mu2)*(v2-volFracV2);
+%         damping = 5;
+%         lambda2 =  lambda2 -1/(mu2)*(v2-volFracV2)*damping;
 %         
-      
-%         G2 = -g2_local_square - lambda2 + 1/mu2*(v2-volFracV2)^2;
-%         lambda2 = lambda2 - 10/mu2 * (v2 - volFracV2)^2;
-%         alpha = 0.95;
-%         mu2 = mu2*alpha;
-         
-         
-            g2Full = zeros(size(G2)+2); g2Full(2:end-1,2:end-1) = G2;
+%         g2Full = zeros(size(G2)+2); g2Full(2:end-1,2:end-1) = G2;
+        G2 = g2_local_square - lambda2 + 1/m2*(volCurr-volFracV2);
         
         % Choose time step for evolution based on CFL value
         dt = 1/max(abs(G2(:)));
@@ -199,7 +186,7 @@ for count = 1:500
         end
     end
     
-    fprintf('Volfrac1, Volfra2, iter, lambda1, lambda2, mu2,  %0.2f , %0.2f, %d, %0.2f , %0.2f, %0.2f \n', volFracV1,volFracV2, count, lambda1, lambda2, mu2);
+    fprintf('Volfrac1, Volfra2, iter, lambda1, lambda2, %0.2f , %0.2f, %d, %0.2f , %0.2f \n', volFracV1,volFracV2, count, lambda1, lambda2);
     %[volFracV1,volFracV2, count, lambda1, lambda2]
     drawnow
     if recvid==1
