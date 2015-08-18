@@ -30,22 +30,23 @@ recvid = 0; % Record a video of the figure 1, record view, 1 = yes
 % Algorithm configurations
 % ------------------------
 
-mode = 1; % 1 = optimize only material, 2 optimize only topology, 3 = both
-nelx = 40; % number of elements in the x direction
-nely = 10; % number of elements in the y direction
+mode = 3; % 1 = optimize only material, 2 optimize only topology, 3 = both
+nelx = 20; % number of elements in the x direction
+nely = 12; % number of elements in the y direction
 v1 = 0.5; % amount of material 1 to allow where  1 = 100%
 v2 = 0.5; % amount of mateiral 2 to allow
 lambda1  = 0; % Set the lambda1 penalty/ lagrangian
 dampingLambda1 = 0.5;
 timestep = 0.1; % step size for vol fraction update, influenced by lambda1
 
+  dampingtopology = 0.5;
 lambda2 = -0.1; % set the lambda2 penality/lagrangian
 mu1 = 1; % set the penality term close to zero
 mu2 = 20; % set the second penality close to zero.
 omegaMin = 0.1; % set the minimum allowed vol fraction of material 1 (stronger)
 omegaMax = 0.9; % set the max allowed vol fraction of material 2 (weaker)
-alpha = 5; % set the term that influenes the smoothness of the vol fraction
-beta = 2; % set the perimeter regularization term.
+alpha = 0; % set the term that influenes the smoothness of the vol fraction
+beta = 0; % set the perimeter regularization term.
 
 
 if recvid==1
@@ -62,7 +63,8 @@ end
 % ------------------------------
 % Step 1
 % ------------------------------
-structure = ones(nely, nelx); % initialize the structure as the whole domain
+rM = 1;
+structure = ones(nely*rM, nelx*rM); % initialize the structure as the whole domain
 volFraction = structure*0.5; % volFraction(1:3:nely, 1:3:nelx) = 1; % initialize the volfraction composition
 [lsf] = reinit(structure); % make the lsf whic is the signed distance for the structure edge
 
@@ -104,7 +106,7 @@ for count = 1:500
     % --------------------
     % Run the FEA
     % --------------------
-    [U, g1_local_square,g2_local_square, volFracV1, volFracV2] =  FEALevelSet_2D(structure,lsf,volFraction,  doPlot, alpha,beta, count, mode); %#ok<ASGLU>
+    [U, g1_local_square,g2_local_square, volFracV1, volFracV2] =  FEALevelSet_2D(structure,lsf,volFraction,  doPlot, alpha,beta, count, mode, rM); %#ok<ASGLU>
     
     % --------------------
     % Update the volume fraction composition
@@ -113,9 +115,21 @@ for count = 1:500
         if(mod(count, 5) ==0)
            G1 = g1_local_square - lambda1 +1/(mu1)*(v1-volFracV1)^2;
            volFraction_proposedUpdate = volFraction+timestep*G1;
-           volFraction = max(min(volFraction_proposedUpdate,omegaMax),omegaMin);
            
+          
+           
+           volFraction = max(min(volFraction_proposedUpdate,omegaMax),omegaMin);           
            lambda1 =  lambda1 -1/(mu1)*(v1-volFracV1)*dampingLambda1;
+           
+            for i = 1:nelx
+                for j = 1:nely   
+                     structureLocal = structure(j,i);
+                    if(structureLocal == 0) % if void region
+                        % volFraction_proposedUpdate(j,i) = 0;  
+                        volFraction(j,i) =0;
+                    end
+               end
+           end
         end
     end
    
@@ -131,8 +145,8 @@ for count = 1:500
             
         else
                  G2 = g2_local_square-lambda2+1/(mu2)*(v2-volFracV2);
-                damping = 5;
-                lambda2 =  lambda2 -1/(mu2)*(v2-volFracV2)*damping;
+              
+                lambda2 =  lambda2 -1/(mu2)*(v2-volFracV2)*dampingtopology;
         end
 %         
       
@@ -171,22 +185,35 @@ for count = 1:500
 
 
                 lsf = lsf - dt*moveSlope;
-                else
+                elseif (1==1)
                     
                     dt = 0.1/max(abs(g2Full(:)));
                     % Evolve for total time stepLength * CFL value:
                     for i = 1:(10*stepLength)
                      % Calculate derivatives on the grid
-                     dpx = circshift(lsf,[0,1])-lsf;
-                     dmx = lsf - circshift(lsf,[0,+1]);
-                     dpy = circshift(lsf,[1,0]) - lsf;
-                     dmy = lsf - circshift(lsf,[-1,0]);
+                      dpx = circshift(lsf,[0,-1])-lsf;
+                     dmx = lsf - circshift(lsf,[0,1]);
+                     dpy = circshift(lsf,[-1,0]) - lsf;
+                     dmy = lsf - circshift(lsf,[1,0]);
                      % Update level set function using an upwind scheme 
                      lsf = lsf - dt * min(g2Full,0).* ...
                        sqrt( min(dmx,0).^2+max(dpx,0).^2+min(dmy,0).^2+max(dpy,0).^2 ) ...
                        - dt * max(g2Full,0) .*...
                        sqrt( max(dmx,0).^2+min(dpx,0).^2+max(dmy,0).^2+min(dpy,0).^2 );
                     end
+                elseif(1 == 0)
+                     diff_forward_x = circshift(lsf,[0,-1])-lsf;
+                    diff_backward_x = lsf - circshift(lsf,[0,1]);
+
+                    diff_forward_y = circshift(lsf,[-1,0])-lsf;
+                    diff_backward_y = lsf - circshift(lsf,[+1,0]);
+                    
+                    pNabla = (max(diff_backward_x,0).^2+min(diff_forward_x,0).^2 + max(diff_backward_y,0).^2 +min(diff_forward_y,0).^2).^(1/2);
+                    nNabla = (max(diff_forward_x,0).^2+min(diff_backward_x,0).^2 + max(diff_forward_y,0).^2 + min(diff_backward_y,0).^2).^(1/2);
+                    
+                    lsf = lsf - dt*(max(g2Full, 0).*pNabla+min(g2Full,0).*nNabla);
+                    
+                    
                 end
 
         
@@ -194,7 +221,7 @@ for count = 1:500
         structure = strucFull2(2:end-1,2:end-1);
         
      
-        if(mod(count, 5) ==0)
+        if(mod(count, 2) ==0)
             [lsf] = reinit(structure)   ;
         end
     end

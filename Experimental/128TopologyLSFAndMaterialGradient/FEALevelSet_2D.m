@@ -1,6 +1,7 @@
 % Copyright Anthony Garland 2015
 % ------------------------
-function [U, g1_local_square,g2_local_square, volFracV1, volFracV2] = FEALevelSet_2D(structure,lsf, volFracArray,  doplot, alphaPenalty,beta, countMainLoop, mode)
+function [U, g1_local_square,g2_local_square, volFracV1, volFracV2] = FEALevelSet_2D(structure,lsf, volFracArray,  doplot, ...
+    alphaPenalty,beta, countMainLoop, mode, resolutionMultiplier)
 % structure - shows the structure's boundary by a binary relationship, 0 = void, 1 = material
 % lsf - is the level set function. I need this level set function so that I
 % can calcualte the normal direction and mean curvature
@@ -33,8 +34,7 @@ plotNormalDirection = doplot;
 
 plotSensitivity = doplot;
 
-
-
+rM = resolutionMultiplier;
 subplotY = 2; % Suplot matrix setup
 subplotX = 2;
 subplotCount = 1;
@@ -60,6 +60,9 @@ elseif (mode ==3)
 end
 
 [nely,nelx] = size(volFracArray);
+% nely = nely/rM;
+% nelx = nelx/rM;
+
 h = nely;
 L = nelx;
 
@@ -112,6 +115,8 @@ gy_lsf = gy_lsf./denominator_g_lsf;
 curvature_lsf = divergence(gx_lsf,gy_lsf); % calculate the divergence of the normal direction to get the curvature
 curvature_lsf(isnan(curvature_lsf)) = 0 ; % remove the NaN
 curvature_lsf = curvature_lsf(2:end-1,2:end-1);
+
+curvature_lsf = curvature_lsf*0+1;
 
 % if (plotNormalDirection == 1)
 %      figure(1)
