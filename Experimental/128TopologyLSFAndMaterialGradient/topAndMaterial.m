@@ -24,22 +24,22 @@ subplotY = 3; % number of subplots in the Y direction
 subplotCount = 1; % current subplot count (do not modify)
 doPlot = 0; % Controls plotting or not
 plotStructure = doPlot;
-recvid = 0; % Record a video of the figure 1, record view, 1 = yes
+recvid = 1; % Record a video of the figure 1, record view, 1 = yes
 
 % ------------------------
 % Algorithm configurations
 % ------------------------
 
 mode = 3; % 1 = optimize only material, 2 optimize only topology, 3 = both
-nelx = 20; % number of elements in the x direction
-nely = 12; % number of elements in the y direction
+nelx = 50; % number of elements in the x direction
+nely = 25; % number of elements in the y direction
 v1 = 0.5; % amount of material 1 to allow where  1 = 100%
 v2 = 0.5; % amount of mateiral 2 to allow
 lambda1  = 0; % Set the lambda1 penalty/ lagrangian
-dampingLambda1 = 0.5;
+dampingLambda1 = 0.9; % 0.1
 timestep = 0.1; % step size for vol fraction update, influenced by lambda1
 
-  dampingtopology = 0.5;
+  dampingtopology = 0.9; %0.5
 lambda2 = -0.1; % set the lambda2 penality/lagrangian
 mu1 = 1; % set the penality term close to zero
 mu2 = 20; % set the second penality close to zero.
@@ -66,7 +66,7 @@ end
 rM = 1;
 structure = ones(nely*rM, nelx*rM); % initialize the structure as the whole domain
 volFraction = structure*0.5; % volFraction(1:3:nely, 1:3:nelx) = 1; % initialize the volfraction composition
-[lsf] = reinit(structure); % make the lsf whic is the signed distance for the structure edge
+
 
 
 if mode ==1 % optimize material distribution only, 50%
@@ -76,10 +76,19 @@ elseif mode ==2 % optimize the topology only, 50% material 1
     v1 = 0;
     v2 = 0.5;
     volFraction = structure*0;
+   
 elseif mode ==3
-    v1 = 0.3;
-    v2 = 0.3;
+    v1 = 0.15;
+    v2 = 0.15;
+    
+    for j = 1:2:nely
+       for i = 1:2:nelx
+           structure(j,i)  = -1;
+       end
+   end
 end
+
+[lsf] = reinit(structure); % make the lsf whic is the signed distance for the structure edge
 
 % plotting the structure
 if(plotStructure ==1)
@@ -102,34 +111,41 @@ end
 % method to find the displacement u. Calculate the sensitivity G1.
 % Update omega according to Eq. (26).
 
-for count = 1:500
+FEAcount = 1;
+count = 0;
+while(FEAcount<1000)
+    count = count +1;
     % --------------------
     % Run the FEA
     % --------------------
-    [U, g1_local_square,g2_local_square, volFracV1, volFracV2] =  FEALevelSet_2D(structure,lsf,volFraction,  doPlot, alpha,beta, count, mode, rM); %#ok<ASGLU>
+   % [U, g1_local_square,g2_local_square, volFracV1, volFracV2] =  FEALevelSet_2D(structure,lsf,volFraction,  doPlot, alpha,beta, count, mode, rM); %#ok<ASGLU>
     
     % --------------------
     % Update the volume fraction composition
     % --------------------
     if (mode ==1 || mode ==3)
-        if(mod(count, 5) ==0)
-           G1 = g1_local_square - lambda1 +1/(mu1)*(v1-volFracV1)^2;
-           volFraction_proposedUpdate = volFraction+timestep*G1;
-           
-          
-           
-           volFraction = max(min(volFraction_proposedUpdate,omegaMax),omegaMin);           
-           lambda1 =  lambda1 -1/(mu1)*(v1-volFracV1)*dampingLambda1;
-           
-            for i = 1:nelx
-                for j = 1:nely   
-                     structureLocal = structure(j,i);
-                    if(structureLocal == 0) % if void region
-                        % volFraction_proposedUpdate(j,i) = 0;  
-                        volFraction(j,i) =0;
+        if(mod(count, 3) ==0)
+            for subcount1 = 1:2
+                FEAcount= FEAcount+1;
+                [U, g1_local_square,g2_local_square, volFracV1, volFracV2] =  FEALevelSet_2D(structure,lsf,volFraction,  doPlot, alpha,beta, FEAcount, mode, rM); %#ok<ASGLU>
+                   G1 = g1_local_square - lambda1 +1/(mu1)*(v1-volFracV1)^2;
+                   volFraction_proposedUpdate = volFraction+timestep*G1;
+
+
+
+                   volFraction = max(min(volFraction_proposedUpdate,omegaMax),omegaMin);           
+                   lambda1 =  lambda1 -1/(mu1)*(v1-volFracV1)*dampingLambda1;
+
+                    for i = 1:nelx
+                        for j = 1:nely   
+                             structureLocal = structure(j,i);
+                            if(structureLocal == 0) % if void region
+                                % volFraction_proposedUpdate(j,i) = 0;  
+                                volFraction(j,i) =0;
+                            end
+                       end
                     end
-               end
-           end
+            end
         end
     end
    
@@ -139,94 +155,94 @@ for count = 1:500
     % Calculate the propogation of the levelset boundary
     % --------------------
     if (mode ==2 || mode ==3)   
-        if (count < 1)
-            G2 = g2_local_square+1/(mu2)*(v2-volFracV2);
-         
-            
-        else
-                 G2 = g2_local_square-lambda2+1/(mu2)*(v2-volFracV2);
-              
-                lambda2 =  lambda2 -1/(mu2)*(v2-volFracV2)*dampingtopology;
-        end
-%         
-      
-%         G2 = -g2_local_square - lambda2 + 1/mu2*(v2-volFracV2)^2;
-%         lambda2 = lambda2 - 10/mu2 * (v2 - volFracV2)^2;
-%         alpha = 0.95;
-%         mu2 = mu2*alpha;
-         
-         
-            g2Full = zeros(size(G2)+2); g2Full(2:end-1,2:end-1) = G2;
-        
-        % Choose time step for evolution based on CFL value
-        dt = 1/max(abs(G2(:)));
-        stepLength = 1;
-        % Evolve for total time stepLength * CFL value:
-        %for i = 1:(15*stepLength)
-                % Calculate derivatives on the grid
-                if 1==1
-                diff_forward_x = circshift(lsf,[0,1])-lsf;
-                diff_backward_x = lsf - circshift(lsf,[0,-1]);
-
-                diff_forward_y = circshift(lsf,[1,0])-lsf;
-                diff_backward_y = lsf - circshift(lsf,[-1,0]);
-
-                positiveGradientUpwind = (max(diff_backward_x,0).^2 +...
-                    min(diff_forward_x,0).^2 + ...
-                    max(diff_backward_y,0).^2 +...
-                    min(diff_forward_y,0).^2 ).^(1/2);
-
-                negGradientUpwind = (min(diff_backward_x,0).^2 +...
-                    max(diff_forward_x,0).^2 + ...
-                    min(diff_backward_y,0).^2 +...
-                    max(diff_forward_y,0).^2 ).^(1/2);
-
-                moveSlope = (max(-g2Full,0).*positiveGradientUpwind + min(-g2Full,0).*negGradientUpwind);
-
-
-                lsf = lsf - dt*moveSlope;
-                elseif (1==1)
-                    
-                    dt = 0.1/max(abs(g2Full(:)));
-                    % Evolve for total time stepLength * CFL value:
-                    for i = 1:(10*stepLength)
-                     % Calculate derivatives on the grid
-                      dpx = circshift(lsf,[0,-1])-lsf;
-                     dmx = lsf - circshift(lsf,[0,1]);
-                     dpy = circshift(lsf,[-1,0]) - lsf;
-                     dmy = lsf - circshift(lsf,[1,0]);
-                     % Update level set function using an upwind scheme 
-                     lsf = lsf - dt * min(g2Full,0).* ...
-                       sqrt( min(dmx,0).^2+max(dpx,0).^2+min(dmy,0).^2+max(dpy,0).^2 ) ...
-                       - dt * max(g2Full,0) .*...
-                       sqrt( max(dmx,0).^2+min(dpx,0).^2+max(dmy,0).^2+min(dpy,0).^2 );
-                    end
-                elseif(1 == 0)
-                     diff_forward_x = circshift(lsf,[0,-1])-lsf;
-                    diff_backward_x = lsf - circshift(lsf,[0,1]);
-
-                    diff_forward_y = circshift(lsf,[-1,0])-lsf;
-                    diff_backward_y = lsf - circshift(lsf,[+1,0]);
-                    
-                    pNabla = (max(diff_backward_x,0).^2+min(diff_forward_x,0).^2 + max(diff_backward_y,0).^2 +min(diff_forward_y,0).^2).^(1/2);
-                    nNabla = (max(diff_forward_x,0).^2+min(diff_backward_x,0).^2 + max(diff_forward_y,0).^2 + min(diff_backward_y,0).^2).^(1/2);
-                    
-                    lsf = lsf - dt*(max(g2Full, 0).*pNabla+min(g2Full,0).*nNabla);
-                    
-                    
-                end
-
-        
-        strucFull2 = (lsf>0);
-        structure = strucFull2(2:end-1,2:end-1);
-        
      
-        if(mod(count, 2) ==0)
-            [lsf] = reinit(structure)   ;
-        end
+         for subcount2 = 1:7
+             FEAcount= FEAcount+1;
+                   [U, g1_local_square,g2_local_square, volFracV1, volFracV2] =  FEALevelSet_2D(structure,lsf,volFraction,  doPlot, alpha,beta, FEAcount, mode, rM); %#ok<ASGLU>
+                     G2 = g2_local_square-lambda2+1/(mu2)*(v2-volFracV2);
+
+                    lambda2 =  lambda2 -1/(mu2)*(v2-volFracV2)*dampingtopology;
+
+    %         
+
+    %         G2 = -g2_local_square - lambda2 + 1/mu2*(v2-volFracV2)^2;
+    %         lambda2 = lambda2 - 10/mu2 * (v2 - volFracV2)^2;
+    %         alpha = 0.95;
+    %         mu2 = mu2*alpha;
+
+
+                g2Full = zeros(size(G2)+2); g2Full(2:end-1,2:end-1) = G2;
+
+            % Choose time step for evolution based on CFL value
+            dt = 1/max(abs(G2(:)));
+            stepLength = 1;
+            % Evolve for total time stepLength * CFL value:
+            %for i = 1:(15*stepLength)
+                    % Calculate derivatives on the grid
+                    if 1==1
+                    diff_forward_x = circshift(lsf,[0,1])-lsf;
+                    diff_backward_x = lsf - circshift(lsf,[0,-1]);
+
+                    diff_forward_y = circshift(lsf,[1,0])-lsf;
+                    diff_backward_y = lsf - circshift(lsf,[-1,0]);
+
+                    positiveGradientUpwind = (max(diff_backward_x,0).^2 +...
+                        min(diff_forward_x,0).^2 + ...
+                        max(diff_backward_y,0).^2 +...
+                        min(diff_forward_y,0).^2 ).^(1/2);
+
+                    negGradientUpwind = (min(diff_backward_x,0).^2 +...
+                        max(diff_forward_x,0).^2 + ...
+                        min(diff_backward_y,0).^2 +...
+                        max(diff_forward_y,0).^2 ).^(1/2);
+
+                    moveSlope = (max(-g2Full,0).*positiveGradientUpwind + min(-g2Full,0).*negGradientUpwind);
+
+
+                    lsf = lsf - dt*moveSlope;
+                    elseif (1==1)
+
+                        dt = 0.1/max(abs(g2Full(:)));
+                        % Evolve for total time stepLength * CFL value:
+                        for i = 1:(10*stepLength)
+                         % Calculate derivatives on the grid
+                          dpx = circshift(lsf,[0,-1])-lsf;
+                         dmx = lsf - circshift(lsf,[0,1]);
+                         dpy = circshift(lsf,[-1,0]) - lsf;
+                         dmy = lsf - circshift(lsf,[1,0]);
+                         % Update level set function using an upwind scheme 
+                         lsf = lsf - dt * min(g2Full,0).* ...
+                           sqrt( min(dmx,0).^2+max(dpx,0).^2+min(dmy,0).^2+max(dpy,0).^2 ) ...
+                           - dt * max(g2Full,0) .*...
+                           sqrt( max(dmx,0).^2+min(dpx,0).^2+max(dmy,0).^2+min(dpy,0).^2 );
+                        end
+                    elseif(1 == 0)
+                         diff_forward_x = circshift(lsf,[0,-1])-lsf;
+                        diff_backward_x = lsf - circshift(lsf,[0,1]);
+
+                        diff_forward_y = circshift(lsf,[-1,0])-lsf;
+                        diff_backward_y = lsf - circshift(lsf,[+1,0]);
+
+                        pNabla = (max(diff_backward_x,0).^2+min(diff_forward_x,0).^2 + max(diff_backward_y,0).^2 +min(diff_forward_y,0).^2).^(1/2);
+                        nNabla = (max(diff_forward_x,0).^2+min(diff_backward_x,0).^2 + max(diff_forward_y,0).^2 + min(diff_backward_y,0).^2).^(1/2);
+
+                        lsf = lsf - dt*(max(g2Full, 0).*pNabla+min(g2Full,0).*nNabla);
+
+
+                    end
+
+
+            strucFull2 = (lsf>0);
+            structure = strucFull2(2:end-1,2:end-1);
+
+
+            if(mod(count, 2) ==0)
+                [lsf] = reinit(structure)   ;
+            end
+         end
     end
     
-    fprintf('Volfrac1, Volfra2, iter, lambda1, lambda2, mu2,  %0.2f , %0.2f, %d, %0.2f , %0.2f, %0.2f \n', volFracV1,volFracV2, count, lambda1, lambda2, mu2);
+    fprintf('Volfrac1, Volfra2, feacount, lambda1, lambda2, mu2,  %0.2f , %0.2f, %d, %0.2f , %0.2f, %0.2f \n', volFracV1,volFracV2, FEAcount, lambda1, lambda2, mu2);
     %[volFracV1,volFracV2, count, lambda1, lambda2]
     drawnow
     if recvid==1
@@ -277,5 +293,8 @@ end
 %       lsf  
         
     end
+
+
+
 end
 

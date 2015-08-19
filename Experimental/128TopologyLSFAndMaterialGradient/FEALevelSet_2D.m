@@ -16,6 +16,7 @@ function [U, g1_local_square,g2_local_square, volFracV1, volFracV2] = FEALevelSe
 
 % 2D grid with a 3D function 
 % http://www.mathworks.com/help/matlab/ref/interp2.html
+recvid = 1; % Record a video of the figure 1, record view, 1 = yes
 
 iterationsPerPlot = 10;
 
@@ -33,6 +34,14 @@ plotLSF = doplot;
 plotNormalDirection = doplot;
 
 plotSensitivity = doplot;
+
+% if recvid==1
+%     vidObj = VideoWriter('results.avi');    %Prepare the new file for video
+%     vidObj.FrameRate = 5;
+%     vidObj.Quality = 100;
+%     open(vidObj);
+%     vid=1;
+% end
 
 rM = resolutionMultiplier;
 subplotY = 2; % Suplot matrix setup
@@ -687,6 +696,17 @@ if(plotSensitivity ==1 && mod(countMainLoop,iterationsPerPlot) ==0)
           xlim([0,L])
          ylim([0,h])
 end
+
+%  if ( recvid==1 &&  mod(countMainLoop,iterationsPerPlot) ==0)
+%         F(vid) = getframe(figure(1)); %#ok<AGROW> %Get frame of the topology in each iteration
+%         writeVideo(vidObj,F(vid)); %Save the topology in the video
+%         vid=vid+1;
+%  end
+%  
+% if(countMainLoop >=499 &&  recvid==1) 
+% 
+%     close(vidObj);  %close video
+% end
 
 
 end
