@@ -30,7 +30,7 @@ recvid = 1; % Record a video of the figure 1, record view, 1 = yes
 % Algorithm configurations
 % ------------------------
 
-mode = 1; % 1 = optimize only material, 2 optimize only topology, 3 = both
+mode = 3; % 1 = optimize only material, 2 optimize only topology, 3 = both
 nelx = 40; % number of elements in the x direction
 nely = 18; % number of elements in the y direction
 v1 = 0.5; % amount of material 1 to allow where  1 = 100%
@@ -40,7 +40,8 @@ dampingLambda1 = 0.5; % 0.1
 g1Multiplier = 20;
 timestep = 0.1; % step size for vol fraction update, influenced by lambda1
 
-  dampingtopology = 1; %0.5
+  dampingtopology = 5; %0.5
+ g2Multiplier = 1;
 lambda2 = -0.1; % set the lambda2 penality/lagrangian
 mu1 = 5; % set the penality term close to zero
 mu2 = 5; % set the second penality close to zero.
@@ -121,7 +122,7 @@ end
 
 FEAcount = 1;
 count = 0;
-while(FEAcount<1000)
+while(FEAcount<150)
     count = count +1;
     % --------------------
     % Run the FEA
@@ -155,10 +156,16 @@ while(FEAcount<1000)
                              structureLocal = structure(j,i);
                             if(structureLocal == 0) % if void region
                                 % volFraction_proposedUpdate(j,i) = 0;  
-                                
-                                volFraction(j,i) =infill;
+                                 volFraction(j,i) =0;
+                                % volFraction(j,i) =infill;
                             end
                        end
+                    end
+                    
+                    if recvid==1
+                        F(vid) = getframe(figure(1)); %#ok<AGROW> %Get frame of the topology in each iteration
+                        writeVideo(vidObj,F(vid)); %Save the topology in the video
+                        vid=vid+1;
                     end
             end
         end
@@ -177,7 +184,7 @@ while(FEAcount<1000)
                    fprintf('Volfrac1, Volfra2, feacount, lambda1, lambda2, mu2,  %0.2f , %0.2f, %d, %0.2f , %0.2f, %0.2f \n', volFracV1,volFracV2, FEAcount, lambda1, lambda2, mu2);
                      
                      totalVolLocal = volFracV1+volFracV2;
-                      G2 = g2_local_square-lambda2+1/(mu2)*(totalVol-totalVolLocal);
+                      G2 = g2_local_square* g2Multiplier -lambda2+1/(mu2)*(totalVol-totalVolLocal);
 
                     lambda2 =  lambda2 -1/(mu2)*(totalVol-totalVolLocal)*dampingtopology;
 
@@ -254,8 +261,14 @@ while(FEAcount<1000)
             structure = strucFull2(2:end-1,2:end-1);
 
 
-            if(mod(count, 2) ==0)
+            if(mod(count, 5) ==0)
                 [lsf] = reinit(structure)   ;
+            end
+            
+            if recvid==1
+                F(vid) = getframe(figure(1)); %#ok<AGROW> %Get frame of the topology in each iteration
+                writeVideo(vidObj,F(vid)); %Save the topology in the video
+                vid=vid+1;
             end
          end
     end
@@ -263,11 +276,7 @@ while(FEAcount<1000)
     fprintf('Volfrac1, Volfra2, feacount, lambda1, lambda2, mu2,  %0.2f , %0.2f, %d, %0.2f , %0.2f, %0.2f \n', volFracV1,volFracV2, FEAcount, lambda1, lambda2, mu2);
     %[volFracV1,volFracV2, count, lambda1, lambda2]
    
-    if recvid==1
-        F(vid) = getframe(figure(1)); %#ok<AGROW> %Get frame of the topology in each iteration
-        writeVideo(vidObj,F(vid)); %Save the topology in the video
-        vid=vid+1;
-    end
+    
 end
 
 
@@ -297,8 +306,8 @@ end
         if(strucFull <=0)
             strucFull = -0.1;
         end
-        lsf = bwdist(~strucFull);
-        lsfn = -bwdist(strucFull);
+        lsf = bwdist(~strucFull)*0.5;
+%         lsfn = -bwdist(strucFull);
         
 %         [y,x]=size(lsf);
 %         for i = 1: x

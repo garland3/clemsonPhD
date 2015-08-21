@@ -18,7 +18,7 @@ function [U, g1_local_square,g2_local_square, volFracV1, volFracV2] = FEALevelSe
 % http://www.mathworks.com/help/matlab/ref/interp2.html
 recvid = 1; % Record a video of the figure 1, record view, 1 = yes
 
-iterationsPerPlot = 5;
+iterationsPerPlot = 1;
 
 doplotDisplacement = doplot; % Set to 1 to show. Runs much slower
 plotStress = doplot; % Set to 1 to plot the stress graphs
@@ -42,6 +42,8 @@ plotSensitivity = doplot;
 %     open(vidObj);
 %     vid=1;
 % end
+
+ g2Multiplier = 100;
 
 rM = resolutionMultiplier;
 subplotY = 2; % Suplot matrix setup
@@ -173,6 +175,7 @@ volFracV2 = 0;
     figure(1)
     subplot(subplotX,subplotY,subplotCount); subplotCount=subplotCount+1;
    imagesc(lsf); axis equal; axis tight; axis off;
+    set(gca,'YDir','normal'); % http://www.mathworks.com/matlabcentral/answers/94170-how-can-i-reverse-the-y-axis-when-i-use-the-image-or-imagesc-function-to-display-an-image-in-matlab
    colormap winter
     colorbar 
    % caxis([-1 1 ]);
@@ -584,17 +587,22 @@ strainEnergy = 0;
      vonM = sqrt(stress(1)^2  +   stress(2)^2 -  stress(1)*stress(2)  +   3*(stress(3))^2);
      vonM_stored(e) = vonM;    
      
+     localStrainE = strain'*stress;
+    
+     strainEnergy = strainEnergy+localStrainE;
+     
+     
+     
      % G1_local
      g1_local = alphaPenalty*LaplaceVolFrac_atElementsArray(e)+ strain'*(Aomega*(strain));
      g1_localstored(e) = g1_local;     
     
      
-     localStrainE = strain'*stress;
-     strainEnergy = strainEnergy+localStrainE;
+     
      
       % G2_local
      g2_local = localStrainE-alphaPenalty*GradientSquredVolFact_atElementsArray(e) - beta*curvature_lsf_atElements(e);
-     g2_localstored(e) = g2_local;
+     g2_localstored(e) = g2_local*g2Multiplier;
              
     % Store the transpose, to make things work nice. 
     stress_stored(e,:) = stress';
@@ -672,6 +680,7 @@ for i = 1:nely
     end
 end
 
+[g2_local_square] = conv2(padarray(g2_local_square,[1,1],'replicate'),1/6*[0 1 0; 1 2 1; 0 1 0],'valid');
 
 if(plotSensitivity ==1 && mod(countMainLoop,iterationsPerPlot) ==0)   
     figure(1)
