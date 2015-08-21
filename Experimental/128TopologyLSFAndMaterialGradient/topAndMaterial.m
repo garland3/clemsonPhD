@@ -30,7 +30,7 @@ recvid = 1; % Record a video of the figure 1, record view, 1 = yes
 % Algorithm configurations
 % ------------------------
 
-mode = 3; % 1 = optimize only material, 2 optimize only topology, 3 = both
+mode = 1; % 1 = optimize only material, 2 optimize only topology, 3 = both
 nelx = 40; % number of elements in the x direction
 nely = 18; % number of elements in the y direction
 v1 = 0.5; % amount of material 1 to allow where  1 = 100%
@@ -139,14 +139,16 @@ while(FEAcount<1000)
                    
                 totalVolLocal = volFracV1+ volFracV2;
                
-                percentV1Local = v1/totalVol*100;
-                G1 = g1_local_square*g1Multiplier - lambda1 +1/(mu1)*(v1-volFracV1)^2;
+                percentV1Local = volFracV1/totalVolLocal*100;
+%                 G1 = g1_local_square*g1Multiplier - lambda1 +1/(mu1)*(v1-volFracV1)^2;
+                  G1 = g1_local_square*g1Multiplier - lambda1 +1/(mu1)*(percentV1-percentV1Local);
                    volFraction_proposedUpdate = volFraction+timestep*G1;
 
 
 
                    volFraction = max(min(volFraction_proposedUpdate,omegaMax),omegaMin);           
-                   lambda1 =  lambda1 -1/(mu1)*(v1-volFracV1)*dampingLambda1;
+%                    lambda1 =  lambda1 -1/(mu1)*(v1-volFracV1)*dampingLambda1;
+                    lambda1 =  lambda1 -1/(mu1)*(percentV1-percentV1Local)*dampingLambda1;
 
                     for i = 1:nelx
                         for j = 1:nely   
