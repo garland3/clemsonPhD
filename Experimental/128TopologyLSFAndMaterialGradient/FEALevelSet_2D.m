@@ -18,7 +18,7 @@ function [U, g1_local_square,g2_local_square, volFracV1, volFracV2] = FEALevelSe
 % http://www.mathworks.com/help/matlab/ref/interp2.html
 recvid = 1; % Record a video of the figure 1, record view, 1 = yes
 
-iterationsPerPlot = 1;
+iterationsPerPlot = 5;
 
 doplotDisplacement = doplot; % Set to 1 to show. Runs much slower
 plotStress = doplot; % Set to 1 to plot the stress graphs

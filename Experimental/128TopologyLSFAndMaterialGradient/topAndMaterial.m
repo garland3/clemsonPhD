@@ -24,7 +24,7 @@ subplotY = 3; % number of subplots in the Y direction
 subplotCount = 1; % current subplot count (do not modify)
 doPlot = 0; % Controls plotting or not
 plotStructure = doPlot;
-recvid = 1; % Record a video of the figure 1, record view, 1 = yes
+recvid = 0; % Record a video of the figure 1, record view, 1 = yes
 
 % ------------------------
 % Algorithm configurations
@@ -50,8 +50,10 @@ omegaMax = 0.9; % set the max allowed vol fraction of material 2 (weaker)
 alpha = 0; % set the term that influenes the smoothness of the vol fraction
 beta = 0; % set the perimeter regularization term.
 
-stepsVolfraction = 5;
-stepsTopology = 5;
+stepsVolfraction = 15;
+stepsTopology = 15;
+
+maxFEAcalls = 250;
 
 
 if recvid==1
@@ -83,8 +85,8 @@ elseif mode ==2 % optimize the topology only, 50% material 1
     volFraction = structure*0;
    
 elseif mode ==3
-    v1 = 0.15;
-    v2 = 0.15;
+    v1 = 0.1;
+    v2 = 0.29;
     
     for j = 1:2:nely
        for i = 1:2:nelx
@@ -122,7 +124,7 @@ end
 
 FEAcount = 1;
 count = 0;
-while(FEAcount<150)
+while(FEAcount<maxFEAcalls)
     count = count +1;
     % --------------------
     % Run the FEA
@@ -138,6 +140,7 @@ while(FEAcount<150)
                 FEAcount= FEAcount+1;
                 [U, g1_local_square,g2_local_square, volFracV1, volFracV2] =  FEALevelSet_2D(structure,lsf,volFraction,  doPlot, alpha,beta, FEAcount, mode, rM); %#ok<ASGLU>
                    
+               totalStainE = sum(g2_local_square(:));
                 totalVolLocal = volFracV1+ volFracV2;
                
                 percentV1Local = volFracV1/totalVolLocal*100;
@@ -167,6 +170,10 @@ while(FEAcount<150)
                         writeVideo(vidObj,F(vid)); %Save the topology in the video
                         vid=vid+1;
                     end
+                    
+                     fprintf('Volfrac1, Volfra2, feacount, lambda1, lambda2, strainE,  %0.2f , %0.2f, %d, %0.2f , %0.2f, %0.2f \n', volFracV1,volFracV2, FEAcount, lambda1, lambda2, totalStainE);
+                    
+                    
             end
         end
     end
@@ -181,7 +188,9 @@ while(FEAcount<150)
          for subcount2 = 1:stepsTopology
              FEAcount= FEAcount+1;
                    [U, g1_local_square,g2_local_square, volFracV1, volFracV2] =  FEALevelSet_2D(structure,lsf,volFraction,  doPlot, alpha,beta, FEAcount, mode, rM); %#ok<ASGLU>
-                   fprintf('Volfrac1, Volfra2, feacount, lambda1, lambda2, mu2,  %0.2f , %0.2f, %d, %0.2f , %0.2f, %0.2f \n', volFracV1,volFracV2, FEAcount, lambda1, lambda2, mu2);
+                  
+                    totalStainE = sum(g2_local_square(:));
+                      fprintf('Volfrac1, Volfra2, feacount, lambda1, lambda2, strainE,  %0.2f , %0.2f, %d, %0.2f , %0.2f, %0.2f \n', volFracV1,volFracV2, FEAcount, lambda1, lambda2, totalStainE);
                      
                      totalVolLocal = volFracV1+volFracV2;
                       G2 = g2_local_square* g2Multiplier -lambda2+1/(mu2)*(totalVol-totalVolLocal);
@@ -273,7 +282,7 @@ while(FEAcount<150)
          end
     end
     
-    fprintf('Volfrac1, Volfra2, feacount, lambda1, lambda2, mu2,  %0.2f , %0.2f, %d, %0.2f , %0.2f, %0.2f \n', volFracV1,volFracV2, FEAcount, lambda1, lambda2, mu2);
+    %fprintf('Volfrac1, Volfra2, feacount, lambda1, lambda2, mu2,  %0.2f , %0.2f, %d, %0.2f , %0.2f, %0.2f \n', volFracV1,volFracV2, FEAcount, lambda1, lambda2, mu2);
     %[volFracV1,volFracV2, count, lambda1, lambda2]
    
     
