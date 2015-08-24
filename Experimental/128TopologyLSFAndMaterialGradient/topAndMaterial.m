@@ -24,7 +24,7 @@ subplotY = 3; % number of subplots in the Y direction
 subplotCount = 1; % current subplot count (do not modify)
 doPlot = 0; % Controls plotting or not
 plotStructure = doPlot;
-recvid = 0; % Record a video of the figure 1, record view, 1 = yes
+recvid = 1; % Record a video of the figure 1, record view, 1 = yes
 
 % ------------------------
 % Algorithm configurations

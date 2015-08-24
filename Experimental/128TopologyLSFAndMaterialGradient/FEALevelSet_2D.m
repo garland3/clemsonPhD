@@ -5,7 +5,7 @@ function [U, g1_local_square,g2_local_square, volFracV1, volFracV2] = FEALevelSe
 % structure - shows the structure's boundary by a binary relationship, 0 = void, 1 = material
 % lsf - is the level set function. I need this level set function so that I
 % can calcualte the normal direction and mean curvature
-% volFracArray - tells the volume fraction at each element in the domain
+% volFracArray - tells the volu me fraction at each element in the domain
 % doplot - indicates if we should plot or not
 % alphaPenalty - indicates the strength of the alpha penalty function which
 % penalizes the volume fraction to encourage smoothness
@@ -35,6 +35,12 @@ plotNormalDirection = doplot;
 
 plotSensitivity = doplot;
 
+plotStrucAndGrad = doplot;
+
+showFinalResultsMode = 1; % show final results mode shows the struct and gradient in 1 subplot. 
+
+
+
 % if recvid==1
 %     vidObj = VideoWriter('results.avi');    %Prepare the new file for video
 %     vidObj.FrameRate = 5;
@@ -61,10 +67,24 @@ elseif( mode ==2) % optimize topology only
     plotStress = 1; % Set to 1 to plot the stress graphs
     plotSensitivity = 1; % override
 elseif (mode ==3)
-    plotStructure = 1;
-    plotLSF = 1;
-    plotStress = 1;
-     plotVolFraction = 1; % override
+    
+     
+     if showFinalResultsMode ~= 1
+         plotStructure = 1;
+        plotLSF = 1;
+        plotStress = 1;
+         plotVolFraction = 1; % override
+         
+         
+     else
+         subplotY = 1; % Suplot matrix setup
+         subplotX = 1;
+         
+         plotStrucAndGrad = 1;
+         
+         
+     end
+         
     
     
     
@@ -153,16 +173,20 @@ E_atElement = volFracArray;
 volFracV1= 0;
 volFracV2 = 0;
 
+structGradArray = volFracArray;
+
  for i = 1:nelx
     for j = 1:nely           
          structureLocal = structure(j,i);
             if(structureLocal == 0) % if void region
-                E_atElement(j,i) = E_empty;                     
+                E_atElement(j,i) = E_empty;   
+                structGradArray(j,i) = Enylon-100;
             else % if a filled region
                   volFraclocal = volFracArray(j,i);
                   volFracV1 = volFracV1 +volFraclocal; % sum up the total use of material 1 (PLA)
                   volFracV2 = volFracV2 + (1- volFraclocal); % sum up the total use of material 2 (Nylon)
                  E_atElement(j,i)= Epla*volFraclocal+(1-volFraclocal)*Enylon;  % simple mixture ratio 
+                  structGradArray(j,i) = E_atElement(j,i);
             end     
     end
  end    
@@ -180,7 +204,49 @@ volFracV2 = 0;
     colorbar 
    % caxis([-1 1 ]);
    title('LSF')
-end
+ end
+
+ 
+ % -------------------
+ % plot the structure and the gradient
+ % -------------------
+ if plotStrucAndGrad == 1
+    figure(1)
+    subplot(subplotX,subplotY,subplotCount); subplotCount=subplotCount+1;
+   imagesc(structGradArray); axis equal; axis tight; axis off;
+    set(gca,'YDir','normal'); % http://www.mathworks.com/matlabcentral/answers/94170-how-can-i-reverse-the-y-axis-when-i-use-the-image-or-imagesc-function-to-display-an-image-in-matlab
+   
+   
+   % caxis([-1 1 ]);
+   title('Structure and Elastic Mod Gradient')
+   
+   colormap winter
+       %  cmap = colormap;
+        rgbSteps = Epla- Enylon +1 ; % plus 1 for 1 below the Enylon for void
+        
+       % [cmin,cmax] = caxis;
+       caxis([Enylon-100,Epla])
+        map = colormap; % current colormap
+        
+        %map = [colormap(1,1):1/rgbSteps:colormap(1:-1)
+         for zz =    1:rgbSteps
+              map(1,:) = [1,1,1];
+              map(zz,:) = [0,       zz*7/(8*rgbSteps)+1/8,          0.5];
+         end
+        
+        colormap(map)
+        
+        
+%         
+%         RgbValuesvalues = 0.5:1/rgbSteps:1;
+%         
+%         cmap = [RgbValuesvalues' RgbValuesvalues' RgbValuesvalues'*0 ];
+%        
+%         cmap(1,:) = 1;
+%         colormap(cmap)
+     
+      colorbar 
+ end
 
 % --------------------------
 % Plot Elastic mod
