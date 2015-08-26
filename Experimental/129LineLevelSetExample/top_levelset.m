@@ -102,7 +102,7 @@ for elx = 1:nelx
  end
 end
 
-Save
+Save;
 % Define loads and supports - Bridge:
 F(2*(round(nelx/2)+1)*(nely+1),1) = 1;
 fixeddofs = [2*(nely+1)-1:2*(nely+1),2*(nelx+1)*(nely+1)-1:2*(nelx+1)*(nely+1)];

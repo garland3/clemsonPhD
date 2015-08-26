@@ -24,15 +24,15 @@ subplotY = 3; % number of subplots in the Y direction
 subplotCount = 1; % current subplot count (do not modify)
 doPlot = 0; % Controls plotting or not
 plotStructure = doPlot;
-recvid = 1; % Record a video of the figure 1, record view, 1 = yes
+recvid = 0; % Record a video of the figure 1, record view, 1 = yes
 
 % ------------------------
 % Algorithm configurations
 % ------------------------
 
 mode = 3; % 1 = optimize only material, 2 optimize only topology, 3 = both
-nelx = 40; % number of elements in the x direction
-nely = 18; % number of elements in the y direction
+nelx = 20; % 40 % number of elements in the x direction
+nely = 20; % 18 % number of elements in the y direction
 v1 = 0.5; % amount of material 1 to allow where  1 = 100%
 v2 = 0.5; % amount of mateiral 2 to allow
 lambda1  = 0; % Set the lambda1 penalty/ lagrangian
@@ -50,6 +50,8 @@ omegaMax = 0.9; % set the max allowed vol fraction of material 2 (weaker)
 alpha = 0; % set the term that influenes the smoothness of the vol fraction
 beta = 0; % set the perimeter regularization term.
 
+topologySensWeight =0;
+
 stepsVolfraction = 15;
 stepsTopology = 15;
 
@@ -64,9 +66,6 @@ if recvid==1
     vid=1;
 end
 
-
-
-
 % ------------------------------
 % Step 1
 % ------------------------------
@@ -74,30 +73,39 @@ rM = 1;
 structure = ones(nely*rM, nelx*rM); % initialize the structure as the whole domain
 volFraction = structure*0.5; % volFraction(1:3:nely, 1:3:nelx) = 1; % initialize the volfraction composition
 
-
-
 if mode ==1 % optimize material distribution only, 50%
     v1 = 0.5;
     v2 = 0.5; 
 elseif mode ==2 % optimize the topology only, 50% material 1
     v1 = 0;
-    v2 = 0.5;
-    volFraction = structure*0;
+    v2 = 0.39;
+    volFraction = structure*0.1/(0.1+0.29);
    
 elseif mode ==3
-    v1 = 0.1;
+    v1 = 0.10;
     v2 = 0.29;
     
-    for j = 1:2:nely
-       for i = 1:2:nelx
-           structure(j,i)  = -1;
-       end
-   end
+    if( 1== 0)
+        holesize = 5;
+        tempCount = 0;
+        for j = 1:5:nely-holesize
+           for i = 1:5:nelx-holesize
+               for jj = 1:holesize
+                   for ii = 1:holesize
+                       if(mod(tempCount ,2) ==0)
+                         structure(j+jj,i+ii)  = 0;
+                       end
+                   end
+               end
+               tempCount = tempCount+1;
+           end
+        end
+    end
 end
 
 totalVol = v1+v2; % the total volume of the whole structure
 percentV1 = v1/totalVol*100;
-infill = 1-totalVol;
+
 
 [lsf] = reinit(structure); % make the lsf whic is the signed distance for the structure edge
 
@@ -138,7 +146,7 @@ while(FEAcount<maxFEAcalls)
         if(mod(count, 3) ==0 || mode ==1)
             for subcount1 = 1:stepsVolfraction
                 FEAcount= FEAcount+1;
-                [U, g1_local_square,g2_local_square, volFracV1, volFracV2] =  FEALevelSet_2D(structure,lsf,volFraction,  doPlot, alpha,beta, FEAcount, mode, rM); %#ok<ASGLU>
+                [U, g1_local_square,g2_local_square, volFracV1, volFracV2,topologySens_square] =  FEALevelSet_2D(structure,lsf,volFraction,  doPlot, alpha,beta, FEAcount, mode, rM); %#ok<ASGLU>
                    
                totalStainE = sum(g2_local_square(:));
                 totalVolLocal = volFracV1+ volFracV2;
@@ -187,24 +195,29 @@ while(FEAcount<maxFEAcalls)
      
          for subcount2 = 1:stepsTopology
              FEAcount= FEAcount+1;
-                   [U, g1_local_square,g2_local_square, volFracV1, volFracV2] =  FEALevelSet_2D(structure,lsf,volFraction,  doPlot, alpha,beta, FEAcount, mode, rM); %#ok<ASGLU>
+                   [U, g1_local_square,g2_local_square, volFracV1, volFracV2,topologySens_square] =  FEALevelSet_2D(structure,lsf,volFraction,  doPlot, alpha,beta, FEAcount, mode, rM); %#ok<ASGLU>
                   
                     totalStainE = sum(g2_local_square(:));
                       fprintf('Volfrac1, Volfra2, feacount, lambda1, lambda2, strainE,  %0.2f , %0.2f, %d, %0.2f , %0.2f, %0.2f \n', volFracV1,volFracV2, FEAcount, lambda1, lambda2, totalStainE);
                      
                      totalVolLocal = volFracV1+volFracV2;
                       G2 = g2_local_square* g2Multiplier -lambda2+1/(mu2)*(totalVol-totalVolLocal);
+                      
+                     topologySens_square =  topologySens_square +pi*(lambda2 -1/(mu2)*(totalVol-totalVolLocal)*dampingtopology);
+                     
+%                      shapeSens = shapeSens - la + 1/La*(volCurr-volReq);
+%                      topSens = topSens + pi*(la - 1/La*(volCurr-volReq));
 
                     lambda2 =  lambda2 -1/(mu2)*(totalVol-totalVolLocal)*dampingtopology;
 
-    %         
+                  
 
     %         G2 = -g2_local_square - lambda2 + 1/mu2*(v2-volFracV2)^2;
     %         lambda2 = lambda2 - 10/mu2 * (v2 - volFracV2)^2;
     %         alpha = 0.95;
     %         mu2 = mu2*alpha;
 
-
+                 topSensFull = zeros(size(topologySens_square)+2); topSensFull(2:end-1,2:end-1) = topologySens_square;
                 g2Full = zeros(size(G2)+2); g2Full(2:end-1,2:end-1) = G2;
 
             % Choose time step for evolution based on CFL value
@@ -233,7 +246,8 @@ while(FEAcount<maxFEAcalls)
                     moveSlope = (max(-g2Full,0).*positiveGradientUpwind + min(-g2Full,0).*negGradientUpwind);
 
 
-                    lsf = lsf - dt*moveSlope;
+                   % lsf = lsf - dt*moveSlope- topologySensWeight*dt*topSensFull;
+                      lsf = lsf - dt*moveSlope ;%- topologySensWeight*dt*topSensFull;
                     elseif (1==1)
 
                         dt = 0.1/max(abs(g2Full(:)));
