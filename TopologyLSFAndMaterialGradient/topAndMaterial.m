@@ -30,9 +30,9 @@ recvid = 0; % Record a video of the figure 1, record view, 1 = yes
 % Algorithm configurations
 % ------------------------
 
-mode = 3; % 1 = optimize only material, 2 optimize only topology, 3 = both
+mode = 4; % 1 = optimize only material, 2 optimize only topology, 3 = both, mode 4 = heat transfer only
 nelx = 20; % 40 % number of elements in the x direction
-nely = 20; % 18 % number of elements in the y direction
+nely = 10; % 18 % number of elements in the y direction
 v1 = 0.5; % amount of material 1 to allow where  1 = 100%
 v2 = 0.5; % amount of mateiral 2 to allow
 lambda1  = 0; % Set the lambda1 penalty/ lagrangian
@@ -40,8 +40,8 @@ dampingLambda1 = 0.5; % 0.1
 g1Multiplier = 20;
 timestep = 0.1; % step size for vol fraction update, influenced by lambda1
 
-  dampingtopology = 5; %0.5
- g2Multiplier = 1;
+dampingtopology = 5; %0.5
+g2Multiplier = 1;
 lambda2 = -0.1; % set the lambda2 penality/lagrangian
 mu1 = 5; % set the penality term close to zero
 mu2 = 5; % set the second penality close to zero.
@@ -85,22 +85,44 @@ elseif mode ==3
     v1 = 0.10;
     v2 = 0.29;
     
-    if( 1== 0)
-        holesize = 5;
-        tempCount = 0;
-        for j = 1:5:nely-holesize
-           for i = 1:5:nelx-holesize
-               for jj = 1:holesize
-                   for ii = 1:holesize
-                       if(mod(tempCount ,2) ==0)
-                         structure(j+jj,i+ii)  = 0;
-                       end
-                   end
-               end
-               tempCount = tempCount+1;
+%     if( 1== 0)
+%         holesize = 5;
+%         tempCount = 0;
+%         for j = 1:5:nely-holesize
+%            for i = 1:5:nelx-holesize
+%                for jj = 1:holesize
+%                    for ii = 1:holesize
+%                        if(mod(tempCount ,2) ==0)
+%                          structure(j+jj,i+ii)  = 0;
+%                        end
+%                    end
+%                end
+%                tempCount = tempCount+1;
+%            end
+%         end
+%     end
+    
+elseif mode ==4 % optimize the topology only, using heat transfer
+    v1 = 0;
+    v2 = 0.39;
+    volFraction = structure*0.1/(0.1+0.29);
+    lambda2 = 3500;
+    dampingtopology = 15;
+    g2Multiplier = 10;
+    
+    
+    for j = 1:nely
+       for i = 1:nelx
+           if(randi(100)<v2*100)
+             
+                         structure(j,i)  = 1;
+           else
+                       structure(j,i)  = 0;
            end
-        end
+               
+       end
     end
+  
 end
 
 totalVol = v1+v2; % the total volume of the whole structure
@@ -146,7 +168,7 @@ while(FEAcount<maxFEAcalls)
         if(mod(count, 3) ==0 || mode ==1)
             for subcount1 = 1:stepsVolfraction
                 FEAcount= FEAcount+1;
-                [U, g1_local_square,g2_local_square, volFracV1, volFracV2,topologySens_square] =  FEALevelSet_2D(structure,lsf,volFraction,  doPlot, alpha,beta, FEAcount, mode, rM); %#ok<ASGLU>
+                [U, g1_local_square,g2_local_square, g3_local_square, volFracV1, volFracV2,topologySens_square] =  FEALevelSet_2D(structure,lsf,volFraction,  doPlot, alpha,beta, FEAcount, mode, rM); %#ok<ASGLU>
                    
                totalStainE = sum(g2_local_square(:));
                 totalVolLocal = volFracV1+ volFracV2;
@@ -191,26 +213,47 @@ while(FEAcount<maxFEAcalls)
     % Update the boundary (level set)
     % Calculate the propogation of the levelset boundary
     % --------------------
-    if (mode ==2 || mode ==3)   
+    if (mode ==2 || mode ==3 || mode == 4)   
      
          for subcount2 = 1:stepsTopology
              FEAcount= FEAcount+1;
-                   [U, g1_local_square,g2_local_square, volFracV1, volFracV2,topologySens_square] =  FEALevelSet_2D(structure,lsf,volFraction,  doPlot, alpha,beta, FEAcount, mode, rM); %#ok<ASGLU>
+                   [U, g1_local_square,g2_local_square, g3_local_square, volFracV1, volFracV2,topologySens_square] =  FEALevelSet_2D(structure,lsf,volFraction,  doPlot, alpha,beta, FEAcount, mode, rM); %#ok<ASGLU>
                   
-                    totalStainE = sum(g2_local_square(:));
-                      fprintf('Volfrac1, Volfra2, feacount, lambda1, lambda2, strainE,  %0.2f , %0.2f, %d, %0.2f , %0.2f, %0.2f \n', volFracV1,volFracV2, FEAcount, lambda1, lambda2, totalStainE);
-                     
-                     totalVolLocal = volFracV1+volFracV2;
-                      G2 = g2_local_square* g2Multiplier -lambda2+1/(mu2)*(totalVol-totalVolLocal);
-                      
-                     topologySens_square =  topologySens_square +pi*(lambda2 -1/(mu2)*(totalVol-totalVolLocal)*dampingtopology);
-                     
-%                      shapeSens = shapeSens - la + 1/La*(volCurr-volReq);
-%                      topSens = topSens + pi*(la - 1/La*(volCurr-volReq));
+                    if (mode ==2 || mode ==3 )
+                        totalStainE = sum(g2_local_square(:));
+                          fprintf('Volfrac1, Volfra2, feacount, lambda1, lambda2, strainE,  %0.2f , %0.2f, %d, %0.2f , %0.2f, %0.2f \n', volFracV1,volFracV2, FEAcount, lambda1, lambda2, totalStainE);
 
-                    lambda2 =  lambda2 -1/(mu2)*(totalVol-totalVolLocal)*dampingtopology;
+                         totalVolLocal = volFracV1+volFracV2;
+                          G2 = g2_local_square* g2Multiplier -lambda2+1/(mu2)*(totalVol-totalVolLocal);
 
-                  
+                         topologySens_square =  topologySens_square +pi*(lambda2 -1/(mu2)*(totalVol-totalVolLocal)*dampingtopology);
+
+    %                      shapeSens = shapeSens - la + 1/La*(volCurr-volReq);
+    %                      topSens = topSens + pi*(la - 1/La*(volCurr-volReq));
+
+                        lambda2 =  lambda2 -1/(mu2)*(totalVol-totalVolLocal)*dampingtopology;
+                        
+                         % ----------------------
+                         % mode 4 is heat transfer topology only
+                         %-----------------------
+                    elseif (mode ==4)
+                        
+                        totalStainE = sum(g3_local_square(:));
+                          fprintf('Volfrac1, Volfra2, feacount, lambda1, lambda2, heat strainE,  %0.2f , %0.2f, %d, %0.2f , %0.2f, %0.2f \n', volFracV1,volFracV2, FEAcount, lambda1, lambda2, totalStainE);
+
+                         totalVolLocal = volFracV1+volFracV2;
+                          G2 = g3_local_square* g2Multiplier -lambda2+1/(mu2)*(totalVol-totalVolLocal);
+
+                       %  topologySens_square =  topologySens_square +pi*(lambda2 -1/(mu2)*(totalVol-totalVolLocal)*dampingtopology);
+
+    %                      shapeSens = shapeSens - la + 1/La*(volCurr-volReq);
+    %                      topSens = topSens + pi*(la - 1/La*(volCurr-volReq));
+
+                        lambda2 =  lambda2 -1/(mu2)*(totalVol-totalVolLocal)*dampingtopology;
+                        
+                        
+
+                    end
 
     %         G2 = -g2_local_square - lambda2 + 1/mu2*(v2-volFracV2)^2;
     %         lambda2 = lambda2 - 10/mu2 * (v2 - volFracV2)^2;
@@ -248,7 +291,7 @@ while(FEAcount<maxFEAcalls)
 
                    % lsf = lsf - dt*moveSlope- topologySensWeight*dt*topSensFull;
                       lsf = lsf - dt*moveSlope ;%- topologySensWeight*dt*topSensFull;
-                    elseif (1==1)
+                    elseif (1==0)
 
                         dt = 0.1/max(abs(g2Full(:)));
                         % Evolve for total time stepLength * CFL value:
@@ -280,11 +323,11 @@ while(FEAcount<maxFEAcalls)
                     end
 
 
-            strucFull2 = (lsf>0);
+            strucFull2 = (lsf>0.001);
             structure = strucFull2(2:end-1,2:end-1);
 
 
-            if(mod(count, 5) ==0)
+            if(mod(FEAcount, 6) ==0)
                 [lsf] = reinit(structure)   ;
             end
             

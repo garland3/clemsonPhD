@@ -1,6 +1,6 @@
 % Copyright Anthony Garland 2015
 % ------------------------
-function [U, g1_local_square,g2_local_square, volFracV1, volFracV2, topologySens_square] = FEALevelSet_2D(structure,lsf, volFracArray,  doplot, ...
+function [U, g1_local_square,g2_local_square,g3_local_square, volFracV1, volFracV2, topologySens_square] = FEALevelSet_2D(structure,lsf, volFracArray,  doplot, ...
     alphaPenalty,beta, countMainLoop, mode, resolutionMultiplier)
 % structure - shows the structure's boundary by a binary relationship, 0 = void, 1 = material
 % lsf - is the level set function. I need this level set function so that I
@@ -18,7 +18,7 @@ function [U, g1_local_square,g2_local_square, volFracV1, volFracV2, topologySens
 % http://www.mathworks.com/help/matlab/ref/interp2.html
 recvid = 1; % Record a video of the figure 1, record view, 1 = yes
 
-iterationsPerPlot = 5;
+iterationsPerPlot = 10;
 
 doplotDisplacement = doplot; % Set to 1 to show. Runs much slower
 plotStress = doplot; % Set to 1 to plot the stress graphs
@@ -74,6 +74,12 @@ elseif (mode ==3)
         plotSensitivity = 1; % override
         plotVolFraction = 1; % override
     end
+    
+elseif (mode ==4)
+     plotLSF = 1;
+     plotHeat = 1;
+      plotStructure = 1;
+    
 end
 
 [nely,nelx] = size(volFracArray);
@@ -619,17 +625,17 @@ F_f_heat = F_heat(Free_heat);
 T(Free_heat) = K_ff_heat \ F_f_heat; % solve the FEA for temperature
 T(Essentialheat) = T0;
 
-
-% Max displacement can be used a preformance measure in some cases.
-% maxDisplacement1 = max(max(U));
-% minDisplacement1 = min(min(U));
-% maxDisplacement = max([maxDisplacement1 -minDisplacement1]); % get the max in the positive or negative direction of U displacements
+% -----------------
+% initialize storage
+% --------------
 
 stress_stored = zeros(ne,3);
 vonM_stored = zeros(ne,1);
 g1_localstored = zeros(ne,1);
 g2_localstored = zeros(ne,1);
-topologySensitivity = zeros(ne,1);
+g3_localstored = zeros(ne,1);
+qstored = zeros(ne,2);
+%  topologySensitivity = zeros(ne,1);
 elemcenterLocations = zeros(ne,2);
 
 if(doplotDisplacement ==1 && mod(countMainLoop,iterationsPerPlot) ==0)
@@ -656,6 +662,7 @@ for e = 1:ne
         arrayCoordNumber(j) = nodeNumber;
         % get the global X,Y position of each node and put in array
         coord(j,:) = globalPosition(nodeNumber,:);
+        local_t(j) = T(nodeNumber);
         local_u(j,:) = U(nodeNumber);
         xsum = xsum+coord(j,1);
         ysum = ysum+coord(j,2);
@@ -720,10 +727,32 @@ for e = 1:ne
     g2_local = localStrainE;
     g2_localstored(e) = g2_local*g2Multiplier;
     
+    % Store the transpose, to make things work nice.
+    stress_stored(e,:) = stress';
+    
     % -----------------------------------
     % Heat
     % -----------------------------------
-    g3_local = 
+    ke_heat = 1;    
+     volFraclocal = volFraction_atElementsArray(e);       
+    kmaterial = ke_heat*(KheatPLA*volFraclocal+(1-volFraclocal)*KheatNylon);    
+    
+    
+    % Calculate the Jacobian
+     J=B_hat*coord;
+
+     % Calculate the determinate
+     %J_det = det(J);
+     J_transpose = transpose(J);
+     J_transpose_inv = inv(J_transpose);
+
+     % Form the B matrix
+     B = J_transpose_inv*B_hat;
+    
+    qLocal = -kmaterial*B*local_t';
+    qstored(e,:) = qLocal';
+    
+    g3_localstored(e) = qLocal'*qLocal*kmaterial; % heat strain energy
     
 %     lambda = E*v/((1+v)*(1-2*v));
 %     mu = v;
@@ -733,8 +762,7 @@ for e = 1:ne
     
     % topologySensitivity_stored(e) = topologySensitivity_local;
     
-    % Store the transpose, to make things work nice.
-    stress_stored(e,:) = stress';
+  
     
     % ---------------------------------------
     % plot the element outline and the displacments
@@ -771,28 +799,39 @@ for j = 1:numNodesInColumn % y
      end
 end
 
-if(plotHeat ==1)
-    figure(1)
-    subplot(subplotY,subplotX,subplotCount); subplotCount=subplotCount+1;
-     % plot the coutour graph
-     contour(XLocations,YLocations,TcontourMatrix);
-     tti= strcat('Heat contours. Number of elements=', int2str(ne));
-     title(tti);
+if(plotHeat ==1  && mod(countMainLoop,iterationsPerPlot) ==0)
+%     figure(1)
+%     subplot(subplotY,subplotX,subplotCount); subplotCount=subplotCount+1;
+%      % plot the coutour graph
+%      contour(XLocations,YLocations,TcontourMatrix);
+%      tti= strcat('Heat contours. Number of elements=', int2str(ne));
+%      title(tti);
+
+     % figure(1)
+     subplot(subplotY,subplotX,subplotCount); subplotCount=subplotCount+1;
+    quiver(elemcenterLocations(:,1),elemcenterLocations(:,2),qstored(:,1),qstored(:,2))
+    xlim([0,L])
+    ylim([0,h])
+    %xlabel('radial distance, meters') % y-axis label
+    %ylabel('Height') % x-axis label
+    tti= strcat('Flux from each element');
+    title(tti);
+     
+%     % plot the surf graph
+%      figure(1)
+%    subplot(subplotY,subplotX,subplotCount); subplotCount=subplotCount+1;
+%     surf(XLocations,YLocations,TcontourMatrix);
+%       tti= strcat('Temp Distribution. Number of elements=', int2str(ne));
+%      title(tti);
      
      
-    % plot the surf graph
-     figure(1)
-   subplot(subplotY,subplotX,subplotCount); subplotCount=subplotCount+1;
-    surf(XLocations,YLocations,TcontourMatrix);
-      tti= strcat('Temp Distribution. Number of elements=', int2str(ne));
-     title(tti);
      
-      % plot the surf graph
-       figure(1)
+      % plot the temp image graph
+      % figure(1)
    subplot(subplotY,subplotX,subplotCount); subplotCount=subplotCount+1;
     imagesc(TcontourMatrix');
     colorbar;
-      tti= strcat('Temp Distribution. Number of elements=', int2str(ne));
+      tti= strcat('Temp Distribution. ');
      title(tti);
 end
 
@@ -830,12 +869,14 @@ end
 % -----------------------
 g1_local_square = zeros(nely, nelx);
 g2_local_square = zeros(nely,nelx);
+g3_local_square = zeros(nely,nelx);
 topologySens_square = zeros(nely, nelx);
 count = 1;
 for i = 1:nely
     for j= 1:nelx
         g1_local_square(i,j) = g1_localstored(count);
         g2_local_square(i,j) = g2_localstored(count);
+        g3_local_square(i,j) =  g3_localstored(count);
       %  topologySens_square(i,j) = topologySensitivity_stored(count);
         count = count+1;
     end
