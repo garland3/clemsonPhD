@@ -17,22 +17,14 @@ function [U, g1_local_square,g2_local_square,g3_local_square, volFracV1, volFrac
 % 2D grid with a 3D function
 % http://www.mathworks.com/help/matlab/ref/interp2.html
 recvid = 1; % Record a video of the figure 1, record view, 1 = yes
-
-iterationsPerPlot = 10;
+iterationsPerPlot = 1;
 
 doplotDisplacement = doplot; % Set to 1 to show. Runs much slower
 plotStress = doplot; % Set to 1 to plot the stress graphs
-%plotStress = 1; % Set to 1 to plot the stress graphs
 plotElasticMod = doplot;
-%plotElasticMod = 1;
 plotVolFraction = doplot;
-%plotVolFraction = 1; % override
 plotStructure = doplot;
-%plotStructure = 1; % override
 plotLSF = doplot;
-%plotLSF = 1; % override
-plotNormalDirection = doplot;
-
 plotSensitivity = doplot;
 plotStrucAndGrad = doplot;
 plotHeat = doplot;
@@ -60,8 +52,7 @@ elseif (mode ==3)
     if (showFinalResultsMode ==1)
         subplotY = 1; % Suplot matrix setup
         subplotX = 1;
-        plotStrucAndGrad = 1;
-        
+        plotStrucAndGrad = 1;        
     elseif(heatMode ==1)
         subplotY = 2; % Suplot matrix setup
         subplotX = 2;
@@ -76,10 +67,10 @@ elseif (mode ==3)
     end
     
 elseif (mode ==4)
-     plotLSF = 1;
+     % plotLSF = 1;
      plotHeat = 1;
       plotStructure = 1;
-    
+       plotSensitivity = 1; % override    
 end
 
 [nely,nelx] = size(volFracArray);
@@ -101,13 +92,10 @@ t = 5; % mm, thickness of the beam
 FappliedLoad = 200; % N.
 Enylon = 1700; % elastic mod of nylon, Mpa
 KheatNylon = 2; % W/degreeC
-
 Epla =  3368; % elastic mod of pla, MPa
 KheatPLA = 1; % W/degreeC
-
 E_empty = 1; % elastic mod for the region with no material to prevent sigularity of the FEA
 K_empty = 0.001;
-
 v = 0.3; % Assume 0.3 for Poisson's ratio for both materials
 
 % ------------------------
@@ -120,40 +108,9 @@ D_dd =  [ 1 v 0;
 
 Aomega = D_dd;
 
-% Calculate the Laplace of the vol Fraction composition. (needed for the G1
-% term calculation)
-% stepSize = 1;
-% LaplaceVolFract = del2(volFracArray,stepSize);
-%
-% % Calculate the gradient as well ofr the volume fraction, this is neededd
-% % for the G2 term)
-% [gvolFracX, gvolFracY] = gradient(volFracArray,stepSize);
-% volFracGradientSquared = gvolFracX.^2+gvolFracY.^2;
-%
-%
-% % Find the normal direction of the lsf,  = nabla(lsf)/abs(nabla(lsf))
-% [gx_lsf, gy_lsf] = gradient(lsf);
-% denominator_g_lsf = (gx_lsf.^2 +gy_lsf.^2).^(1/2);
-% gx_lsf = gx_lsf./denominator_g_lsf;
-% gy_lsf = gy_lsf./denominator_g_lsf;
-%
-% curvature_lsf = divergence(gx_lsf,gy_lsf); % calculate the divergence of the normal direction to get the curvature
-% curvature_lsf(isnan(curvature_lsf)) = 0 ; % remove the NaN
-% curvature_lsf = curvature_lsf(2:end-1,2:end-1);
-%
-% curvature_lsf = curvature_lsf*0+1;
-
-% if (plotNormalDirection == 1)
-%      figure(1)
-%     subplot(subplotY,subplotX,subplotCount); subplotCount=subplotCount+1;
-%     quiver(gx_lsf, gy_lsf);
-%     title('Normal direction of lsf');
-% end
-
 
 % Handle the mapping between nodes and elements and node
 % locations
-
 % nelx; %  Number of elements in the x direction
 % nely; %  Number of elements in the y direction
 nn = (nelx+1)*(nely+1); % number of nodes
@@ -213,39 +170,22 @@ if plotStrucAndGrad == 1
     subplot(subplotX,subplotY,subplotCount); subplotCount=subplotCount+1;
     imagesc(structGradArray); axis equal; axis tight; axis off;
     set(gca,'YDir','normal'); % http://www.mathworks.com/matlabcentral/answers/94170-how-can-i-reverse-the-y-axis-when-i-use-the-image-or-imagesc-function-to-display-an-image-in-matlab
-    
-    
     % caxis([-1 1 ]);
     title('Structure and Elastic Mod Gradient')
-    
     colormap winter
     %  cmap = colormap;
     rgbSteps = Epla- Enylon +1 ; % plus 1 for 1 below the Enylon for void
-    
     % [cmin,cmax] = caxis;
     caxis([Enylon-100,Epla])
     map = colormap; % current colormap
-    
     %map = [colormap(1,1):1/rgbSteps:colormap(1:-1)
     for zz =    1:rgbSteps
         map(1,:) = [1,1,1];
         map(zz,:) = [0,       zz*7/(8*rgbSteps)+1/8,          0.5];
-    end
-    
-    colormap(map)
-    
-    
-    %
-    %         RgbValuesvalues = 0.5:1/rgbSteps:1;
-    %
-    %         cmap = [RgbValuesvalues' RgbValuesvalues' RgbValuesvalues'*0 ];
-    %
-    %         cmap(1,:) = 1;
-    %         colormap(cmap)
-    
+    end    
+    colormap(map)   
     colorbar
 end
-
 % --------------------------
 % Plot Elastic mod
 % --------------------------
@@ -270,7 +210,6 @@ end
 % --------------------------
 % Plot structure
 % --------------------------
-
 if(plotStructure ==1 && mod(countMainLoop,iterationsPerPlot) ==0)
     figure(1)
     subplot(subplotX,subplotY,subplotCount); subplotCount=subplotCount+1;
@@ -288,7 +227,6 @@ if(plotVolFraction ==1 && mod(countMainLoop,iterationsPerPlot) ==0)
     subplot(subplotY,subplotX,subplotCount); subplotCount=subplotCount+1;
     imagesc(imageXaxis,imageYaxis,volFracArray);
     set(gca,'YDir','normal'); % http://www.mathworks.com/matlabcentral/answers/94170-how-can-i-reverse-the-y-axis-when-i-use-the-image-or-imagesc-function-to-display-an-image-in-matlab
-    
     % Set the values in in ches and give mm label
     ax1 = gca;
     set(ax1, 'XLim', [0 nelx ],'YLim', [0 nely] );
@@ -301,7 +239,6 @@ if(plotVolFraction ==1 && mod(countMainLoop,iterationsPerPlot) ==0)
     xlim([0,L])
     ylim([0,h])
     axis equal
-    
 end
 
 % ------------------------------------
@@ -350,10 +287,6 @@ E_atElementsArray = zeros(ne,1);
 K_atElementsArray = zeros(ne,1);
 structure_atElementsArray = zeros(ne,1);
 volFraction_atElementsArray = zeros(ne,1);
-% LaplaceVolFrac_atElementsArray = zeros(ne,1);
-% GradientSquredVolFact_atElementsArray = zeros(ne,1);
-% curvature_lsf_atElements = zeros(ne,1);
-
 
 count = 1;
 numNodesInRow = nelx+1;
@@ -367,12 +300,9 @@ for i = 1:nely
         % Store the E value for this element
         structure_atElementsArray(count) = structure(i,j);
         E_atElementsArray(count) = E_atElement(i,j);
-        K_atElementsArray(count) = K_atElement(i,j);
-        
+        K_atElementsArray(count) = K_atElement(i,j);        
         volFraction_atElementsArray(count) =  volFracArray(i,j);
-        % LaplaceVolFrac_atElementsArray(count) = LaplaceVolFract(i,j); % store the laplace of the vol fraction in a single column matrix
-        % GradientSquredVolFact_atElementsArray(count) = volFracGradientSquared(i,j);
-        % curvature_lsf_atElements(count) = curvature_lsf(i,j);
+       
         % Store node mapping
         ElemToNodeMap(count,:)=[rowMultiplier*numNodesInRow+j, ...
             rowMultiplier*numNodesInRow+j+1, ...
@@ -387,10 +317,8 @@ end
 %
 % Store both the X and Y positions
 globalPosition = zeros(nn,2);
-
 XLocations=zeros(numNodesInRow,numNodesInColumn);
 YLocations=zeros(numNodesInRow,numNodesInColumn);
-
 
 count = 1;
 for i = 1:numNodesInColumn  % y
@@ -413,8 +341,6 @@ ndof = nn*2; % Number of degrees of freedome. 2 per node.
 F2 = zeros(ndof,1);
 K = zeros(ndof,ndof);
 
-
-
 % ---------------------------------------------
 % Find the essential boundary conditions
 % Bridge problem
@@ -423,63 +349,31 @@ u0 = 0; % value at essential boundaries
 row = nelx+1;
 Essential2 = [1 2]; % bottom left corner is fixed
 Essential2 = [Essential2 row*2 row*2-1]; % bottom right corner is only fixed in the y direction
+Essential2 = unique(Essential2);
 F2( (floor(row/2)+1)*2) = -FappliedLoad; % force down in the bottom middle
-
-
+alldofs     = 1:ndof;
+Free    = setdiff(alldofs,Essential2);
 
 % -------------------
 % heat FEA
 % -------------------
-
 Kheat = zeros(nn,nn);
 T0 = 10; % set the essential boundaries  to 10
 
 % Just the left side in the middle
-quartY = ceil(nely/4);
-Essentialheat=   1+quartY*numNodesInRow:numNodesInRow :numNodesInRow*(numNodesInColumn-quartY)+1; % ... % left side
-Essentialheat = unique(Essentialheat);
+% quartY = ceil(nely/4);
+% Essentialheat=   1+quartY*numNodesInRow:numNodesInRow :numNodesInRow*(numNodesInColumn-quartY)+1; % ... % left side
+% Essentialheat = unique(Essentialheat);
+column = nely +1;
+Essentialheat = [1:nelx] ;
 alldofs_heat = [1:nn];
 
 Free_heat    = setdiff(alldofs_heat,Essentialheat);
-F_heat = ones(nn,1); % add a constant heat source everywhere
+F_heat = zeros(nn,1);
+F_heat([ceil(row/2)+(ceil(column/2)*row) (ceil(row/2)+1)+(ceil(column/2)*row)]) =  20; % heat source in the middle
 
 
 
-% for i = 1:nn
-%     % get the xy locations as a row
-%     xy = globalPosition(i,:);
-%     xLoc = xy(1); yLoc = xy(2);
-%
-%     if( xLoc ==0)
-%         % exists returns 1 if Essential2 is a varriable
-%         temp = exist('Essential2', 'var');
-%
-%         if(temp==1)
-%             % only constrain in the X direction, 2*i-1
-%              Essential2 = [Essential2  2*i-1]; %#ok<AGROW>
-%         else
-%             Essential2 =[2*i-1];
-%         end
-%     end
-%
-%     % if in the left top, then add the downward force
-%     if(yLoc == 2 && xLoc == 0)
-%          F2(i*2) = -FappliedLoad;
-%     end
-%
-%     % if bottom right, the add a boundary condition to prevent up-down
-%     % movement
-%     if(yLoc == 0 && xLoc == 6)
-%          Essential2 = [Essential2 (i*2)];
-%     end
-%
-% end
-Essential2 = unique(Essential2);
-% ---------------------------------------------
-% Generate the Free dof matrix
-% ---------------------------------------------
-alldofs     = 1:ndof;
-Free    = setdiff(alldofs,Essential2);
 
 % ---------------------------------------------
 %     Generate the local k and f matrixes
@@ -546,18 +440,14 @@ for e = 1:ne
         
         tempK = transpose(B)*D*B*J_det*wght;
         ke = ke + tempK;
-    end
+    end   
     
-    
-    % Get the precalculated element stiffness matrix. for k  = 1 watt/c
-    % which is for k_pla.
-    ke_heat = elementK_heat();
-    volFraclocal = volFraction_atElementsArray(e);   
-    
-    ke_heat = ke_heat*(KheatPLA*volFraclocal+(1-volFraclocal)*KheatNylon);
-    
-    node = ElemToNodeMap(e,:);
-    
+    % ---------------
+    % heat
+    % ----------------
+    ke_heatvalue = K_atElementsArray(e);
+    ke_heat = elementK_heatv2(ke_heatvalue);    
+    node = ElemToNodeMap(e,:);    
     Kheat(node, node) = Kheat(node, node)+ke_heat;
     
     % Calculate the body force term
@@ -733,9 +623,10 @@ for e = 1:ne
     % -----------------------------------
     % Heat
     % -----------------------------------
-    ke_heat = 1;    
-     volFraclocal = volFraction_atElementsArray(e);       
-    kmaterial = ke_heat*(KheatPLA*volFraclocal+(1-volFraclocal)*KheatNylon);    
+    kmaterial=  K_atElementsArray(e);
+%     ke_heat = 1;    
+%      volFraclocal = volFraction_atElementsArray(e);       
+%     kmaterial = ke_heat*(KheatPLA*volFraclocal+(1-volFraclocal)*KheatNylon);    
     
     
     % Calculate the Jacobian
@@ -750,19 +641,9 @@ for e = 1:ne
      B = J_transpose_inv*B_hat;
     
     qLocal = -kmaterial*B*local_t';
-    qstored(e,:) = qLocal';
-    
-    g3_localstored(e) = qLocal'*qLocal*kmaterial; % heat strain energy
-    
-%     lambda = E*v/((1+v)*(1-2*v));
-%     mu = v;
-    
-    %topologySensitivity_local = structure_atElementsArray(e)*pi/(2*mu)*(lambda+2*mu)/(lambda+mu)* ...
-     %   (4*mu*localStrainE+(lambda-mu)*localStrainE);
-    
-    % topologySensitivity_stored(e) = topologySensitivity_local;
-    
-  
+    qstored(e,:) = qLocal';    
+    g3_localstored(e) = local_t*local_t'*kmaterial; % heat sensitivity
+
     
     % ---------------------------------------
     % plot the element outline and the displacments
@@ -830,6 +711,7 @@ if(plotHeat ==1  && mod(countMainLoop,iterationsPerPlot) ==0)
       % figure(1)
    subplot(subplotY,subplotX,subplotCount); subplotCount=subplotCount+1;
     imagesc(TcontourMatrix');
+     set(gca,'YDir','normal');
     colorbar;
       tti= strcat('Temp Distribution. ');
      title(tti);
@@ -883,12 +765,14 @@ for i = 1:nely
 end
 
 [g2_local_square] = conv2(padarray(g2_local_square,[1,1],'replicate'),1/6*[0 1 0; 1 2 1; 0 1 0],'valid');
+[g3_local_square] = conv2(padarray(g3_local_square,[1,1],'replicate'),1/6*[0 1 0; 1 2 1; 0 1 0],'valid');
 [topologySens_square] = conv2(padarray(topologySens_square,[1,1],'replicate'),1/6*[0 1 0; 1 2 1; 0 1 0],'valid');
 
 if(plotSensitivity ==1 && mod(countMainLoop,iterationsPerPlot) ==0)
     figure(1)
     subplot(subplotY,subplotX,subplotCount); subplotCount=subplotCount+1;
-    imagesc(imageXaxis,imageYaxis,g2_local_square);
+    imagesc(imageXaxis,imageYaxis,g3_local_square);
+     set(gca,'YDir','normal');
     
     % Set the X and Y axis labels
     xlabel('X','FontSize',10, 'FontName','Arial')
@@ -900,11 +784,11 @@ if(plotSensitivity ==1 && mod(countMainLoop,iterationsPerPlot) ==0)
     %cmap(1,:) = 1;
     %colormap(cmap);
     % freezeColors
-    caxis([0 100])
+    % caxis([0 100])
     set(gca,'YDir','normal'); % http://www.mathworks.com/matlabcentral/answers/94170-how-can-i-reverse-the-y-axis-when-i-use-the-image-or-imagesc-function-to-display-an-image-in-matlab
     axis equal
     colorbar
-    title('g2 shape Sensitivity')
+    title('g3 heat shape Sensitivity')
     xlim([0,L])
     ylim([0,h])
 end

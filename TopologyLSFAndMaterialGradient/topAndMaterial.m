@@ -50,7 +50,6 @@ omegaMax = 0.9; % set the max allowed vol fraction of material 2 (weaker)
 alpha = 0; % set the term that influenes the smoothness of the vol fraction
 beta = 0; % set the perimeter regularization term.
 
-topologySensWeight =0;
 
 stepsVolfraction = 15;
 stepsTopology = 15;
@@ -106,9 +105,11 @@ elseif mode ==4 % optimize the topology only, using heat transfer
     v1 = 0;
     v2 = 0.39;
     volFraction = structure*0.1/(0.1+0.29);
-    lambda2 = 3500;
-    dampingtopology = 15;
-    g2Multiplier = 10;
+    lambda2 = 0;
+    mu2 = 0.5;
+    
+    dampingtopology = 10;
+    g2Multiplier = 0.001;
     
     
     for j = 1:nely
@@ -239,27 +240,14 @@ while(FEAcount<maxFEAcalls)
                     elseif (mode ==4)
                         
                         totalStainE = sum(g3_local_square(:));
-                          fprintf('Volfrac1, Volfra2, feacount, lambda1, lambda2, heat strainE,  %0.2f , %0.2f, %d, %0.2f , %0.2f, %0.2f \n', volFracV1,volFracV2, FEAcount, lambda1, lambda2, totalStainE);
+                        fprintf('Volfrac1, Volfra2, feacount, lambda1, lambda2, heat strainE,  %0.2f , %0.2f, %d, %0.2f , %0.2f, %0.2f \n', volFracV1,volFracV2, FEAcount, lambda1, lambda2, totalStainE);
 
-                         totalVolLocal = volFracV1+volFracV2;
-                          G2 = g3_local_square* g2Multiplier -lambda2+1/(mu2)*(totalVol-totalVolLocal);
-
-                       %  topologySens_square =  topologySens_square +pi*(lambda2 -1/(mu2)*(totalVol-totalVolLocal)*dampingtopology);
-
-    %                      shapeSens = shapeSens - la + 1/La*(volCurr-volReq);
-    %                      topSens = topSens + pi*(la - 1/La*(volCurr-volReq));
-
-                        lambda2 =  lambda2 -1/(mu2)*(totalVol-totalVolLocal)*dampingtopology;
-                        
-                        
+                        totalVolLocal = volFracV1+volFracV2;
+                        G2 = g3_local_square*g2Multiplier -lambda2+1/(mu2)*(totalVol-totalVolLocal);
+                        lambda2 =  lambda2 -1/(mu2)*(totalVol-totalVolLocal)*dampingtopology;  
 
                     end
-
-    %         G2 = -g2_local_square - lambda2 + 1/mu2*(v2-volFracV2)^2;
-    %         lambda2 = lambda2 - 10/mu2 * (v2 - volFracV2)^2;
-    %         alpha = 0.95;
-    %         mu2 = mu2*alpha;
-
+                    
                  topSensFull = zeros(size(topologySens_square)+2); topSensFull(2:end-1,2:end-1) = topologySens_square;
                 g2Full = zeros(size(G2)+2); g2Full(2:end-1,2:end-1) = G2;
 
