@@ -16,7 +16,7 @@ function [U, g1_local_square,g2_local_square,g3_local_square, volFracV1, volFrac
 
 % 2D grid with a 3D function
 % http://www.mathworks.com/help/matlab/ref/interp2.html
-recvid = 1; % Record a video of the figure 1, record view, 1 = yes
+recvid = 0; % Record a video of the figure 1, record view, 1 = yes
 iterationsPerPlot = 1;
 
 doplotDisplacement = doplot; % Set to 1 to show. Runs much slower
@@ -30,7 +30,8 @@ plotStrucAndGrad = doplot;
 plotHeat = doplot;
 
 heatMode = 0;
-showFinalResultsMode = 0; % show final results mode shows the struct and gradient in 1 subplot.
+showFinalResultsMode = 1; % show final results mode shows the struct and gradient in 1 subplot.
+noPlotsCSVOutput = 1;
 
 g2Multiplier = 100;
 subplotY = 2; % Suplot matrix setup
@@ -166,25 +167,30 @@ end
 % plot the structure and the gradient
 % -------------------
 if plotStrucAndGrad == 1
-    figure(1)
-    subplot(subplotX,subplotY,subplotCount); subplotCount=subplotCount+1;
-    imagesc(structGradArray); axis equal; axis tight; axis off;
-    set(gca,'YDir','normal'); % http://www.mathworks.com/matlabcentral/answers/94170-how-can-i-reverse-the-y-axis-when-i-use-the-image-or-imagesc-function-to-display-an-image-in-matlab
-    % caxis([-1 1 ]);
-    title('Structure and Elastic Mod Gradient')
-    colormap winter
-    %  cmap = colormap;
-    rgbSteps = Epla- Enylon +1 ; % plus 1 for 1 below the Enylon for void
-    % [cmin,cmax] = caxis;
-    caxis([Enylon-100,Epla])
-    map = colormap; % current colormap
-    %map = [colormap(1,1):1/rgbSteps:colormap(1:-1)
-    for zz =    1:rgbSteps
-        map(1,:) = [1,1,1];
-        map(zz,:) = [0,       zz*7/(8*rgbSteps)+1/8,          0.5];
-    end    
-    colormap(map)   
-    colorbar
+    if(noPlotsCSVOutput~=1)
+        figure(1)
+        subplot(subplotX,subplotY,subplotCount); subplotCount=subplotCount+1;
+        imagesc(structGradArray); axis equal; axis tight; axis off;
+        set(gca,'YDir','normal'); % http://www.mathworks.com/matlabcentral/answers/94170-how-can-i-reverse-the-y-axis-when-i-use-the-image-or-imagesc-function-to-display-an-image-in-matlab
+        % caxis([-1 1 ]);
+        title('Structure and Elastic Mod Gradient')
+        colormap winter
+        %  cmap = colormap;
+        rgbSteps = Epla- Enylon +1 ; % plus 1 for 1 below the Enylon for void
+        % [cmin,cmax] = caxis;
+        caxis([Enylon-100,Epla])
+        map = colormap; % current colormap
+        %map = [colormap(1,1):1/rgbSteps:colormap(1:-1)
+        for zz =    1:rgbSteps
+            map(1,:) = [1,1,1];
+            map(zz,:) = [0,       zz*7/(8*rgbSteps)+1/8,          0.5];
+        end    
+        colormap(map)   
+        colorbar
+    else
+        name = sprintf('./StuctGradOutput/gradAndStuct%i.csv',countMainLoop);
+        csvwrite(name,structGradArray);
+    end
 end
 % --------------------------
 % Plot Elastic mod

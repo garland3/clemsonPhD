@@ -25,12 +25,13 @@ subplotCount = 1; % current subplot count (do not modify)
 doPlot = 0; % Controls plotting or not
 plotStructure = doPlot;
 recvid = 0; % Record a video of the figure 1, record view, 1 = yes
+recordResultsInFile = 1;
 
 % ------------------------
 % Algorithm configurations
 % ------------------------
 
-mode = 4; % 1 = optimize only material, 2 optimize only topology, 3 = both, mode 4 = heat transfer only
+mode = 3; % 1 = optimize only material, 2 optimize only topology, 3 = both, mode 4 = heat transfer only
 nelx = 20; % 40 % number of elements in the x direction
 nely = 10; % 18 % number of elements in the y direction
 v1 = 0.5; % amount of material 1 to allow where  1 = 100%
