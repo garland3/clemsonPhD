@@ -33,7 +33,7 @@ recordResultsInFile = 1;
 
 mode = 3; % 1 = optimize only material, 2 optimize only topology, 3 = both, mode 4 = heat transfer only
 nelx = 20; % 40 % number of elements in the x direction
-nely = 10; % 18 % number of elements in the y direction
+nely = 9; % 18 % number of elements in the y direction
 v1 = 0.5; % amount of material 1 to allow where  1 = 100%
 v2 = 0.5; % amount of mateiral 2 to allow
 lambda1  = 0; % Set the lambda1 penalty/ lagrangian
@@ -55,7 +55,7 @@ beta = 0; % set the perimeter regularization term.
 stepsVolfraction = 15;
 stepsTopology = 15;
 
-maxFEAcalls = 250;
+maxFEAcalls = 30;
 
 
 if recvid==1
@@ -170,7 +170,7 @@ while(FEAcount<maxFEAcalls)
         if(mod(count, 3) ==0 || mode ==1)
             for subcount1 = 1:stepsVolfraction
                 FEAcount= FEAcount+1;
-                [U, g1_local_square,g2_local_square, g3_local_square, volFracV1, volFracV2,topologySens_square] =  FEALevelSet_2D(structure,lsf,volFraction,  doPlot, alpha,beta, FEAcount, mode, rM); %#ok<ASGLU>
+                [U, g1_local_square,g2_local_square, g3_local_square, volFracV1, volFracV2] =  FEALevelSet_2D(structure,lsf,volFraction,  doPlot, alpha,beta, FEAcount, mode, rM); %#ok<ASGLU>
                    
                totalStainE = sum(g2_local_square(:));
                 totalVolLocal = volFracV1+ volFracV2;
@@ -219,7 +219,7 @@ while(FEAcount<maxFEAcalls)
      
          for subcount2 = 1:stepsTopology
              FEAcount= FEAcount+1;
-                   [U, g1_local_square,g2_local_square, g3_local_square, volFracV1, volFracV2,topologySens_square] =  FEALevelSet_2D(structure,lsf,volFraction,  doPlot, alpha,beta, FEAcount, mode, rM); %#ok<ASGLU>
+                   [U, g1_local_square,g2_local_square, g3_local_square, volFracV1, volFracV2] =  FEALevelSet_2D(structure,lsf,volFraction,  doPlot, alpha,beta, FEAcount, mode, rM); %#ok<ASGLU>
                   
                     if (mode ==2 || mode ==3 )
                         totalStainE = sum(g2_local_square(:));
@@ -228,7 +228,7 @@ while(FEAcount<maxFEAcalls)
                          totalVolLocal = volFracV1+volFracV2;
                           G2 = g2_local_square* g2Multiplier -lambda2+1/(mu2)*(totalVol-totalVolLocal);
 
-                         topologySens_square =  topologySens_square +pi*(lambda2 -1/(mu2)*(totalVol-totalVolLocal)*dampingtopology);
+                        % topologySens_square =  topologySens_square +pi*(lambda2 -1/(mu2)*(totalVol-totalVolLocal)*dampingtopology);
 
     %                      shapeSens = shapeSens - la + 1/La*(volCurr-volReq);
     %                      topSens = topSens + pi*(la - 1/La*(volCurr-volReq));

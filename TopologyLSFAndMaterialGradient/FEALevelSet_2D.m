@@ -1,6 +1,6 @@
 % Copyright Anthony Garland 2015
 % ------------------------
-function [U, g1_local_square,g2_local_square,g3_local_square, volFracV1, volFracV2, topologySens_square] = FEALevelSet_2D(structure,lsf, volFracArray,  doplot, ...
+function [U, g1_local_square,g2_local_square,g3_local_square, volFracV1, volFracV2] = FEALevelSet_2D(structure,lsf, volFracArray,  doplot, ...
     alphaPenalty,beta, countMainLoop, mode, resolutionMultiplier)
 % structure - shows the structure's boundary by a binary relationship, 0 = void, 1 = material
 % lsf - is the level set function. I need this level set function so that I
@@ -108,6 +108,14 @@ D_dd =  [ 1 v 0;
     0 0 1/2*(1-v)]*(Epla-Enylon)/(1-v^2);
 
 Aomega = D_dd;
+
+
+% % Find the normal direction of the lsf,  = nabla(lsf)/abs(nabla(lsf))
+[gx_lsf, gy_lsf] = gradient(lsf);
+denominator_g_lsf = (gx_lsf.^2 +gy_lsf.^2).^(1/2);
+% gx_lsf = gx_lsf./denominator_g_lsf;
+% gy_lsf = gy_lsf./denominator_g_lsf;
+%normalDirection = [gx_lsf./denominator_g_lsf  gy_lsf./denominator_g_lsf];
 
 
 % Handle the mapping between nodes and elements and node
@@ -521,6 +529,10 @@ F_f_heat = F_heat(Free_heat);
 T(Free_heat) = K_ff_heat \ F_f_heat; % solve the FEA for temperature
 T(Essentialheat) = T0;
 
+
+G_boundary = zeros(1,ndof); % Dirichelt Boundary condition. 
+G_boundary(Essentialheat) = T0;
+
 % -----------------
 % initialize storage
 % --------------
@@ -541,10 +553,97 @@ end
 
 strainEnergyTotal = 0;
 
+%----------------------------
+% Change the Temperature matrix into a more useful form. 
+% Change the Dirichet boundary condition matrix to a more useful form as
+% well. 
+% ---------------------------
+TcontourMatrix = zeros(numNodesInRow,numNodesInColumn);
+GcounterMatrix = TcontourMatrix;
+
+for j = 1:numNodesInColumn % y
+      rowMultiplier = j-1;
+     for i = 1:numNodesInRow % x
+         nodeNumber = i+numNodesInRow*rowMultiplier;
+         TcontourMatrix(i,j) = T(nodeNumber);     
+         GcounterMatrix(i,j) = G_boundary(nodeNumber);
+     end
+end
+
+% #################################################3
+% ################################################3
+% -----------------------------------
+% Solve the adjoint heat problem. 
+% -----------------------------------
+% ################################################3
+% #################################################3
+
+AdjointBoundary = 0; % set the essential boundaries  to 10
+%Essentialheat = [1:nelx] ; % same adjoint
+
+% Free_heat    = setdiff(alldofs_heat,Essentialheat); % same for adjoint
+
+adjoint_load = -2*del2(TcontourMatrix,1);
+
+
+% K_ff_heat = Kheat(Free_heat,Free_heat); % same for adjoint
+F_f_adjoint = adjoint_load(Free_heat)'; % transpose it to make the dimension agree for solving. 
+
+P(Free_heat) = K_ff_heat \ F_f_adjoint; % solve the adjoint problem for P
+P(Essentialheat) = AdjointBoundary;
+
+
+
+% #################################################3
+% #################################################3
+%
+%  END ADJOINT EQUATION Solver
+% #################################################3
+% #################################################3
+
+
+
+PcontourMatrix = zeros(numNodesInRow,numNodesInColumn);
+
+for j = 1:numNodesInColumn % y
+      rowMultiplier = j-1;
+     for i = 1:numNodesInRow % x
+         nodeNumber = i+numNodesInRow*rowMultiplier;
+         PcontourMatrix(i,j) = P(nodeNumber);     
+     end
+end
+
+stepSize = 1;
+[T_gradient_X, T_gradient_Y] = gradient(TcontourMatrix,stepSize);
+T_gradient_X = T_gradient_X'; T_gradient_Y = T_gradient_Y';
+[P_gradient_X, P_gradient_Y] = gradient(PcontourMatrix,stepSize);
+P_gradient_X = P_gradient_X'; P_gradient_Y = P_gradient_Y';
+% P_gradient = [P_gradient_X P_gradient_Y];
+
+[G_gradient_X, G_gradient_Y] = gradient(GcounterMatrix, stepSize);
+G_gradient_X = G_gradient_X'; G_gradient_Y = G_gradient_Y';
+
+count = 1;
+% Each row, so nely # of row
+for i = 1:nely  
+    % Each column, so nelx # of row
+    for j= 1:nelx
+        % Store the E value for this element
+        P_gradient(count,:) = [P_gradient_X(i,j) P_gradient_Y(i,j)];  
+        G_gradient(count,:) = [G_gradient_X(i,j) G_gradient_Y(i,j)];
+        NormalDirection(count,:) = [gx_lsf(i,j)./denominator_g_lsf(i,j)  gy_lsf(i,j)./denominator_g_lsf(i,j)];
+        T_gradient(count,:) = [T_gradient_X(i,j) T_gradient_Y(i,j)] ;
+        
+        count = count+1;
+    end
+end
+
+NormalDirection(isnan(NormalDirection))  =0; % remove the NaN values 
 % --------------------------------
 % Post processing
 % Calculate stress, vonMises, and sensitivies
 % --------------------------------
+
 % loop over the elements
 for e = 1:ne
     arrayCoordNumber = zeros(1,4);
@@ -630,25 +729,12 @@ for e = 1:ne
     % Heat
     % -----------------------------------
     kmaterial=  K_atElementsArray(e);
-%     ke_heat = 1;    
-%      volFraclocal = volFraction_atElementsArray(e);       
-%     kmaterial = ke_heat*(KheatPLA*volFraclocal+(1-volFraclocal)*KheatNylon);    
-    
-    
-    % Calculate the Jacobian
-     J=B_hat*coord;
 
-     % Calculate the determinate
-     %J_det = det(J);
-     J_transpose = transpose(J);
-     J_transpose_inv = inv(J_transpose);
 
-     % Form the B matrix
-     B = J_transpose_inv*B_hat;
-    
-    qLocal = -kmaterial*B*local_t';
-    qstored(e,:) = qLocal';    
-    g3_localstored(e) = local_t*local_t'*kmaterial; % heat sensitivity
+    g3_part1 =   kmaterial*P_gradient(e,:)*NormalDirection(e,:)' -2*T_gradient(e,:)*NormalDirection(e,:)';
+    g3_part2 = T_gradient(e,:)*NormalDirection(e,:)'-G_gradient(e,:)*NormalDirection(e,:)';
+    g3_part3 = T_gradient(e,:)*T_gradient(e,:)';
+    g3_localstored(e) = g3_part1*g3_part2+g3_part3;
 
     
     % ---------------------------------------
@@ -671,20 +757,7 @@ for e = 1:ne
     
 end
 
-%----------------------------
-% Change the Temperature matrix into a more useful form. 
-% Then PLot
-% ---------------------------
-TcontourMatrix = zeros(numNodesInRow,numNodesInColumn);
 
-for j = 1:numNodesInColumn % y
-      rowMultiplier = j-1;
-     for i = 1:numNodesInRow % x
-         nodeNumber = i+numNodesInRow*rowMultiplier;
-         TcontourMatrix(i,j) = T(nodeNumber);
-     
-     end
-end
 
 if(plotHeat ==1  && mod(countMainLoop,iterationsPerPlot) ==0)
 %     figure(1)
@@ -758,13 +831,15 @@ end
 g1_local_square = zeros(nely, nelx);
 g2_local_square = zeros(nely,nelx);
 g3_local_square = zeros(nely,nelx);
-topologySens_square = zeros(nely, nelx);
+%topologySens_square = zeros(nely, nelx);
+
 count = 1;
 for i = 1:nely
     for j= 1:nelx
         g1_local_square(i,j) = g1_localstored(count);
         g2_local_square(i,j) = g2_localstored(count);
         g3_local_square(i,j) =  g3_localstored(count);
+       
       %  topologySens_square(i,j) = topologySensitivity_stored(count);
         count = count+1;
     end
@@ -772,7 +847,7 @@ end
 
 [g2_local_square] = conv2(padarray(g2_local_square,[1,1],'replicate'),1/6*[0 1 0; 1 2 1; 0 1 0],'valid');
 [g3_local_square] = conv2(padarray(g3_local_square,[1,1],'replicate'),1/6*[0 1 0; 1 2 1; 0 1 0],'valid');
-[topologySens_square] = conv2(padarray(topologySens_square,[1,1],'replicate'),1/6*[0 1 0; 1 2 1; 0 1 0],'valid');
+%[topologySens_square] = conv2(padarray(topologySens_square,[1,1],'replicate'),1/6*[0 1 0; 1 2 1; 0 1 0],'valid');
 
 if(plotSensitivity ==1 && mod(countMainLoop,iterationsPerPlot) ==0)
     figure(1)
