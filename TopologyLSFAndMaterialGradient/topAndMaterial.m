@@ -31,7 +31,7 @@ recordResultsInFile = 1;
 % Algorithm configurations
 % ------------------------
 
-mode = 3; % 1 = optimize only material, 2 optimize only topology, 3 = both, mode 4 = heat transfer only
+mode = 4; % 1 = optimize only material, 2 optimize only topology, 3 = both, mode 4 = heat transfer only
 nelx = 20; % 40 % number of elements in the x direction
 nely = 9; % 18 % number of elements in the y direction
 v1 = 0.5; % amount of material 1 to allow where  1 = 100%
@@ -55,7 +55,7 @@ beta = 0; % set the perimeter regularization term.
 stepsVolfraction = 15;
 stepsTopology = 15;
 
-maxFEAcalls = 30;
+maxFEAcalls = 750;
 
 
 if recvid==1
@@ -107,23 +107,23 @@ elseif mode ==4 % optimize the topology only, using heat transfer
     v2 = 0.39;
     volFraction = structure*0.1/(0.1+0.29);
     lambda2 = 0;
-    mu2 = 0.5;
+    mu2 = 1;
     
-    dampingtopology = 10;
-    g2Multiplier = 0.001;
+    dampingtopology = 1;
+    g2Multiplier = 10;
     
     
-    for j = 1:nely
-       for i = 1:nelx
-           if(randi(100)<v2*100)
-             
-                         structure(j,i)  = 1;
-           else
-                       structure(j,i)  = 0;
-           end
-               
-       end
-    end
+%     for j = 1:nely
+%        for i = 1:nelx
+%            if(randi(100)<v2*100)
+%              
+%                          structure(j,i)  = 1;
+%            else
+%                        structure(j,i)  = 0;
+%            end
+%                
+%        end
+%     end
   
 end
 
@@ -240,16 +240,18 @@ while(FEAcount<maxFEAcalls)
                          %-----------------------
                     elseif (mode ==4)
                         
-                        totalStainE = sum(g3_local_square(:));
-                        fprintf('Volfrac1, Volfra2, feacount, lambda1, lambda2, heat strainE,  %0.2f , %0.2f, %d, %0.2f , %0.2f, %0.2f \n', volFracV1,volFracV2, FEAcount, lambda1, lambda2, totalStainE);
+                        % totalStainE = sum(g3_local_square(:));
+                        fprintf('Volfrac1, Volfra2, feacount, lambda1, lambda2, heat   %0.2f , %0.2f, %d, %0.2f , %0.2f,  \n', volFracV1,volFracV2, FEAcount, lambda1, lambda2);
 
+                          g3_local_square = -g3_local_square;
                         totalVolLocal = volFracV1+volFracV2;
                         G2 = g3_local_square*g2Multiplier -lambda2+1/(mu2)*(totalVol-totalVolLocal);
+                        
                         lambda2 =  lambda2 -1/(mu2)*(totalVol-totalVolLocal)*dampingtopology;  
 
                     end
                     
-                 topSensFull = zeros(size(topologySens_square)+2); topSensFull(2:end-1,2:end-1) = topologySens_square;
+                % topSensFull = zeros(size(topologySens_square)+2); topSensFull(2:end-1,2:end-1) = topologySens_square;
                 g2Full = zeros(size(G2)+2); g2Full(2:end-1,2:end-1) = G2;
 
             % Choose time step for evolution based on CFL value

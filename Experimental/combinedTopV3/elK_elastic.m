@@ -1,4 +1,4 @@
-function [KE]=elK_elastic
+function [KE]=elK_elastic(ElasticMod)
 
 % Change this if statement to be not true if you need to see the
 % calculations
@@ -16,9 +16,14 @@ if(1==0)
 
 else
 % Do the calculations 
-E = 1; % Young's mod
+%E = 1; % Young's mod
+E = ElasticMod;
 v = 0.3; % Piossons ratio
 G = E/(2*(1+v));
+
+ D = [ 1 v 0;
+        v 1 0;
+        0 0 1/2*(1-v)]*E/(1-v^2);
 
 
 % 1 by 1 square

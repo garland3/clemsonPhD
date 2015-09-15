@@ -1,4 +1,4 @@
-function [T]  = temperatureFEA2(nelx,nely,x,penal)
+function [T]  = temperatureFEA2(nelx,nely,x,penal, doPlot, iterationsPerPlot, iteration)
 
 kmaterial = 1; % W/degreeC
 u0 =0; % value at essentail boundaries
@@ -53,14 +53,18 @@ end
 % conditions
 F = zeros(nn,1);
 K = zeros(nn,nn);
+
+row = nelx+1;
+column = nely+1;
 % Just the left side in the middle
 quartY = ceil(nely/4);
-Essential=   1+quartY*numNodesInRow:numNodesInRow :numNodesInRow*(numNodesInColumn-quartY)+1; % ... % left side
+Essential=   [1 row (column-1)*row+1 column*row] ; % the 4 corners
 
 Essential = unique(Essential);
 alldofs     = [1:nn];
 Free    = setdiff(alldofs,Essential);
-F = ones(nn,1); % add a constant heat source everywhere
+%F = ones(nn,1); % add a constant heat source everywhere
+F([ceil(row/2)+(ceil(column/2)*row) (ceil(row/2)+1)+(ceil(column/2)*row)]) =  20; % heat source in the middle
 
   
 xLoc = 1;
@@ -186,7 +190,7 @@ for j = 1:numNodesInColumn % y
      end
 end
 
-if(1==0)
+if(doPlot==1 && mod(iteration,iterationsPerPlot) ==0)
      subplot(1,2,1)
      % plot the coutour graph
      contour(XLocations,YLocations,TcontourMatrix);
@@ -195,11 +199,11 @@ if(1==0)
      
     % 
     % plot the surf graph
-    subplot(1,2,2)
-    surf(XLocations,YLocations,TcontourMatrix);
+%     subplot(1,2,2)
+%     surf(XLocations,YLocations,TcontourMatrix);
 end
- subplot(1,2,1);
-  surf(XLocations,YLocations,TcontourMatrix);
+% subplot(1,2,1);
+%  surf(XLocations,YLocations,TcontourMatrix);
 % tti= strcat('Heat surface.  Number of elements =', int2str(ne));
 % title(tti);
 % 

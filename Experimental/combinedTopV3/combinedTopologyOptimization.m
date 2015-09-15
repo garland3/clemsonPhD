@@ -1,9 +1,38 @@
 function combinedTopologyOptimization()
 
-actualTopElasticCombined(60,30,0.4,3,2);
-%%%% A 99 LINE TOPOLOGY OPTIMIZATION CODE BY OLE SIGMUND, JANUARY 2000 %%%
-%%%% CODE MODIFIED FOR INCREASED SPEED, September 2002, BY OLE SIGMUND %%%
-function [x] =  actualTopElasticCombined(nelx,nely,volfrac,penal,rmin)
+
+
+% --------------------------------------
+% %% Settings
+% --------------------------------------------
+
+nelx = 40; % # of elements in the x direcction
+nely = 18; % number of elements in the y direction
+penal = 3; % penality used for the SIMP method
+rmin = 2; % smoothing radius for sensitivity smoothing. 
+
+E_material1 = 4; % The elastic mod of material 1
+E_material2 = 2; % The elastic mod of material 2
+
+K_material1 = 2; % heat conduction of material 1
+K_material1 = 4; % heat conduction of material 2
+
+
+doPlotHeat = 1;
+iterationsPerPLot = 5;
+
+w1 = 0.15; % weight elastic for multi-objective
+w2 = 1- w1; % weight heat transfer
+
+elasticMod = 4;
+
+% INITIALIZE
+x(1:nely,1:nelx) = volfrac; % artificial density of the elements
+w(1:nely,1:nelx)  = 1; % actual volume fraction composition of each element
+
+temp1(1:nely,1:nelx) =0;
+temp2(1:nely,1:nelx) =0;
+
 % recvid=1;       %turn on or off the video recorder
 % %% FEA and Elastic problem initialization
 % if recvid==1
@@ -14,12 +43,7 @@ function [x] =  actualTopElasticCombined(nelx,nely,volfrac,penal,rmin)
 %     vid=1;
 % end
 
-w1 = 0.999; % weight elastic for multi-objective
-w2 = 1- w1; % weight heat transfer
 
-
-% INITIALIZE
-x(1:nely,1:nelx) = volfrac; % density of the elements
 loop = 0; 
 change = 1.;
 % START ITERATION
@@ -28,9 +52,9 @@ while change > 0.01
   xold = x;
 % FE-ANALYSIS
   [U]=FE_elastic(nelx,nely,x,penal);   
-    [U_heatColumn]=temperatureFEA2(nelx,nely,x,penal);   
+    [U_heatColumn]=temperatureFEA2(nelx,nely,x,penal,doPlotHeat,iterationsPerPLot,loop);   
 % OBJECTIVE FUNCTION AND SENSITIVITY ANALYSIS
-  [KE] = elK_elastic;
+  [KE] = elK_elastic(elasticMod);
    [KEHeat] = lkHeat;
    
      % Normalize the U's for now
@@ -42,6 +66,8 @@ while change > 0.01
   
 elementsInRow = nelx+1;
 c = 0.; % c is the objective. Total strain energy
+
+
 for ely = 1:nely
     rowMultiplier = ely-1;
     for elx = 1:nelx
@@ -76,12 +102,25 @@ for ely = 1:nely
           
         %  dc(ely,elx) = -penal*x(ely,elx)^(penal-1)*Ue'*KE*Ue; % objective sensitivity, partial of c with respect to x
         
-        
-         temp1 = -penal*x(ely,elx)^(penal-1)*Ue'*KE*Ue; % objective sensitivity, partial of c with respect to x
-          temp2 = -penal*x(ely,elx)^(penal-1)*U_heat'*KEHeat*U_heat;
-           dc(ely,elx) = w1*temp1+w2*temp2;
+        % Temps are the sensitivies 
+         temp1(ely,elx) = -penal*x(ely,elx)^(penal-1)*Ue'*KE*Ue; % objective sensitivity, partial of c with respect to x
+         temp2(ely,elx) = -penal*x(ely,elx)^(penal-1)*U_heat'*KEHeat*U_heat;
+          
+          
+           %dc(ely,elx) = w1*temp1+w2*temp2;
+   
     end
 end
+
+% normalize the sensitivies  by dividing by their max values. 
+ temp1Max =-1* min(min(temp1));
+ temp1 = temp1/temp1Max;
+ temp2Max =-1* min(min(temp2));
+ temp2 = temp2/temp2Max;
+
+dc = w1*temp1+w2*temp2; % add the two sensitivies together using their weights 
+
+
 % FILTERING OF SENSITIVITIES
   [dc]   = check(nelx,nely,rmin,x,dc);    
 % DESIGN UPDATE BY THE OPTIMALITY CRITERIA METHOD

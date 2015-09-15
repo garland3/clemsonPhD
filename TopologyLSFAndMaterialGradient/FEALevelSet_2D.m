@@ -17,7 +17,7 @@ function [U, g1_local_square,g2_local_square,g3_local_square, volFracV1, volFrac
 % 2D grid with a 3D function
 % http://www.mathworks.com/help/matlab/ref/interp2.html
 recvid = 0; % Record a video of the figure 1, record view, 1 = yes
-iterationsPerPlot = 1;
+iterationsPerPlot = 10;
 
 doplotDisplacement = doplot; % Set to 1 to show. Runs much slower
 plotStress = doplot; % Set to 1 to plot the stress graphs
@@ -30,8 +30,8 @@ plotStrucAndGrad = doplot;
 plotHeat = doplot;
 
 heatMode = 0;
-showFinalResultsMode = 1; % show final results mode shows the struct and gradient in 1 subplot.
-noPlotsCSVOutput = 1;
+showFinalResultsMode = 0; % show final results mode shows the struct and gradient in 1 subplot.
+noPlotsCSVOutput = 0;
 
 g2Multiplier = 100;
 subplotY = 2; % Suplot matrix setup
@@ -72,6 +72,7 @@ elseif (mode ==4)
      plotHeat = 1;
       plotStructure = 1;
        plotSensitivity = 1; % override    
+         plotLSF = 1;
 end
 
 [nely,nelx] = size(volFracArray);
@@ -372,19 +373,20 @@ Free    = setdiff(alldofs,Essential2);
 % heat FEA
 % -------------------
 Kheat = zeros(nn,nn);
-T0 = 10; % set the essential boundaries  to 10
+T0 = 0; % set the essential boundaries  to 10
 
 % Just the left side in the middle
 % quartY = ceil(nely/4);
 % Essentialheat=   1+quartY*numNodesInRow:numNodesInRow :numNodesInRow*(numNodesInColumn-quartY)+1; % ... % left side
 % Essentialheat = unique(Essentialheat);
 column = nely +1;
-Essentialheat = [1:nelx] ;
+Essentialheat = [1 2 nn nn-1 ceil(row/2)+(ceil(column/2)*row) (ceil(row/2)+1)+(ceil(column/2)*row) ] ;
+EssentialHeatTemps = [0 0 0 0 20 20];
 alldofs_heat = [1:nn];
 
 Free_heat    = setdiff(alldofs_heat,Essentialheat);
 F_heat = zeros(nn,1);
-F_heat([ceil(row/2)+(ceil(column/2)*row) (ceil(row/2)+1)+(ceil(column/2)*row)]) =  20; % heat source in the middle
+%F_heat([ceil(row/2)+(ceil(column/2)*row) (ceil(row/2)+1)+(ceil(column/2)*row)]) =  20; % heat source in the middle
 
 
 
@@ -527,7 +529,7 @@ K_ff_heat = Kheat(Free_heat,Free_heat);
 F_f_heat = F_heat(Free_heat);
 
 T(Free_heat) = K_ff_heat \ F_f_heat; % solve the FEA for temperature
-T(Essentialheat) = T0;
+T(Essentialheat) = EssentialHeatTemps;
 
 
 G_boundary = zeros(1,ndof); % Dirichelt Boundary condition. 
@@ -542,7 +544,7 @@ vonM_stored = zeros(ne,1);
 g1_localstored = zeros(ne,1);
 g2_localstored = zeros(ne,1);
 g3_localstored = zeros(ne,1);
-qstored = zeros(ne,2);
+% qstored = zeros(ne,2);
 %  topologySensitivity = zeros(ne,1);
 elemcenterLocations = zeros(ne,2);
 
@@ -768,14 +770,14 @@ if(plotHeat ==1  && mod(countMainLoop,iterationsPerPlot) ==0)
 %      title(tti);
 
      % figure(1)
-     subplot(subplotY,subplotX,subplotCount); subplotCount=subplotCount+1;
-    quiver(elemcenterLocations(:,1),elemcenterLocations(:,2),qstored(:,1),qstored(:,2))
-    xlim([0,L])
-    ylim([0,h])
-    %xlabel('radial distance, meters') % y-axis label
-    %ylabel('Height') % x-axis label
-    tti= strcat('Flux from each element');
-    title(tti);
+%      subplot(subplotY,subplotX,subplotCount); subplotCount=subplotCount+1;
+%     quiver(elemcenterLocations(:,1),elemcenterLocations(:,2),qstored(:,1),qstored(:,2))
+%     xlim([0,L])
+%     ylim([0,h])
+%     %xlabel('radial distance, meters') % y-axis label
+%     %ylabel('Height') % x-axis label
+%     tti= strcat('Flux from each element');
+%     title(tti);
      
 %     % plot the surf graph
 %      figure(1)
@@ -852,7 +854,7 @@ end
 if(plotSensitivity ==1 && mod(countMainLoop,iterationsPerPlot) ==0)
     figure(1)
     subplot(subplotY,subplotX,subplotCount); subplotCount=subplotCount+1;
-    imagesc(imageXaxis,imageYaxis,g3_local_square);
+    imagesc(imageXaxis,imageYaxis,-g3_local_square);
      set(gca,'YDir','normal');
     
     % Set the X and Y axis labels

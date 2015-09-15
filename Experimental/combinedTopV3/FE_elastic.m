@@ -58,6 +58,7 @@ end
 % conditions
 F = zeros(ndof,1);
 K = zeros(ndof,ndof);
+row = nelx+1;
 % Essential   = [1:numNodesInRow ... % bottom row
 %             numNodesInRow*(numNodesInColumn-1):numNodesInRow*numNodesInColumn ... % top row
 %             1:numNodesInRow :numNodesInRow*(numNodesInColumn-1) ... % left side
@@ -75,9 +76,14 @@ K = zeros(ndof,ndof);
 % Essential   =[ 1:numNodesInRow*2 :2*numNodesInRow*(numNodesInColumn-1)+1 % X direction on left side is held fixed
 %              1+1:numNodesInRow*2 :2*numNodesInRow*(numNodesInColumn-1)+1+1  ];  % Y direction on left side is held fixed
          
- Essential   =union( 1:2*numNodesInRow :2*(numNodesInColumn-1)*numNodesInRow+1,numNodesInRow*2) ;% X direction on left side is held fixed
+%  Essential   =union( 1:2*numNodesInRow :2*(numNodesInColumn-1)*numNodesInRow+1,numNodesInRow*2) ;% X direction on left side is held fixed
                % Y direction on left side is held fixed
+% Essential = unique(Essential);
+
+Essential = [1 2]; % bottom left corner is fixed
+Essential = [Essential row*2 row*2-1]; % bottom right corner is only fixed in the y direction
 Essential = unique(Essential);
+
 alldofs     = [1:ndof];
 Free    = setdiff(alldofs,Essential);
 
@@ -87,10 +93,12 @@ Free    = setdiff(alldofs,Essential);
 %nodeNumber = 2*(numNodesInRow)*floor( (numNodesInColumn)/2);
 % F(nodeNumber,1) = -1; % force at particular node
 
-F(2*(numNodesInColumn-1)*numNodesInRow+2,1) = -10; % y direction, down
+% F(2*(numNodesInColumn-1)*numNodesInRow+2,1) = -10; % y direction, down
+FappliedLoad = 20;
+F( (floor(row/2)+1)*2) = -FappliedLoad; % force down in the bottom middle
 
 
-ke = elK_elastic();
+ke = elK_elastic(E);
   
 xLoc = 1;
 yLoc = 1;
@@ -274,54 +282,54 @@ T(Essential) = u0;
 % q_mags = [qMag_stored,transpose(1:nn)]
 % 
 
-TcontourMatrix = zeros(numNodesInRow,numNodesInColumn);
-
-TcontourMatrixX = zeros(numNodesInRow,numNodesInColumn);
-TcontourMatrixY = zeros(numNodesInRow,numNodesInColumn);
-
- 
-  
-for j = 1:numNodesInColumn % y
-      rowMultiplier = j-1;
-     for i = 1:numNodesInRow % x
-         nodeNumber = i+numNodesInRow*rowMultiplier;
-         % combined the X and Y into 1 magnitude of a vector
-         node1 = nodeNumber*2-1; % minus 1, because we want to start at 1 and not 2
-         node2 = node1+1;
-         TcontourMatrixX(i,j) = T(node1);
-         TcontourMatrixY(i,j) = T(node2);
-         
-         temp = sqrt(T(node1)^2+T(node2)^2);
-         
-         
-         TcontourMatrix(i,j) = temp;
-     
-     end
-end
-
-if(1==0)
-     subplot(1,2,1)
-     % plot the coutour graph
-     contour(XLocations,YLocations,TcontourMatrix);
-     tti= strcat('Heat contours. Number of elements=', int2str(ne));
-     title(tti);
-     
-    % 
-    % plot the surf graph
-    subplot(1,2,2)
-    surf(XLocations,YLocations,TcontourMatrix);
-end
- subplot(2,2,1);
-  surf(XLocations,YLocations,TcontourMatrix);
-  
-if(1==1)
-     subplot(2,2,2);
-     surf(XLocations,YLocations,TcontourMatrixX);
-      subplot(2,2,3);
-     surf(XLocations,YLocations,TcontourMatrixY);
-end
-% tti= strcat('Heat surface.  Number of elements =', int2str(ne));
-% title(tti);
+% TcontourMatrix = zeros(numNodesInRow,numNodesInColumn);
 % 
-% diary off
+% TcontourMatrixX = zeros(numNodesInRow,numNodesInColumn);
+% TcontourMatrixY = zeros(numNodesInRow,numNodesInColumn);
+% 
+%  
+%   
+% for j = 1:numNodesInColumn % y
+%       rowMultiplier = j-1;
+%      for i = 1:numNodesInRow % x
+%          nodeNumber = i+numNodesInRow*rowMultiplier;
+%          % combined the X and Y into 1 magnitude of a vector
+%          node1 = nodeNumber*2-1; % minus 1, because we want to start at 1 and not 2
+%          node2 = node1+1;
+%          TcontourMatrixX(i,j) = T(node1);
+%          TcontourMatrixY(i,j) = T(node2);
+%          
+%          temp = sqrt(T(node1)^2+T(node2)^2);
+%          
+%          
+%          TcontourMatrix(i,j) = temp;
+%      
+%      end
+% end
+% 
+% if(1==0)
+%      subplot(1,2,1)
+%      % plot the coutour graph
+%      contour(XLocations,YLocations,TcontourMatrix);
+%      tti= strcat('Heat contours. Number of elements=', int2str(ne));
+%      title(tti);
+%      
+%     % 
+%     % plot the surf graph
+%     subplot(1,2,2)
+%     surf(XLocations,YLocations,TcontourMatrix);
+% end
+%  subplot(2,2,1);
+%   surf(XLocations,YLocations,TcontourMatrix);
+%   
+% if(1==1)
+%      subplot(2,2,2);
+%      surf(XLocations,YLocations,TcontourMatrixX);
+%       subplot(2,2,3);
+%      surf(XLocations,YLocations,TcontourMatrixY);
+% end
+% % tti= strcat('Heat surface.  Number of elements =', int2str(ne));
+% % title(tti);
+% % 
+% % diary off
 T = transpose(T);
