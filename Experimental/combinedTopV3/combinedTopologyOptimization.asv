@@ -17,15 +17,12 @@ matProp = MaterialProperties;
 
 
 % INITIALIZE
-designVars = DesignVars(settings);
+designVars = DesignVars;
 designVars.x(1:settings.nely,1:settings.nelx) = settings.totalVolume; % artificial density of the elements
 designVars.w(1:settings.nely,1:settings.nelx)  = 1; % actual volume fraction composition of each element
 
 designVars.temp1(1:settings.nely,1:settings.nelx) =0;
 designVars.temp2(1:settings.nely,1:settings.nelx) =0;
-
-% designVars.CalcIENmatrix(settings);
-% designVars.CalcElementLocation(settings);
 
 % recvid=1;       %turn on or off the video recorder
 % %% FEA and Elastic problem initialization
@@ -64,7 +61,7 @@ c = 0.; % c is the objective. Total strain energy
 
 for ely = 1:settings.nely
     rowMultiplier = ely-1;
-    for elx = 1:settings.nelx
+    for elx = 1:nelx
 %           n1 = (nely+1)*(elx-1)+ely; 
 %           n2 = (nely+1)* elx   +ely;
 %           Ue = U([2*n1-1;2*n1; 2*n2-1;2*n2; 2*n2+1;2*n2+2; 2*n1+1;2*n1+2],1);
@@ -84,9 +81,11 @@ for ely = 1:settings.nely
          % NodeNumbers = union(xNodeNumbers,yNodeNumbers);
           Ue = U(NodeNumbers,:);
           U_heat = U_heatColumn(nodes1,:);
+          
+        
          
-          c = c + settings.w1*designVars.x(ely,elx)^settings.penal*Ue'*KE*Ue;
-          c = c + settings.w2*designVars.x(ely,elx)^settings.penal*U_heat'*KEHeat*U_heat;
+          c = c + w1*x(ely,elx)^penal*Ue'*KE*Ue;
+          c = c + w2*x(ely,elx)^penal*U_heat'*KEHeat*U_heat;
           
           % for the x location
           % The first number is the row - "y value"
@@ -95,8 +94,8 @@ for ely = 1:settings.nely
         %  dc(ely,elx) = -penal*x(ely,elx)^(penal-1)*Ue'*KE*Ue; % objective sensitivity, partial of c with respect to x
         
         % Temps are the sensitivies 
-         designVars.temp1(ely,elx) = -settings.penal*designVars.x(ely,elx)^(settings.penal-1)*Ue'*KE*Ue; % objective sensitivity, partial of c with respect to x
-         designVars.temp2(ely,elx) = -settings.penal*designVars.x(ely,elx)^(settings.penal-1)*U_heat'*KEHeat*U_heat;
+         temp1(ely,elx) = -penal*x(ely,elx)^(penal-1)*Ue'*KE*Ue; % objective sensitivity, partial of c with respect to x
+         temp2(ely,elx) = -penal*x(ely,elx)^(penal-1)*U_heat'*KEHeat*U_heat;
           
           
            %dc(ely,elx) = w1*temp1+w2*temp2;
@@ -105,27 +104,27 @@ for ely = 1:settings.nely
 end
 
 % normalize the sensitivies  by dividing by their max values. 
-temp1Max =-1* min(min(designVars.temp1));
-designVars.temp1 = designVars.temp1/temp1Max;
-temp2Max =-1* min(min(designVars.temp2));
-designVars.temp2 = designVars.temp2/temp2Max;
+ temp1Max =-1* min(min(temp1));
+ temp1 = temp1/temp1Max;
+ temp2Max =-1* min(min(temp2));
+ temp2 = temp2/temp2Max;
 
-designVars.dc = settings.w1*designVars.temp1+settings.w2*designVars.temp2; % add the two sensitivies together using their weights 
+dc = w1*temp1+w2*temp2; % add the two sensitivies together using their weights 
 
 
 % FILTERING OF SENSITIVITIES
-  [designVars.dc]   = check(settings.nelx,settings.nely,settings.rmin,designVars.x,designVars.dc);    
+  [dc]   = check(nelx,nely,rmin,x,dc);    
 % DESIGN UPDATE BY THE OPTIMALITY CRITERIA METHOD
-  [designVars.x]    = OC(settings.nelx,settings.nely,designVars.x,settings.totalVolume,designVars.dc); 
+  [x]    = OC(nelx,nely,x,totalVolumeTarget,dc); 
 % PRINT RESULTS
-  change = max(max(abs(designVars.x-designVars.xold)));
+  change = max(max(abs(x-xold)));
   disp([' It.: ' sprintf('%4i',loop) ' Obj.: ' sprintf('%10.4f',c) ...
-       ' Vol.: ' sprintf('%6.3f',sum(sum(designVars.x))/(settings.nelx*settings.nely)) ...
+       ' Vol.: ' sprintf('%6.3f',sum(sum(x))/(nelx*nely)) ...
         ' ch.: ' sprintf('%6.3f',change )])
 % PLOT DENSITIES  
 subplot(2,2,4);
 colormap(winter); 
-imagesc(designVars.x); 
+imagesc(x); 
 set(gca,'YDir','normal'); % Flips the image so that row 1 is not at the top
 % image(x); 
 axis equal; axis tight; axis off;pause(1e-6);

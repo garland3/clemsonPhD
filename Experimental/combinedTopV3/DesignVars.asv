@@ -1,0 +1,34 @@
+classdef DesignVars
+    
+     properties
+         x; % the "density" at each element
+         xold; % 
+         w; % the volume fraction at each element
+         
+         % Support vars to help in optimization
+         temp1; % Sensitivity 1
+         temp2; % Sensitivity 2
+         dc; % Derivative of c (hence dc). C is the objective.
+         
+         IEN; % element to node map. Save this matrix, so it does not need to be recalculated every time. 
+         numNodesInRow = settings.nelx+1;
+        numNodesInColumn = settings.nely+1;
+        XLocations=zeros(numNodesInRow,numNodesInColumn);
+        YLocations=zeros(numNodesInRow,numNodesInColumn);
+         
+     end
+     
+      methods
+          function obj = DesignVars()
+              
+              
+              
+          end
+          
+          function Ca
+          
+      end
+     
+     
+    
+end

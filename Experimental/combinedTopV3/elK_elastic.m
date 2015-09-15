@@ -1,4 +1,4 @@
-function [KE]=elK_elastic(ElasticMod)
+function [KE]=elK_elastic(materialProp)
 
 % Change this if statement to be not true if you need to see the
 % calculations
@@ -17,9 +17,11 @@ if(1==0)
 else
 % Do the calculations 
 %E = 1; % Young's mod
-E = ElasticMod;
-v = 0.3; % Piossons ratio
-G = E/(2*(1+v));
+
+
+E = materialProp.E_material1;
+v = materialProp.v; % Piossons ratio
+G = materialProp.G;
 
  D = [ 1 v 0;
         v 1 0;

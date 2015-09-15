@@ -1,12 +1,12 @@
-function [T]  = FE_elastic(nelx,nely,x,penal, matProp)
+function [T]=FE_elasticV2(designVars, settings, matProp)
 
 E = matProp.E_material1; % Young's mod
-v = 0.25; % Piossons ratio
-G = E/(2*(1+v));
+v = matProp.v; % Piossons ratio
+G = matProp.G;
 
 u0 =0; % value at essentail boundaries
-nn = (nelx+1)*(nely+1); % number of nodes
-ne = nelx*nely; % number of elements
+nn = (settings.nelx+1)*(settings.nely+1); % number of nodes
+ne = settings.nelx*settings.nely; % number of elements
 ndof = nn*2; % Number of degrees of freedome. 2 per node. 
 
 % ------------------------------------
@@ -19,26 +19,26 @@ ndof = nn*2; % Number of degrees of freedome. 2 per node.
 % Second column is elemnt 2's global node number
 %  and ....
 
-count = 1;
-elementsInRow = nelx+1;
-IEN = zeros(nn,4);
-% Each row, so nely # of row
-for i = 1:nely
-     rowMultiplier = i-1;
-    % Each column, so nelx # of row
-    for j= 1:nelx        
-        IEN(count,:)=[rowMultiplier*elementsInRow+j,
-                      rowMultiplier*elementsInRow+j+1,
-                      (rowMultiplier +1)*elementsInRow+j+1,
-                       (rowMultiplier +1)*elementsInRow+j];
-        count = count+1;
-    end
-end
+% count = 1;
+% elementsInRow = settings.nelx+1;
+% % IEN = zeros(nn,4);
+% % % Each row, so nely # of row
+% % for i = 1:settings.nely
+% %      rowMultiplier = i-1;
+% %     % Each column, so nelx # of row
+% %     for j= 1:settings.nelx        
+% %         IEN(count,:)=[rowMultiplier*elementsInRow+j,
+% %                       rowMultiplier*elementsInRow+j+1,
+% %                       (rowMultiplier +1)*elementsInRow+j+1,
+% %                        (rowMultiplier +1)*elementsInRow+j];
+% %         count = count+1;
+% %     end
+% % end
 
-numNodesInRow = nelx+1;
-numNodesInColumn = nely+1;
-XLocations=zeros(numNodesInRow,numNodesInColumn);
-YLocations=zeros(numNodesInRow,numNodesInColumn);
+numNodesInRow = settings.nelx+1;
+numNodesInColumn = settings.nely+1;
+% XLocations=zeros(numNodesInRow,numNodesInColumn);
+% YLocations=zeros(numNodesInRow,numNodesInColumn);
 
 % Find and store the global positions of each node
 % Each element square is 1 by 1 units
@@ -58,7 +58,7 @@ end
 % conditions
 F = zeros(ndof,1);
 K = zeros(ndof,ndof);
-row = nelx+1;
+row = settings.nelx+1;
 % Essential   = [1:numNodesInRow ... % bottom row
 %             numNodesInRow*(numNodesInColumn-1):numNodesInRow*numNodesInColumn ... % top row
 %             1:numNodesInRow :numNodesInRow*(numNodesInColumn-1) ... % left side
@@ -109,7 +109,7 @@ for e = 1:ne
       % loop over local node numbers to get their node global node numbers
       for j = 1:4
           % Get the node number
-          coordNodeNumber = IEN(e,j);
+          coordNodeNumber = designVars.IEN(e,j);
            % get the global X,Y position of each node and put in array
            coord(j,:) = globalPosition(coordNodeNumber,:);
       end
@@ -178,7 +178,7 @@ for e = 1:ne
 
       % Insert the element stiffness matrix into the global.    
      % node = IEN(e,:);
-        nodes1 = IEN(e,:);
+        nodes1 = designVars.IEN(e,:);
          xNodes = nodes1*2-1;
         yNodes = nodes1*2;
     
@@ -192,10 +192,10 @@ for e = 1:ne
       % for the x location
       % The first number is the row - "y value"
       % The second number is the column "x value"
-       K(NodeNumbers,NodeNumbers) = K(NodeNumbers,NodeNumbers) + x(yLoc,xLoc)^penal*ke;
+       K(NodeNumbers,NodeNumbers) = K(NodeNumbers,NodeNumbers) + designVars.x(yLoc,xLoc)^settings.penal*ke;
        
        xLoc = xLoc+1;
-       if(xLoc>nelx)
+       if(xLoc>settings.nelx)
            xLoc = 1;
            yLoc = yLoc+1;
        end
