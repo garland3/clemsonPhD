@@ -73,7 +73,10 @@ yLoc = 1;
 for e = 1:ne
     
       % Get the precalculated element stiffness matrix. 
-      ke = elementK_heat();
+     % ke = elementK_heat();
+      [elx,ely]= designVars.GivenNodeNumberGetXY(e);
+      ke = matProp.effectiveHeatKEmatrix(  designVars.w(ely,elx));
+
       
       
       % Insert the element stiffness matrix into the global.    

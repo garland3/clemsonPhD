@@ -1,14 +1,8 @@
-function k = elementK_heat()
+function k = elementK_heat(heatCoefficient)
 
 if(1==1)    
-    % use the precalculated k
-    % or if necessary we can actually do the calculations. 
-    k = [0.6667   -0.1667   -0.3333   -0.1667;
-           -0.1667    0.6667   -0.1667   -0.3333;
-           -0.3333   -0.1667    0.6667   -0.1667;
-           -0.1667   -0.3333   -0.1667    0.6667];
-else
-    kmaterial = 1; % W/degreeC
+  
+    kmaterial = heatCoefficient; % W/degreeC
     % 1 by 1 square
     coord = [0 0;
             1 0;
@@ -52,4 +46,13 @@ else
        ke = ke + tempK;% +tempM;
     end  
     k = ke;
+    
+else
+      % use the precalculated k
+    % or if necessary we can actually do the calculations. 
+    k = [0.6667   -0.1667   -0.3333   -0.1667;
+           -0.1667    0.6667   -0.1667   -0.3333;
+           -0.3333   -0.1667    0.6667   -0.1667;
+           -0.1667   -0.3333   -0.1667    0.6667];
+
 end

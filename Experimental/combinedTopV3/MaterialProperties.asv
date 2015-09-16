@@ -8,20 +8,49 @@ classdef MaterialProperties
         K_material2 = 4; % heat conduction of material 2    
         
         v = 0.3; % Piossons ratio
-        G = E_material1/(2*(1+v));
+        G ; % = E_material1/(2*(1+v));
+        
+        dKelastic; % derivative of K elastic matrix with respect to a material vol fraction change.
+        dKheat;   % derivative of K heat matrix with respect to a material vol fraction change.
     end
     
     methods
-        
+
+        % Constructor
         function obj = MaterialProperties
+             obj.G = obj.E_material1/(2*(1+obj.v));
+             
+             obj.dKelastic = [ 1 obj.v 0;
+                            obj.v 1 0;
+                            0 0 1/2*(1-obj.v)]*(obj.E_material1-obj.E_material2)/(1-obj.v^2);
+                        
+            dKheat
         end
     
-        function e =  effectiveElasticProperties(material1Fraction)
+        
+        % Calculate Elastic mod
+        function e =  effectiveElasticProperties(obj, material1Fraction)
             e = material1Fraction*obj.E_material1+(1-material1Fraction)*obj.E_material2;
         end
         
-        function e =  effectiveHeatProperties(material1Fraction)
+        function ke = effectiveElasticKEmatrix(obj, material1Fraction)
+            % Calculate E, then calculate the K element matrix
+            E = effectiveElasticProperties(obj, material1Fraction);
+            [ke]=elK_elastic(E,obj.v, obj.G);
+            
+        end
+        
+        
+        
+        % Calculate heat transfer coefficient
+        function e =  effectiveHeatProperties(obj,material1Fraction)
              e = material1Fraction*obj.K_material1+(1-material1Fraction)*obj.K_material2;
+        end
+
+        % Calculate the heat conduction matrix
+        function  kheat = effectiveHeatKEmatrix(obj, material1Fraction)
+            heatCoefficient = obj.effectiveHeatProperties(material1Fraction);
+            [kheat]=elementK_heat(heatCoefficient);            
         end
         
     end

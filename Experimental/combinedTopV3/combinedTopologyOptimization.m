@@ -1,7 +1,4 @@
 function combinedTopologyOptimization()
-
-
-
 % --------------------------------------
 % %% Settings
 % --------------------------------------------
@@ -10,22 +7,21 @@ settings = Configuration;
 % material properties Object
 matProp = MaterialProperties;
 
-
 % ---------------------------------
 % Initialization of varriables
 % ---------------------------------
-
-
-% INITIALIZE
 designVars = DesignVars(settings);
 designVars.x(1:settings.nely,1:settings.nelx) = settings.totalVolume; % artificial density of the elements
 designVars.w(1:settings.nely,1:settings.nelx)  = 1; % actual volume fraction composition of each element
 
-designVars.temp1(1:settings.nely,1:settings.nelx) =0;
-designVars.temp2(1:settings.nely,1:settings.nelx) =0;
+designVars.temp1(1:settings.nely,1:settings.nelx) = 0;
+designVars.temp2(1:settings.nely,1:settings.nelx) = 0;
+designVars.g1elastic(1:settings.nely,1:settings.nelx) = 0;
+designVars.g1heat(1:settings.nely,1:settings.nelx) = 0;
 
-% designVars.CalcIENmatrix(settings);
-% designVars.CalcElementLocation(settings);
+designVars = designVars.CalcIENmatrix(settings);
+designVars =  designVars.CalcElementLocation(settings);
+designVars = designVars.PreCalculateXYmapToNodeNumber(settings);
 
 % recvid=1;       %turn on or off the video recorder
 % %% FEA and Elastic problem initialization
@@ -40,6 +36,7 @@ designVars.temp2(1:settings.nely,1:settings.nelx) =0;
 
 loop = 0; 
 change = 1.;
+elementsInRow = settings.nelx+1;
 % START ITERATION
 while change > 0.01  
   loop = loop + 1;
@@ -48,90 +45,119 @@ while change > 0.01
   [U]=FE_elasticV2(designVars, settings, matProp);   
   [U_heatColumn]=temperatureFEA_V3(designVars, settings, matProp,loop);   
 % OBJECTIVE FUNCTION AND SENSITIVITY ANALYSIS
- [KE] = elK_elastic(matProp);
- [KEHeat] = lkHeat;
+% [KE] = elK_elastic(matProp);
+
+
+ %[KEHeat] = lkHeat;
    
-     % Normalize the U's for now
-          uemax = max(max(U));
-          uHeatmax = max(max(U_heatColumn));
-          %U = U/uemax;
-          %U_heatColumn = U_heatColumn/uHeatmax;
-  
-  
-elementsInRow = settings.nelx+1;
-c = 0.; % c is the objective. Total strain energy
+            
+            c = 0.; % c is the objective. Total strain energy
 
 
-for ely = 1:settings.nely
-    rowMultiplier = ely-1;
-    for elx = 1:settings.nelx
-%           n1 = (nely+1)*(elx-1)+ely; 
-%           n2 = (nely+1)* elx   +ely;
-%           Ue = U([2*n1-1;2*n1; 2*n2-1;2*n2; 2*n2+1;2*n2+2; 2*n1+1;2*n1+2],1);
-           nodes1=[rowMultiplier*elementsInRow+elx;
-                    rowMultiplier*elementsInRow+elx+1;
-                    (rowMultiplier +1)*elementsInRow+elx+1;
-                    (rowMultiplier +1)*elementsInRow+elx];
-        
-         
+        for ely = 1:settings.nely
+            rowMultiplier = ely-1;
+            for elx = 1:settings.nelx
+        %           n1 = (nely+1)*(elx-1)+ely; 
+        %           n2 = (nely+1)* elx   +ely;
+        %           Ue = U([2*n1-1;2*n1; 2*n2-1;2*n2; 2*n2+1;2*n2+2; 2*n1+1;2*n1+2],1);
+                   nodes1=[rowMultiplier*elementsInRow+elx;
+                            rowMultiplier*elementsInRow+elx+1;
+                            (rowMultiplier +1)*elementsInRow+elx+1;
+                            (rowMultiplier +1)*elementsInRow+elx];
+
+                        
+                    % Get the element K matrix for this partiular element
+                    KE = matProp.effectiveElasticKEmatrix(  designVars.w(ely,elx));
+                    KEHeat = matProp.effectiveHeatKEmatrix(  designVars.w(ely,elx));
+
+
+                    xNodes = nodes1*2-1;
+                    yNodes = nodes1*2;
+
+                 % NodeNumbers = union(xNodeNumbers,yNodeNumbers);
+                  NodeNumbers = [xNodes(1) yNodes(1) xNodes(2) yNodes(2) xNodes(3) yNodes(3) xNodes(4) yNodes(4)];
+
+                 % NodeNumbers = union(xNodeNumbers,yNodeNumbers);
+                  Ue = U(NodeNumbers,:);
+                  U_heat = U_heatColumn(nodes1,:);
+
+                  c = c + settings.w1*designVars.x(ely,elx)^settings.penal*Ue'*KE*Ue;
+                  c = c + settings.w2*designVars.x(ely,elx)^settings.penal*U_heat'*KEHeat*U_heat;
               
-            xNodes = nodes1*2-1;
-            yNodes = nodes1*2;
-    
-         % NodeNumbers = union(xNodeNumbers,yNodeNumbers);
-          NodeNumbers = [xNodes(1) yNodes(1) xNodes(2) yNodes(2) xNodes(3) yNodes(3) xNodes(4) yNodes(4)];
-    
-         % NodeNumbers = union(xNodeNumbers,yNodeNumbers);
-          Ue = U(NodeNumbers,:);
-          U_heat = U_heatColumn(nodes1,:);
-         
-          c = c + settings.w1*designVars.x(ely,elx)^settings.penal*Ue'*KE*Ue;
-          c = c + settings.w2*designVars.x(ely,elx)^settings.penal*U_heat'*KEHeat*U_heat;
-          
-          % for the x location
-          % The first number is the row - "y value"
-          % The second number is the column "x value"
-          
-        %  dc(ely,elx) = -penal*x(ely,elx)^(penal-1)*Ue'*KE*Ue; % objective sensitivity, partial of c with respect to x
+
+                  % for the x location
+                  % The first number is the row - "y value"
+                  % The second number is the column "x value"
+
+                %  dc(ely,elx) = -penal*x(ely,elx)^(penal-1)*Ue'*KE*Ue; % objective sensitivity, partial of c with respect to x
+
+                % Temps are the sensitivies 
+                 designVars.temp1(ely,elx) = -settings.penal*designVars.x(ely,elx)^(settings.penal-1)*Ue'*matProp.dKelastic*Ue; % objective sensitivity, partial of c with respect to x
+                 designVars.temp2(ely,elx) = -settings.penal*designVars.x(ely,elx)^(settings.penal-1)*U_heat'*KEHeat*U_heat;
+                 
+                 % Calculate the derivative with respect to a material
+                 % volume fraction composition change (not density change)
+                 designVars.g1elastic(ely,elx) = designVars.x(ely,elx)^(settings.penal)*Ue'*matProp.dKelastic*Ue;
+                 designVars.g1heat(ely,elx) = designVars.x(ely,elx)^(settings.penal)*U_heat'*matProp.dKheat*U_heat;
+
+
+                   %dc(ely,elx) = w1*temp1+w2*temp2;
+
+            end
+        end
+
+        %for loopTopology = 1:10
+        if 1==0
+            % normalize the sensitivies  by dividing by their max values. 
+            temp1Max =-1* min(min(designVars.temp1));
+            designVars.temp1 = designVars.temp1/temp1Max;
+            temp2Max = -1* min(min(designVars.temp2));
+            designVars.temp2 = designVars.temp2/temp2Max;
+
+            designVars.dc = settings.w1*designVars.temp1+settings.w2*designVars.temp2; % add the two sensitivies together using their weights 
+
+           
+
+
+
+            % FILTERING OF SENSITIVITIES
+              [designVars.dc]   = check(settings.nelx,settings.nely,settings.rmin,designVars.x,designVars.dc);    
+            % DESIGN UPDATE BY THE OPTIMALITY CRITERIA METHOD
+              [designVars.x]    = OC(settings.nelx,settings.nely,designVars.x,settings.totalVolume,designVars.dc); 
+            % PRINT RESULTS
+              change = max(max(abs(designVars.x-designVars.xold)));
+              disp([' It.: ' sprintf('%4i',loop) ' Obj.: ' sprintf('%10.4f',c) ...
+                   ' Vol.: ' sprintf('%6.3f',sum(sum(designVars.x))/(settings.nelx*settings.nely)) ...
+                    ' ch.: ' sprintf('%6.3f',change )])
+                
+            p = plotResults;
+            p.plotTopAndFraction(designVars); % plot the results. 
+           
+           
+        end
         
-        % Temps are the sensitivies 
-         designVars.temp1(ely,elx) = -settings.penal*designVars.x(ely,elx)^(settings.penal-1)*Ue'*KE*Ue; % objective sensitivity, partial of c with respect to x
-         designVars.temp2(ely,elx) = -settings.penal*designVars.x(ely,elx)^(settings.penal-1)*U_heat'*KEHeat*U_heat;
-          
-          
-           %dc(ely,elx) = w1*temp1+w2*temp2;
-   
-    end
-end
-
-% normalize the sensitivies  by dividing by their max values. 
-temp1Max =-1* min(min(designVars.temp1));
-designVars.temp1 = designVars.temp1/temp1Max;
-temp2Max =-1* min(min(designVars.temp2));
-designVars.temp2 = designVars.temp2/temp2Max;
-
-designVars.dc = settings.w1*designVars.temp1+settings.w2*designVars.temp2; % add the two sensitivies together using their weights 
-
-
-% FILTERING OF SENSITIVITIES
-  [designVars.dc]   = check(settings.nelx,settings.nely,settings.rmin,designVars.x,designVars.dc);    
-% DESIGN UPDATE BY THE OPTIMALITY CRITERIA METHOD
-  [designVars.x]    = OC(settings.nelx,settings.nely,designVars.x,settings.totalVolume,designVars.dc); 
-% PRINT RESULTS
-  change = max(max(abs(designVars.x-designVars.xold)));
-  disp([' It.: ' sprintf('%4i',loop) ' Obj.: ' sprintf('%10.4f',c) ...
-       ' Vol.: ' sprintf('%6.3f',sum(sum(designVars.x))/(settings.nelx*settings.nely)) ...
-        ' ch.: ' sprintf('%6.3f',change )])
-% PLOT DENSITIES  
-subplot(2,2,4);
-colormap(winter); 
-imagesc(designVars.x); 
-set(gca,'YDir','normal'); % Flips the image so that row 1 is not at the top
-% image(x); 
-axis equal; axis tight; axis off;pause(1e-6);
-%    F(vid) = getframe; %Get frame of the topology in each iteration
-%      writeVideo(vidObj,F(vid)); %Save the topology in the video
-%      vid=vid+1;
+        %for loopMaterialGradient = 1:10
+        if 1==1
+            
+              g1 = settings.w1*designVars.g1elastic+settings.w2*designVars.g1heat; % Calculate the weighted volume fraction change sensitivity. 
+              
+              G1 = g1 - lambda1 +1/(mu1)*( settings.v1-percentV1Local);
+              
+              designVars.w = designVars.w+settings.timestep*G1; % update the volume fraction. 
+              
+              p = plotResults;
+              p.plotTopAndFraction(designVars); % plot the results. 
+             
+              % PRINT RESULTS
+              %change = max(max(abs(designVars.x-designVars.xold)));
+              
+              disp([' It.: ' sprintf('%4i',loop) ' Obj.: ' sprintf('%10.4f',c) ...
+                   ' Vol.: ' sprintf('%6.3f',sum(sum(designVars.x))/(settings.nelx*settings.nely)) ...
+                    ' ch.: ' sprintf('%6.3f',change )])
+%            
+            
+            
+        end
 end 
 
 % if recvid==1

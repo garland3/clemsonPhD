@@ -43,16 +43,16 @@ numNodesInColumn = settings.nely+1;
 % Find and store the global positions of each node
 % Each element square is 1 by 1 units
 % Store both the X and Y positions
-globalPosition = zeros(nn,2);
-count = 1;
-for i = 1:numNodesInColumn  % y
-    for j= 1:numNodesInRow % x
-        globalPosition(count,:) = [j-1 i-1];
-        count = count+1;        
-        XLocations(j,i) = j-1;
-        YLocations(j,i) = i-1;
-    end
-end 
+% globalPosition = zeros(nn,2);
+% count = 1;
+% for i = 1:numNodesInColumn  % y
+%     for j= 1:numNodesInRow % x
+%         globalPosition(count,:) = [j-1 i-1];
+%         count = count+1;        
+%         XLocations(j,i) = j-1;
+%         YLocations(j,i) = i-1;
+%     end
+% end 
 
 % Specifiy the constrained nodes where there are essential boundary
 % conditions
@@ -98,91 +98,31 @@ FappliedLoad = 20;
 F( (floor(row/2)+1)*2) = -FappliedLoad; % force down in the bottom middle
 
 
-ke = elK_elastic(matProp);
+% ke = elK_elastic(matProp);
   
 xLoc = 1;
 yLoc = 1;
 % % loop over the elements
 for e = 1:ne
-     % compute local element vector fe
-     
+         
       % loop over local node numbers to get their node global node numbers
       for j = 1:4
           % Get the node number
           coordNodeNumber = designVars.IEN(e,j);
            % get the global X,Y position of each node and put in array
-           coord(j,:) = globalPosition(coordNodeNumber,:);
+           coord(j,:) = designVars.globalPosition(coordNodeNumber,:);
       end
       
-      % ----------------------
-      % Pre calculated the ke matrix, so we don't have to calculated it
-      % each time. 
-      % ----------------------
+      [x,y]= designVars.GivenNodeNumberGetXY(e);
+      ke = matProp.effectiveElasticKEmatrix(  designVars.w(y,x));
       
-      
-%       % Loop over the Guassian quadrature points. We will use 2 point
-%       % quadrature for a total of 4 points
-%       etaRow(1,:) = [1/sqrt(3) 1/sqrt(3) -1/sqrt(3) -1/sqrt(3)];
-%       zetaRow(1,:) = [1/sqrt(3) -1/sqrt(3) -1/sqrt(3) 1/sqrt(3)];
-%       weight = [ 1 1 1 1];
-%       
-%       ke = zeros(8,8);
-% %      ftemp = zeros(4,4);
-%       btemp = zeros(2,4);
-%      
-%       for gu = 1:4
-%           eta = etaRow(gu);
-%           Zeta = zetaRow(gu);
-%           wght = weight(gu);
-%           
-%           % Calculate the Shape functions.
-%           N(1) = 1/4*(1-eta)*(1-Zeta);
-%           N(2) = 1/4*(1+eta)*(1-Zeta);
-%           N(3) = 1/4*(1+eta)*(1+Zeta);
-%           N(4) = 1/4*(1-eta)*(1+Zeta);
-%           
-%           % B_hat (Derivative of N1 with respect to zeta and eta)
-%           B_hat = 1/4*[-(1-eta) (1-eta) (1+eta) -(1+eta);
-%                        -(1-Zeta) -(1+Zeta) (1+Zeta) (1-Zeta)];
-%           
-%           % Calculate the Jacobian
-%           J=B_hat*coord;
-%           
-%           % Calculate the determinate
-%           J_det = det(J);
-%           J_transpose = transpose(J);
-%           J_transpose_inv = inv(J_transpose);
-%           
-%           % Form the B matrix          
-%          B_2by4 = J_transpose_inv*B_hat;
-% 
-%          % Form B, which is an 3 by 8
-%          B(1,[1,3,5,7]) = B_2by4(1,1:4);
-%          B(2,[2,4,6,8]) = B_2by4(2,1:4);
-% 
-%          B(3,[1,3,5,7]) = B_2by4(2,1:4);
-%          B(3,[2,4,6,8]) = B_2by4(1,1:4);
-%          
-%           D = [ 1 v 0;
-%               v 1 0;
-%               0 0 1/2*(1-v)]*E/(1-v^2);
-%           
-%          
-%         %  btemp = btemp +B;
-%           
-%           tempK = transpose(B)*D*B*J_det*wght;          
-%            ke = ke + tempK;% +tempM;
-%       end  
-      
-   %   ke
-
-      % Insert the element stiffness matrix into the global.    
-     % node = IEN(e,:);
-        nodes1 = designVars.IEN(e,:);
-         xNodes = nodes1*2-1;
-        yNodes = nodes1*2;
+     
+      % Insert the element stiffness matrix into the global.        
+      nodes1 = designVars.IEN(e,:);
+      xNodes = nodes1*2-1;
+      yNodes = nodes1*2;
     
-     % NodeNumbers = union(xNodeNumbers,yNodeNumbers);
+     
      
      % I cannot use the union, or else the order get messed up. The order
      % is important. Same in the actual topology code when you are

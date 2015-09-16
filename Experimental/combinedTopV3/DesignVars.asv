@@ -1,31 +1,125 @@
 classdef DesignVars
-    
+% Design varriables and support temp varriables are stored in this class. 
+
      properties
-         x; % the "density" at each element
-         xold; % 
+         % --------------------------------
+         % Design Var Arrays
+         % --------------------------------
+         x; % the "density" at each element        
          w; % the volume fraction at each element
          
+         % --------------------------
+         % Support vars
+         % -------------------------------
+          xold; %          
          % Support vars to help in optimization
          temp1; % Sensitivity 1
          temp2; % Sensitivity 2
-         dc; % Derivative of c (hence dc). C is the objective.
-         
-         IEN; % element to node map. Save this matrix, so it does not need to be recalculated every time. 
-         numNodesInRow = settings.nelx+1;
-        numNodesInColumn = settings.nely+1;
-        XLocations=zeros(numNodesInRow,numNodesInColumn);
-        YLocations=zeros(numNodesInRow,numNodesInColumn);
+         dc; % Derivative of c (hence dc). C is the objective.         
+         IEN; % element to node map. Save this matrix, so it does not need to be recalculated every time.       
+        XLocations; %=zeros(numNodesInRow,numNodesInColumn);
+        YLocations; %=zeros(numNodesInRow,numNodesInColumn);
+        globalPosition; %  = zeros(nn,2);
+        
+        NodeToXYArrayMap; % map of node numbers to their X,Y position in FEA arrays
          
      end
      
       methods
-          function obj = DesignVars()
+          % Constructur method
+          function obj = DesignVars(settings)
+              obj.CalcIENmatrix(settings);
+              obj.CalcElementLocation(settings);
+            
+          end
+          
+          % Calcualte the Center of each element and put the information
+          % into an array. Needed for the FEA
+          % Calculate it here, so it only need to be calculated once. 
+          function obj = CalcElementLocation(obj,settings)
+              
+               nn = (settings.nelx+1)*(settings.nely+1); % number of nodes
               
               
+               numNodesInRow = settings.nelx + 1;
+               numNodesInColumn = settings.nely + 1;
+               obj.XLocations=zeros(numNodesInRow,numNodesInColumn);
+               obj.YLocations=zeros(numNodesInRow,numNodesInColumn);
+               
+               
+               obj.globalPosition = zeros(nn,2);
+               count = 1;
+               for i = 1:numNodesInColumn  % y
+                   for j= 1:numNodesInRow % x
+                        obj.globalPosition(count,:) = [j-1 i-1];
+                        count = count+1;        
+                        obj.XLocations(j,i) = j-1;
+                        obj.YLocations(j,i) = i-1;
+                    end
+                end
               
           end
           
-          function Ca
+          function obj =  CalcIENmatrix(obj,settings)
+              
+          
+              
+            count = 1;
+            elementsInRow = settings.nelx+1;
+            nn = (settings.nelx+1)*(settings.nely+1); % number of nodes
+            obj.IEN = zeros(nn,4);
+            % Each row, so nely # of row
+            for i = 1:settings.nely
+                 rowMultiplier = i-1;
+                % Each column, so nelx # of row
+                for j= 1:settings.nelx        
+                    obj.IEN(count,:)=[rowMultiplier*elementsInRow+j,
+                                  rowMultiplier*elementsInRow+j+1,
+                                  (rowMultiplier +1)*elementsInRow+j+1,
+                                   (rowMultiplier +1)*elementsInRow+j];
+                    count = count+1;
+                end
+            end
+              
+          end
+          
+          
+          % Given an X, find the node number
+          function number = GetNodeNumberGivenXY(settings, x,y)
+              numNodesInRow = settings.nelx+1;
+              % numNodesInColumn = obj.nely+1;              
+               rowMultiplier = y-1;
+               number = rowMultiplier*numNodesInRow+x;
+          end
+          
+          % Given a node number, find the X, Y position (not the physical
+          % position, but the matrix location position)
+          function [x , y ]= GivenNodeNumberGetXY(settings, nodeNum)
+               numNodesInRow = settings.nelx+1;
+               numNodesInColumn = settings.nely+1;   
+               
+               rows = idivide(int32(nodeNum),numNodesInRow, 'floor')
+               column = mod(nodeNum,numNodesInRow);
+               
+               x = column;
+               y = rows;
+                  
+          end
+          
+          % Pre Calculate a map of 
+          function obj= PreCalculateXYmapToNodeNumber(obj ,settings)
+              
+                nn = (settings.nelx+1)*(settings.nely+1); % number of nodes
+                obj.NodeToXYArrayMap = zeros(nn,2);
+                count = 1;
+                 for i = 1:settings.nely
+                   for j= 1:settings.nelx
+                         obj.NodeToXYArrayMap(count,:) = [i,j];
+                        count = count+1;
+                   end
+                end
+              
+          end
           
       end
      
