@@ -34,129 +34,76 @@ designVars = designVars.PreCalculateXYmapToNodeNumber(settings);
 % end
 
 
-loop = 0; 
+masterloop = 0; 
+FEACalls = 0;
 change = 1.;
-elementsInRow = settings.nelx+1;
+
 % START ITERATION
-while change > 0.01  
-  loop = loop + 1;
-  designVars.xold = designVars.x;
-% FE-ANALYSIS
-  [U]=FE_elasticV2(designVars, settings, matProp);   
-  [U_heatColumn]=temperatureFEA_V3(designVars, settings, matProp,loop);   
-% OBJECTIVE FUNCTION AND SENSITIVITY ANALYSIS
-% [KE] = elK_elastic(matProp);
+while change > 0.01  && masterloop<=15 && FEACalls<=150
+  masterloop = masterloop + 1;
+  
+        % --------------------------------
+        % Topology Optimization
+        % --------------------------------
+         if ( settings.mode == 1 || settings.mode == 3)
+              for loopTop = 1:10
+                   designVars = CalculateSensitivies(designVars, settings, matProp, masterloop);
+                   [vol1Fraction, vol2Fraction] =  designVars.CalculateVolumeFractions(settings);
+                   
+                   FEACalls = FEACalls+1;
+                    % normalize the sensitivies  by dividing by their max values. 
+                    temp1Max =-1* min(min(designVars.temp1));
+                    designVars.temp1 = designVars.temp1/temp1Max;
+                    temp2Max = -1* min(min(designVars.temp2));
+                    designVars.temp2 = designVars.temp2/temp2Max;
 
+                    designVars.dc = settings.w1*designVars.temp1+settings.w2*designVars.temp2; % add the two sensitivies together using their weights 
 
- %[KEHeat] = lkHeat;
-   
-            
-            c = 0.; % c is the objective. Total strain energy
+                      % FILTERING OF SENSITIVITIES
+                      [designVars.dc]   = check(settings.nelx,settings.nely,settings.rmin,designVars.x,designVars.dc);    
+                    % DESIGN UPDATE BY THE OPTIMALITY CRITERIA METHOD
+                      [designVars.x]    = OC(settings.nelx,settings.nely,designVars.x,settings.totalVolume,designVars.dc); 
+                    % PRINT RESULTS
+                      %change = max(max(abs(designVars.x-designVars.xold)));
+                       disp([' FEA calls.: ' sprintf('%4i',FEACalls) ' Obj.: ' sprintf('%10.4f',designVars.c) ...
+                       ' Vol. 1: ' sprintf('%6.3f', vol1Fraction) ...
+                        ' Vol. 2: ' sprintf('%6.3f', vol2Fraction) ...
+                        ' Lambda.: ' sprintf('%6.3f',designVars.lambda1  )])
 
-
-        for ely = 1:settings.nely
-            rowMultiplier = ely-1;
-            for elx = 1:settings.nelx
-        %           n1 = (nely+1)*(elx-1)+ely; 
-        %           n2 = (nely+1)* elx   +ely;
-        %           Ue = U([2*n1-1;2*n1; 2*n2-1;2*n2; 2*n2+1;2*n2+2; 2*n1+1;2*n1+2],1);
-                   nodes1=[rowMultiplier*elementsInRow+elx;
-                            rowMultiplier*elementsInRow+elx+1;
-                            (rowMultiplier +1)*elementsInRow+elx+1;
-                            (rowMultiplier +1)*elementsInRow+elx];
-
-                        
-                    % Get the element K matrix for this partiular element
-                    KE = matProp.effectiveElasticKEmatrix(  designVars.w(ely,elx));
-                    KEHeat = matProp.effectiveHeatKEmatrix(  designVars.w(ely,elx));
-
-
-                    xNodes = nodes1*2-1;
-                    yNodes = nodes1*2;
-
-                 % NodeNumbers = union(xNodeNumbers,yNodeNumbers);
-                  NodeNumbers = [xNodes(1) yNodes(1) xNodes(2) yNodes(2) xNodes(3) yNodes(3) xNodes(4) yNodes(4)];
-
-                 % NodeNumbers = union(xNodeNumbers,yNodeNumbers);
-                  Ue = U(NodeNumbers,:);
-                  U_heat = U_heatColumn(nodes1,:);
-
-                  c = c + settings.w1*designVars.x(ely,elx)^settings.penal*Ue'*KE*Ue;
-                  c = c + settings.w2*designVars.x(ely,elx)^settings.penal*U_heat'*KEHeat*U_heat;
-              
-
-                  % for the x location
-                  % The first number is the row - "y value"
-                  % The second number is the column "x value"
-
-                %  dc(ely,elx) = -penal*x(ely,elx)^(penal-1)*Ue'*KE*Ue; % objective sensitivity, partial of c with respect to x
-
-                % Temps are the sensitivies 
-                 designVars.temp1(ely,elx) = -settings.penal*designVars.x(ely,elx)^(settings.penal-1)*Ue'*matProp.dKelastic*Ue; % objective sensitivity, partial of c with respect to x
-                 designVars.temp2(ely,elx) = -settings.penal*designVars.x(ely,elx)^(settings.penal-1)*U_heat'*KEHeat*U_heat;
-                 
-                 % Calculate the derivative with respect to a material
-                 % volume fraction composition change (not density change)
-                 designVars.g1elastic(ely,elx) = designVars.x(ely,elx)^(settings.penal)*Ue'*matProp.dKelastic*Ue;
-                 designVars.g1heat(ely,elx) = designVars.x(ely,elx)^(settings.penal)*U_heat'*matProp.dKheat*U_heat;
-
-
-                   %dc(ely,elx) = w1*temp1+w2*temp2;
-
-            end
-        end
-
-        %for loopTopology = 1:10
-        if 1==0
-            % normalize the sensitivies  by dividing by their max values. 
-            temp1Max =-1* min(min(designVars.temp1));
-            designVars.temp1 = designVars.temp1/temp1Max;
-            temp2Max = -1* min(min(designVars.temp2));
-            designVars.temp2 = designVars.temp2/temp2Max;
-
-            designVars.dc = settings.w1*designVars.temp1+settings.w2*designVars.temp2; % add the two sensitivies together using their weights 
-
-           
-
-
-
-            % FILTERING OF SENSITIVITIES
-              [designVars.dc]   = check(settings.nelx,settings.nely,settings.rmin,designVars.x,designVars.dc);    
-            % DESIGN UPDATE BY THE OPTIMALITY CRITERIA METHOD
-              [designVars.x]    = OC(settings.nelx,settings.nely,designVars.x,settings.totalVolume,designVars.dc); 
-            % PRINT RESULTS
-              change = max(max(abs(designVars.x-designVars.xold)));
-              disp([' It.: ' sprintf('%4i',loop) ' Obj.: ' sprintf('%10.4f',c) ...
-                   ' Vol.: ' sprintf('%6.3f',sum(sum(designVars.x))/(settings.nelx*settings.nely)) ...
-                    ' ch.: ' sprintf('%6.3f',change )])
-                
-            p = plotResults;
-            p.plotTopAndFraction(designVars); % plot the results. 
-           
-           
-        end
+                    p = plotResults;
+                    p.plotTopAndFraction(designVars, settings, matProp); % plot the results. 
+              end
+         end
         
-        %for loopMaterialGradient = 1:10
-        if 1==1
-            
-              g1 = settings.w1*designVars.g1elastic+settings.w2*designVars.g1heat; % Calculate the weighted volume fraction change sensitivity. 
-              
-              G1 = g1 - lambda1 +1/(mu1)*( settings.v1-percentV1Local);
-              
-              designVars.w = designVars.w+settings.timestep*G1; % update the volume fraction. 
-              
-              p = plotResults;
-              p.plotTopAndFraction(designVars); % plot the results. 
-             
-              % PRINT RESULTS
-              %change = max(max(abs(designVars.x-designVars.xold)));
-              
-              disp([' It.: ' sprintf('%4i',loop) ' Obj.: ' sprintf('%10.4f',c) ...
-                   ' Vol.: ' sprintf('%6.3f',sum(sum(designVars.x))/(settings.nelx*settings.nely)) ...
-                    ' ch.: ' sprintf('%6.3f',change )])
-%            
-            
-            
+      % --------------------------------   
+      % Volume fraction optimization
+      % --------------------------------
+        if ( settings.mode ==2 || settings.mode ==3)
+            for loopVolFrac = 1:10
+                   designVars = CalculateSensitivies(designVars, settings, matProp, masterloop);
+                   FEACalls = FEACalls+1;
+                  [vol1Fraction, vol2Fraction] =  designVars.CalculateVolumeFractions(settings);
+                  
+                    totalVolLocal = vol1Fraction+ vol2Fraction;
+                    fractionCurrent_V1Local = vol1Fraction/totalVolLocal;
+
+                  g1 = settings.w1*designVars.g1elastic+settings.w2*designVars.g1heat; % Calculate the weighted volume fraction change sensitivity.               
+                  G1 = g1 - designVars.lambda1 +1/(designVars.mu1)*( settings.v1-fractionCurrent_V1Local); % add in the lagrangian             
+                  designVars.w = designVars.w+settings.timestep*G1; % update the volume fraction.
+
+                 designVars.w = max(min( designVars.w,1),0);    % Don't allow the    vol fraction to go above 1 or below 0    
+                 designVars.lambda1 =  designVars.lambda1 -1/(designVars.mu1)*(settings.v1-fractionCurrent_V1Local)*settings.volFractionDamping;
+
+                  % PRINT RESULTS
+                  %change = max(max(abs(designVars.x-designVars.xold)));
+                  p = plotResults;
+                  p.plotTopAndFraction(designVars, settings, matProp); % plot the results. 
+
+                  disp([' FEA calls.: ' sprintf('%4i',FEACalls) ' Obj.: ' sprintf('%10.4f',designVars.c) ...
+                       ' Vol. 1: ' sprintf('%6.3f', vol1Fraction) ...
+                        ' Vol. 2: ' sprintf(    '%6.3f', vol2Fraction) ...
+                        ' Lambda.: ' sprintf('%6.3f',designVars.lambda1  )])
+            end
         end
 end 
 

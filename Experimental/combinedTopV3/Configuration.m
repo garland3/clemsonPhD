@@ -5,20 +5,23 @@ classdef Configuration
         % %% Settings
         % --------------------------------------------
 
-        nelx = 40; % # of elements in the x direcction
-        nely = 18; % number of elements in the y direction
+        nelx = 20; % 40 # of elements in the x direcction
+        nely = 9; % 18 number of elements in the y direction
         penal = 3; % penality used for the SIMP method
         rmin = 2; % smoothing radius for sensitivity smoothing. 
         
         % Optimization mode and configurations
-        mode = 1; % 1 = topology only, 2 = material optimization only. 3 = both
+        mode = 3; % 1 = topology only, 2 = material optimization only. 3 = both
 
        
         timestep = 0.1; % time step for the volume fraction update algorithm
+        volFractionDamping = 0.1;
         iterationsPerPlot = 5;
 
-        w1 = 0.15; % weight elastic for multi-objective
+        w1 = 1; % weight elastic for multi-objective
         w2;
+        
+        voidMaterialDensityCutOff = 0.3; % everything below this density is considered void. 
         
         
         doPlotHeat = 1;
@@ -38,8 +41,12 @@ classdef Configuration
                 obj.v1 = 0.2; % fraction of material 1 to use
                 obj.v2 = 0.2; % fraction of material 2 to use
             elseif obj.mode ==2
+                obj.v1 = 0.5; % fraction of material 1 to use
+                obj.v2 = 0.5; % fraction of material 2 to use
 
             elseif obj.mode ==3
+                 obj.v1 = 0.2; % fraction of material 1 to use
+                 obj.v2 = 0.2; % fraction of material 2 to use
 
              end
             

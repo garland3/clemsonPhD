@@ -11,6 +11,7 @@ classdef DesignVars
          % Optimization vars
          lambda1 = 0;
          mu1 = 1;
+         c = 0; % objective. 
          
          % --------------------------
          % Support vars
@@ -122,33 +123,87 @@ classdef DesignVars
               
           end
           
-          function [volume1, volume2] = CalculateVolumeFractions(obj)
+          
+          % Calculates the volume
+          function [volume1, volume2] = CalculateVolumeFractions(obj, settings)
               
               volume1 = 0;
               volume2 = 0;
               
-              for i = 1:nelx
-                for j = 1:nely
-                    structureLocal = structure(j,i);
-                    if(structureLocal == 0) % if void region
-                        E_atElement(j,i) = E_empty;
-                        K_atElement(i,j) = K_empty;
-                        structGradArray(j,i) = Enylon-100;
+              for i = 1:settings.nelx
+                for j = 1:settings.nely
+                    
+                    x_local = obj.x(j,i);
+                    if(x_local <= settings.voidMaterialDensityCutOff) % if void region
+                       % E_atElement(j,i) = E_empty;
+                       % K_atElement(i,j) = K_empty;
+                       % structGradArray(j,i) = Enylon-100;
                     else % if a filled region
-                        volFraclocal = volFracArray(j,i);
-                        volFracV1 = volFracV1 +volFraclocal; % sum up the total use of material 1 (PLA)
-                        volFracV2 = volFracV2 + (1- volFraclocal); % sum up the total use of material 2 (Nylon)
+                       volFraclocal = obj.w(j,i);
+                       volume1 = volume1 +volFraclocal; % sum up the total use of material 1 
+                       volume2 = volume2 + (1- volFraclocal); % sum up the total use of material 2 
 
-                        K_atElement(i,j) = KheatPLA*volFraclocal+(1-volFraclocal)*KheatNylon;
-                        E_atElement(j,i)= Epla*volFraclocal+(1-volFraclocal)*Enylon;  % simple mixture ratio
-                        structGradArray(j,i) = E_atElement(j,i);
+                      % K_atElement(i,j) = KheatPLA*volFraclocal+(1-volFraclocal)*KheatNylon;
+                      % E_atElement(j,i)= Epla*volFraclocal+(1-volFraclocal)*Enylon;  % simple mixture ratio
+                      % structGradArray(j,i) = E_atElement(j,i);
                     end
                 end
             end
 
             % normalize the volume fraction by the number of elements
-            volFracV1 = volFracV1/ne;
-            volFracV2 = volFracV2/ne;
+             ne = settings.nelx*settings.nely;
+            volume1 = volume1/ne;
+            volume2 = volume2/ne;
+              
+          end
+          
+          function obj = CalculateSensitivies(obj, settings, matProp, loop)
+              elementsInRow = settings.nelx+1;
+              obj.xold = obj.x;
+                % FE-ANALYSIS
+                  [U]=FE_elasticV2(obj, settings, matProp);   
+                  [U_heatColumn]=temperatureFEA_V3(obj, settings, matProp,loop);   
+                % OBJECTIVE FUNCTION AND SENSITIVITY ANALYSIS
+                            obj.c = 0.; % c is the objective. Total strain energy
+
+
+                        for ely = 1:settings.nely
+                            rowMultiplier = ely-1;
+                            for elx = 1:settings.nelx
+
+                                   nodes1=[rowMultiplier*elementsInRow+elx;
+                                            rowMultiplier*elementsInRow+elx+1;
+                                            (rowMultiplier +1)*elementsInRow+elx+1;
+                                            (rowMultiplier +1)*elementsInRow+elx];
+
+                                    % Get the element K matrix for this partiular element
+                                    KE = matProp.effectiveElasticKEmatrix(  obj.w(ely,elx));
+                                    KEHeat = matProp.effectiveHeatKEmatrix(  obj.w(ely,elx));
+
+                                    xNodes = nodes1*2-1;
+                                    yNodes = nodes1*2;
+
+                                 % NodeNumbers = union(xNodeNumbers,yNodeNumbers);
+                                  NodeNumbers = [xNodes(1) yNodes(1) xNodes(2) yNodes(2) xNodes(3) yNodes(3) xNodes(4) yNodes(4)];
+
+                                 % NodeNumbers = union(xNodeNumbers,yNodeNumbers);
+                                  Ue = U(NodeNumbers,:);
+                                  U_heat = U_heatColumn(nodes1,:);
+
+                                   obj.c =  obj.c + settings.w1*obj.x(ely,elx)^settings.penal*Ue'*KE*Ue;
+                                   obj.c =  obj.c + settings.w2*obj.x(ely,elx)^settings.penal*U_heat'*KEHeat*U_heat;              
+
+
+                                % Temps are the sensitivies 
+                                 obj.temp1(ely,elx) = -settings.penal*obj.x(ely,elx)^(settings.penal-1)*Ue'*matProp.dKelastic*Ue; % objective sensitivity, partial of c with respect to x
+                                 obj.temp2(ely,elx) = -settings.penal*obj.x(ely,elx)^(settings.penal-1)*U_heat'*KEHeat*U_heat;
+
+                                 % Calculate the derivative with respect to a material
+                                 % volume fraction composition change (not density change)
+                                 obj.g1elastic(ely,elx) = obj.x(ely,elx)^(settings.penal)*Ue'*matProp.dKelastic*Ue;
+                                 obj.g1heat(ely,elx) = obj.x(ely,elx)^(settings.penal)*U_heat'*matProp.dKheat*U_heat;
+                            end
+                        end
               
           end
           
