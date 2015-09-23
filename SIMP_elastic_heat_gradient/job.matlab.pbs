@@ -21,7 +21,8 @@ rm *.csv
 # 
 # Note, request 12 cpus, so that each run can have its own cpu and we can run in parallel. 
 
-mcc -R -nodisplay  -m  GAOptimizationMain_v2_Single.m FEALevelSetWrapperGA_v2.m FEALevelSet_2D_v8.m  objfun2_v2.m outPutFunction.m freezeColors.m constr2_v2.m
+mcc -R -nodisplay  -m  Main.m Analysis.m combinedTopologyOptimization.m Configuration.m DesignVars.m elastic_top.m  elastic_top_no_support.m elementK_heat.m elK_elastic.m FE_elastic.m FE_elasticV2.m MaterialProperties.m plotResults.m plotStructGradFromCSVfile.m problem1.m temperatureFEA2.m temperatureFEA_V3.m testTemperatureFEA2.m test_FE_elastic.m topologyHeatTransfer1.m
 
-./GAOptimizationMain_v2_Single 1
+./Main 1
+
 
