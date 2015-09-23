@@ -136,10 +136,11 @@ classdef plotResults
             imagesc(structGradArrayElastic); axis equal; axis tight; axis off;
             set(gca,'YDir','normal'); % http://www.mathworks.com/matlabcentral/answers/94170-how-can-i-reverse-the-y-axis-when-i-use-the-image-or-imagesc-function-to-display-an-image-in-matlab
             % caxis([-1 1 ]);
-            title('Structure and Elastic Mod Gradient')
+            titleText = sprintf('Structure and Elastic Mod Gradient, w1=%f, iter = %i',settings.w1,loopNum);
+            title(titleText)
             %colormap winter
             %  cmap = colormap;
-            rgbSteps = matProp.E_material1- matProp.E_material2; ; % plus 1 for 1 below the Enylon for void
+            rgbSteps = matProp.E_material1- matProp.E_material2;  % plus 1 for 1 below the Enylon for void
             rgbSteps = rgbSteps*50;
             % [cmin,cmax] = caxis;
             caxis([matProp.E_material2-1,matProp.E_material1])

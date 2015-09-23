@@ -1,6 +1,7 @@
 import os
 import shutil
 import stat
+import subprocess
 
 # bump up the resolution on the analysis code. 40 x20 at least.  (80 x40 would be better
 # make a folder to store the .csv files
@@ -40,13 +41,13 @@ for x in range(0, 10):
 		os.makedirs(directoryNew)
 		
 	
-	name = "job%i" % x
-	pbsname = "job%imatlab.pbs"  % x
+	name = "jobP%i" % x
+	pbsname = "jobweight%imatlab.pbs"  % x
    
     # Make different weightings of the objective functions
 	w1 = x/10.
-	w2 = 1-w1
-	args = "  %f %f %i" % (w1, w2, x)
+	#w2 = 1-w1
+	args = "  1 %f %i" % (w1,  x)
                 
                     
 	with open(pbsname, "wt") as fout:
@@ -61,7 +62,7 @@ for x in range(0, 10):
 
 	cmd = "qsub "+ pbsname
 	print cmd
-    #subprocess.call(["qsub",pbsname])
+	subprocess.call(["qsub",pbsname])
 		
 	
 	#newProgramLocation = os.path.join(directoryNew,programName)
