@@ -5,7 +5,7 @@
 
 source /etc/profile.d/modules.sh
 module purge
-module add matlab/2014a
+module add matlab/2015a
 
 cd $PBS_O_WORKDIR
 

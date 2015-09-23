@@ -50,7 +50,7 @@ while change > 0.01  && masterloop<=15 && FEACalls<=150
         % --------------------------------
          if ( settings.mode == 1 || settings.mode == 3)
               for loopTop = 1:10
-                   designVars = CalculateSensitivies(designVars, settings, matProp, masterloop);
+                   designVars = designVars.CalculateSensitivies(settings, matProp, masterloop);
                    [vol1Fraction, vol2Fraction] =  designVars.CalculateVolumeFractions(settings);
                    
                    FEACalls = FEACalls+1;
@@ -83,7 +83,7 @@ while change > 0.01  && masterloop<=15 && FEACalls<=150
       % --------------------------------
         if ( settings.mode ==2 || settings.mode ==3)
             for loopVolFrac = 1:10
-                   designVars = CalculateSensitivies(designVars, settings, matProp, masterloop);
+                   designVars = designVars.CalculateSensitivies( settings, matProp, masterloop);
                    FEACalls = FEACalls+1;
                    
                   % for j = 1:5
