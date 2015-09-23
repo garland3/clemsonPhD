@@ -1,5 +1,5 @@
 #!/bin/bash
-#PBS -N {NAME}
+#PBS -N job7
 #PBS -l select=1:ncpus=2:mem=2gb,walltime=2:00:00
 #PBS -j oe
 
@@ -10,7 +10,7 @@ module add matlab/2015a
 
 cd $PBS_O_WORKDIR
 
-./main {ARGS_SCRPT_CALL}
+./main   0.700000 0.300000 7
 
 
 
@@ -26,9 +26,7 @@ cd $PBS_O_WORKDIR
 # - run the matlab code, accept in put args for the weights of the objectives. 
 # 
 # Note, request 12 cpus, so that each run can have its own cpu and we can run in parallel. 
-#mcc -R -nodisplay  -m  combinedTopologyOptimization.m Configuration.m DesignVars.m elastic_top.m  elementK_heat.m elK_elastic.m FE_elasticV2.m  MaterialProperties.m plotResults.m temperatureFEA_V3.m  
-
-combinedTopologyOptimization('1','0.5','1')
+#mcc -R -nodisplay  -m  main.m combinedTopologyOptimization.m Configuration.m DesignVars.m elastic_top.m  elementK_heat.m elK_elastic.m FE_elasticV2.m  MaterialProperties.m plotResults.m temperatureFEA_V3.m  
 
 
 

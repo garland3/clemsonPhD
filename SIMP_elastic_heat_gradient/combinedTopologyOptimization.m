@@ -1,11 +1,26 @@
-function combinedTopologyOptimization()
+function combinedTopologyOptimization(useInputArgs, w1, iterationNum)
+% input args, useInputArgs = 1 if to use the input args
+% w1 weight1 for weighted objective. 
+% iterationNum, used to know where to output files. 
+
 % --------------------------------------
 % %% Settings
 % --------------------------------------------
-clear
-clc
-close all
+%clear
+%clc
+%close all
+
+
+
 settings = Configuration;
+
+% if using input args, then override some configurations. 
+ if(str2num(useInputArgs) ==1)
+     settings.w1 = str2num(w1);
+     settings.w2 = 1-settings.w1;
+     settings.iterationNum = str2num(iterationNum)   
+     
+ end
 
 % material properties Object
 matProp = MaterialProperties;

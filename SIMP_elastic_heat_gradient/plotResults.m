@@ -158,7 +158,8 @@ classdef plotResults
                  % Plot to CSV file
                  % ------------------------------
                 % loopNumb
-                  name = sprintf('./csvOut/gradAndStuct%i.csv',loopNum);
+                folderNum = settings.iterationNum;
+                  name = sprintf('./out%i/gradAndStuct%i.csv',folderNum, loopNum);
                     csvwrite(name,structGradArrayElastic);
                  
              end
