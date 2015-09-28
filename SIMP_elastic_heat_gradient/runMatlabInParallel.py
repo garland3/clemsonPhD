@@ -28,7 +28,7 @@ print programFullPath
 
 
 
-for x in range(0, 10):
+for x in range(0, 11):
 	directoryName = "out"+str(x)
 	directoryNew = os.path.join(pathHome,directoryName)
 	

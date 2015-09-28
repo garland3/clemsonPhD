@@ -51,20 +51,32 @@ end
 
 % Specifiy the constrained nodes where there are essential boundary
 % conditions
-F = zeros(nn,1);
-K = zeros(nn,nn);
 
+K = zeros(nn,nn);
 row = settings.nelx+1;
 column = settings.nely+1;
-% Just the left side in the middle
-quartY = ceil(settings.nely/4);
-Essential=   [1 row (column-1)*row+1 column*row] ; % the 4 corners
+
+if 1==0
+    % set a heat source in the middle and sinks on the four corners. 
+    F = zeros(nn,1);
+    F([ceil(row/2)+(ceil(column/2)*row) (ceil(row/2)+1)+(ceil(column/2)*row)]) =  20; % heat source in the middle
+   
+    % Set the 4 corners. 
+    quartY = ceil(settings.nely/4);
+    Essential =   [1 row (column-1)*row+1 column*row] ; % the 4 corners
+else
+    % Set a heat source everywhere, anda sink on the left botom
+    F = ones(nn,1)*2;
+    Essential = [1 2 row+1];
+    
+    
+end
 
 Essential = unique(Essential);
 alldofs     = [1:nn];
 Free    = setdiff(alldofs,Essential);
 %F = ones(nn,1); % add a constant heat source everywhere
-F([ceil(row/2)+(ceil(column/2)*row) (ceil(row/2)+1)+(ceil(column/2)*row)]) =  20; % heat source in the middle
+
 
   
 xLoc = 1;

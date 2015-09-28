@@ -28,7 +28,8 @@ lsitOfFolders = ls( 'out*');
 count = 0;
 for folderS = lsitOfFolders'
     folderS = folderS';
-    folder = folderS(1,:)
+    folder = folderS(1,:);
+    folder = strtrim(folder)
     
     
     if recvid==1

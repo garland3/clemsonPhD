@@ -15,11 +15,17 @@ function combinedTopologyOptimization(useInputArgs, w1, iterationNum)
 settings = Configuration;
 
 % if using input args, then override some configurations. 
+% if using input args, then running on the cluster, so use high resolution,
+% otherwise use low resolution
  if(str2num(useInputArgs) ==1)
      settings.w1 = str2num(w1);
      settings.w2 = 1-settings.w1;
      settings.iterationNum = str2num(iterationNum)   
-     
+     settings.nelx = 80;
+     settings.nely = 80;
+ else
+     settings.nelx = 20;
+     settings.nely = 20;     
  end
 
 % material properties Object
@@ -107,6 +113,12 @@ while change > 0.01  && masterloop<=15 && FEACalls<=150
                       totalVolLocal = vol1Fraction+ vol2Fraction;
                       fractionCurrent_V1Local = vol1Fraction/totalVolLocal;
                       targetFraction_v1 = settings.v1/(settings.v1+settings.v2);
+                      
+                      % Normalize the sensitives. 
+                      temp1Max = max(max(designVars.g1elastic));
+                      designVars.g1elastic = designVars.g1elastic/temp1Max;
+                      temp2Max = max(max(designVars.g1heat));
+                      designVars.g1heat = designVars.g1heat/temp2Max;
 
                       g1 = settings.w1*designVars.g1elastic+settings.w2*designVars.g1heat; % Calculate the weighted volume fraction change sensitivity.               
                       G1 = g1 - designVars.lambda1 +1/(designVars.mu1)*( targetFraction_v1-fractionCurrent_V1Local); % add in the lagrangian             

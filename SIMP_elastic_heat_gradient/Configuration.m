@@ -5,8 +5,8 @@ classdef Configuration
         % %% Settings
         % --------------------------------------------
 
-        nelx = 80; % 40 # of elements in the x direcction
-        nely = 40; % 18 number of elements in the y direction
+        nelx = 20; % 40 # of elements in the x direcction
+        nely = 20; % 18 number of elements in the y direction
         penal = 3; % penality used for the SIMP method
         rmin = 2; % smoothing radius for sensitivity smoothing. 
         
@@ -30,7 +30,7 @@ classdef Configuration
         totalVolume; % = v1+v2;
         
         plotFinal = 1;
-        plotToCSVFile = 1;
+        plotToCSVFile = 0;
         
         iterationNum=0; %  used for parallel computing. 
 
