@@ -23,6 +23,9 @@ settings = Configuration;
      settings.iterationNum = str2num(iterationNum)   
      settings.nelx = 80;
      settings.nely = 80;
+     
+     settings.plotToCSVFile = 1;
+     settings.plotFinal = 1;
  else
      settings.nelx = 20;
      settings.nely = 20;     

@@ -3,6 +3,14 @@ import shutil
 import stat
 import subprocess
 
+# precompile the matlab code
+
+# dos2unix *.*
+# module add python/2.7.6 
+# module add matlab/2015a
+# mcc -R -nodisplay  -m  combinedTopologyOptimization.m Configuration.m DesignVars.m  elementK_heat.m elK_elastic.m FE_elasticV2.m  MaterialProperties.m plotResults.m temperatureFEA_V3.m  
+
+
 # bump up the resolution on the analysis code. 40 x20 at least.  (80 x40 would be better
 # make a folder to store the .csv files
 # clear previous data

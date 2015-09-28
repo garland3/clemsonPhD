@@ -52,8 +52,8 @@ classdef Configuration
                  obj.doPlotHeat = 0;
 
             elseif obj.mode ==3
-                 obj.v1 = 0.2; % fraction of material 1 to use
-                 obj.v2 = 0.05; % fraction of material 2 to use
+                 obj.v1 = 0.15; % fraction of material 1 to use
+                 obj.v2 = 0.15; % fraction of material 2 to use
                  obj.doPlotHeat = 0;
 
              end
