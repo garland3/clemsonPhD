@@ -28,11 +28,11 @@ lsitOfFolders = ls( 'out*');
 count = 0;
 for folderS = lsitOfFolders'
     folderS = folderS';
-    folder = folderS(1,:);   
+    folder = folderS(1,:);
+    
     folder = strtrim(folder)
     
-   %  totalStringLength = numel(folder);
-    iterationNum = str2num(folder(4:end));
+    iterationNum = substring(folder,0,
     
     
     if recvid==1
@@ -44,8 +44,8 @@ for folderS = lsitOfFolders'
         vid=1;
     end
     
-    settings.w1 = iterationNum/10;
-    %count = count+1;
+    settings.w1 = count/10;
+    count = count+1;
 
     for i = 1:256
         name = sprintf('./%s/gradAndStuct%i.csv',folder, i);

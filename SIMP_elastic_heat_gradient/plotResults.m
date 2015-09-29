@@ -125,14 +125,27 @@ classdef plotResults
         
         function ActualPlotStructGradArray(obj,structGradArrayElastic, settings,matProp, loopNum)
             
-            if(settings.plotToCSVFile ~=1)
+            if(settings.plotToCSVFile ==1)                
+                 
+                 % -------------------------------
+                 % Plot to CSV file
+                 % ------------------------------
+                % loopNumb
+                folderNum = settings.iterationNum;
+                  name = sprintf('./out%i/gradAndStuct%i.csv',folderNum, loopNum);
+                    csvwrite(name,structGradArrayElastic);
+                    
+            else
+                
+                % Plot normally. 
               figure(1)
-                 if(settings.plotFinal ~=1)
-             
-                     subplot(2,2,3);
-                 else
-                     %  subplot(1,1,1);
-                 end
+             if(settings.plotFinal ==1)
+
+
+             else
+                   subplot(2,2,3);
+                 %  subplot(1,1,1);
+             end
             imagesc(structGradArrayElastic); axis equal; axis tight; axis off;
             set(gca,'YDir','normal'); % http://www.mathworks.com/matlabcentral/answers/94170-how-can-i-reverse-the-y-axis-when-i-use-the-image-or-imagesc-function-to-display-an-image-in-matlab
             % caxis([-1 1 ]);
@@ -154,14 +167,7 @@ classdef plotResults
             colormap(map)   
             colorbar
             drawnow
-             else
-                 % -------------------------------
-                 % Plot to CSV file
-                 % ------------------------------
-                % loopNumb
-                folderNum = settings.iterationNum;
-                  name = sprintf('./out%i/gradAndStuct%i.csv',folderNum, loopNum);
-                    csvwrite(name,structGradArrayElastic);
+            
                  
              end
         end
