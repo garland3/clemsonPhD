@@ -14,8 +14,8 @@ classdef Configuration
         mode =3; % 1 = topology only, 2 = material optimization only. 3 = both
 
        
-        timestep = 1; % time step for the volume fraction update algorithm
-        volFractionDamping = 2;
+        timestep = 0.1; % time step for the volume fraction update algorithm
+        volFractionDamping = 1;
         iterationsPerPlot = 5;
 
         w1 = 0; % weight elastic for multi-objective

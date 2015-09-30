@@ -5,10 +5,14 @@ import subprocess
 
 # precompile the matlab code
 
+# 
+# qsub -I
 # dos2unix *.*
-# module add python/2.7.6 
 # module add matlab/2015a
 # mcc -R -nodisplay  -m  combinedTopologyOptimization.m Configuration.m DesignVars.m  elementK_heat.m elK_elastic.m FE_elasticV2.m  MaterialProperties.m plotResults.m temperatureFEA_V3.m  
+# exit
+# module add python/2.7.6 
+# python runMatlabInParallel.py
 
 
 # bump up the resolution on the analysis code. 40 x20 at least.  (80 x40 would be better

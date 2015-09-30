@@ -9,7 +9,6 @@ matProp = MaterialProperties;
 % settings object
 settings = Configuration;
 
-
 % plotting tool
 plotter = plotResults;
 settings.plotFinal = 1; % set to final plotting mode. 
@@ -17,12 +16,7 @@ settings.plotToCSVFile = 0; % do not replot to the file.
 
 % set the design var object. 
 designVars = DesignVars(settings);
-
-
 recvid = 1;
-
-
-
 
 lsitOfFolders = ls( 'out*');
 count = 0;

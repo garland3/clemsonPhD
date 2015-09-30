@@ -20,15 +20,17 @@ settings = Configuration;
  if(str2num(useInputArgs) ==1)
      settings.w1 = str2num(w1);
      settings.w2 = 1-settings.w1;
-     settings.iterationNum = str2num(iterationNum)   
+     settings.iterationNum = str2num(iterationNum)   ;
      settings.nelx = 80;
      settings.nely = 80;
      
      settings.plotToCSVFile = 1;
-     settings.plotFinal = 1;
+     settings.plotFinal = 1
  else
      settings.nelx = 20;
-     settings.nely = 20;     
+     settings.nely = 20;  
+      settings.w1 = 0;
+       settings.iterationNum = 0;
  end
 
 % material properties Object
@@ -120,7 +122,7 @@ while change > 0.01  && masterloop<=15 && FEACalls<=150
                       % Normalize the sensitives. 
                       temp1Max = max(max(designVars.g1elastic));
                       designVars.g1elastic = designVars.g1elastic/temp1Max;
-                      temp2Max = max(max(designVars.g1heat));
+                      temp2Max = max(max(abs(designVars.g1heat)));
                       designVars.g1heat = designVars.g1heat/temp2Max;
 
                       g1 = settings.w1*designVars.g1elastic+settings.w2*designVars.g1heat; % Calculate the weighted volume fraction change sensitivity.               
