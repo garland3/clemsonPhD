@@ -15,7 +15,7 @@ classdef Configuration
 
        
         timestep = 0.1; % time step for the volume fraction update algorithm
-        volFractionDamping = 1;
+        volFractionDamping = 0.1;
         iterationsPerPlot = 5;
 
         w1 = 0; % weight elastic for multi-objective
@@ -33,6 +33,8 @@ classdef Configuration
         plotToCSVFile = 0; % set to 1 to write cv file instead
         
         iterationNum=0; %  used for parallel computing. 
+        
+        useGPU = 1; % set to 1 to try to solve matrix using gpu
 
         
     end

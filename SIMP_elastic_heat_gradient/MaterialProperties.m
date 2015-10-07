@@ -30,6 +30,7 @@ classdef MaterialProperties
         
         % Calculate Elastic mod
         function e =  effectiveElasticProperties(obj, material1Fraction)
+            
             e = material1Fraction*obj.E_material1+(1-material1Fraction)*obj.E_material2;
         end
         

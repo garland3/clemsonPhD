@@ -146,7 +146,20 @@ K_ff = K(Free,Free);
 K_fe = K(Free,Essential);
 F_f = F(Free);
   
-T(Free) = K_ff \ F_f;
+% http://www.mathworks.com/help/distcomp/gpuarray.html
+% http://www.mathworks.com/matlabcentral/answers/63692-matlab-cuda-slow-in-solving-matrix-vector-equation-a-x-b
+
+if(settings.useGPU ==1)
+    % GPU matrix solve. 
+    K_ff_gpu = gpuArray(K_ff);
+    F_f_gpu = gpuArray(F_f);
+    T_gpu = K_ff_gpu\F_f_gpu;
+    T = gather(T_gpu);
+else
+    % normal matrix solve
+     T(Free) = K_ff \ F_f;
+
+end
 T(Essential) = u0;
   
 % disp('The temperature at each node is');
