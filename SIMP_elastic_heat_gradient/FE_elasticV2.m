@@ -154,7 +154,7 @@ if(settings.useGPU ==1)
     K_ff_gpu = gpuArray(K_ff);
     F_f_gpu = gpuArray(F_f);
     T_gpu = K_ff_gpu\F_f_gpu;
-    T = gather(T_gpu);
+    T(Free) = gather(T_gpu);
 else
     % normal matrix solve
      T(Free) = K_ff \ F_f;
