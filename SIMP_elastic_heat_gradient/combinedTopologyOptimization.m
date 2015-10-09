@@ -31,6 +31,7 @@ settings = Configuration;
      settings.nely = 20;  
       settings.w1 = 0;
        settings.iterationNum = 0;
+         settings.plotToCSVFile = 1;
  end
 
 % material properties Object

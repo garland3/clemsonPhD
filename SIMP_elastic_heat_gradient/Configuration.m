@@ -34,7 +34,8 @@ classdef Configuration
         
         iterationNum=0; %  used for parallel computing. 
         
-        useGPU = 1; % set to 1 to try to solve matrix using gpu
+        % not much faster. 
+        useGPU = 0; % set to 1 to try to solve matrix using gpu
 
         
     end
