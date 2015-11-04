@@ -1,7 +1,7 @@
 function [T]  = temperatureFEA_V3(designVars, settings, matProp,loop)
 
-kmaterial = matProp.K_material1; % W/degreeC
-u0 =0; % value at essentail boundaries
+% kmaterial = matProp.K_material1; % W/degreeC
+u0 =100; % value at essentail boundaries
 nn = (settings.nelx+1)*(settings.nely+1); % number of nodes
 ne = settings.nelx*settings.nely; % number of elements
 
@@ -66,7 +66,7 @@ if 1==0
     Essential =   [1 row (column-1)*row+1 column*row] ; % the 4 corners
 else
     % Set a heat source everywhere, anda sink on the left botom
-    F = ones(nn,1)*2;
+    F = ones(nn,1)*0.2;
     Essential = [1 2 row+1];
     
     
@@ -206,31 +206,31 @@ T(Essential) = u0;
 % q_mags = [qMag_stored,transpose(1:nn)]
 % 
 
-TcontourMatrix = zeros(numNodesInRow,numNodesInColumn);
+% TcontourMatrix = zeros(numNodesInRow,numNodesInColumn);
+% 
+%  
+%   
+% for j = 1:numNodesInColumn % y
+%       rowMultiplier = j-1;
+%      for i = 1:numNodesInRow % x
+%          nodeNumber = i+numNodesInRow*rowMultiplier;
+%          TcontourMatrix(i,j) = T(nodeNumber);
+%      
+%      end
+% end
 
- 
-  
-for j = 1:numNodesInColumn % y
-      rowMultiplier = j-1;
-     for i = 1:numNodesInRow % x
-         nodeNumber = i+numNodesInRow*rowMultiplier;
-         TcontourMatrix(i,j) = T(nodeNumber);
-     
-     end
-end
-
-if(settings.doPlotHeat==1 && mod(loop,settings.iterationsPerPlot) ==0)
-     subplot(1,2,1)
-     % plot the coutour graph
-     contour(XLocations,YLocations,TcontourMatrix);
-     tti= strcat('Heat contours. Number of elements=', int2str(ne));
-     title(tti);
-     
-    % 
-    % plot the surf graph
-%     subplot(1,2,2)
-%     surf(XLocations,YLocations,TcontourMatrix);
-end
+% if(settings.doPlotHeat==1 && mod(loop,settings.iterationsPerPlot) ==0)
+%      subplot(1,2,1)
+%      % plot the coutour graph
+%      contour(XLocations,YLocations,TcontourMatrix);
+%      tti= strcat('Heat contours. Number of elements=', int2str(ne));
+%      title(tti);
+%      
+%     % 
+%     % plot the surf graph
+% %     subplot(1,2,2)
+% %     surf(XLocations,YLocations,TcontourMatrix);
+% end
 % subplot(1,2,1);
 %  surf(XLocations,YLocations,TcontourMatrix);
 % tti= strcat('Heat surface.  Number of elements =', int2str(ne));

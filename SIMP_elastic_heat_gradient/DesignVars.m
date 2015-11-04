@@ -28,6 +28,9 @@ classdef DesignVars
         globalPosition; %  = zeros(nn,2);
         NodeToXYArrayMap; % map of node numbers to their X,Y position in FEA arrays
         
+        U_heatColumn; % temperature matrix
+        U; % displacement matrix
+        
         
          
      end
@@ -161,10 +164,11 @@ classdef DesignVars
               elementsInRow = settings.nelx+1;
               obj.xold = obj.x;
                 % FE-ANALYSIS
-                  [U]=FE_elasticV2(obj, settings, matProp);   
-                  [U_heatColumn]=temperatureFEA_V3(obj, settings, matProp,loop);   
+                [obj.U_heatColumn]=temperatureFEA_V3(obj, settings, matProp,loop);   
+                [obj.U]=FE_elasticV2(obj, settings, matProp);   
+              
                 % OBJECTIVE FUNCTION AND SENSITIVITY ANALYSIS
-                            obj.c = 0.; % c is the objective. Total strain energy
+                    obj.c = 0.; % c is the objective. Total strain energy
 
 
                         for ely = 1:settings.nely
@@ -187,8 +191,8 @@ classdef DesignVars
                                   NodeNumbers = [xNodes(1) yNodes(1) xNodes(2) yNodes(2) xNodes(3) yNodes(3) xNodes(4) yNodes(4)];
 
                                  % NodeNumbers = union(xNodeNumbers,yNodeNumbers);
-                                  Ue = U(NodeNumbers,:);
-                                  U_heat = U_heatColumn(nodes1,:);
+                                  Ue = obj.U(NodeNumbers,:);
+                                  U_heat = obj.U_heatColumn(nodes1,:);
 
                                    obj.c =  obj.c + settings.w1*obj.x(ely,elx)^settings.penal*Ue'*KE*Ue;
                                    obj.c =  obj.c + settings.w2*obj.x(ely,elx)^settings.penal*U_heat'*KEHeat*U_heat;              

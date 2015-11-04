@@ -74,7 +74,7 @@ classdef plotResults
                     if(x_local <= settings.voidMaterialDensityCutOff) % if void region
                        % E_atElement(j,i) = E_empty;
                        % K_atElement(i,j) = K_empty;
-                       structGradArrayElastic(j,i) = matProp.E_material2-1; % make the void region 25 less than the least strong material for plotting purposes
+                       structGradArrayElastic(j,i) = matProp.E_material2-0.01*matProp.E_material2; % make the void region 25 less than the least strong material for plotting purposes
                        structGradArrayHeat(j,i) = matProp.E_material1-1;
                     else % if a filled region
                        volFraclocal = designVars.w(j,i);
@@ -91,9 +91,29 @@ classdef plotResults
                     end
                 end
              end
+             
+             
+             TcontourMatrix = 1;
+
+ 
+  
+            if settings.doPlotHeat ==1
+                numNodesInRow = settings.nelx +1;
+                numNodesInColumn = settings.nely+1;
+                
+                TcontourMatrix = zeros(numNodesInRow,numNodesInColumn);
+                for j = 1:numNodesInColumn % y
+                      rowMultiplier = j-1;
+                     for i = 1:numNodesInRow % x
+                         nodeNumber = i+numNodesInRow*rowMultiplier;
+                         TcontourMatrix(i,j) = designVars.U_heatColumn(nodeNumber);
+
+                     end
+                end
+            end
             
              
-             ActualPlotStructGradArray(obj,structGradArrayElastic, settings,matProp, loopNumb)
+             ActualPlotStructGradArray(obj,structGradArrayElastic,TcontourMatrix, settings,matProp,designVars, loopNumb)
              
             
             
@@ -123,7 +143,7 @@ classdef plotResults
         end
         
         
-        function ActualPlotStructGradArray(obj,structGradArrayElastic, settings,matProp, loopNum)
+        function ActualPlotStructGradArray(obj,structGradArrayElastic, temperatureField, settings,matProp,designVars, loopNum)
             
             if(settings.plotToCSVFile ==1)                
                  
@@ -139,24 +159,36 @@ classdef plotResults
                 
                 % Plot normally. 
               figure(1)
-             if(settings.plotFinal ==1)
-
+             if(settings.doPlotHeat ==1)
+                    subplot(1,2,1);
+                    maxH = max(max(temperatureField));
+                    minH = min(min(temperatureField));
+                    contour(designVars.XLocations,designVars.YLocations,temperatureField,'ShowText','on');
+                    % imagesc(temperatureField); axis equal; axis tight; axis off;
+                    set(gca,'YDir','normal'); % http://www.mathworks.com/matlabcentral/an
+                    
+                     titleText = sprintf('Heat,\n max=%f, min = %f',maxH,minH);
+                  
+                    title(titleText);
+                    
+                     subplot(1,2,2);
 
              else
-                   subplot(2,2,3);
+                   subplot(1,1,1);
                  %  subplot(1,1,1);
              end
             imagesc(structGradArrayElastic); axis equal; axis tight; axis off;
             set(gca,'YDir','normal'); % http://www.mathworks.com/matlabcentral/answers/94170-how-can-i-reverse-the-y-axis-when-i-use-the-image-or-imagesc-function-to-display-an-image-in-matlab
             % caxis([-1 1 ]);
-            titleText = sprintf('Structure and Elastic Mod Gradient, w1=%f, iter = %i',settings.w1,loopNum);
+            titleText = sprintf('Structure and Elastic Mod Gradient,\n w1=%f, iter = %i',settings.w1,loopNum);
             title(titleText)
             %colormap winter
             %  cmap = colormap;
-            rgbSteps = matProp.E_material1- matProp.E_material2;  % plus 1 for 1 below the Enylon for void
-            rgbSteps = rgbSteps*50;
+            rgbSteps = (matProp.E_material1- matProp.E_material2);  % plus 1 for 1 below the Enylon for void
+            rgbSteps = 100;
+            %rgbSteps = rgbSteps*50;
             % [cmin,cmax] = caxis;
-            caxis([matProp.E_material2-1,matProp.E_material1])
+            caxis([matProp.E_material2-0.01*matProp.E_material2,matProp.E_material1])
             map = colormap; % current colormap
             %map = [colormap(1,1):1/rgbSteps:colormap(1:-1)
             map(1,:) = [1,1,1];
@@ -166,6 +198,8 @@ classdef plotResults
             end    
             colormap(map)   
             colorbar
+            
+            
             drawnow
             
                  

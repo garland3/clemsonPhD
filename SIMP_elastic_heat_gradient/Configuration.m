@@ -12,6 +12,9 @@ classdef Configuration
         
         % Optimization mode and configurations
         mode =3; % 1 = topology only, 2 = material optimization only. 3 = both
+        
+        referenceTemperature = 5; % for thermal expansion, assume that there is not strain when at this temperature. 
+        addThermalExpansion = 1; % Set to 1 to incorporate thermal expansion
 
        
         timestep = 0.1; % time step for the volume fraction update algorithm
@@ -59,7 +62,7 @@ classdef Configuration
             elseif obj.mode ==3
                  obj.v1 = 0.15; % fraction of material 1 to use
                  obj.v2 = 0.15; % fraction of material 2 to use
-                 obj.doPlotHeat = 0;
+                 obj.doPlotHeat = 1;
                  
 
              end

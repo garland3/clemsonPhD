@@ -29,11 +29,12 @@ settings = Configuration;
  else
      settings.nelx = 20;
      settings.nely = 20;  
-      settings.w1 = 0;
+      settings.w1 = 0.0;
        settings.iterationNum = 0;
-         settings.plotToCSVFile = 1;
+         settings.plotToCSVFile = 0;
  end
 
+ settings
 % material properties Object
 matProp = MaterialProperties;
 

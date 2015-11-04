@@ -1,4 +1,4 @@
-function [KE]=elK_elastic(E,v, G)
+function [KE, kExpansion_bar]=elK_elastic(E,v, G)
 
 % Change this if statement to be not true if you need to see the
 % calculations
@@ -34,6 +34,7 @@ if(1==1)
       weight = [ 1 1 1 1];
 
       ke = zeros(8,8);
+      kExpansion_bar = 0;
     %      ftemp = zeros(4,4);
     %  btemp = zeros(2,4);
 
@@ -43,11 +44,11 @@ if(1==1)
           Zeta = zetaRow(gu);
           wght = weight(gu);
 
-          % Calculate the Shape functions.
-          N(1) = 1/4*(1-eta)*(1-Zeta);
-          N(2) = 1/4*(1+eta)*(1-Zeta);
-          N(3) = 1/4*(1+eta)*(1+Zeta);
-          N(4) = 1/4*(1-eta)*(1+Zeta);
+%           % Calculate the Shape functions.
+%           N(1) = 1/4*(1-eta)*(1-Zeta);
+%           N(2) = 1/4*(1+eta)*(1-Zeta);
+%           N(3) = 1/4*(1+eta)*(1+Zeta);
+%           N(4) = 1/4*(1-eta)*(1+Zeta);
 
           % B_hat (Derivative of N1 with respect to zeta and eta)
           B_hat = 1/4*[-(1-eta) (1-eta) (1+eta) -(1+eta);
@@ -74,10 +75,18 @@ if(1==1)
 
          tempK = transpose(B)*D*B*J_det*wght;          
          ke = ke + tempK; 
+         
+         % Calcualte the thermal expansion matrix
+         f_bar_temp =  transpose(B)*D*transpose([1 1  0])*J_det*wght;
+         kExpansion_bar = kExpansion_bar+f_bar_temp;
       end  
       KE = ke;
+      
+      
+     
+      
 
-else      
+elseif(1==2)      
     KE =   [ 1.9556    0.6667   -1.1556   -0.1333   -0.9778   -0.6667    0.1778    0.1333;
         0.6667    1.9556    0.1333    0.1778   -0.6667   -0.9778   -0.1333   -1.1556;
        -1.1556    0.1333    1.9556   -0.6667    0.1778   -0.1333   -0.9778    0.6667;
@@ -86,6 +95,7 @@ else
        -0.6667   -0.9778   -0.1333   -1.1556    0.6667    1.9556    0.1333    0.1778;
         0.1778   -0.1333   -0.9778    0.6667   -1.1556    0.1333    1.9556   -0.6667;
         0.1333   -1.1556    0.6667   -0.9778   -0.1333    0.1778   -0.6667    1.9556];
+else
     
     
 

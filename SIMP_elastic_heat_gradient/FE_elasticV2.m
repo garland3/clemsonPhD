@@ -114,7 +114,11 @@ for e = 1:ne
       end
       
       [x,y]= designVars.GivenNodeNumberGetXY(e);
-      ke = matProp.effectiveElasticKEmatrix(  designVars.w(y,x));
+      [ke, KexpansionBar] = matProp.effectiveElasticKEmatrix(  designVars.w(y,x));
+      
+      
+      
+      
       
      
       % Insert the element stiffness matrix into the global.        
@@ -134,11 +138,22 @@ for e = 1:ne
       % The second number is the column "x value"
        K(NodeNumbers,NodeNumbers) = K(NodeNumbers,NodeNumbers) + designVars.x(yLoc,xLoc)^settings.penal*ke;
        
+       if(settings.addThermalExpansion ==1)
+            alpha = matProp.effectiveThermalExpansionCoefficient(  designVars.w(y,x));
+            deltaTemp = designVars.U_heatColumn(e)- settings.referenceTemperature;
+            f_temperature = alpha*deltaTemp*KexpansionBar;
+            F(NodeNumbers) = F(NodeNumbers) + f_temperature;
+       end
+       
        xLoc = xLoc+1;
        if(xLoc>settings.nelx)
            xLoc = 1;
            yLoc = yLoc+1;
        end
+       
+       
+       % Add the thermal strain (Force term)
+       %Ftemp = 
 
 end
   
