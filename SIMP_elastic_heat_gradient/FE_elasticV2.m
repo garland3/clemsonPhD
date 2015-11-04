@@ -1,8 +1,8 @@
 function [T]=FE_elasticV2(designVars, settings, matProp)
 
-E = matProp.E_material1; % Young's mod
-v = matProp.v; % Piossons ratio
-G = matProp.G;
+% E = matProp.E_material1; % Young's mod
+% v = matProp.v; % Piossons ratio
+% G = matProp.G;
 
 u0 =0; % value at essentail boundaries
 nn = (settings.nelx+1)*(settings.nely+1); % number of nodes
@@ -19,24 +19,24 @@ ndof = nn*2; % Number of degrees of freedome. 2 per node.
 % Second column is elemnt 2's global node number
 %  and ....
 
-% count = 1;
-% elementsInRow = settings.nelx+1;
-% % IEN = zeros(nn,4);
-% % % Each row, so nely # of row
-% % for i = 1:settings.nely
-% %      rowMultiplier = i-1;
-% %     % Each column, so nelx # of row
-% %     for j= 1:settings.nelx        
-% %         IEN(count,:)=[rowMultiplier*elementsInRow+j,
-% %                       rowMultiplier*elementsInRow+j+1,
-% %                       (rowMultiplier +1)*elementsInRow+j+1,
-% %                        (rowMultiplier +1)*elementsInRow+j];
-% %         count = count+1;
-% %     end
-% % end
-
-numNodesInRow = settings.nelx+1;
-numNodesInColumn = settings.nely+1;
+%  count = 1;
+%  elementsInRow = settings.nelx+1;
+% IEN = zeros(nn,4);
+% % Each row, so nely # of row
+% for i = 1:settings.nely
+%      rowMultiplier = i-1;
+%     % Each column, so nelx # of row
+%     for j= 1:settings.nelx        
+%         IEN(count,:)=[rowMultiplier*elementsInRow+j,
+%                       rowMultiplier*elementsInRow+j+1,
+%                       (rowMultiplier +1)*elementsInRow+j+1,
+%                        (rowMultiplier +1)*elementsInRow+j];
+%         count = count+1;
+%     end
+% end
+% 
+% numNodesInRow = settings.nelx+1;
+% numNodesInColumn = settings.nely+1;
 % XLocations=zeros(numNodesInRow,numNodesInColumn);
 % YLocations=zeros(numNodesInRow,numNodesInColumn);
 
@@ -44,15 +44,15 @@ numNodesInColumn = settings.nely+1;
 % Each element square is 1 by 1 units
 % Store both the X and Y positions
 % globalPosition = zeros(nn,2);
-% count = 1;
-% for i = 1:numNodesInColumn  % y
-%     for j= 1:numNodesInRow % x
-%         globalPosition(count,:) = [j-1 i-1];
-%         count = count+1;        
-%         XLocations(j,i) = j-1;
-%         YLocations(j,i) = i-1;
-%     end
-% end 
+%  count = 1;
+%  for i = 1:numNodesInColumn  % y
+%      for j= 1:numNodesInRow % x
+%          globalPosition(count,:) = [j-1 i-1];
+%          count = count+1;        
+%          XLocations(j,i) = j-1;
+%          YLocations(j,i) = i-1;
+%      end
+%  end 
 
 % Specifiy the constrained nodes where there are essential boundary
 % conditions
@@ -114,7 +114,7 @@ for e = 1:ne
       end
       
       [x,y]= designVars.GivenNodeNumberGetXY(e);
-      ke = matProp.effectiveElasticKEmatrix(  designVars.w(y,x));
+      ke = matProp.effectiveElasticKEmatrix(  designVars.w(y,x),settings);
       
      
       % Insert the element stiffness matrix into the global.        
@@ -172,24 +172,24 @@ T(Essential) = u0;
 % qMag_stored = zeros(nn,1);
 % elemcenterLocations = zeros(ne,2); 
 % 
-% subplot(2,2,1)
+%  subplot(2,2,2)
 %  
-% % loop over the elements
-% for e = 1:ne
-%     
-%     coord = zeros(3,2);
-%     xsum = 0;
-%     ysum = 0;
-%     % loop over local node numbers to get their node global node numbers
-%     for j = 1:4
-%         % Get the node number
-%         coordNodeNumber = IEN(e,j);
-%          % get the global X,Y position of each node and put in array
-%          coord(j,:) = globalPosition(coordNodeNumber,:);
-%          local_t(j) = T(coordNodeNumber);
-%          xsum = xsum+coord(j,1);
-%          ysum = ysum+coord(j,2);
-%     end
+% % % loop over the elements
+%  for e = 1:ne
+% %     
+% %     coord = zeros(3,2);
+% %     xsum = 0;
+% %     ysum = 0;
+% %     % loop over local node numbers to get their node global node numbers
+%      for j = 1:4
+% %         % Get the node number
+%          coordNodeNumber = IEN(e,j);
+%           % get the global X,Y position of each node and put in array
+%           coord(j,:) = globalPosition(coordNodeNumber,:);
+% %          local_t(j) = T(coordNodeNumber);
+% %          xsum = xsum+coord(j,1);
+% %          ysum = ysum+coord(j,2);
+%      end
 %     elemcenterLocations(e,:) = [xsum/4 ysum/4];
 %     
 %     % see version 3 of notes page 13 Also, see version 5 of the notes page
@@ -219,18 +219,18 @@ T(Essential) = u0;
 %     qMag_stored(e) =qMag;
 %     
 %     % plot the element outline
-%     hold on
-%     coord(5,:) = coord(1,:); 
-%     plot(coord(:,1),coord(:,2));    
+%      hold on
+%      coord(5,:) = coord(1,:); 
+%      plot(coord(:,1),coord(:,2));    
 %     
-% end
+%  end
 % 
 % quiver(elemcenterLocations(:,1),elemcenterLocations(:,2),qstored(:,1),qstored(:,2))
 % %xlabel('radial distance, meters') % y-axis label
 % %ylabel('Height') % x-axis label
 % tti= strcat('Flux from each element . Number of elements=', int2str(ne));
 % title(tti);
-% hold off
+%  hold off
 % 
 % q_mags = [qMag_stored,transpose(1:nn)]
 % 

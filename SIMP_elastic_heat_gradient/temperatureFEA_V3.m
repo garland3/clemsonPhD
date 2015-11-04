@@ -1,7 +1,7 @@
 function [T]  = temperatureFEA_V3(designVars, settings, matProp,loop)
 
 kmaterial = matProp.K_material1; % W/degreeC
-u0 =0; % value at essentail boundaries
+u0 =100; % value at essentail boundaries
 nn = (settings.nelx+1)*(settings.nely+1); % number of nodes
 ne = settings.nelx*settings.nely; % number of elements
 
@@ -66,7 +66,7 @@ if 1==0
     Essential =   [1 row (column-1)*row+1 column*row] ; % the 4 corners
 else
     % Set a heat source everywhere, anda sink on the left botom
-    F = ones(nn,1)*2;
+    F = ones(nn,1)*2; % 2 Watt heat source applied everywhere
     Essential = [1 2 row+1];
     
     
@@ -87,7 +87,7 @@ for e = 1:ne
       % Get the precalculated element stiffness matrix. 
      % ke = elementK_heat();
       [elx,ely]= designVars.GivenNodeNumberGetXY(e);
-      ke = matProp.effectiveHeatKEmatrix(  designVars.w(ely,elx));
+      ke = matProp.effectiveHeatKEmatrix(  designVars.w(ely,elx), settings);
 
       
       

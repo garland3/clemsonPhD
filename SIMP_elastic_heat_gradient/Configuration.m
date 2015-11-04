@@ -34,8 +34,38 @@ classdef Configuration
         
         iterationNum=0; %  used for parallel computing. 
         
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
         % not much faster. 
         useGPU = 0; % set to 1 to try to solve matrix using gpu
+        
+        % -----------------
+        % Use different mixture rules for effective elastic properteis
+        % 1. Simple linear interpolation, Vigot rule of miztures E = w(E1)*(1-w)*E2
+        % 2. Hashin–Shtrikam law
+        % 3. Reuss -rule, 1/E = w/E1+(1-w)/E2 (not implemented yet)
+        % 4. Mori and Tanaka, metal ceramic composite
+        % ---------------------        
+        elasticMaterialInterpMethod = 1; 
+        
+        % -----------------
+        % Use different mixture rules for effective Heat properteis
+        % 1. Simple linear interpolation, Vigot rule of miztures E = w(E1)*(1-w)*E2
+       
+        % 3. Reuss -rule, 1/E = w/E1+(1-w)/E2 (not implemented yet)
+        % 4. Kingery's, metal ceramic composite
+        % ---------------------        
+        heatMaterialInterpMethod = 1; 
+=======
+        useGPU = 1; % set to 1 to try to solve matrix using gpu
+>>>>>>> parent of 14800cd... working on converting results to amf format for 3d printing
+=======
+        useGPU = 1; % set to 1 to try to solve matrix using gpu
+>>>>>>> parent of 14800cd... working on converting results to amf format for 3d printing
+=======
+        useGPU = 1; % set to 1 to try to solve matrix using gpu
+>>>>>>> parent of 14800cd... working on converting results to amf format for 3d printing
 
         
     end

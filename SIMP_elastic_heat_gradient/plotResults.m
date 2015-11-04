@@ -74,8 +74,11 @@ classdef plotResults
                     if(x_local <= settings.voidMaterialDensityCutOff) % if void region
                        % E_atElement(j,i) = E_empty;
                        % K_atElement(i,j) = K_empty;
-                       structGradArrayElastic(j,i) = matProp.E_material2-1; % make the void region 25 less than the least strong material for plotting purposes
-                       structGradArrayHeat(j,i) = matProp.E_material1-1;
+                       smallerE = min( matProp.E_material2, matProp.E_material1);
+                       largerE = max( matProp.E_material2, matProp.E_material1);
+                       diffE = largerE-smallerE;
+                       structGradArrayElastic(j,i) =smallerE-diffE*0.1; % make the void region 10 less than the least strong material for plotting purposes
+                       %structGradArrayHeat(j,i) = matProp.E_material1-1;
                     else % if a filled region
                        volFraclocal = designVars.w(j,i);
 %                        volume1 = volume1 +volFraclocal; % sum up the total use of material 1 
@@ -84,10 +87,10 @@ classdef plotResults
                       % K_atElement(i,j) = KheatPLA*volFraclocal+(1-volFraclocal)*KheatNylon;
                       
                       
-                       E_heat_atElement = matProp.effectiveHeatProperties(volFraclocal);
-                       E_atElement=  matProp.effectiveElasticProperties(volFraclocal);  % simple mixture ratio
+                       E_heat_atElement = matProp.effectiveHeatProperties(volFraclocal, settings);
+                       E_atElement=  matProp.effectiveElasticProperties(volFraclocal,settings);  % simple mixture ratio
                        structGradArrayElastic(j,i) = E_atElement;
-                       structGradArrayHeat(j,i) = E_heat_atElement;
+                       %structGradArrayHeat(j,i) = E_heat_atElement;
                     end
                 end
              end
@@ -153,10 +156,15 @@ classdef plotResults
             title(titleText)
             %colormap winter
             %  cmap = colormap;
-            rgbSteps = matProp.E_material1- matProp.E_material2;  % plus 1 for 1 below the Enylon for void
-            rgbSteps = rgbSteps*50;
+            largeE = max(matProp.E_material1, matProp.E_material2);
+            smallE =  min(matProp.E_material1, matProp.E_material2);
+            diffE = largeE-smallE;
+            rgbSteps = largeE-smallE;  % plus 1 for 1 below the Enylon for void
+            rgbSteps = 100*rgbSteps/rgbSteps+10;
+            %rgbSteps =200
+           % rgbSteps = rgbSteps*50;
             % [cmin,cmax] = caxis;
-            caxis([matProp.E_material2-1,matProp.E_material1])
+            caxis(sort([smallE-0.1*diffE,largeE]))
             map = colormap; % current colormap
             %map = [colormap(1,1):1/rgbSteps:colormap(1:-1)
             map(1,:) = [1,1,1];

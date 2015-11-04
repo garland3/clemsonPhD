@@ -162,7 +162,9 @@ classdef DesignVars
               obj.xold = obj.x;
                 % FE-ANALYSIS
                   [U]=FE_elasticV2(obj, settings, matProp);   
-                  [U_heatColumn]=temperatureFEA_V3(obj, settings, matProp,loop);   
+                 
+                  %[U_heatColumn]=temperatureFEA_V3(obj, settings, matProp,loop);   
+                  U_heatColumn = U;
                 % OBJECTIVE FUNCTION AND SENSITIVITY ANALYSIS
                             obj.c = 0.; % c is the objective. Total strain energy
 
@@ -177,8 +179,8 @@ classdef DesignVars
                                             (rowMultiplier +1)*elementsInRow+elx];
 
                                     % Get the element K matrix for this partiular element
-                                    KE = matProp.effectiveElasticKEmatrix(  obj.w(ely,elx));
-                                    KEHeat = matProp.effectiveHeatKEmatrix(  obj.w(ely,elx));
+                                    KE = matProp.effectiveElasticKEmatrix(  obj.w(ely,elx),settings);
+                                    KEHeat = matProp.effectiveHeatKEmatrix(  obj.w(ely,elx), settings);
 
                                     xNodes = nodes1*2-1;
                                     yNodes = nodes1*2;
