@@ -12,6 +12,7 @@ function combinedTopologyOptimization(useInputArgs, w1, iterationNum)
 
 
 
+
 settings = Configuration;
 
 % if using input args, then override some configurations. 
