@@ -12,6 +12,9 @@ classdef Configuration
         
         % Optimization mode and configurations
         mode =3; % 1 = topology only, 2 = material optimization only. 3 = both
+        
+        referenceTemperature = 0; % for thermal expansion, assume that there is not strain when at this temperature. 
+        addThermalExpansion = 1; % Set to 1 to incorporate thermal expansion
 
        
         timestep = 0.1; % time step for the volume fraction update algorithm
@@ -25,6 +28,7 @@ classdef Configuration
         
         
         doPlotHeat = 1;
+        doPlotSensitivityComparison = 1;
         v1 = 1;
         v2 = 1;
         totalVolume; % = v1+v2;
@@ -34,9 +38,7 @@ classdef Configuration
         
         iterationNum=0; %  used for parallel computing. 
         
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
+
         % not much faster. 
         useGPU = 0; % set to 1 to try to solve matrix using gpu
         
@@ -57,15 +59,9 @@ classdef Configuration
         % 4. Kingery's, metal ceramic composite
         % ---------------------        
         heatMaterialInterpMethod = 1; 
-=======
-        useGPU = 1; % set to 1 to try to solve matrix using gpu
->>>>>>> parent of 14800cd... working on converting results to amf format for 3d printing
-=======
-        useGPU = 1; % set to 1 to try to solve matrix using gpu
->>>>>>> parent of 14800cd... working on converting results to amf format for 3d printing
-=======
-        useGPU = 1; % set to 1 to try to solve matrix using gpu
->>>>>>> parent of 14800cd... working on converting results to amf format for 3d printing
+
+       
+
 
         
     end
@@ -87,9 +83,9 @@ classdef Configuration
                 obj. plotToCSVFile = 0;
 
             elseif obj.mode ==3
-                 obj.v1 = 0.15; % fraction of material 1 to use
-                 obj.v2 = 0.15; % fraction of material 2 to use
-                 obj.doPlotHeat = 0;
+                 obj.v1 = 0.10; % fraction of material 1 to use
+                 obj.v2 = 0.10; % fraction of material 2 to use
+                 obj.doPlotHeat = 1;
                  
 
              end

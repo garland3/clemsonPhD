@@ -1,4 +1,4 @@
-function [T]=FE_elasticV2(designVars, settings, matProp)
+function [T, maxF,maxT]=FE_elasticV2(designVars, settings, matProp)
 
 % E = matProp.E_material1; % Young's mod
 % v = matProp.v; % Piossons ratio
@@ -94,7 +94,7 @@ Free    = setdiff(alldofs,Essential);
 % F(nodeNumber,1) = -1; % force at particular node
 
 % F(2*(numNodesInColumn-1)*numNodesInRow+2,1) = -10; % y direction, down
-FappliedLoad = 20;
+FappliedLoad = 2000;
 F( (floor(row/2)+1)*2) = -FappliedLoad; % force down in the bottom middle
 
 
@@ -114,7 +114,12 @@ for e = 1:ne
       end
       
       [x,y]= designVars.GivenNodeNumberGetXY(e);
-      ke = matProp.effectiveElasticKEmatrix(  designVars.w(y,x),settings);
+
+      [ke, KexpansionBar] = matProp.effectiveElasticKEmatrix(designVars.w(y,x), settings);
+      % [ke] = matProp.effectiveElasticKEmatrix(  designVars.w(y,x), settings);
+      
+      
+
       
      
       % Insert the element stiffness matrix into the global.        
@@ -134,17 +139,28 @@ for e = 1:ne
       % The second number is the column "x value"
        K(NodeNumbers,NodeNumbers) = K(NodeNumbers,NodeNumbers) + designVars.x(yLoc,xLoc)^settings.penal*ke;
        
+       if(settings.addThermalExpansion ==1)
+            alpha = matProp.effectiveThermalExpansionCoefficient(  designVars.w(y,x));
+            U_heat = designVars.U_heatColumn(nodes1,:);
+            averageElementTemp = mean2(U_heat); % calculate the average temperature of the 4 nodes
+            deltaTemp = averageElementTemp- settings.referenceTemperature;
+            f_temperature = alpha*deltaTemp*KexpansionBar;
+            F(NodeNumbers) = F(NodeNumbers) + f_temperature;
+       end
+       
        xLoc = xLoc+1;
        if(xLoc>settings.nelx)
            xLoc = 1;
            yLoc = yLoc+1;
        end
-
+       
+       
 end
   
 K_ff = K(Free,Free);
 K_fe = K(Free,Essential);
 F_f = F(Free);
+% maxF = max(max(F))
   
 % http://www.mathworks.com/help/distcomp/gpuarray.html
 % http://www.mathworks.com/matlabcentral/answers/63692-matlab-cuda-slow-in-solving-matrix-vector-equation-a-x-b
@@ -160,7 +176,13 @@ else
      T(Free) = K_ff \ F_f;
 
 end
+
+maxF = max(F);
 T(Essential) = u0;
+
+maxT = max(T);
+
+
   
 % disp('The temperature at each node is');
 % T_column = [transpose(T),transpose(1:nn)]  

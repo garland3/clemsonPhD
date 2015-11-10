@@ -11,7 +11,6 @@ function combinedTopologyOptimization(useInputArgs, w1, iterationNum)
 %close all
 
 
-
 settings = Configuration;
 
 % if using input args, then override some configurations. 
@@ -19,7 +18,7 @@ settings = Configuration;
 % otherwise use low resolution
  if(str2num(useInputArgs) ==1)
      settings.w1 = str2num(w1);
-     settings.w2 = 1-settings.w1;
+    
      settings.iterationNum = str2num(iterationNum)   ;
      settings.nelx = 80;
      settings.nely = 80;
@@ -27,26 +26,16 @@ settings = Configuration;
      settings.plotToCSVFile = 1;
      settings.plotFinal = 0;
  else
-<<<<<<< HEAD
-     settings.nelx = 15;
-     settings.nely = 15;  
-     settings.w1 = 0.5;
-     settings.iterationNum = 0;
-     settings.plotToCSVFile = 0;
-=======
+
      settings.nelx = 20;
      settings.nely = 20;  
-      settings.w1 = 0;
+      settings.w1 = 0.5; % do not set to zero, instead set to 0.0001. Else we will get NA for temp2
        settings.iterationNum = 0;
-<<<<<<< HEAD
-<<<<<<< HEAD
->>>>>>> parent of 14800cd... working on converting results to amf format for 3d printing
-=======
->>>>>>> parent of 14800cd... working on converting results to amf format for 3d printing
-=======
->>>>>>> parent of 14800cd... working on converting results to amf format for 3d printing
+
  end
 
+ settings.w2 = 1-settings.w1;
+ settings
 % material properties Object
 matProp = MaterialProperties;
 
@@ -59,6 +48,8 @@ designVars.w(1:settings.nely,1:settings.nelx)  = 1; % actual volume fraction com
 
 designVars.temp1(1:settings.nely,1:settings.nelx) = 0;
 designVars.temp2(1:settings.nely,1:settings.nelx) = 0;
+designVars.complianceSensitivity(1:settings.nely,1:settings.nelx) = 0;
+
 designVars.g1elastic(1:settings.nely,1:settings.nelx) = 0;
 designVars.g1heat(1:settings.nely,1:settings.nelx) = 0;
 
