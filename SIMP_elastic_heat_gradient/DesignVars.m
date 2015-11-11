@@ -226,7 +226,7 @@ classdef DesignVars
                                    
                                    
                                    total =  settings.w1*(term1 + term2 + term3);
-                                   [complianceTotal ,total]
+                                   [complianceTotal ,total];
                                    obj.c =  obj.c +total;
                                    obj.c =  obj.c + settings.w2*obj.x(ely,elx)^settings.penal*U_heat'*KEHeat*U_heat;     
                                    
@@ -256,14 +256,17 @@ classdef DesignVars
                                % calcualte the minimum strain energy
                                % sensitivity
                                 obj.temp1(ely,elx) = -total;      
-                               obj.temp1(ely,elx) = obj.complianceSensitivity(ely,elx);
+                              % obj.temp1(ely,elx) = obj.complianceSensitivity(ely,elx);
                                 
                                 % calculate the minim temp sensitivity
-                                 obj.temp2(ely,elx) = -settings.penal*obj.x(ely,elx)^(settings.penal-1)*U_heat'*KEHeat*U_heat;
+                                obj.temp2(ely,elx) = -settings.penal*obj.x(ely,elx)^(settings.penal-1)*U_heat'*KEHeat*U_heat;
+                              
 
                                  % Calculate the derivative with respect to a material
                                  % volume fraction composition change (not density change)
-                                 obj.g1elastic(ely,elx) = obj.x(ely,elx)^(settings.penal)*Ue'*matProp.dKelastic*Ue;
+                                  totalMaterialD = dTerm1+dTerm2+dTerm3;
+                               obj.g1elastic(ely,elx) =totalMaterialD;
+                               %  obj.g1elastic(ely,elx) = obj.x(ely,elx)^(settings.penal)*Ue'*matProp.dKelastic*Ue;
                                  
                                  obj.g1heat(ely,elx) = obj.x(ely,elx)^(settings.penal)*U_heat'*matProp.dKheat*U_heat;
                             end

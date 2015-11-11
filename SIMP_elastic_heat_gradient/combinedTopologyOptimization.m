@@ -1,4 +1,4 @@
-function combinedTopologyOptimization(useInputArgs, w1, iterationNum)
+function combinedTopologyOptimization(useInputArgs, w1text, iterationNum)
 % input args, useInputArgs = 1 if to use the input args
 % w1 weight1 for weighted objective. 
 % iterationNum, used to know where to output files. 
@@ -17,7 +17,7 @@ settings = Configuration;
 % if using input args, then running on the cluster, so use high resolution,
 % otherwise use low resolution
  if(str2num(useInputArgs) ==1)
-     settings.w1 = str2num(w1);
+     settings.w1 = str2num(w1text);
     
      settings.iterationNum = str2num(iterationNum)   ;
      settings.nelx = 80;
@@ -27,7 +27,7 @@ settings = Configuration;
      settings.plotFinal = 0;
  else
 
-     settings.nelx = 20;
+     settings.nelx = 30;
      settings.nely = 20;  
       settings.w1 = 0.5; % do not set to zero, instead set to 0.0001. Else we will get NA for temp2
        settings.iterationNum = 0;
@@ -73,7 +73,7 @@ FEACalls = 0;
 change = 1.;
 
 % START ITERATION
-while change > 0.01  && masterloop<=15 && FEACalls<=150
+while change > 0.01  && masterloop<=15 && FEACalls<=60
   masterloop = masterloop + 1;
   
         % --------------------------------
@@ -125,7 +125,7 @@ while change > 0.01  && masterloop<=15 && FEACalls<=150
                       targetFraction_v1 = settings.v1/(settings.v1+settings.v2);
                       
                       % Normalize the sensitives. 
-                      temp1Max = max(max(designVars.g1elastic));
+                      temp1Max = max(max(abs(designVars.g1elastic)));
                       designVars.g1elastic = designVars.g1elastic/temp1Max;
                       temp2Max = max(max(abs(designVars.g1heat)));
                       designVars.g1heat = designVars.g1heat/temp2Max;
@@ -163,7 +163,7 @@ function [xnew]=OC(nelx,nely,x,volfrac,dc ,designVar, settings)
 l1 = 0; l2 = 100000; move = 0.2;
 while (l2-l1 > 1e-4)
   lmid = 0.5*(l2+l1);
-  xnew = max(0.001,max(x-move,min(1.,min(x+move,x.*sqrt(-dc./lmid)))));
+  xnew = max(0.01,max(x-move,min(1.,min(x+move,x.*sqrt(-dc./lmid)))));
   
 %   desvars = max(VOID, max((x - move), min(SOLID,  min((x + move),(x * (-dfc / lammid)**self.eta)**self.q))))
 

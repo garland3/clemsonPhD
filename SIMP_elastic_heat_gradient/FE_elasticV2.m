@@ -59,6 +59,7 @@ ndof = nn*2; % Number of degrees of freedome. 2 per node.
 F = zeros(ndof,1);
 K = zeros(ndof,ndof);
 row = settings.nelx+1;
+column= settings.nely+1;
 % Essential   = [1:numNodesInRow ... % bottom row
 %             numNodesInRow*(numNodesInColumn-1):numNodesInRow*numNodesInColumn ... % top row
 %             1:numNodesInRow :numNodesInRow*(numNodesInColumn-1) ... % left side
@@ -81,7 +82,8 @@ row = settings.nelx+1;
 % Essential = unique(Essential);
 
 Essential = [1 2]; % bottom left corner is fixed
-Essential = [Essential row*2 row*2-1]; % bottom right corner is only fixed in the y direction
+%Essential = [Essential row*2 row*2-1]; % bottom right corner is only fixed in the y direction
+Essential=[Essential row*2+(ceil(column/2)*row*2) ] ; % fixed at the heat source in the middle right
 Essential = unique(Essential);
 
 alldofs     = [1:ndof];
@@ -94,7 +96,8 @@ Free    = setdiff(alldofs,Essential);
 % F(nodeNumber,1) = -1; % force at particular node
 
 % F(2*(numNodesInColumn-1)*numNodesInRow+2,1) = -10; % y direction, down
-FappliedLoad = 2000;
+FappliedLoad = -0;
+%FappliedLoad = -200000;
 F( (floor(row/2)+1)*2) = -FappliedLoad; % force down in the bottom middle
 
 
@@ -140,7 +143,7 @@ for e = 1:ne
        K(NodeNumbers,NodeNumbers) = K(NodeNumbers,NodeNumbers) + designVars.x(yLoc,xLoc)^settings.penal*ke;
        
        if(settings.addThermalExpansion ==1)
-            alpha = matProp.effectiveThermalExpansionCoefficient(  designVars.w(y,x));
+            alpha = matProp.effectiveThermalExpansionCoefficient(designVars.w(y,x))*designVars.x(yLoc,xLoc)^settings.penal;
             U_heat = designVars.U_heatColumn(nodes1,:);
             averageElementTemp = mean2(U_heat); % calculate the average temperature of the 4 nodes
             deltaTemp = averageElementTemp- settings.referenceTemperature;
