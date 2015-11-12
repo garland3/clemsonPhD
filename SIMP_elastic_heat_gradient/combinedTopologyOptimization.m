@@ -20,8 +20,8 @@ settings = Configuration;
      settings.w1 = str2num(w1text);
     
      settings.iterationNum = str2num(iterationNum)   ;
-     settings.nelx = 80;
-     settings.nely = 80;
+     settings.nelx = 300;
+     settings.nely = 200;
      
      settings.plotToCSVFile = 1;
      settings.plotFinal = 0;
@@ -49,6 +49,7 @@ designVars.w(1:settings.nely,1:settings.nelx)  = 1; % actual volume fraction com
 designVars.temp1(1:settings.nely,1:settings.nelx) = 0;
 designVars.temp2(1:settings.nely,1:settings.nelx) = 0;
 designVars.complianceSensitivity(1:settings.nely,1:settings.nelx) = 0;
+designVars.totalStress(1:settings.nely,1:settings.nelx) = 0;
 
 designVars.g1elastic(1:settings.nely,1:settings.nelx) = 0;
 designVars.g1heat(1:settings.nely,1:settings.nelx) = 0;
@@ -73,7 +74,7 @@ FEACalls = 0;
 change = 1.;
 
 % START ITERATION
-while change > 0.01  && masterloop<=15 && FEACalls<=60
+while change > 0.01  && masterloop<=15 && FEACalls<=100
   masterloop = masterloop + 1;
   
         % --------------------------------

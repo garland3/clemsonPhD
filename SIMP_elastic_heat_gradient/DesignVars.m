@@ -21,6 +21,7 @@ classdef DesignVars
          temp2; % Sensitivity 2
          
          complianceSensitivity; % 
+         totalStress; 
          dc; % Derivative of c (hence dc). C is the objective.    
          g1elastic; % Derivative of c with respect to a material change for the elastic
          g1heat; %  Derivative of c with respect to a material change for the heat
@@ -243,8 +244,12 @@ classdef DesignVars
                                       dTerm2=0;
                                       dTerm3=0;
                                    
-                                   end
+                                    end
 
+                                   totalStrain=thermalStrain+elasticStrain;
+                                    totalSressLocal=Dmaterial*totalStrain*obj.x(ely,elx)^settings.penal;
+                                     vonM = sqrt(totalSressLocal(1)^2  +   totalSressLocal(2)^2 -  totalSressLocal(1)*totalSressLocal(2)  +   3*(totalSressLocal(3))^2);
+                                   obj.totalStress(ely,elx)=vonM;
 
                                 % Topology sensitivies
                                 %

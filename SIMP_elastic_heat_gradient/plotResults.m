@@ -190,15 +190,17 @@ classdef plotResults
                     
                      % PLot comparison
                      
-                    imagesc(designVars.dc); axis equal; axis tight; axis off;
+                    imagesc(designVars.totalStress); axis equal; axis tight; axis off;
                     colormap winter
                     set(gca,'YDir','normal'); % http://www.mathworks.com/m       
-                    titleText = sprintf('dc, maxF = %f, maxU=%f', designVars. maxF, designVars.maxU );
+                    titleText = sprintf('Von Mises Stress, maxF = %f, maxU=%f', designVars. maxF, designVars.maxU );
                     title(titleText);
                      colorbar
                     freezeColors
                      
                      subplot(2,2,3);
+                    tStress= max(max(abs(designVars.totalStress)));
+                    fprintf('max Stress=%f\n', tStress);
                      
                  
                  

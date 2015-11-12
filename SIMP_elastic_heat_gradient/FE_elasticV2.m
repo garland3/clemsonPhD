@@ -1,5 +1,10 @@
 function [T, maxF,maxT]=FE_elasticV2(designVars, settings, matProp)
 
+% loading condition
+FappliedLoad = -1000;
+fixedElementsCase = 'middleDown'; % 'sidesMiddle'
+
+
 % E = matProp.E_material1; % Young's mod
 % v = matProp.v; % Piossons ratio
 % G = matProp.G;
@@ -81,10 +86,35 @@ column= settings.nely+1;
                % Y direction on left side is held fixed
 % Essential = unique(Essential);
 
-Essential = [1 2]; % bottom left corner is fixed
-%Essential = [Essential row*2 row*2-1]; % bottom right corner is only fixed in the y direction
-Essential=[Essential row*2+(ceil(column/2)*row*2) ] ; % fixed at the heat source in the middle right
-Essential = unique(Essential);
+
+
+if(strcmp(fixedElementsCase,'bottomCorners'))
+    Essential = [1 2]; % bottom left corner is fixed
+    Essential = [Essential row*2 row*2-1]; % bottom right corner is fixed
+    Essential = unique(Essential);
+    F( (floor(row/2)+1)*2) = FappliedLoad; % force down in the bottom middle
+    
+elseif(strcmp(fixedElementsCase,'sidesMiddle'))
+    
+    Essential = []; % 
+    Essential=[Essential row*2+(ceil(column/2)*row*2) 1+row*2+(ceil(column/2)*row*2)] ; % fixed at the heat source in the middle right
+    Essential=[Essential 1+(ceil(column/2)*row*2) 2+(ceil(column/2)*row*2)] ; % fixed at the heat source in the middle left
+    Essential = unique(Essential);
+    F( (floor(row/2)+1)*2) = FappliedLoad; % force down in the bottom middle
+
+elseif(strcmp(fixedElementsCase,'middleDown'))    
+     Essential = []; % 
+     
+     Essential=[Essential row*2+(ceil(column/2)*row*2) 1+row*2+(ceil(column/2)*row*2)] ; % fixed at the heat source in the middle right
+    Essential=[Essential 1+(ceil(column/2)*row*2) 2+(ceil(column/2)*row*2)] ; % fixed at the heat source in the middle left
+    Essential = unique(Essential);
+     
+    % even DOF should be y directions
+    forceNodes = [ 2+(ceil(column/2)*row*2):2:2+row*2+(ceil(column/2)*row*2)];
+     F(forceNodes)=  FappliedLoad; % middle row, downward force
+   
+
+end
 
 alldofs     = [1:ndof];
 Free    = setdiff(alldofs,Essential);
@@ -96,9 +126,9 @@ Free    = setdiff(alldofs,Essential);
 % F(nodeNumber,1) = -1; % force at particular node
 
 % F(2*(numNodesInColumn-1)*numNodesInRow+2,1) = -10; % y direction, down
-FappliedLoad = -0;
+
 %FappliedLoad = -200000;
-F( (floor(row/2)+1)*2) = -FappliedLoad; % force down in the bottom middle
+
 
 
 % ke = elK_elastic(matProp);
@@ -180,12 +210,16 @@ else
 
 end
 
-maxF = max(F);
+maxF = max(abs(F));
 T(Essential) = u0;
 
 maxT = max(T);
 
-
+plotForces =1;
+if(plotForces ==1)
+    subplot(2,2,4);
+    quiver(reshape(designVars.XLocations, ndof/2,1),reshape(designVars.YLocations, ndof/2,1),F(1:2:ndof),F(2:2:ndof));
+end
   
 % disp('The temperature at each node is');
 % T_column = [transpose(T),transpose(1:nn)]  
@@ -250,7 +284,7 @@ maxT = max(T);
 %     
 %  end
 % 
-% quiver(elemcenterLocations(:,1),elemcenterLocations(:,2),qstored(:,1),qstored(:,2))
+ 
 % %xlabel('radial distance, meters') % y-axis label
 % %ylabel('Height') % x-axis label
 % tti= strcat('Flux from each element . Number of elements=', int2str(ne));

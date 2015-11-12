@@ -64,17 +64,28 @@ if 1==0
     % Set the 4 corners. 
     quartY = ceil(settings.nely/4);
     Essential =   [1 row (column-1)*row+1 column*row] ; % the 4 corners
-else
-    % Set a heat source everywhere, anda sink on the left botom
-
-    %F = ones(nn,1)*0.02;
+elseif (1==0)
+    
+    
+   % ----------------------
+   % Heat source in top middle and right middle. Sink in bototm left
+   % ----------------------
       F = zeros(nn,1)*0.02;
-       F([row+(ceil(column/2)*row) ]) =  0.01; % heat source in the middle right
-          F([(column-1)*row+ceil(row/2) ]) =  0.01; % heat source in the top middle
+      F([row+(ceil(column/2)*row) ]) =  0.5; % heat source in the middle right
+      F([(column-1)*row+ceil(row/2) ]) =  0.5; % heat source in the top middle
 
     Essential = [1 2 row+1];
     
+else
     
+       % ----------------------
+       % Heat source in right middle. Sink in left middle
+       % ----------------------
+      F = zeros(nn,1)*0.02;
+       F([row+(ceil(column/2)*row) ]) =  1; % heat source in the middle right
+      
+
+     Essential = [1+(ceil(column/2)*row)]; % sink in left middle
 end
 
 Essential = unique(Essential);
