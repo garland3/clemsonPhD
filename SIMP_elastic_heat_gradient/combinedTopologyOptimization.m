@@ -20,8 +20,8 @@ settings = Configuration;
      settings.w1 = str2num(w1text);
     
      settings.iterationNum = str2num(iterationNum)   ;
-     settings.nelx = 300;
-     settings.nely = 200;
+     settings.nelx = 80;
+     settings.nely = 80;
      
      settings.plotToCSVFile = 1;
      settings.plotFinal = 0;
