@@ -122,7 +122,10 @@ for e = 1:ne
        end
 
 end
-  
+ 
+K = sparse(K);
+F = sparse(F);
+
 K_ff = K(Free,Free);
 % K_fe = K(Free,Essential);
 F_f = F(Free);

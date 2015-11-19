@@ -27,8 +27,8 @@ settings = Configuration;
      settings.plotFinal = 0;
  else
 
-     settings.nelx = 30;
-     settings.nely = 20;  
+     settings.nelx = 80;
+     settings.nely = 40;  
       settings.w1 = 0.5; % do not set to zero, instead set to 0.0001. Else we will get NA for temp2
        settings.iterationNum = 0;
 

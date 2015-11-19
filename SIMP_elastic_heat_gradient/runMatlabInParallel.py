@@ -7,7 +7,7 @@ import subprocess
 
 # 
 # qsub -I
-# cd clemsonPhD/SIMP_elastic_heat_gradient/
+# cd /scratch1/apg/clemsonPhD/SIMP_elastic_heat_gradient/
 # dos2unix *.*
 # rm jobP*
 # rm jobweight*
@@ -15,8 +15,13 @@ import subprocess
 # module add matlab/2015a
 # mcc -R -nodisplay  -m  combinedTopologyOptimization.m Configuration.m DesignVars.m  elementK_heat.m elK_elastic.m FE_elasticV2.m  MaterialProperties.m plotResults.m temperatureFEA_V3.m  
 # exit
+ # cd /scratch1/apg/clemsonPhD/SIMP_elastic_heat_gradient
+
 # module add python/2.7.6 
 # python runMatlabInParallel.py
+# --------------------
+# then watch the status with
+# qstat -u apg
 
 
 # bump up the resolution on the analysis code. 40 x20 at least.  (80 x40 would be better

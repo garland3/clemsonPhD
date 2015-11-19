@@ -190,6 +190,8 @@ for e = 1:ne
        
 end
   
+K = sparse(K);
+F = sparse(F);
 K_ff = K(Free,Free);
 K_fe = K(Free,Essential);
 F_f = F(Free);
@@ -206,14 +208,15 @@ if(settings.useGPU ==1)
     T(Free) = gather(T_gpu);
 else
     % normal matrix solve
+     
      T(Free) = K_ff \ F_f;
 
 end
 
-maxF = max(abs(F));
+maxF = full(max(abs(F)));
 T(Essential) = u0;
 
-maxT = max(T);
+maxT = full(max(T));
 
 plotForces =1;
 if(plotForces ==1)

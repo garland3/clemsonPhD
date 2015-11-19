@@ -13,6 +13,8 @@ settings = Configuration;
 plotter = plotResults;
 settings.plotFinal = 1; % set to final plotting mode. 
 settings.plotToCSVFile = 0; % do not replot to the file. 
+settings.doPlotHeat = 0;
+settings.doPlotSensitivityComparison = 0;
 
 % set the design var object. 
 designVars = DesignVars(settings);
@@ -58,7 +60,9 @@ for folderS = lsitOfFolders'
         figure(1)
 
         
-        plotter. ActualPlotStructGradArray(structGradArray, settings,matProp,i)
+       % plotter.ActualPlotStructGradArray(structGradArray, settings,matProp,i)
+       loopNum=i;
+       plotter.ActualPlotStructGradArray(structGradArray, 0, settings,matProp,designVars, loopNum)
         %designVars.
 
 
