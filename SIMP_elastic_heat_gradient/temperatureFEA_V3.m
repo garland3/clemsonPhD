@@ -56,7 +56,11 @@ K = zeros(nn,nn);
 row = settings.nelx+1;
 column = settings.nely+1;
 
-if 1==0
+loadingScenario = 'sourceEverywhereSinkMiddle';
+% 'topAndRightLoadsSinkBottomLeft'
+% 'sourceMiddleRightSinkMiddleLeft'
+
+if strcmp(loadingScenario,'heatMiddleSinksCorners')
     % set a heat source in the middle and sinks on the four corners. 
     F = zeros(nn,1);
     F([ceil(row/2)+(ceil(column/2)*row) (ceil(row/2)+1)+(ceil(column/2)*row)]) =  20; % heat source in the middle
@@ -64,7 +68,8 @@ if 1==0
     % Set the 4 corners. 
     quartY = ceil(settings.nely/4);
     Essential =   [1 row (column-1)*row+1 column*row] ; % the 4 corners
-elseif (1==0)
+    
+elseif (strcmp(loadingScenario,'topAndRightLoadsSinkBottomLeft'))
     
     
    % ----------------------
@@ -76,7 +81,7 @@ elseif (1==0)
 
     Essential = [1 2 row+1];
     
-else
+elseif  (strcmp(loadingScenario,'sourceMiddleRightSinkMiddleLeft'))
     
        % ----------------------
        % Heat source in right middle. Sink in left middle
@@ -86,6 +91,22 @@ else
       
 
      Essential = [1+(ceil(column/2)*row)]; % sink in left middle
+elseif (strcmp(loadingScenario,'sourceMiddleSinkBoundaries'))
+     F = zeros(nn,1);
+    F([ceil(row/2)+(ceil(column/2)*row) (ceil(row/2)+1)+(ceil(column/2)*row)]) =  20; % heat source in the middle
+   
+    % Set the 4 corners. 
+    bottomRow = 1:row;
+    topRow = (column-1)*row+1:column*row;
+    left = 1:row:(column-1)*row+1;
+    right = row:row:column*row;
+    Essential =   [bottomRow topRow left right] ; % 4 sides
+    
+elseif (strcmp(loadingScenario,'sourceEverywhereSinkMiddle'))
+    
+    F = ones(nn,1)*0.01;
+    Essential=[ceil(row/2)+(ceil(column/2)*row) (ceil(row/2)+1)+(ceil(column/2)*row)]; % heat source in the middle
+    
 end
 
 Essential = unique(Essential);

@@ -27,13 +27,17 @@ settings = Configuration;
      settings.plotFinal = 0;
  else
 
-     settings.nelx = 80;
+     settings.nelx = 40;
      settings.nely = 40;  
-      settings.w1 = 0.5; % do not set to zero, instead set to 0.0001. Else we will get NA for temp2
+      settings.w1 = 0; % do not set to zero, instead set to 0.0001. Else we will get NA for temp2
        settings.iterationNum = 0;
 
  end
 
+ % Do not allow w1 to be zero. Divide by zero messes stuff up. 
+ if(settings.w1 ==0)
+     settings.w1=0.00001;
+ end
  settings.w2 = 1-settings.w1;
  settings
 % material properties Object

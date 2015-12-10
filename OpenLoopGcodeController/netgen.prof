@@ -1,0 +1,66 @@
+calls       18, time   0.00 sec 90
+calls       18, time   0.00 sec 91
+calls       18, time   0.00 sec 92
+calls       18, time   0.00 sec 97
+calls       18, time   0.00 sec 98
+calls       18, time   0.00 sec 99
+calls      486, time   0.00 sec 100
+calls       18, time   0.00 sec 101
+calls       18, time   0.00 sec 102
+calls       18, time   0.00 sec 103
+calls       18, time   0.00 sec 104
+calls       18, time   0.00 sec 105
+calls       18, time   0.00 sec 106
+calls       18, time   0.00 sec 107
+calls       18, time   0.00 sec 108
+calls       18, time   0.00 sec 109
+calls       18, time   0.00 sec 110
+calls       18, time   0.00 sec 111
+calls       18, time   0.00 sec 112
+calls       18, time   0.00 sec 113
+calls       18, time   0.00 sec 114
+calls       18, time   0.00 sec 115
+calls       18, time   0.00 sec 116
+calls       18, time   0.00 sec 117
+calls       18, time   0.00 sec 118
+calls       18, time   0.00 sec 119
+calls       18, time   0.00 sec 120
+calls       18, time   0.00 sec 121
+calls       18, time   0.00 sec 122
+calls       18, time   0.00 sec 123
+calls       18, time   0.00 sec 124
+calls       18, time   0.00 sec 125
+calls       18, time   0.00 sec 126
+calls       18, time   0.00 sec 127
+calls       18, time   0.00 sec 151
+calls       18, time   0.00 sec 152
+calls       18, time   0.00 sec 153
+calls       18, time   0.00 sec 155
+calls       18, time   0.00 sec 156
+calls       18, time   0.00 sec 157
+calls       18, time   0.00 sec 163
+calls       18, time   0.00 sec 164
+calls       18, time   0.00 sec 165
+calls      162, time   0.00 sec 300
+calls      117, time   0.00 sec 301
+calls       99, time   0.00 sec 302
+calls        6, time   0.00 sec AdFront3::GetLocals
+calls        6, time   0.00 sec Adfront3::RebuildInternal D
+calls        6, time   0.00 sec Adfront3::RebuildInternal C
+calls        6, time   0.00 sec Adfront3::RebuildInternal B
+calls        6, time   0.00 sec Adfront3::RebuildInternal A
+calls       18, time   0.00 sec Meshing3::GenerateMesh d
+calls       18, time   0.00 sec Meshing3::GenerateMesh c
+calls        0, time   0.00 sec Meshing3::GenerateMesh b
+calls        6, time   0.00 sec Meshing3::GenerateMesh a
+calls        3, time   0.01 sec Meshing3::GenerateMesh
+calls       24, time   0.00 sec Mesh::FindOpenElements E
+calls       24, time   0.00 sec Mesh::FindOpenElements D
+calls       24, time   0.00 sec Mesh::FindOpenElements C
+calls       24, time   0.00 sec Mesh::FindOpenElements B
+calls       24, time   0.00 sec Mesh::FindOpenElements A
+calls       24, time   0.00 sec Mesh::FindOpenElements
+calls      540, time   0.02 sec MeshSmoothing 2D
+calls     1080, time   0.00 sec GetSurfaceElementsOfFace
+calls      540, time   0.03 sec EdgeSwapping 2D
+calls        1, time 3027.76 sec total CPU time

@@ -1,0 +1,743 @@
+store line 1
+j = 1, p1 = 1, p2 = 2
+segm-trigs: trig1 = 1, trig1b = 1, trig2 = 4, trig2b = 4
+store line 2
+j = 1, p1 = 2, p2 = 3
+segm-trigs: trig1 = 1, trig1b = 1, trig2 = 20, trig2b = 20
+j = 2, p1 = 3, p2 = 4
+segm-trigs: trig1 = 1, trig1b = 1, trig2 = 20, trig2b = 20
+store line 3
+j = 1, p1 = 4, p2 = 5
+segm-trigs: trig1 = 2, trig1b = 2, trig2 = 15, trig2b = 15
+j = 2, p1 = 5, p2 = 6
+segm-trigs: trig1 = 2, trig1b = 2, trig2 = 15, trig2b = 15
+store line 4
+j = 1, p1 = 6, p2 = 7
+segm-trigs: trig1 = 2, trig1b = 2, trig2 = 26, trig2b = 26
+j = 2, p1 = 7, p2 = 1
+segm-trigs: trig1 = 2, trig1b = 2, trig2 = 26, trig2b = 26
+store line 5
+j = 1, p1 = 8, p2 = 9
+segm-trigs: trig1 = 3, trig1b = 3, trig2 = 6, trig2b = 6
+j = 2, p1 = 9, p2 = 10
+segm-trigs: trig1 = 3, trig1b = 3, trig2 = 6, trig2b = 6
+store line 6
+j = 1, p1 = 10, p2 = 11
+segm-trigs: trig1 = 3, trig1b = 3, trig2 = 22, trig2b = 22
+j = 2, p1 = 11, p2 = 12
+segm-trigs: trig1 = 3, trig1b = 3, trig2 = 22, trig2b = 22
+j = 3, p1 = 12, p2 = 2
+segm-trigs: trig1 = 3, trig1b = 3, trig2 = 22, trig2b = 22
+store line 7
+j = 1, p1 = 1, p2 = 13
+segm-trigs: trig1 = 4, trig1b = 4, trig2 = 24, trig2b = 24
+j = 2, p1 = 13, p2 = 14
+segm-trigs: trig1 = 4, trig1b = 4, trig2 = 24, trig2b = 24
+j = 3, p1 = 14, p2 = 8
+segm-trigs: trig1 = 4, trig1b = 4, trig2 = 24, trig2b = 24
+store line 8
+j = 1, p1 = 15, p2 = 16
+segm-trigs: trig1 = 5, trig1b = 5, trig2 = 8, trig2b = 8
+j = 2, p1 = 16, p2 = 17
+segm-trigs: trig1 = 5, trig1b = 5, trig2 = 8, trig2b = 8
+store line 9
+j = 1, p1 = 17, p2 = 10
+segm-trigs: trig1 = 5, trig1b = 5, trig2 = 22, trig2b = 22
+store line 10
+j = 1, p1 = 8, p2 = 15
+segm-trigs: trig1 = 6, trig1b = 6, trig2 = 23, trig2b = 23
+store line 11
+j = 1, p1 = 18, p2 = 19
+segm-trigs: trig1 = 7, trig1b = 7, trig2 = 10, trig2b = 10
+j = 2, p1 = 19, p2 = 20
+segm-trigs: trig1 = 7, trig1b = 7, trig2 = 10, trig2b = 10
+store line 12
+j = 1, p1 = 20, p2 = 21
+segm-trigs: trig1 = 7, trig1b = 7, trig2 = 21, trig2b = 21
+j = 2, p1 = 21, p2 = 17
+segm-trigs: trig1 = 7, trig1b = 7, trig2 = 21, trig2b = 21
+store line 13
+j = 1, p1 = 15, p2 = 22
+segm-trigs: trig1 = 8, trig1b = 8, trig2 = 23, trig2b = 23
+j = 2, p1 = 22, p2 = 23
+segm-trigs: trig1 = 8, trig1b = 8, trig2 = 23, trig2b = 23
+j = 3, p1 = 23, p2 = 18
+segm-trigs: trig1 = 8, trig1b = 8, trig2 = 23, trig2b = 23
+store line 14
+j = 1, p1 = 24, p2 = 25
+segm-trigs: trig1 = 9, trig1b = 9, trig2 = 12, trig2b = 12
+j = 2, p1 = 25, p2 = 26
+segm-trigs: trig1 = 9, trig1b = 9, trig2 = 12, trig2b = 12
+store line 15
+j = 1, p1 = 26, p2 = 20
+segm-trigs: trig1 = 9, trig1b = 9, trig2 = 19, trig2b = 19
+store line 16
+j = 1, p1 = 18, p2 = 24
+segm-trigs: trig1 = 10, trig1b = 10, trig2 = 25, trig2b = 25
+store line 17
+j = 1, p1 = 27, p2 = 28
+segm-trigs: trig1 = 11, trig1b = 11, trig2 = 14, trig2b = 14
+j = 2, p1 = 28, p2 = 29
+segm-trigs: trig1 = 11, trig1b = 11, trig2 = 14, trig2b = 14
+store line 18
+j = 1, p1 = 29, p2 = 30
+segm-trigs: trig1 = 11, trig1b = 11, trig2 = 17, trig2b = 17
+j = 2, p1 = 30, p2 = 31
+segm-trigs: trig1 = 11, trig1b = 11, trig2 = 17, trig2b = 17
+j = 3, p1 = 31, p2 = 26
+segm-trigs: trig1 = 11, trig1b = 11, trig2 = 17, trig2b = 17
+store line 19
+j = 1, p1 = 24, p2 = 32
+segm-trigs: trig1 = 12, trig1b = 12, trig2 = 27, trig2b = 27
+j = 2, p1 = 32, p2 = 27
+segm-trigs: trig1 = 12, trig1b = 12, trig2 = 27, trig2b = 27
+store line 20
+j = 1, p1 = 33, p2 = 34
+segm-trigs: trig1 = 13, trig1b = 13, trig2 = 16, trig2b = 16
+j = 2, p1 = 34, p2 = 35
+segm-trigs: trig1 = 13, trig1b = 13, trig2 = 16, trig2b = 16
+store line 21
+j = 1, p1 = 35, p2 = 29
+segm-trigs: trig1 = 13, trig1b = 13, trig2 = 17, trig2b = 17
+store line 22
+j = 1, p1 = 27, p2 = 33
+segm-trigs: trig1 = 14, trig1b = 14, trig2 = 28, trig2b = 28
+store line 23
+j = 1, p1 = 4, p2 = 36
+segm-trigs: trig1 = 15, trig1b = 15, trig2 = 18, trig2b = 18
+j = 2, p1 = 36, p2 = 37
+segm-trigs: trig1 = 15, trig1b = 15, trig2 = 18, trig2b = 18
+j = 3, p1 = 37, p2 = 35
+segm-trigs: trig1 = 15, trig1b = 15, trig2 = 18, trig2b = 18
+store line 24
+j = 1, p1 = 33, p2 = 38
+segm-trigs: trig1 = 16, trig1b = 16, trig2 = 28, trig2b = 28
+j = 2, p1 = 38, p2 = 39
+segm-trigs: trig1 = 16, trig1b = 16, trig2 = 28, trig2b = 28
+j = 3, p1 = 39, p2 = 6
+segm-trigs: trig1 = 16, trig1b = 16, trig2 = 28, trig2b = 28
+open segments: 
+line seg: 1 - 2 len = 50
+line seg: 2 - 1 len = 50
+line seg: 2 - 3 len = 25.9589
+line seg: 3 - 2 len = 25.9589
+line seg: 3 - 4 len = 24.0411
+line seg: 4 - 3 len = 24.0411
+line seg: 7 - 1 len = 25.5583
+line seg: 1 - 7 len = 25.5583
+line seg: 4 - 5 len = 24.6804
+line seg: 5 - 4 len = 24.6804
+line seg: 5 - 6 len = 25.3196
+line seg: 6 - 5 len = 25.3196
+line seg: 6 - 7 len = 24.4417
+line seg: 7 - 6 len = 24.4417
+line seg: 12 - 2 len = 39.8224
+line seg: 2 - 12 len = 39.8224
+line seg: 1 - 13 len = 39.7088
+line seg: 13 - 1 len = 39.7088
+line seg: 8 - 9 len = 23.6422
+line seg: 9 - 8 len = 23.6422
+line seg: 9 - 10 len = 26.3578
+line seg: 10 - 9 len = 26.3578
+line seg: 10 - 11 len = 24.0271
+line seg: 11 - 10 len = 24.0271
+line seg: 14 - 8 len = 26.9006
+line seg: 8 - 14 len = 26.9006
+line seg: 11 - 12 len = 36.1505
+line seg: 12 - 11 len = 36.1505
+line seg: 8 - 15 len = 15
+line seg: 15 - 8 len = 15
+line seg: 13 - 14 len = 33.3906
+line seg: 14 - 13 len = 33.3906
+line seg: 17 - 10 len = 15
+line seg: 10 - 17 len = 15
+line seg: 15 - 16 len = 23.6422
+line seg: 16 - 15 len = 23.6422
+line seg: 16 - 17 len = 26.3578
+line seg: 17 - 16 len = 26.3578
+line seg: 18 - 19 len = 25.3835
+line seg: 19 - 18 len = 25.3835
+line seg: 15 - 22 len = 22.4576
+line seg: 22 - 15 len = 22.4576
+line seg: 21 - 17 len = 33.5318
+line seg: 17 - 21 len = 33.5318
+line seg: 19 - 20 len = 24.6165
+line seg: 20 - 19 len = 24.6165
+line seg: 4 - 36 len = 34.1082
+line seg: 36 - 4 len = 34.1082
+line seg: 20 - 21 len = 51.4682
+line seg: 21 - 20 len = 51.4682
+line seg: 23 - 18 len = 31.6452
+line seg: 18 - 23 len = 31.6452
+line seg: 18 - 24 len = 20
+line seg: 24 - 18 len = 20
+line seg: 22 - 23 len = 30.8973
+line seg: 23 - 22 len = 30.8973
+line seg: 39 - 6 len = 39.5155
+line seg: 6 - 39 len = 39.5155
+line seg: 26 - 20 len = 20
+line seg: 20 - 26 len = 20
+line seg: 24 - 25 len = 25
+line seg: 25 - 24 len = 25
+line seg: 25 - 26 len = 25
+line seg: 26 - 25 len = 25
+line seg: 27 - 28 len = 23.2954
+line seg: 28 - 27 len = 23.2954
+line seg: 24 - 32 len = 51.2614
+line seg: 32 - 24 len = 51.2614
+line seg: 28 - 29 len = 26.7046
+line seg: 29 - 28 len = 26.7046
+line seg: 31 - 26 len = 36.7198
+line seg: 26 - 31 len = 36.7198
+line seg: 29 - 30 len = 20.1954
+line seg: 30 - 29 len = 20.1954
+line seg: 32 - 27 len = 33.7386
+line seg: 27 - 32 len = 33.7386
+line seg: 27 - 33 len = 15
+line seg: 33 - 27 len = 15
+line seg: 30 - 31 len = 28.0848
+line seg: 31 - 30 len = 28.0848
+line seg: 35 - 29 len = 15
+line seg: 29 - 35 len = 15
+line seg: 33 - 34 len = 23.2954
+line seg: 34 - 33 len = 23.2954
+line seg: 34 - 35 len = 26.7046
+line seg: 35 - 34 len = 26.7046
+line seg: 33 - 38 len = 23.8758
+line seg: 38 - 33 len = 23.8758
+line seg: 37 - 35 len = 26.6286
+line seg: 35 - 37 len = 26.6286
+line seg: 36 - 37 len = 39.2632
+line seg: 37 - 36 len = 39.2632
+line seg: 38 - 39 len = 36.6087
+line seg: 39 - 38 len = 36.6087
+94 open segments found
+open segments: 
+line seg: 1 - 2 len = 50
+line seg: 2 - 1 len = 50
+line seg: 2 - 3 len = 25.9589
+line seg: 3 - 2 len = 25.9589
+line seg: 3 - 4 len = 24.0411
+line seg: 4 - 3 len = 24.0411
+line seg: 7 - 1 len = 25.5583
+line seg: 1 - 7 len = 25.5583
+line seg: 4 - 5 len = 24.6804
+line seg: 5 - 4 len = 24.6804
+line seg: 5 - 6 len = 25.3196
+line seg: 6 - 5 len = 25.3196
+line seg: 6 - 7 len = 24.4417
+line seg: 7 - 6 len = 24.4417
+line seg: 12 - 2 len = 39.8224
+line seg: 2 - 12 len = 39.8224
+line seg: 1 - 13 len = 39.7088
+line seg: 13 - 1 len = 39.7088
+line seg: 8 - 9 len = 23.6422
+line seg: 9 - 8 len = 23.6422
+line seg: 9 - 10 len = 26.3578
+line seg: 10 - 9 len = 26.3578
+line seg: 10 - 11 len = 24.0271
+line seg: 11 - 10 len = 24.0271
+line seg: 14 - 8 len = 26.9006
+line seg: 8 - 14 len = 26.9006
+line seg: 11 - 12 len = 36.1505
+line seg: 12 - 11 len = 36.1505
+line seg: 8 - 15 len = 15
+line seg: 15 - 8 len = 15
+line seg: 13 - 14 len = 33.3906
+line seg: 14 - 13 len = 33.3906
+line seg: 17 - 10 len = 15
+line seg: 10 - 17 len = 15
+line seg: 15 - 16 len = 23.6422
+line seg: 16 - 15 len = 23.6422
+line seg: 16 - 17 len = 26.3578
+line seg: 17 - 16 len = 26.3578
+line seg: 18 - 19 len = 25.3835
+line seg: 19 - 18 len = 25.3835
+line seg: 15 - 22 len = 22.4576
+line seg: 22 - 15 len = 22.4576
+line seg: 21 - 17 len = 33.5318
+line seg: 17 - 21 len = 33.5318
+line seg: 19 - 20 len = 24.6165
+line seg: 20 - 19 len = 24.6165
+line seg: 4 - 36 len = 34.1082
+line seg: 36 - 4 len = 34.1082
+line seg: 20 - 21 len = 51.4682
+line seg: 21 - 20 len = 51.4682
+line seg: 23 - 18 len = 31.6452
+line seg: 18 - 23 len = 31.6452
+line seg: 18 - 24 len = 20
+line seg: 24 - 18 len = 20
+line seg: 22 - 23 len = 30.8973
+line seg: 23 - 22 len = 30.8973
+line seg: 39 - 6 len = 39.5155
+line seg: 6 - 39 len = 39.5155
+line seg: 26 - 20 len = 20
+line seg: 20 - 26 len = 20
+line seg: 24 - 25 len = 25
+line seg: 25 - 24 len = 25
+line seg: 25 - 26 len = 25
+line seg: 26 - 25 len = 25
+line seg: 27 - 28 len = 23.2954
+line seg: 28 - 27 len = 23.2954
+line seg: 24 - 32 len = 51.2614
+line seg: 32 - 24 len = 51.2614
+line seg: 28 - 29 len = 26.7046
+line seg: 29 - 28 len = 26.7046
+line seg: 31 - 26 len = 36.7198
+line seg: 26 - 31 len = 36.7198
+line seg: 29 - 30 len = 20.1954
+line seg: 30 - 29 len = 20.1954
+line seg: 32 - 27 len = 33.7386
+line seg: 27 - 32 len = 33.7386
+line seg: 27 - 33 len = 15
+line seg: 33 - 27 len = 15
+line seg: 30 - 31 len = 28.0848
+line seg: 31 - 30 len = 28.0848
+line seg: 35 - 29 len = 15
+line seg: 29 - 35 len = 15
+line seg: 33 - 34 len = 23.2954
+line seg: 34 - 33 len = 23.2954
+line seg: 34 - 35 len = 26.7046
+line seg: 35 - 34 len = 26.7046
+line seg: 33 - 38 len = 23.8758
+line seg: 38 - 33 len = 23.8758
+line seg: 37 - 35 len = 26.6286
+line seg: 35 - 37 len = 26.6286
+line seg: 36 - 37 len = 39.2632
+line seg: 37 - 36 len = 39.2632
+line seg: 38 - 39 len = 36.6087
+line seg: 39 - 38 len = 36.6087
+94 open segments found
+   0 times used rule Free Triangle (1)
+   0 times used rule Free Triangle (5)
+   0 times used rule Free Triangle (10)
+   0 times used rule Free Triangle (20)
+   4 times used rule Right 60 (1)
+   0 times used rule Left 60 (1)
+   0 times used rule Right 120 (1)
+   0 times used rule Left 120 (1)
+   0 times used rule Left Right 120 (1)
+   1 times used rule Fill Triangle
+   0 times used rule Vis A Vis (1)
+   0 times used rule 2 h Vis A Vis (1)
+   0 times used rule Free Triangle (1)
+   0 times used rule Free Triangle (5)
+   0 times used rule Free Triangle (10)
+   0 times used rule Free Triangle (20)
+   3 times used rule Right 60 (1)
+   3 times used rule Left 60 (1)
+   0 times used rule Right 120 (1)
+   0 times used rule Left 120 (1)
+   0 times used rule Left Right 120 (1)
+   1 times used rule Fill Triangle
+   0 times used rule Vis A Vis (1)
+   0 times used rule 2 h Vis A Vis (1)
+   0 times used rule Free Triangle (1)
+   0 times used rule Free Triangle (5)
+   0 times used rule Free Triangle (10)
+   0 times used rule Free Triangle (20)
+   1 times used rule Right 60 (1)
+   2 times used rule Left 60 (1)
+   0 times used rule Right 120 (1)
+   0 times used rule Left 120 (1)
+   0 times used rule Left Right 120 (1)
+   1 times used rule Fill Triangle
+   0 times used rule Vis A Vis (1)
+   0 times used rule 2 h Vis A Vis (1)
+   0 times used rule Free Triangle (1)
+   0 times used rule Free Triangle (5)
+   0 times used rule Free Triangle (10)
+   0 times used rule Free Triangle (20)
+   2 times used rule Right 60 (1)
+   3 times used rule Left 60 (1)
+   0 times used rule Right 120 (1)
+   0 times used rule Left 120 (1)
+   1 times used rule Left Right 120 (1)
+   1 times used rule Fill Triangle
+   0 times used rule Vis A Vis (1)
+   0 times used rule 2 h Vis A Vis (1)
+   0 times used rule Free Triangle (1)
+   0 times used rule Free Triangle (5)
+   0 times used rule Free Triangle (10)
+   0 times used rule Free Triangle (20)
+   2 times used rule Right 60 (1)
+   1 times used rule Left 60 (1)
+   0 times used rule Right 120 (1)
+   0 times used rule Left 120 (1)
+   0 times used rule Left Right 120 (1)
+   1 times used rule Fill Triangle
+   0 times used rule Vis A Vis (1)
+   0 times used rule 2 h Vis A Vis (1)
+   0 times used rule Free Triangle (1)
+   0 times used rule Free Triangle (5)
+   0 times used rule Free Triangle (10)
+   0 times used rule Free Triangle (20)
+   4 times used rule Right 60 (1)
+   2 times used rule Left 60 (1)
+   0 times used rule Right 120 (1)
+   0 times used rule Left 120 (1)
+   0 times used rule Left Right 120 (1)
+   1 times used rule Fill Triangle
+   0 times used rule Vis A Vis (1)
+   0 times used rule 2 h Vis A Vis (1)
+   0 times used rule Free Triangle (1)
+   0 times used rule Free Triangle (5)
+   0 times used rule Free Triangle (10)
+   0 times used rule Free Triangle (20)
+   2 times used rule Right 60 (1)
+   1 times used rule Left 60 (1)
+   0 times used rule Right 120 (1)
+   0 times used rule Left 120 (1)
+   0 times used rule Left Right 120 (1)
+   1 times used rule Fill Triangle
+   0 times used rule Vis A Vis (1)
+   0 times used rule 2 h Vis A Vis (1)
+   0 times used rule Free Triangle (1)
+   0 times used rule Free Triangle (5)
+   0 times used rule Free Triangle (10)
+   0 times used rule Free Triangle (20)
+   3 times used rule Right 60 (1)
+   2 times used rule Left 60 (1)
+   0 times used rule Right 120 (1)
+   0 times used rule Left 120 (1)
+   2 times used rule Left Right 120 (1)
+   1 times used rule Fill Triangle
+   0 times used rule Vis A Vis (1)
+   0 times used rule 2 h Vis A Vis (1)
+   0 times used rule Free Triangle (1)
+   0 times used rule Free Triangle (5)
+   0 times used rule Free Triangle (10)
+   0 times used rule Free Triangle (20)
+   5 times used rule Right 60 (1)
+   4 times used rule Left 60 (1)
+   0 times used rule Right 120 (1)
+   0 times used rule Left 120 (1)
+   0 times used rule Left Right 120 (1)
+   3 times used rule Fill Triangle
+   2 times used rule Vis A Vis (1)
+   0 times used rule 2 h Vis A Vis (1)
+   0 times used rule Free Triangle (1)
+   0 times used rule Free Triangle (5)
+   0 times used rule Free Triangle (10)
+   0 times used rule Free Triangle (20)
+   1 times used rule Right 60 (1)
+   4 times used rule Left 60 (1)
+   0 times used rule Right 120 (1)
+   0 times used rule Left 120 (1)
+   0 times used rule Left Right 120 (1)
+   5 times used rule Fill Triangle
+   4 times used rule Vis A Vis (1)
+   0 times used rule 2 h Vis A Vis (1)
+open segments: 
+0 open segments found
+open segments: 
+0 open segments found
+open segments: 
+0 open segments found
+open segments: 
+0 open segments found
+open segments: 
+0 open segments found
+very very bad badness
+very very bad badness
+very very bad badness
+fail, f = 1.68124 f0 = 1.68124
+very very bad badness
+fail, f = 1.68124 f0 = 1.68124
+fail, f = 1.68124 f0 = 1.68124
+fail, f = 1.68124 f0 = 1.68124
+fail, f = 1.68124 f0 = 1.68124
+fail, f = 1.68124 f0 = 1.68124
+fail, f = 1.68124 f0 = 1.68124
+fail, f = 1.68124 f0 = 1.68124
+fail, f = 1.68124 f0 = 1.68124
+fail, f = 1.68124 f0 = 1.68124
+fail, f = 2.25551 f0 = 2.25551
+fail, f = 1.68124 f0 = 1.68124
+fail, f = 2.86305 f0 = 2.86305
+fail, f = 2.25551 f0 = 2.25551
+fail, f = 1.68124 f0 = 1.68124
+fail, f = 2.86305 f0 = 2.86305
+fail, f = 2.25551 f0 = 2.25551
+fail, f = 1.68124 f0 = 1.68124
+fail, f = 2.86305 f0 = 2.86305
+fail, f = 2.25551 f0 = 2.25551
+fail, f = 1.68124 f0 = 1.68124
+fail, f = 2.86305 f0 = 2.86305
+fail, f = 2.25551 f0 = 2.25551
+fail, f = 1.68124 f0 = 1.68124
+fail, f = 2.86305 f0 = 2.86305
+fail, f = 2.25551 f0 = 2.25551
+fail, f = 1.68124 f0 = 1.68124
+fail, f = 2.86305 f0 = 2.86305
+fail, f = 2.25551 f0 = 2.25551
+fail, f = 1.68124 f0 = 1.68124
+fail, f = 2.86305 f0 = 2.86305
+fail, f = 2.25551 f0 = 2.25551
+Meshing subdomain 1
+blockfill local h
+rel filldist = 0.1
+
+
+Points:           46
+Volume Elements:  200
+
+Volume elements in qualityclasses:
+   0 - 0.05: 102
+0.05 -  0.1: 0
+ 0.1 - 0.15: 0
+0.15 -  0.2: 0
+ 0.2 - 0.25: 0
+0.25 -  0.3: 0
+ 0.3 - 0.35: 2
+0.35 -  0.4: 2
+ 0.4 - 0.45: 6
+0.45 -  0.5: 3
+ 0.5 - 0.55: 7
+0.55 -  0.6: 8
+ 0.6 - 0.65: 16
+0.65 -  0.7: 15
+ 0.7 - 0.75: 16
+0.75 -  0.8: 7
+ 0.8 - 0.85: 8
+0.85 -  0.9: 5
+ 0.9 - 0.95: 2
+0.95 -    1: 1
+total error: 1.3e+005
+free: 190, fixed: 10
+
+Start SwapImprove
+free: 65, fixed: 132
+
+Start SwapImprove
+
+
+Points:           46
+Volume Elements:  197
+
+Volume elements in qualityclasses:
+   0 - 0.05: 99
+0.05 -  0.1: 0
+ 0.1 - 0.15: 0
+0.15 -  0.2: 1
+ 0.2 - 0.25: 0
+0.25 -  0.3: 0
+ 0.3 - 0.35: 1
+0.35 -  0.4: 0
+ 0.4 - 0.45: 9
+0.45 -  0.5: 7
+ 0.5 - 0.55: 10
+0.55 -  0.6: 10
+ 0.6 - 0.65: 15
+0.65 -  0.7: 19
+ 0.7 - 0.75: 18
+0.75 -  0.8: 5
+ 0.8 - 0.85: 3
+0.85 -  0.9: 0
+ 0.9 - 0.95: 0
+0.95 -    1: 0
+total error: 1.3e+005
+   0 times used rule Free Tetrahedron
+   2 times used rule Tetrahedron 60
+   1 times used rule Tetrahedron 60 with edge(1)
+   0 times used rule Tetrahedron Vis a Vis Point (1)
+   0 times used rule Tetrahedron Vis a Vis Point with edge(1)
+   0 times used rule Tetrahedron Vis a Vis Point with 2 edges (1)
+   1 times used rule Tetrahedron Vis a Vis Point with 3 edges (1)
+   0 times used rule Tetrahedron Vis a Vis Triangle (1)
+   0 times used rule Octaeder 1
+   0 times used rule Octaeder 2
+   0 times used rule Octaeder 2a
+   0 times used rule Pyramid 1
+   1 times used rule Tetrahedron 2 times 60
+   0 times used rule Fill Tetrahedron (1)
+   0 times used rule Tetrahedron 120 (1)
+   0 times used rule Tetrahedron 2 times 120 (1)
+   0 times used rule four Tetrahedron non convex (4)
+   0 times used rule five Tetrahedron non convex (4)
+   0 times used rule four Tetrahedron non convex (6)
+   0 times used rule four Tetrahedron non convex (6)
+   0 times used rule three Tetrahedron non convex (4)
+   0 times used rule three Tetrahedron non convex (6)
+   0 times used rule four Tetrahedron non convex (6)
+   0 times used rule Tetrahedron 2 in 60 (12)
+   0 times used rule Tetrahedron 120: but more than 180 (13)
+   0 times used rule Free Tetrahedron (14)
+   0 times used rule Free Tetrahedron (15)
+
+
+Points:           42
+Volume Elements:  67
+
+Volume elements in qualityclasses:
+   0 - 0.05: 0
+0.05 -  0.1: 0
+ 0.1 - 0.15: 0
+0.15 -  0.2: 0
+ 0.2 - 0.25: 0
+0.25 -  0.3: 0
+ 0.3 - 0.35: 0
+0.35 -  0.4: 0
+ 0.4 - 0.45: 2
+0.45 -  0.5: 5
+ 0.5 - 0.55: 7
+0.55 -  0.6: 8
+ 0.6 - 0.65: 13
+0.65 -  0.7: 11
+ 0.7 - 0.75: 13
+0.75 -  0.8: 5
+ 0.8 - 0.85: 3
+0.85 -  0.9: 0
+ 0.9 - 0.95: 0
+0.95 -    1: 0
+total error: 1.1e+002
+Start CombineImprove
+CombineImprove done
+Improve Mesh
+Total badness = 1.2e+002
+Total badness = 117.17511
+start SplitImprove
+Total badness = 117.17511
+Splitt - Improve done
+Total badness = 117.17511
+Improve Mesh
+Total badness = 117.17511
+Total badness = 117.17511
+
+Start SwapImprove
+Total badness = 117.17511
+
+Start SwapImprove2
+Total badness = 114.12074
+Total badness = 114.12074
+swapimprove2 done
+Improve Mesh
+Total badness = 114.12074
+Total badness = 114.12074
+
+
+Points:           42
+Volume Elements:  66
+
+Volume elements in qualityclasses:
+   0 - 0.05: 0
+0.05 -  0.1: 0
+ 0.1 - 0.15: 0
+0.15 -  0.2: 0
+ 0.2 - 0.25: 0
+0.25 -  0.3: 0
+ 0.3 - 0.35: 0
+0.35 -  0.4: 0
+ 0.4 - 0.45: 2
+0.45 -  0.5: 5
+ 0.5 - 0.55: 5
+0.55 -  0.6: 7
+ 0.6 - 0.65: 13
+0.65 -  0.7: 12
+ 0.7 - 0.75: 13
+0.75 -  0.8: 5
+ 0.8 - 0.85: 4
+0.85 -  0.9: 0
+ 0.9 - 0.95: 0
+0.95 -    1: 0
+total error: 1e+002
+Start CombineImprove
+CombineImprove done
+Improve Mesh
+Total badness = 1.1e+002
+Total badness = 114.12074
+start SplitImprove
+Total badness = 114.12074
+Splitt - Improve done
+Total badness = 114.12074
+Improve Mesh
+Total badness = 114.12074
+Total badness = 114.12074
+
+Start SwapImprove
+Total badness = 114.12074
+
+Start SwapImprove2
+Total badness = 114.12074
+Total badness = 114.12074
+swapimprove2 done
+Improve Mesh
+Total badness = 114.12074
+Total badness = 114.12074
+
+
+Points:           42
+Volume Elements:  66
+
+Volume elements in qualityclasses:
+   0 - 0.05: 0
+0.05 -  0.1: 0
+ 0.1 - 0.15: 0
+0.15 -  0.2: 0
+ 0.2 - 0.25: 0
+0.25 -  0.3: 0
+ 0.3 - 0.35: 0
+0.35 -  0.4: 0
+ 0.4 - 0.45: 2
+0.45 -  0.5: 5
+ 0.5 - 0.55: 5
+0.55 -  0.6: 7
+ 0.6 - 0.65: 13
+0.65 -  0.7: 12
+ 0.7 - 0.75: 13
+0.75 -  0.8: 5
+ 0.8 - 0.85: 4
+0.85 -  0.9: 0
+ 0.9 - 0.95: 0
+0.95 -    1: 0
+total error: 1e+002
+Start CombineImprove
+CombineImprove done
+Improve Mesh
+Total badness = 1.1e+002
+Total badness = 114.12074
+start SplitImprove
+Total badness = 114.12074
+Splitt - Improve done
+Total badness = 114.12074
+Improve Mesh
+Total badness = 114.12074
+Total badness = 114.12074
+
+Start SwapImprove
+Total badness = 114.12074
+
+Start SwapImprove2
+Total badness = 114.12074
+Total badness = 114.12074
+swapimprove2 done
+Improve Mesh
+Total badness = 114.12074
+Total badness = 114.12074
+
+
+Points:           42
+Volume Elements:  66
+
+Volume elements in qualityclasses:
+   0 - 0.05: 0
+0.05 -  0.1: 0
+ 0.1 - 0.15: 0
+0.15 -  0.2: 0
+ 0.2 - 0.25: 0
+0.25 -  0.3: 0
+ 0.3 - 0.35: 0
+0.35 -  0.4: 0
+ 0.4 - 0.45: 2
+0.45 -  0.5: 5
+ 0.5 - 0.55: 5
+0.55 -  0.6: 7
+ 0.6 - 0.65: 13
+0.65 -  0.7: 12
+ 0.7 - 0.75: 13
+0.75 -  0.8: 5
+ 0.8 - 0.85: 4
+0.85 -  0.9: 0
+ 0.9 - 0.95: 0
+0.95 -    1: 0
+total error: 1e+002

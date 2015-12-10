@@ -1,0 +1,86 @@
+solid "box3"
+  facet normal -0 -1 -0
+    outer loop
+      vertex 4 -1.83697014653e-016 -3
+      vertex 3.74875668285e-008 -1.83697014653e-016 -3
+      vertex 4 25.3999996185 -3
+    endloop
+  endfacet
+  facet normal 0 -1 0
+    outer loop
+      vertex 4 25.3999996185 -3
+      vertex 3.74875668285e-008 -1.83697014653e-016 -3
+      vertex 3.74875668285e-008 25.3999996185 -3
+    endloop
+  endfacet
+  facet normal 1 0 0
+    outer loop
+      vertex 4 1.17538608409e-024 1.91955109585e-008
+      vertex 4 -1.83697014653e-016 -3
+      vertex 4 25.3999996185 1.91955091822e-008
+    endloop
+  endfacet
+  facet normal 1 0 0
+    outer loop
+      vertex 4 25.3999996185 1.91955091822e-008
+      vertex 4 -1.83697014653e-016 -3
+      vertex 4 25.3999996185 -3
+    endloop
+  endfacet
+  facet normal -0 1 0
+    outer loop
+      vertex 3.74875668285e-008 1.17538608409e-024 1.91955109585e-008
+      vertex 4 1.17538608409e-024 1.91955109585e-008
+      vertex 3.74875668285e-008 25.3999996185 1.91955091822e-008
+    endloop
+  endfacet
+  facet normal 0 1 0
+    outer loop
+      vertex 3.74875668285e-008 25.3999996185 1.91955091822e-008
+      vertex 4 1.17538608409e-024 1.91955109585e-008
+      vertex 4 25.3999996185 1.91955091822e-008
+    endloop
+  endfacet
+  facet normal -1 0 0
+    outer loop
+      vertex 3.74875668285e-008 -1.83697014653e-016 -3
+      vertex 3.74875668285e-008 1.17538608409e-024 1.91955109585e-008
+      vertex 3.74875668285e-008 25.3999996185 -3
+    endloop
+  endfacet
+  facet normal -1 0 0
+    outer loop
+      vertex 3.74875668285e-008 25.3999996185 -3
+      vertex 3.74875668285e-008 1.17538608409e-024 1.91955109585e-008
+      vertex 3.74875668285e-008 25.3999996185 1.91955091822e-008
+    endloop
+  endfacet
+  facet normal 0 0 -1
+    outer loop
+      vertex 3.74875668285e-008 25.3999996185 -3
+      vertex 3.74875668285e-008 25.3999996185 1.91955091822e-008
+      vertex 4 25.3999996185 -3
+    endloop
+  endfacet
+  facet normal 0 0 -1
+    outer loop
+      vertex 4 25.3999996185 -3
+      vertex 3.74875668285e-008 25.3999996185 1.91955091822e-008
+      vertex 4 25.3999996185 1.91955091822e-008
+    endloop
+  endfacet
+  facet normal 0 0 1
+    outer loop
+      vertex 3.74875668285e-008 -1.83697014653e-016 -3
+      vertex 4 -1.83697014653e-016 -3
+      vertex 3.74875668285e-008 1.17538608409e-024 1.91955109585e-008
+    endloop
+  endfacet
+  facet normal -0 0 1
+    outer loop
+      vertex 3.74875668285e-008 1.17538608409e-024 1.91955109585e-008
+      vertex 4 -1.83697014653e-016 -3
+      vertex 4 1.17538608409e-024 1.91955109585e-008
+    endloop
+  endfacet
+endsolid "box3"
