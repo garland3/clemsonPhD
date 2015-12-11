@@ -110,23 +110,3 @@ Body Force 1
   Name = "BodyForce 1"
   Heat Source = 0.01
 End
-
-Boundary Condition 1
-  Target Boundaries(2) = 4 5 
-  Name = "roomTemp"
-  Temperature = 273
-End
-
-Boundary Condition 2
-  Target Boundaries(1) = 1 
-  Name = "Fixed"
-  Displacement 3 = 0
-  Displacement 2 = 0
-  Displacement 1 = 0
-End
-
-Boundary Condition 3
-  Target Boundaries(1) = 2 
-  Name = "LoadNegY"
-  Force 2 = -5000
-End

@@ -1,15 +1,7 @@
-calls        0, time   0.00 sec Meshing3::GenerateMesh d
-calls        0, time   0.00 sec Meshing3::GenerateMesh c
-calls        0, time   0.00 sec Meshing3::GenerateMesh b
-calls        0, time   0.00 sec Meshing3::GenerateMesh a
-calls        1, time   0.00 sec Meshing3::GenerateMesh
-calls        8, time   0.00 sec Mesh::FindOpenElements E
-calls        8, time   0.00 sec Mesh::FindOpenElements D
-calls        8, time   0.00 sec Mesh::FindOpenElements C
-calls        8, time   0.00 sec Mesh::FindOpenElements B
-calls        8, time   0.00 sec Mesh::FindOpenElements A
-calls        8, time   0.00 sec Mesh::FindOpenElements
-calls      108, time   0.01 sec MeshSmoothing 2D
-calls      216, time   0.00 sec GetSurfaceElementsOfFace
-calls      108, time   0.02 sec EdgeSwapping 2D
-calls        1, time 493.77 sec total CPU time
+calls        5, time   0.00 sec Mesh::FindOpenElements E
+calls        5, time   0.00 sec Mesh::FindOpenElements D
+calls        5, time   0.00 sec Mesh::FindOpenElements C
+calls        5, time   0.00 sec Mesh::FindOpenElements B
+calls        5, time   0.00 sec Mesh::FindOpenElements A
+calls        5, time   0.00 sec Mesh::FindOpenElements
+calls        1, time 134.37 sec total CPU time

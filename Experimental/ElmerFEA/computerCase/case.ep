@@ -1,5 +1,5 @@
-       140       602     10      1 vector: Displacement scalar: Stress_xx scalar: Stress_yy scalar: Stress_zz scalar: Stress_xy scalar: Stress_yz scalar: Stress_xz scalar: Vonmises
-#File started at: 2015/12/10 17:08:37
+       140       602     11      1 vector: Displacement scalar: Stress_xx scalar: Stress_yy scalar: Stress_zz scalar: Stress_xy scalar: Stress_yz scalar: Stress_xz scalar: Vonmises scalar: Temperature
+#File started at: 2015/12/10 21:35:19
   3.04800000E+002  2.54000000E+001 -2.54000000E+002
   3.04800000E+002  0.00000000E+000 -2.54000000E+002
   2.66700000E+002  0.00000000E+000 -2.54000000E+002
@@ -141,362 +141,362 @@
   1.19458000E+002  0.00000000E+000 -1.07560000E+002
   1.84016000E+002  0.00000000E+000 -1.50645000E+002
 #group all
-body.1  504      35      47      76      46
-body.1  504     130      75     115      93
-body.1  504     109      61      12       7
-body.1  504      22      69      21     111
-body.1  504      31      21      70      20
-body.1  504      69      88      89     111
-body.1  504     134      87     129     124
-body.1  504      82     109      81     119
-body.1  504      12      11      60     109
-body.1  504      81     109      48     119
-body.1  504     108     132     119      82
-body.1  504      67     113     123     129
-body.1  504     127     110      89     111
-body.1  504      80      81      49     120
-body.1  504      78      77      93     122
-body.1  504      81     109      82      60
-body.1  504      81     109      60      59
-body.1  504     125      83      96     126
-body.1  504     130     101     138     131
-body.1  504      44      45      37      74
-body.1  504      76      34      77      47
-body.1  504      88     127      89     111
-body.1  504     110      89      71     118
-body.1  504      75      76      35     115
-body.1  504      84     125     106     107
-body.1  504      24      28     113      27
-body.1  504      20      31      41      70
-body.1  504      74      75      36     116
-body.1  504      90     118     127     117
-body.1  504      76     114      35     115
-body.1  504     130      91     131     116
-body.1  504      40      20      19      41
-body.1  504      88     129     128     112
-body.1  504      43      39     118      38
-body.1  504      84      62     106      63
-body.1  504      35      47      34      76
-body.1  504     138     131     101     137
-body.1  504     108      83     107     126
-body.1  504      72      42      71     118
-body.1  504     127     110     118      89
-body.1  504     100     139     103     137
-body.1  504     134      66      65     104
-body.1  504      66      25      27      26
-body.1  504     134      87     124      85
-body.1  504       3      15      16     105
-body.1  504      69      89      70     111
-body.1  504     125      85      84     106
-body.1  504      58      80      81      49
-body.1  504      51      55      78      52
-body.1  504      65     105     134     104
-body.1  504      36      75      74      45
-body.1  504      37      73     117      38
-body.1  504       3     105      65     104
-body.1  504      76     114     115      93
-body.1  504     103     139     100      97
-body.1  504      77      53      52      54
-body.1  504      97     136      96     103
-body.1  504      66      25     104     123
-body.1  504      28      23      68      29
-body.1  504     125      85     106     124
-body.1  504      28     113      68      23
-body.1  504     128     139     129      87
-body.1  504      97      87     124     139
-body.1  504      67      66     134     123
-body.1  504      94     135      98     133
-body.1  504     105     106      63      85
-body.1  504      64     105      63      85
-body.1  504      88     127     111     128
-body.1  504     124      87      97      85
-body.1  504      66      67      27     123
-body.1  504      25      27     123      66
-body.1  504     116      36     115      75
-body.1  504      95      80      79     120
-body.1  504      37      44      74      73
-body.1  504     121     135      94     133
-body.1  504      75     130      92      93
-body.1  504     121      94      79      95
-body.1  504     125     136     126      96
-body.1  504     102     132     133     136
-body.1  504     114     122     115      93
-body.1  504     122     130     115      93
-body.1  504       1      26       2       0
-body.1  504      33      53      34      54
-body.1  504      34     114      35      76
-body.1  504      82     120      81      95
-body.1  504      81     119      49     120
-body.1  504      11      59      60     109
-body.1  504      36     116      37      74
-body.1  504      77      34      76     114
-body.1  504      91      73      90     117
-body.1  504      69     112      88     111
-body.1  504      94     121     133      95
-body.1  504     138     103     136     137
-body.1  504     110      39      71      40
-body.1  504      99      91      90     131
-body.1  504      82     109     108      61
-body.1  504     127     117     131      90
-body.1  504     117      91     131      90
-body.1  504      70      69      21      30
-body.1  504     135      94      98      92
-body.1  504     111     110      70      21
-body.1  504      97     124     125     139
-body.1  504      42      40      71      39
-body.1  504     113      28      68      67
-body.1  504     138     103     101      98
-body.1  504     131     127      90     137
-body.1  504      72      42     118      43
-body.1  504     130      98     135     138
-body.1  504      35      45      46      75
-body.1  504      66      17       2      26
-body.1  504      78      56      51      79
-body.1  504     106      62       5      63
-body.1  504     102     133      98     136
-body.1  504      15      14      63       5
-body.1  504      86      64      85     134
-body.1  504       4      15      63       5
-body.1  504     111      88     128     112
-body.1  504     125      83     126     107
-body.1  504      18      20      41      19
-body.1  504      88     100     127     128
-body.1  504     116      37      74     117
-body.1  504      99     103     101     137
-body.1  504     135     138      98     133
-body.1  504      81     109      59      48
-body.1  504      53      77      52     122
-body.1  504      61       6       7     108
-body.1  504      37      73      74     117
-body.1  504      67     113      27     123
-body.1  504     113      28      67      27
-body.1  504      91     116      74     117
-body.1  504     129      68     113     112
-body.1  504      97     100      87     139
-body.1  504      64     105     134      65
-body.1  504     103     102     136      96
-body.1  504     134      67     129      87
-body.1  504      69     112     111      22
-body.1  504      26      17       2       0
-body.1  504      21      29      30      69
-body.1  504     106      84      63      85
-body.1  504      89      72      71     118
-body.1  504      97     136     103     139
-body.1  504      97     125      84      96
-body.1  504      90     118     117      73
-body.1  504     121      95      79     120
-body.1  504      84      62     107     106
-body.1  504     106      62     107       5
-body.1  504      82     102     126     132
-body.1  504      50     121      51      79
-body.1  504     109      61       7     108
-body.1  504      51      56      57      79
-body.1  504      59      48      49      81
-body.1  504     133     102      98      95
-body.1  504      99     131      90     137
-body.1  504      63      15     105      64
-body.1  504      97     136     139     125
-body.1  504      88     129     112      68
-body.1  504      82     120      95     132
-body.1  504     118      89      90     127
-body.1  504      90     118      73      72
-body.1  504       3      17      65      16
-body.1  504       3      15     105       4
-body.1  504     132     108     126      82
-body.1  504     106       4      63       5
-body.1  504       1      26      25       2
-body.1  504     132     102     126     136
-body.1  504     134      67      87      86
-body.1  504     113      68     129      67
-body.1  504      77      53      34     114
-body.1  504     118      73      43      38
-body.1  504     134      66      67      86
-body.1  504     105      15      63       4
-body.1  504     118      73      38     117
-body.1  504     105       4      63     106
-body.1  504      25      66     104       2
-body.1  504     108      83     126      82
-body.1  504     126     102      82      83
-body.1  504     139     124     129      87
-body.1  504     130      98     138     101
-body.1  504      73      91      74     117
-body.1  504     134      66     104     123
-body.1  504      53      77     122     114
-body.1  504      51      55      56      78
-body.1  504     130     101     131      91
-body.1  504     100     128      87     139
-body.1  504     134      67     123     129
-body.1  504      42      40      41      71
-body.1  504      42      39      71     118
-body.1  504     136     103     139     137
-body.1  504     125      85     124      97
-body.1  504       3      65       2     104
-body.1  504      35      45      75      36
-body.1  504      62       6     107       5
-body.1  504     116      91     131     117
-body.1  504      65       2      66      17
-body.1  504     132     102     133      95
-body.1  504     127     100      90     137
-body.1  504      48       9       8      10
-body.1  504      90      89     118      72
-body.1  504      88     127      90      89
-body.1  504      40      70      71     110
-body.1  504      31      21      30      70
-body.1  504      43      37      73      44
-body.1  504     100      99      90     137
-body.1  504     100     127     128     137
-body.1  504     127     100      88      90
-body.1  504      99     100     103     137
-body.1  504      23     113      68     112
-body.1  504      67      87      68     129
-body.1  504      88     129      68      87
-body.1  504       6      61     107     108
-body.1  504      89     110      70     111
-body.1  504      62       6       5      14
-body.1  504      45      36      37      74
-body.1  504     118      73      72      43
-body.1  504      33      34      32      54
-body.1  504      77      78      52     122
-body.1  504      78     121      51     122
-body.1  504      88     129      87     128
-body.1  504      77      47      34      54
-body.1  504      50      80     120      79
-body.1  504     107      83     108      61
-body.1  504      62       6      13      61
-body.1  504     103     138     136      98
-body.1  504      34      47      32      54
-body.1  504     134      87      85      86
-body.1  504       7      12     109       8
-body.1  504      94      78      93     122
-body.1  504      39     110      71     118
-body.1  504      88     100     128      87
-body.1  504     130      98     101      92
-body.1  504      61      83      62     107
-body.1  504     125      83     107      84
-body.1  504      82     109     119     108
-body.1  504      23      22      68      29
-body.1  504      94     133      98      95
-body.1  504     125      83      84      96
-body.1  504     105     134     124      85
-body.1  504      97     136     125      96
-body.1  504     105     134      85      64
-body.1  504     133     138      98     136
-body.1  504      82     120     132     119
-body.1  504       6      12      13      61
-body.1  504      62      83      84     107
-body.1  504     103     138     101     137
-body.1  504      62      14       5      63
-body.1  504      81      80      95     120
-body.1  504       3      17       2      65
-body.1  504     102     132      82      95
-body.1  504     136     102     126      96
-body.1  504     102      83     126      96
-body.1  504     130      91     116      74
-body.1  504      66       2      65     104
-body.1  504      24      28      23     113
-body.1  504     130     135      92      93
-body.1  504      53      77      34      54
-body.1  504      77     114      76      93
-body.1  504      77     122     114      93
-body.1  504      62       6      61     107
-body.1  504      25      66       2      26
-body.1  504      35      76      75      46
-body.1  504      94     135     122      93
-body.1  504      62       6      14      13
-body.1  504      82     109      61      60
-body.1  504       6      12      61       7
-body.1  504      43      37      38      73
-body.1  504     135     130     122      93
-body.1  504      11      59       8      10
-body.1  504     125      85      97      84
-body.1  504      22      69      68      29
-body.1  504      69     112      22      68
-body.1  504     116      75     115     130
-body.1  504      43      39      42     118
-body.1  504      50      80      57      49
-body.1  504      91      99     101     131
-body.1  504     130     101      91      92
-body.1  504     128     100     137     139
-body.1  504     130      98      92     135
-body.1  504      75      76     115      93
-body.1  504      75      36     115      35
-body.1  504      48     119      49      81
-body.1  504      80      58      57      49
-body.1  504     135      94      92      93
-body.1  504      77      55      52      78
-body.1  504      55      77      52      54
-body.1  504      48      59       8     109
-body.1  504     105     124     106      85
-body.1  504      69     112      68      88
-body.1  504      22      23      68     112
-body.1  504     121      50     120      79
-body.1  504      50      51      57      79
-body.1  504      59      11       8     109
-body.1  504     121      78      51      79
-body.1  504      80      50      57      79
-body.1  504      71      70      40      41
-body.1  504      12      11     109       8
-body.1  504      61      83     108      82
-body.1  504      59      48       8      10
-body.1  504      20      70      41      40
-body.1  504     102     103     136      98
-body.1  504     116      75     130      74
-body.1  504     123      27      25      24
-body.1  504      86      64     134      65
-body.1  504      82     120     119      81
-body.1  504     110      20      70      21
-body.1  504      20     110      70      40
-body.1  504      69     111      70      21
-body.1  504      21      29      69      22
-body.1  504      94     121      78     122
-body.1  504     135     121      94     122
-body.1  504      78     122      51      52
-body.1  504     121      94      78      79
-body.1  504     132     133     120      95
-body.1  504     133     121     120      95
-body.1  504     113      24      27     123
-body.1  504      58      59      49      81
-body.1  504      80      50     120      49
-body.1  504     109      61      60      12
-body.1  504     130      91      74      92
-body.1  504      18      20      31      41
-body.1  504     131      99     101     137
-body.1  504     130      75      92      74
-body.1  504     134      66      86      65
-body.1  504      89     110      71      70
-body.1  504       3     105      16      65
-body.1  504     105      64      15      16
-body.1  504     105      64      16      65
-Constraint0   303       0       1       2
-Constraint0   303       2       3      17
-Constraint0   303       3       4      15
-Constraint0   303       4       5      15
-Constraint0   303       5       6      14
-Constraint0   303       6       7      12
-Constraint0   303       7       8      12
-Constraint0   303       8       9      10
-Constraint0   303      17       0       2
-Constraint0   303      14      15       5
-Constraint0   303      17       3      16
-Constraint0   303       3      15      16
-Constraint0   303      14       6      13
-Constraint0   303       6      12      13
-Constraint0   303      12       8      11
-Constraint0   303      10      11       8
-force1  303       1       0      26
-force1  303      25       1      26
-force1  303      25      26      27
-force1  303      18      19      20
-force1  303      20      21      31
-force1  303      21      22      29
-force1  303      22      23      29
-force1  303      23      24      28
-force1  303      24      25      27
-force1  303      31      18      20
-force1  303      27      28      24
-force1  303      28      29      23
-force1  303      31      21      30
-force1  303      21      29      30
+body.property.1  504      35      47      76      46
+body.property.1  504     130      75     115      93
+body.property.1  504     109      61      12       7
+body.property.1  504      22      69      21     111
+body.property.1  504      31      21      70      20
+body.property.1  504      69      88      89     111
+body.property.1  504     134      87     129     124
+body.property.1  504      82     109      81     119
+body.property.1  504      12      11      60     109
+body.property.1  504      81     109      48     119
+body.property.1  504     108     132     119      82
+body.property.1  504      67     113     123     129
+body.property.1  504     127     110      89     111
+body.property.1  504      80      81      49     120
+body.property.1  504      78      77      93     122
+body.property.1  504      81     109      82      60
+body.property.1  504      81     109      60      59
+body.property.1  504     125      83      96     126
+body.property.1  504     130     101     138     131
+body.property.1  504      44      45      37      74
+body.property.1  504      76      34      77      47
+body.property.1  504      88     127      89     111
+body.property.1  504     110      89      71     118
+body.property.1  504      75      76      35     115
+body.property.1  504      84     125     106     107
+body.property.1  504      24      28     113      27
+body.property.1  504      20      31      41      70
+body.property.1  504      74      75      36     116
+body.property.1  504      90     118     127     117
+body.property.1  504      76     114      35     115
+body.property.1  504     130      91     131     116
+body.property.1  504      40      20      19      41
+body.property.1  504      88     129     128     112
+body.property.1  504      43      39     118      38
+body.property.1  504      84      62     106      63
+body.property.1  504      35      47      34      76
+body.property.1  504     138     131     101     137
+body.property.1  504     108      83     107     126
+body.property.1  504      72      42      71     118
+body.property.1  504     127     110     118      89
+body.property.1  504     100     139     103     137
+body.property.1  504     134      66      65     104
+body.property.1  504      66      25      27      26
+body.property.1  504     134      87     124      85
+body.property.1  504       3      15      16     105
+body.property.1  504      69      89      70     111
+body.property.1  504     125      85      84     106
+body.property.1  504      58      80      81      49
+body.property.1  504      51      55      78      52
+body.property.1  504      65     105     134     104
+body.property.1  504      36      75      74      45
+body.property.1  504      37      73     117      38
+body.property.1  504       3     105      65     104
+body.property.1  504      76     114     115      93
+body.property.1  504     103     139     100      97
+body.property.1  504      77      53      52      54
+body.property.1  504      97     136      96     103
+body.property.1  504      66      25     104     123
+body.property.1  504      28      23      68      29
+body.property.1  504     125      85     106     124
+body.property.1  504      28     113      68      23
+body.property.1  504     128     139     129      87
+body.property.1  504      97      87     124     139
+body.property.1  504      67      66     134     123
+body.property.1  504      94     135      98     133
+body.property.1  504     105     106      63      85
+body.property.1  504      64     105      63      85
+body.property.1  504      88     127     111     128
+body.property.1  504     124      87      97      85
+body.property.1  504      66      67      27     123
+body.property.1  504      25      27     123      66
+body.property.1  504     116      36     115      75
+body.property.1  504      95      80      79     120
+body.property.1  504      37      44      74      73
+body.property.1  504     121     135      94     133
+body.property.1  504      75     130      92      93
+body.property.1  504     121      94      79      95
+body.property.1  504     125     136     126      96
+body.property.1  504     102     132     133     136
+body.property.1  504     114     122     115      93
+body.property.1  504     122     130     115      93
+body.property.1  504       1      26       2       0
+body.property.1  504      33      53      34      54
+body.property.1  504      34     114      35      76
+body.property.1  504      82     120      81      95
+body.property.1  504      81     119      49     120
+body.property.1  504      11      59      60     109
+body.property.1  504      36     116      37      74
+body.property.1  504      77      34      76     114
+body.property.1  504      91      73      90     117
+body.property.1  504      69     112      88     111
+body.property.1  504      94     121     133      95
+body.property.1  504     138     103     136     137
+body.property.1  504     110      39      71      40
+body.property.1  504      99      91      90     131
+body.property.1  504      82     109     108      61
+body.property.1  504     127     117     131      90
+body.property.1  504     117      91     131      90
+body.property.1  504      70      69      21      30
+body.property.1  504     135      94      98      92
+body.property.1  504     111     110      70      21
+body.property.1  504      97     124     125     139
+body.property.1  504      42      40      71      39
+body.property.1  504     113      28      68      67
+body.property.1  504     138     103     101      98
+body.property.1  504     131     127      90     137
+body.property.1  504      72      42     118      43
+body.property.1  504     130      98     135     138
+body.property.1  504      35      45      46      75
+body.property.1  504      66      17       2      26
+body.property.1  504      78      56      51      79
+body.property.1  504     106      62       5      63
+body.property.1  504     102     133      98     136
+body.property.1  504      15      14      63       5
+body.property.1  504      86      64      85     134
+body.property.1  504       4      15      63       5
+body.property.1  504     111      88     128     112
+body.property.1  504     125      83     126     107
+body.property.1  504      18      20      41      19
+body.property.1  504      88     100     127     128
+body.property.1  504     116      37      74     117
+body.property.1  504      99     103     101     137
+body.property.1  504     135     138      98     133
+body.property.1  504      81     109      59      48
+body.property.1  504      53      77      52     122
+body.property.1  504      61       6       7     108
+body.property.1  504      37      73      74     117
+body.property.1  504      67     113      27     123
+body.property.1  504     113      28      67      27
+body.property.1  504      91     116      74     117
+body.property.1  504     129      68     113     112
+body.property.1  504      97     100      87     139
+body.property.1  504      64     105     134      65
+body.property.1  504     103     102     136      96
+body.property.1  504     134      67     129      87
+body.property.1  504      69     112     111      22
+body.property.1  504      26      17       2       0
+body.property.1  504      21      29      30      69
+body.property.1  504     106      84      63      85
+body.property.1  504      89      72      71     118
+body.property.1  504      97     136     103     139
+body.property.1  504      97     125      84      96
+body.property.1  504      90     118     117      73
+body.property.1  504     121      95      79     120
+body.property.1  504      84      62     107     106
+body.property.1  504     106      62     107       5
+body.property.1  504      82     102     126     132
+body.property.1  504      50     121      51      79
+body.property.1  504     109      61       7     108
+body.property.1  504      51      56      57      79
+body.property.1  504      59      48      49      81
+body.property.1  504     133     102      98      95
+body.property.1  504      99     131      90     137
+body.property.1  504      63      15     105      64
+body.property.1  504      97     136     139     125
+body.property.1  504      88     129     112      68
+body.property.1  504      82     120      95     132
+body.property.1  504     118      89      90     127
+body.property.1  504      90     118      73      72
+body.property.1  504       3      17      65      16
+body.property.1  504       3      15     105       4
+body.property.1  504     132     108     126      82
+body.property.1  504     106       4      63       5
+body.property.1  504       1      26      25       2
+body.property.1  504     132     102     126     136
+body.property.1  504     134      67      87      86
+body.property.1  504     113      68     129      67
+body.property.1  504      77      53      34     114
+body.property.1  504     118      73      43      38
+body.property.1  504     134      66      67      86
+body.property.1  504     105      15      63       4
+body.property.1  504     118      73      38     117
+body.property.1  504     105       4      63     106
+body.property.1  504      25      66     104       2
+body.property.1  504     108      83     126      82
+body.property.1  504     126     102      82      83
+body.property.1  504     139     124     129      87
+body.property.1  504     130      98     138     101
+body.property.1  504      73      91      74     117
+body.property.1  504     134      66     104     123
+body.property.1  504      53      77     122     114
+body.property.1  504      51      55      56      78
+body.property.1  504     130     101     131      91
+body.property.1  504     100     128      87     139
+body.property.1  504     134      67     123     129
+body.property.1  504      42      40      41      71
+body.property.1  504      42      39      71     118
+body.property.1  504     136     103     139     137
+body.property.1  504     125      85     124      97
+body.property.1  504       3      65       2     104
+body.property.1  504      35      45      75      36
+body.property.1  504      62       6     107       5
+body.property.1  504     116      91     131     117
+body.property.1  504      65       2      66      17
+body.property.1  504     132     102     133      95
+body.property.1  504     127     100      90     137
+body.property.1  504      48       9       8      10
+body.property.1  504      90      89     118      72
+body.property.1  504      88     127      90      89
+body.property.1  504      40      70      71     110
+body.property.1  504      31      21      30      70
+body.property.1  504      43      37      73      44
+body.property.1  504     100      99      90     137
+body.property.1  504     100     127     128     137
+body.property.1  504     127     100      88      90
+body.property.1  504      99     100     103     137
+body.property.1  504      23     113      68     112
+body.property.1  504      67      87      68     129
+body.property.1  504      88     129      68      87
+body.property.1  504       6      61     107     108
+body.property.1  504      89     110      70     111
+body.property.1  504      62       6       5      14
+body.property.1  504      45      36      37      74
+body.property.1  504     118      73      72      43
+body.property.1  504      33      34      32      54
+body.property.1  504      77      78      52     122
+body.property.1  504      78     121      51     122
+body.property.1  504      88     129      87     128
+body.property.1  504      77      47      34      54
+body.property.1  504      50      80     120      79
+body.property.1  504     107      83     108      61
+body.property.1  504      62       6      13      61
+body.property.1  504     103     138     136      98
+body.property.1  504      34      47      32      54
+body.property.1  504     134      87      85      86
+body.property.1  504       7      12     109       8
+body.property.1  504      94      78      93     122
+body.property.1  504      39     110      71     118
+body.property.1  504      88     100     128      87
+body.property.1  504     130      98     101      92
+body.property.1  504      61      83      62     107
+body.property.1  504     125      83     107      84
+body.property.1  504      82     109     119     108
+body.property.1  504      23      22      68      29
+body.property.1  504      94     133      98      95
+body.property.1  504     125      83      84      96
+body.property.1  504     105     134     124      85
+body.property.1  504      97     136     125      96
+body.property.1  504     105     134      85      64
+body.property.1  504     133     138      98     136
+body.property.1  504      82     120     132     119
+body.property.1  504       6      12      13      61
+body.property.1  504      62      83      84     107
+body.property.1  504     103     138     101     137
+body.property.1  504      62      14       5      63
+body.property.1  504      81      80      95     120
+body.property.1  504       3      17       2      65
+body.property.1  504     102     132      82      95
+body.property.1  504     136     102     126      96
+body.property.1  504     102      83     126      96
+body.property.1  504     130      91     116      74
+body.property.1  504      66       2      65     104
+body.property.1  504      24      28      23     113
+body.property.1  504     130     135      92      93
+body.property.1  504      53      77      34      54
+body.property.1  504      77     114      76      93
+body.property.1  504      77     122     114      93
+body.property.1  504      62       6      61     107
+body.property.1  504      25      66       2      26
+body.property.1  504      35      76      75      46
+body.property.1  504      94     135     122      93
+body.property.1  504      62       6      14      13
+body.property.1  504      82     109      61      60
+body.property.1  504       6      12      61       7
+body.property.1  504      43      37      38      73
+body.property.1  504     135     130     122      93
+body.property.1  504      11      59       8      10
+body.property.1  504     125      85      97      84
+body.property.1  504      22      69      68      29
+body.property.1  504      69     112      22      68
+body.property.1  504     116      75     115     130
+body.property.1  504      43      39      42     118
+body.property.1  504      50      80      57      49
+body.property.1  504      91      99     101     131
+body.property.1  504     130     101      91      92
+body.property.1  504     128     100     137     139
+body.property.1  504     130      98      92     135
+body.property.1  504      75      76     115      93
+body.property.1  504      75      36     115      35
+body.property.1  504      48     119      49      81
+body.property.1  504      80      58      57      49
+body.property.1  504     135      94      92      93
+body.property.1  504      77      55      52      78
+body.property.1  504      55      77      52      54
+body.property.1  504      48      59       8     109
+body.property.1  504     105     124     106      85
+body.property.1  504      69     112      68      88
+body.property.1  504      22      23      68     112
+body.property.1  504     121      50     120      79
+body.property.1  504      50      51      57      79
+body.property.1  504      59      11       8     109
+body.property.1  504     121      78      51      79
+body.property.1  504      80      50      57      79
+body.property.1  504      71      70      40      41
+body.property.1  504      12      11     109       8
+body.property.1  504      61      83     108      82
+body.property.1  504      59      48       8      10
+body.property.1  504      20      70      41      40
+body.property.1  504     102     103     136      98
+body.property.1  504     116      75     130      74
+body.property.1  504     123      27      25      24
+body.property.1  504      86      64     134      65
+body.property.1  504      82     120     119      81
+body.property.1  504     110      20      70      21
+body.property.1  504      20     110      70      40
+body.property.1  504      69     111      70      21
+body.property.1  504      21      29      69      22
+body.property.1  504      94     121      78     122
+body.property.1  504     135     121      94     122
+body.property.1  504      78     122      51      52
+body.property.1  504     121      94      78      79
+body.property.1  504     132     133     120      95
+body.property.1  504     133     121     120      95
+body.property.1  504     113      24      27     123
+body.property.1  504      58      59      49      81
+body.property.1  504      80      50     120      49
+body.property.1  504     109      61      60      12
+body.property.1  504     130      91      74      92
+body.property.1  504      18      20      31      41
+body.property.1  504     131      99     101     137
+body.property.1  504     130      75      92      74
+body.property.1  504     134      66      86      65
+body.property.1  504      89     110      71      70
+body.property.1  504       3     105      16      65
+body.property.1  504     105      64      15      16
+body.property.1  504     105      64      16      65
+fixed  303       0       1       2
+fixed  303       2       3      17
+fixed  303       3       4      15
+fixed  303       4       5      15
+fixed  303       5       6      14
+fixed  303       6       7      12
+fixed  303       7       8      12
+fixed  303       8       9      10
+fixed  303      17       0       2
+fixed  303      14      15       5
+fixed  303      17       3      16
+fixed  303       3      15      16
+fixed  303      14       6      13
+fixed  303       6      12      13
+fixed  303      12       8      11
+fixed  303      10      11       8
+loadnegy  303       1       0      26
+loadnegy  303      25       1      26
+loadnegy  303      25      26      27
+loadnegy  303      18      19      20
+loadnegy  303      20      21      31
+loadnegy  303      21      22      29
+loadnegy  303      22      23      29
+loadnegy  303      23      24      28
+loadnegy  303      24      25      27
+loadnegy  303      31      18      20
+loadnegy  303      27      28      24
+loadnegy  303      28      29      23
+loadnegy  303      31      21      30
+loadnegy  303      21      29      30
 Constraint0   303      19      18      41
 Constraint0   303      40      19      41
 Constraint0   303      40      41      42
@@ -513,136 +513,136 @@ Constraint0   303      37      43      44
 Constraint0   303      47      35      46
 Constraint0   303      35      45      46
 Constraint0   303      45      37      44
-fixed  303      10       9      48
-fixed  303      33      32      54
-fixed  303      59      10      48
-fixed  303      53      33      54
-fixed  303      59      48      49
-fixed  303      49      50      57
-fixed  303      50      51      57
-fixed  303      51      52      55
-fixed  303      52      53      54
-fixed  303      54      55      52
-fixed  303      59      49      58
-fixed  303      51      55      56
-fixed  303      49      57      58
-fixed  303      57      51      56
-Constraint0   303       0      17      26
-Constraint0   303      11      10      59
-Constraint0   303      12      11      60
-Constraint0   303      13      12      61
-Constraint0   303      12      60      61
-Constraint0   303      11      59      60
-Constraint0   303      14      13      62
-Constraint0   303      13      61      62
-Constraint0   303      15      14      63
-Constraint0   303      14      62      63
-Constraint0   303      16      15      64
-Constraint0   303      15      63      64
-Constraint0   303      17      16      65
-Constraint0   303      16      64      65
-Constraint0   303      18      31      41
-Constraint0   303      27      26      66
-Constraint0   303      28      27      67
-Constraint0   303      27      66      67
-Constraint0   303      29      28      68
-Constraint0   303      28      67      68
-Constraint0   303      30      29      69
-Constraint0   303      29      68      69
-Constraint0   303      31      30      70
-Constraint0   303      30      69      70
-Constraint0   303      32      47      54
-Constraint0   303      42      41      71
-Constraint0   303      43      42      72
-Constraint0   303      42      71      72
-Constraint0   303      44      43      73
-Constraint0   303      43      72      73
-Constraint0   303      45      44      74
-Constraint0   303      44      73      74
-Constraint0   303      46      45      75
-Constraint0   303      45      74      75
-Constraint0   303      47      46      76
-Constraint0   303      46      75      76
-Constraint0   303      55      54      77
-Constraint0   303      56      55      78
-Constraint0   303      55      77      78
-Constraint0   303      57      56      79
-Constraint0   303      56      78      79
-Constraint0   303      58      57      80
-Constraint0   303      57      79      80
-Constraint0   303      59      58      81
-Constraint0   303      60      59      81
-Constraint0   303      58      80      81
-Constraint0   303      41      31      70
-Constraint0   303      54      47      77
-Constraint0   303      26      17      66
-Constraint0   303      61      60      82
-Constraint0   303      60      81      82
-Constraint0   303      17      65      66
-Constraint0   303      62      61      83
-Constraint0   303      61      82      83
-Constraint0   303      63      62      84
-Constraint0   303      62      83      84
-Constraint0   303      64      63      85
-Constraint0   303      63      84      85
-Constraint0   303      65      64      86
-Constraint0   303      66      65      86
-Constraint0   303      64      85      86
-Constraint0   303      67      66      86
-Constraint0   303      68      67      87
-Constraint0   303      69      68      88
-Constraint0   303      68      87      88
-Constraint0   303      70      69      89
-Constraint0   303      69      88      89
-Constraint0   303      77      47      76
-Constraint0   303      71      41      70
-Constraint0   303      71      70      89
-Constraint0   303      73      72      90
-Constraint0   303      74      73      91
-Constraint0   303      73      90      91
-Constraint0   303      75      74      92
-Constraint0   303      74      91      92
-Constraint0   303      76      75      93
-Constraint0   303      75      92      93
-Constraint0   303      79      78      94
-Constraint0   303      80      79      95
-Constraint0   303      79      94      95
-Constraint0   303      77      76      93
-Constraint0   303      78      77      93
-Constraint0   303      87      67      86
-Constraint0   303      72      71      89
-Constraint0   303      90      72      89
-Constraint0   303      78      93      94
-Constraint0   303      80      95      81
-Constraint0   303      84      83      96
-Constraint0   303      85      84      97
-Constraint0   303      84      96      97
-Constraint0   303      86      85      87
-Constraint0   303      89      88      90
-Constraint0   303      95      94      98
-Constraint0   303      91      90      99
-Constraint0   303      88      87     100
-Constraint0   303      92      91     101
-Constraint0   303      91      99     101
-Constraint0   303      93      92      94
-Constraint0   303      81      95      82
-Constraint0   303      82      95     102
-Constraint0   303      83      82     102
-Constraint0   303      95      98     102
-Constraint0   303     100      87      97
-Constraint0   303      99      90     100
-Constraint0   303      90      88     100
-Constraint0   303      94      92      98
-Constraint0   303      92     101      98
-Constraint0   303      96      83     102
-Constraint0   303      87      85      97
-Constraint0   303      99     100     103
-Constraint0   303     101      99     103
-Constraint0   303     100      97     103
-Constraint0   303      98     101     103
-Constraint0   303      97      96     103
-Constraint0   303     102      98     103
-Constraint0   303      96     102     103
+roomtemp  303      10       9      48
+roomtemp  303      33      32      54
+roomtemp  303      59      10      48
+roomtemp  303      53      33      54
+roomtemp  303      59      48      49
+roomtemp  303      49      50      57
+roomtemp  303      50      51      57
+roomtemp  303      51      52      55
+roomtemp  303      52      53      54
+roomtemp  303      54      55      52
+roomtemp  303      59      49      58
+roomtemp  303      51      55      56
+roomtemp  303      49      57      58
+roomtemp  303      57      51      56
+roomtemp  303       0      17      26
+roomtemp  303      11      10      59
+roomtemp  303      12      11      60
+roomtemp  303      13      12      61
+roomtemp  303      12      60      61
+roomtemp  303      11      59      60
+roomtemp  303      14      13      62
+roomtemp  303      13      61      62
+roomtemp  303      15      14      63
+roomtemp  303      14      62      63
+roomtemp  303      16      15      64
+roomtemp  303      15      63      64
+roomtemp  303      17      16      65
+roomtemp  303      16      64      65
+roomtemp  303      18      31      41
+roomtemp  303      27      26      66
+roomtemp  303      28      27      67
+roomtemp  303      27      66      67
+roomtemp  303      29      28      68
+roomtemp  303      28      67      68
+roomtemp  303      30      29      69
+roomtemp  303      29      68      69
+roomtemp  303      31      30      70
+roomtemp  303      30      69      70
+roomtemp  303      32      47      54
+roomtemp  303      42      41      71
+roomtemp  303      43      42      72
+roomtemp  303      42      71      72
+roomtemp  303      44      43      73
+roomtemp  303      43      72      73
+roomtemp  303      45      44      74
+roomtemp  303      44      73      74
+roomtemp  303      46      45      75
+roomtemp  303      45      74      75
+roomtemp  303      47      46      76
+roomtemp  303      46      75      76
+roomtemp  303      55      54      77
+roomtemp  303      56      55      78
+roomtemp  303      55      77      78
+roomtemp  303      57      56      79
+roomtemp  303      56      78      79
+roomtemp  303      58      57      80
+roomtemp  303      57      79      80
+roomtemp  303      59      58      81
+roomtemp  303      60      59      81
+roomtemp  303      58      80      81
+roomtemp  303      41      31      70
+roomtemp  303      54      47      77
+roomtemp  303      26      17      66
+roomtemp  303      61      60      82
+roomtemp  303      60      81      82
+roomtemp  303      17      65      66
+roomtemp  303      62      61      83
+roomtemp  303      61      82      83
+roomtemp  303      63      62      84
+roomtemp  303      62      83      84
+roomtemp  303      64      63      85
+roomtemp  303      63      84      85
+roomtemp  303      65      64      86
+roomtemp  303      66      65      86
+roomtemp  303      64      85      86
+roomtemp  303      67      66      86
+roomtemp  303      68      67      87
+roomtemp  303      69      68      88
+roomtemp  303      68      87      88
+roomtemp  303      70      69      89
+roomtemp  303      69      88      89
+roomtemp  303      77      47      76
+roomtemp  303      71      41      70
+roomtemp  303      71      70      89
+roomtemp  303      73      72      90
+roomtemp  303      74      73      91
+roomtemp  303      73      90      91
+roomtemp  303      75      74      92
+roomtemp  303      74      91      92
+roomtemp  303      76      75      93
+roomtemp  303      75      92      93
+roomtemp  303      79      78      94
+roomtemp  303      80      79      95
+roomtemp  303      79      94      95
+roomtemp  303      77      76      93
+roomtemp  303      78      77      93
+roomtemp  303      87      67      86
+roomtemp  303      72      71      89
+roomtemp  303      90      72      89
+roomtemp  303      78      93      94
+roomtemp  303      80      95      81
+roomtemp  303      84      83      96
+roomtemp  303      85      84      97
+roomtemp  303      84      96      97
+roomtemp  303      86      85      87
+roomtemp  303      89      88      90
+roomtemp  303      95      94      98
+roomtemp  303      91      90      99
+roomtemp  303      88      87     100
+roomtemp  303      92      91     101
+roomtemp  303      91      99     101
+roomtemp  303      93      92      94
+roomtemp  303      81      95      82
+roomtemp  303      82      95     102
+roomtemp  303      83      82     102
+roomtemp  303      95      98     102
+roomtemp  303     100      87      97
+roomtemp  303      99      90     100
+roomtemp  303      90      88     100
+roomtemp  303      94      92      98
+roomtemp  303      92     101      98
+roomtemp  303      96      83     102
+roomtemp  303      87      85      97
+roomtemp  303      99     100     103
+roomtemp  303     101      99     103
+roomtemp  303     100      97     103
+roomtemp  303      98     101     103
+roomtemp  303      97      96     103
+roomtemp  303     102      98     103
+roomtemp  303      96     102     103
 Constraint0   303       2       1      25
 Constraint0   303       3       2     104
 Constraint0   303       4       3     105
@@ -745,143 +745,143 @@ Constraint0   303     124     129     139
 Constraint0   303     136     137     138
 #endgroup all
 #time       1      1  1.00000000E+000
-  5.95950721E-006  3.08963955E-007  7.31779495E-007  3.99763077E+003 -1.12872284E+000  3.87882263E-001 -1.72406303E+000 -3.29345384E+000 -1.22377406E+000  3.99800715E+003
-  5.99914906E-006  4.53695675E-007  7.46113857E-007  3.99626593E+003 -1.05533092E+000 -5.46439105E+000  3.51960425E-001  1.12622904E+000 -4.94327654E+000  3.99953730E+003
-  5.23762196E-006  3.94933623E-007  7.41675355E-007  3.99172473E+003 -6.97511928E-001 -2.25720296E+000 -8.17313704E-001  6.03737164E-001 -5.63593988E+000  3.99321463E+003
-  4.47909712E-006  3.35596006E-007  7.39195675E-007  3.96159528E+003 -2.37131241E+000 -4.67265899E+000  4.20432770E+000  2.32273551E+000 -1.13769467E+001  3.96517546E+003
-  3.73065243E-006  2.69752482E-007  7.36454587E-007  3.90814957E+003  1.06933569E+000 -6.65819196E+000 -2.78584209E-001  7.77726172E-002 -3.10428267E+001  3.91131934E+003
-  2.98684758E-006  2.02379173E-007  7.23625921E-007  3.88339411E+003 -1.72378146E+001  2.23122923E+000  1.02305517E+001  6.19148739E+000 -2.24978226E+001  3.89118418E+003
-  2.25063983E-006  1.36204868E-007  6.88555665E-007  3.81382038E+003 -4.15869365E+001 -1.12383335E+000  1.91428031E+001  1.44570305E+001 -9.88290136E+000  3.83559911E+003
-  1.50899045E-006  8.68745645E-008  5.97376685E-007  4.04690054E+003 -1.01511251E+002  9.95531842E+001 -8.69890668E+000 -3.02223733E+000  5.55095588E+001  4.05279504E+003
-  7.17773011E-007  6.49134215E-008  4.23323469E-007  4.49384924E+003  8.35832767E+002  8.93715789E+002  1.32363355E+002 -2.51392746E+001  6.64205231E+002  3.81453271E+003
-  1.11244600E-039  9.28554176E-040  1.09311112E-039  5.08165966E+003  2.61370027E+003  2.31839058E+003  1.78070561E+002  6.39216338E+001  9.47983986E+002  3.11612739E+003
-  3.92025794E-029  8.40897348E-040  8.44690502E-040  5.31810674E+003  1.81243138E+003  2.70343424E+003  3.58978762E+001 -4.84128710E+001  1.19703077E+003  3.77751565E+003
-  7.56712031E-007 -9.39050875E-008  3.83130661E-007  3.62673234E+003 -7.49082911E+002  6.30957130E+001 -4.57182688E+001 -4.63385882E+001  4.24054274E+002  4.09946679E+003
-  1.49437129E-006 -6.51343770E-008  5.71370800E-007  3.99107786E+003  2.84214986E+000  1.78609301E+002  1.07210020E+002 -1.21966640E+001  6.00304579E+001  3.90917594E+003
-  2.21372979E-006 -4.11156536E-009  6.63541020E-007  3.79337840E+003  3.50897620E+001  2.34259967E+001 -1.45171542E+001 -1.54233190E+001  1.56586918E+001  3.76441056E+003
-  2.94420206E-006  6.07900930E-008  7.02609475E-007  3.87114104E+003 -5.67628139E+000  9.42830301E-001  1.25050554E+001 -2.70381743E+000 -1.00143065E+001  3.87361423E+003
-  3.68597189E-006  1.28523492E-007  7.18422729E-007  3.92140158E+003  2.57719143E+000 -3.27057121E+000  1.86561460E+000  1.35773044E+000 -1.20366660E+001  3.92180899E+003
-  4.44007439E-006  1.91437015E-007  7.23749944E-007  3.98040790E+003 -1.59661764E+000  1.01616733E+001  4.81473244E+000  4.69212796E-001 -4.05890328E+000  3.97615346E+003
-  5.19840150E-006  2.50571011E-007  7.27007816E-007  3.98872976E+003 -5.69882743E-001 -3.72260897E+000 -2.06427768E+000 -1.48241762E+000 -6.13966220E+000  3.99089354E+003
-  5.95658331E-006  3.83586051E-007 -7.36515665E-007  3.99811853E+003 -7.63307183E-001 -2.06981227E+000  4.68529581E+000 -5.09343956E+000  1.17767699E+000  3.99955373E+003
-  5.99560671E-006  5.28119169E-007 -7.34414300E-007  3.99301276E+003 -5.46974342E-001 -7.46725752E+000  1.06661482E+000  8.62165423E-001  4.93011407E+000  3.99703420E+003
-  5.99038604E-006  5.26317649E-007 -5.26944332E-007  3.99801662E+003  1.46650414E+000 -6.59885244E+000 -4.92802525E-001  1.11914319E+000  6.67102238E+000  4.00060614E+003
-  5.98379713E-006  5.23093811E-007 -3.16471040E-007  3.99621470E+003 -5.42784959E+000 -3.46719556E+001 -1.14033818E+000  1.17974830E+000  9.22136295E+000  4.01637722E+003
-  5.97960971E-006  5.15528218E-007 -1.02050094E-007  3.99510053E+003 -6.29913749E+000 -4.70831136E+001  5.10813476E-001  3.24567972E+000  1.74955416E-001  4.02195078E+003
-  5.98004854E-006  5.04933242E-007  1.12462906E-007  3.99853508E+003 -6.08510076E+000 -4.99023586E+001 -1.36006536E+000  4.82132960E+000 -3.59084481E+000  4.02672177E+003
-  5.98480488E-006  4.90811038E-007  3.27312746E-007  4.00090363E+003 -7.35909046E-001 -3.73122166E+001 -2.01870727E+000  1.79726454E+000 -7.19141366E+000  4.02007451E+003
-  5.99244251E-006  4.73294869E-007  5.38102407E-007  3.99541000E+003 -2.38279258E+000 -1.43087614E+001  9.25581196E-001  6.55481816E-001 -6.71641260E+000  4.00378648E+003
-  5.95357771E-006  3.29076810E-007  5.24799510E-007  3.99989764E+003  4.24571945E+000 -3.79288032E+000 -6.91841929E-001 -3.04357777E-001 -2.92815376E+000  3.99968071E+003
-  5.94712745E-006  3.46882223E-007  3.16060545E-007  3.99996074E+003 -1.38258191E+000 -2.03805497E+001  1.34415213E+000 -1.39553583E+000 -5.47748535E+000  4.01088868E+003
-  5.94180248E-006  3.61274141E-007  1.04321996E-007  4.00304290E+003 -1.01603613E+000 -2.83485018E+001  4.56588652E-001 -1.29815418E+000 -3.00678295E+000  4.01779898E+003
-  5.94117051E-006  3.72165976E-007 -1.08437976E-007  4.00451923E+003  3.80272076E+000 -3.43798048E+001 -2.86864829E+000  1.75145890E+000  1.25210325E+000  4.01994858E+003
-  5.94532756E-006  3.78672929E-007 -3.19949215E-007  4.00288946E+003 -3.50176535E+000 -1.00403069E+001 -9.80979626E-001 -1.30782818E+000  8.29254468E+000  4.00969121E+003
-  5.95140838E-006  3.81941293E-007 -5.29109574E-007  3.99698674E+003 -2.18795440E+000 -9.80177711E+000  1.59409243E+000 -5.24694769E+000  5.09216050E+000  4.00300802E+003
-  4.68372840E-029  8.79360077E-040  8.83697075E-040  5.15968470E+003  1.28190425E+003  2.36319142E+003 -1.81501503E+001 -8.63645571E+000 -1.16391566E+003  4.00982293E+003
-  9.08921726E-040  8.83607480E-040  4.64336010E-029  5.84367954E+003  3.25096135E+003  3.01362537E+003  4.20236141E+002 -6.30377235E+001 -1.12165915E+003  3.42197831E+003
-  7.30208964E-007  7.74288268E-008 -4.08237134E-007  4.17717822E+003  4.84640815E+002  5.85302716E+002  5.18890573E+001  4.01647987E+001 -4.52175331E+002  3.72821300E+003
-  1.51107694E-006  1.36702028E-007 -5.99023730E-007  3.97805654E+003 -2.49964052E+000  6.08691096E+001  4.63212536E+001 -6.11557913E+000 -8.00736425E+001  3.95251626E+003
-  2.24873472E-006  2.05190522E-007 -6.78502158E-007  3.87460422E+003 -3.70334896E+001 -3.21539904E+000  1.24385665E+001 -1.24155730E+001  1.20886878E+001  3.89501400E+003
-  2.98445348E-006  2.72162085E-007 -7.15798789E-007  3.85926075E+003 -2.76965196E+001 -8.36867036E+000  1.32105873E+001 -3.71979766E+000  2.57476678E+001  3.87765880E+003
-  3.72852817E-006  3.40221933E-007 -7.28523555E-007  3.90981784E+003  6.95292692E-001 -9.02091059E+000  3.22484634E-001 -3.11249298E+000  3.69070926E+001  3.91451544E+003
-  4.47685172E-006  4.07101488E-007 -7.31052428E-007  3.96311983E+003  2.57465347E-001 -3.34050363E+000  1.88632322E+000 -2.11323506E-001  1.42387896E+001  3.96474064E+003
-  5.23500592E-006  4.68136997E-007 -7.32271018E-007  3.98593311E+003  3.12821026E-001 -1.98786370E+000  2.21449650E+000  1.26093352E+000  8.80219948E+000  3.98680272E+003
-  5.19503456E-006  3.24092195E-007 -7.32954861E-007  3.99336122E+003  3.22469312E+000 -1.86799643E+000 -6.62467105E-002 -2.94229445E+000  5.33491063E+000  3.99269926E+003
-  4.43708885E-006  2.62713662E-007 -7.29560898E-007  3.97010848E+003 -1.04002918E+001  2.66271746E+000  7.33129398E+000 -9.76081883E-001  7.64477179E+000  3.97403608E+003
-  3.68336955E-006  1.99073875E-007 -7.23928806E-007  3.91972701E+003 -4.14650449E-001 -4.39301287E+000  3.12335971E+000 -2.42285664E+000  1.41079907E+001  3.92221445E+003
-  2.94199898E-006  1.30759475E-007 -7.07066732E-007  3.89172968E+003  1.54504881E+001  3.55141116E+000  6.44369045E-001  1.23922993E+000  6.78930741E+000  3.88226097E+003
-  2.20845694E-006  6.34215736E-008 -6.67446012E-007  3.82694743E+003 -2.56149263E+000  9.54563106E+000  1.45047042E+001 -1.54546930E+001  5.00519985E+000  3.82365580E+003
-  1.47795385E-006 -6.67805372E-009 -5.80839366E-007  3.79738083E+003  1.19464127E+002  4.30887734E+001  3.47885286E+001  1.79803643E+001 -1.18519244E+002  3.72297565E+003
-  7.48822314E-007 -7.75925475E-008 -3.94537477E-007  3.63974172E+003 -6.68576541E+002  1.23030679E+002  5.93818304E+001 -4.05261734E+001 -2.71791074E+002  4.00185823E+003
- -6.24818071E-029  4.42682013E-040  5.32365642E-040  4.40264246E+003  1.84140743E+003  1.48314092E+003  1.38540970E+002 -5.42911220E+001  5.66084821E+002  2.93830971E+003
-  6.40679234E-040  2.44642227E-029  5.80079615E-040  3.84553787E+003  9.37790245E+002  1.48754311E+003 -1.50092064E+001 -4.37271065E+000  2.28544263E+002  2.70483133E+003
-  6.53940064E-040  5.57191802E-040  6.01774440E-040  3.72833908E+003  6.21239466E+002  1.19798855E+003  1.62907123E+001  1.17139175E+000  8.01073618E+001  2.86613721E+003
-  6.15997533E-040  5.22771908E-040  5.75876601E-040  3.79042059E+003  8.26390714E+002  1.28913626E+003  1.09615736E-001  4.64428182E+001 -1.60858783E+002  2.77706903E+003
-  6.34195941E-040  5.31923141E-040 -5.79572486E-030  4.00032241E+003  1.06107134E+003  1.71638225E+003  6.85283456E-001 -3.82632144E+001 -3.03883436E+002  2.72468990E+003
-  4.15786222E-029  4.83826028E-040  5.83284460E-040  4.10356103E+003  1.06981716E+003  1.06771893E+003  4.22748741E+001 -8.71887504E+001 -5.38471520E+002  3.17930710E+003
-  3.64466889E-029  5.18071646E-040 -5.81386018E-030  4.30412319E+003  1.72300342E+003  1.55741901E+003 -1.13663906E+002  1.33823251E+002 -6.22528897E+002  2.89345845E+003
-  6.88202699E-040  5.79456038E-040  7.37320971E-040  4.09925635E+003  2.61568965E+003  1.91087970E+003 -1.97637889E+002 -3.30224986E+001 -2.88911144E+002  2.02835461E+003
-  7.76845361E-040  5.88983082E-040  3.45502774E-029  3.88685823E+003  2.26257419E+003  1.67835934E+003 -1.26764299E+002 -2.79924578E+001 -1.10342028E+002  2.00390142E+003
-  6.17617382E-040  5.84456216E-040  7.21008664E-040  3.87516356E+003  2.52445656E+003  1.86014285E+003 -2.27729231E+002  2.73799267E+001  7.09609406E+001  1.82645899E+003
-  7.81493756E-040  5.90854400E-040  7.49444407E-040  4.11348964E+003  2.51958836E+003  1.88673644E+003 -1.40667657E+002 -2.24045495E+001  1.73751822E+002  2.02513295E+003
-  5.42274525E-040  4.37923347E-040  2.32786557E-029  4.16365160E+003  1.32892643E+003  1.10188148E+003 -2.92708588E+001 -7.94116351E+001  4.40189907E+002  3.05509683E+003
-  1.01730022E-006 -4.99159983E-008  3.33880949E-007  3.75411812E+003 -2.09564464E+002  1.60445246E+002  1.48722811E+001  5.85737155E+001  1.11762550E+002  3.79862009E+003
-  1.81715980E-006  2.20559755E-009  4.55152345E-007  3.94795110E+003 -4.35644133E+001  3.15453381E+001  4.99962870E+001  4.35555589E+001  2.12928344E+001  3.95633494E+003
-  2.58676019E-006  6.08586023E-008  5.14415190E-007  3.95161383E+003  2.18187733E+001  1.85119122E+001 -3.68468637E+000 -4.92328654E+000 -1.31693253E+001  3.93153013E+003
-  3.34396533E-006  1.23665801E-007  5.35260399E-007  3.96588911E+003  6.84932084E+000  1.02545288E+000 -2.16439130E+000  3.31783401E+000 -1.77023369E+001  3.96207951E+003
-  4.07006675E-006  1.82766519E-007  5.41519783E-007  3.98548160E+003 -2.03738415E+000 -3.61163129E+000  6.95934698E-001  6.01922175E+000 -1.96749990E+001  3.98846574E+003
-  4.72857733E-006  2.32049595E-007  5.59961606E-007  3.98441382E+003 -2.21605668E+000 -6.11010569E+000 -1.99618756E-001  3.56106954E-001 -1.52197046E+001  3.98866550E+003
-  5.28991918E-006  2.85531507E-007  4.48517290E-007  4.00327914E+003  1.61962725E+000 -1.02153066E+000 -1.98440783E+000 -1.63361057E+000 -8.82975720E+000  4.00301243E+003
-  5.19093864E-006  2.97322848E-007  2.24856624E-007  4.00402791E+003 -8.49485187E-001 -1.54328434E+001  1.45251946E+000 -5.41212433E-001 -1.39833029E+001  4.01226295E+003
-  5.15795402E-006  3.08577266E-007  4.00064216E-010  4.01053348E+003  9.30004048E+000 -1.40277066E+001 -1.71904476E+000 -6.63088813E+000  2.43872858E-001  4.01296573E+003
-  5.21101029E-006  3.22004809E-007 -2.25933198E-007  4.01166350E+003  3.87277885E+000 -1.44541772E+001 -1.04323354E+000 -3.67945992E+000  6.50910614E+000  4.01700684E+003
-  5.28747834E-006  3.30525530E-007 -4.50554127E-007  4.00113758E+003  4.03887855E+000 -6.44939963E+000 -5.53607814E-001 -3.10469064E+000  1.02212579E+001  4.00239603E+003
-  4.71569410E-006  2.86280245E-007 -5.59314366E-007  3.98780258E+003  2.16581775E+000 -1.09510547E+000 -2.41568485E+000  1.24377630E+000  1.17131279E+001  3.98732261E+003
-  4.03845452E-006  2.33746372E-007 -5.30908229E-007  3.98898011E+003 -5.08537054E+000  1.37533638E-001 -1.21963668E+000 -7.51971048E-001  1.17534679E+001  3.99150928E+003
-  3.28501591E-006  1.73959948E-007 -5.20042231E-007  3.97539315E+003  1.27877069E+001  8.76207003E+000 -3.46548322E+000 -2.36131835E+000  1.39033291E+001  3.96469958E+003
-  2.49872580E-006  1.10352212E-007 -4.95465379E-007  3.97263476E+003 -5.62816029E+000  4.06482500E+001  3.10641230E-001 -3.21789049E+000  5.62016471E+000  3.95534370E+003
-  1.75822897E-006  5.10943415E-008 -4.43088545E-007  3.94863352E+003 -2.01279080E+001  7.39669808E+001  1.71706093E+001 -9.66316336E+000 -4.49768652E+001  3.92348242E+003
-  1.11349574E-006 -1.38825625E-008 -3.68541495E-007  4.11661068E+003 -8.65666609E+000  2.21470824E+002  9.68325755E+001 -1.49509795E+001 -1.05670123E+002  4.02290326E+003
-  5.17392151E-007 -4.41953453E-008 -1.66347080E-007  3.72623874E+003  2.29188003E+002  4.49167551E+002  8.21763073E+000 -2.71798848E+001 -2.37610887E+002  3.41764112E+003
-  5.20086767E-007 -3.53355648E-008 -9.19918657E-008  3.85310865E+003  2.91930643E+002  7.30761276E+002  1.44151503E+000  4.04252479E+001 -1.61133192E+002  3.37558998E+003
-  5.17366393E-007 -3.48345982E-008 -1.23030612E-008  3.90764362E+003  3.86379246E+002  8.34109426E+002 -1.31769791E+001 -2.60039532E+001  3.39895491E+000  3.32050794E+003
-  4.32730451E-007 -4.89235150E-008  4.95841871E-008  3.81793838E+003  4.03512654E+002  8.70795820E+002 -1.54441126E+001 -5.33266007E+000  1.10989929E+002  3.21230604E+003
-  6.53728678E-007 -2.87745254E-008  1.47033631E-007  3.99014981E+003  4.17081055E+002  7.47065862E+002 -2.79099844E+001 -6.27390158E+001  2.21407822E+002  3.44352459E+003
-  1.45280768E-006  2.41047080E-008  2.46178407E-007  4.16355459E+003  8.73754475E+001  3.34607860E+002 -3.01340462E+001  1.36418288E+001  7.86148601E+001  3.96111349E+003
-  2.23207726E-006  6.88714883E-008  3.23178815E-007  4.02995354E+003 -1.43862739E+000  4.92370278E+001  5.74363412E+000  2.50436550E+001  7.45300284E+000  4.00656268E+003
-  3.00707973E-006  1.23980594E-007  3.55053992E-007  4.01312583E+003  1.44258375E+001  2.48905158E+001 -2.73673155E+000 -8.13746367E+000 -1.09687386E+001  3.99355082E+003
-  3.77722006E-006  1.82716057E-007  3.47753571E-007  4.01555800E+003  2.69154418E+000  7.42532333E+000 -2.33300255E+000 -4.75465871E+000 -2.45437580E+001  4.01073745E+003
-  4.55316680E-006  2.38161871E-007  3.66535118E-007  4.00578562E+003 -3.72236419E+000  2.07998478E+000  1.55371715E-001 -2.92017178E-002 -1.25081677E+001  4.00666854E+003
-  4.30296720E-006  2.39664496E-007  1.32380693E-007  4.03009434E+003  7.57878109E+000  6.17062506E-001 -2.99606818E+000 -3.74095794E+000 -1.13327913E+001  4.02605734E+003
-  4.42326127E-006  2.62100043E-007 -1.30265637E-007  4.01791350E+003  1.02900254E+001 -1.12274945E+001 -2.22063958E+000  3.01231949E+000  6.78887695E+000  4.01844788E+003
-  4.55078933E-006  2.74728768E-007 -3.59348211E-007  4.00575955E+003  2.29442027E+000 -4.30241138E+000 -5.45261788E-002 -1.21685873E+000  2.37610622E+001  4.00697954E+003
-  3.71547256E-006  2.13009675E-007 -3.01603722E-007  4.02378390E+003  3.17123620E+000  5.40037978E+000  3.03863451E-001  6.91144453E+000  2.04211407E+001  4.01967204E+003
-  2.83977118E-006  1.50128772E-007 -3.33239762E-007  4.03061152E+003 -1.17317317E+000  2.87896328E+001 -6.46753799E+000  6.13915474E+000  1.54889024E+001  4.01700638E+003
-  1.95210943E-006  9.08080687E-008 -2.65356575E-007  4.06087734E+003 -3.56057009E+001  1.85898761E+002  4.78196875E+000  9.93084948E+000 -5.26822314E+001  3.99143320E+003
-  1.18137193E-006  3.24524638E-008 -2.39455340E-007  4.11420383E+003  4.52606064E+001  3.49798281E+002 -1.82787830E+001 -4.32001799E+000 -1.03735326E+002  3.92978842E+003
-  1.20145864E-006  4.22697576E-008 -9.21247453E-008  4.07844493E+003 -5.64089718E+000  4.09393901E+002 -1.69412544E+001 -2.21723764E+001 -4.34832108E+001  3.89422411E+003
-  1.16910706E-006  3.69024999E-008  7.02597320E-008  4.08941885E+003 -3.22366493E+001  4.34419701E+002 -4.71033573E+001 -3.15458957E+001  4.07403868E+001  3.91114260E+003
-  2.66278575E-006  1.21779876E-007  1.95010843E-007  4.04916273E+003  2.51653965E+000  7.26731802E+001  9.79249261E+000 -1.31582776E+001  2.88881374E-001  4.01212856E+003
-  3.37482012E-006  1.73149844E-007  1.65662496E-007  4.04761270E+003 -5.71303690E+000  2.14811737E+001  2.14750835E+000 -7.69098411E+000 -1.26903102E+001  4.03988076E+003
-  1.88248060E-006  9.52524516E-008 -4.50851458E-008  4.07515768E+003  2.96682510E+000  1.88599712E+002 -2.45424518E+000 -1.94256232E+001 -6.78913843E+000  3.98278216E+003
-  3.10889913E-006  1.71729900E-007 -1.63508805E-007  4.04434600E+003  4.99534620E+000  3.55588501E+001  4.38821189E+000  2.60516324E+000  1.06827476E+001  4.02420820E+003
-  3.64422896E-006  2.04864051E-007 -4.06431472E-008  4.04879132E+003  7.43600292E+000  5.22284203E+000 -2.00452172E+000  2.50472760E+000  9.21604592E-001  4.04246649E+003
-  2.47055546E-006  1.30903623E-007 -1.60277903E-007  4.06749737E+003  2.25641636E+001  1.15795471E+002 -3.62057715E+000  8.55906135E+000  1.06204918E+001  3.99920740E+003
-  1.98398584E-006  8.45358140E-008  1.30239920E-007  4.08165024E+003 -1.90578920E+001  1.92347072E+002  2.66317565E+000 -1.22200833E+001  2.18687386E+001  3.99943661E+003
-  2.72759148E-006  1.42345595E-007  1.48238539E-008  4.07570613E+003  1.65860661E+001  8.70344882E+001  1.51556028E+000 -9.53050152E+000 -3.66188670E+000  4.02439805E+003
-  4.93408959E-006  3.89657065E-007  5.67571582E-007  3.98968527E+003  1.23132604E+000 -9.51752910E+000 -1.18450462E-001  2.23098929E+000 -1.54914362E+001  3.99393122E+003
-  4.13505751E-006  3.27830385E-007  5.62889071E-007  3.97096379E+003 -4.26575303E-001 -8.23758872E+000  1.88717735E+000  1.01021967E-001 -2.74607783E+001  3.97558751E+003
-  3.37453124E-006  2.68182794E-007  5.43914543E-007  3.97174447E+003 -1.00492835E+001  8.66395488E-001  1.06646256E+001  7.40641614E+000 -3.92837428E+001  3.97699284E+003
-  2.59234193E-006  2.04739521E-007  5.23578528E-007  3.98456183E+003 -2.20874601E+001 -2.83821831E+000  7.20733347E+000  1.43502811E+001 -1.98083187E+001  3.99730345E+003
-  1.69210337E-006  1.50397651E-007  4.28936668E-007  4.05345572E+003  1.69969219E+001  1.25689317E+002 -1.11961471E+001  1.90730276E+001  5.96355125E+001  3.98474816E+003
-  9.39181459E-007  8.99423005E-008  3.60215935E-007  3.90267757E+003  4.92966376E+001  3.33324279E+001  4.91095979E+001 -1.91757457E+000  1.83004299E+002  3.87531079E+003
-  4.97889485E-006  4.48029154E-007 -4.79316037E-007  3.99493162E+003 -1.89908306E-001 -1.80925834E+001 -5.26468872E-001 -1.69274548E+000  1.98648984E+001  4.00425189E+003
-  5.04886897E-006  4.51344862E-007 -2.17856969E-007  4.01034358E+003  2.24284939E+000 -2.67456043E+001 -2.99026290E+000 -6.77089276E-002  1.51166792E+001  4.02276184E+003
-  5.18174187E-006  4.51452098E-007  1.12877322E-008  4.00750467E+003 -8.95410455E+000 -3.91668567E+001 -4.99921679E-001  6.96479208E+000 -2.46492084E+000  4.03167045E+003
-  5.37361351E-006  4.54427999E-007  2.03604789E-007  4.00565783E+003 -5.26261767E-001 -2.87855940E+001 -6.49777451E-001  1.67982697E+000 -7.44345503E+000  4.02041013E+003
-  9.28536554E-007  1.28129798E-007 -3.37813997E-007  3.98329240E+003 -2.05519209E+002  1.29719834E+002 -6.02451867E+001 -5.96863113E+001 -3.38559082E+002  4.07672875E+003
-  1.67840767E-006  1.90533731E-007 -4.40193741E-007  3.89972053E+003  1.40193732E+001  6.84124594E+001 -2.84651669E+001 -2.01744843E+001 -5.17325702E+001  3.86030536E+003
-  2.51137633E-006  2.55742495E-007 -5.00995893E-007  3.99336904E+003 -5.39267489E+000  5.00951193E+001  1.75853487E+000 -4.35344214E-001  1.66852584E+001  3.97141495E+003
-  3.34442253E-006  3.20254290E-007 -5.17248869E-007  3.97908201E+003 -1.17073638E+001 -4.98265449E+000  5.51357921E+000 -3.88281569E+000  3.66668850E+001  3.98795411E+003
-  4.11101286E-006  3.80453935E-007 -5.46309721E-007  3.97564852E+003 -2.39167651E+000 -5.17779763E+000  1.46609862E+000  3.56810600E-001  2.73085341E+001  3.97971594E+003
-  8.02942410E-007  1.31543841E-007  2.09848545E-007  3.79685480E+003 -4.15393264E+002  3.11325040E+002 -4.39893658E+001  1.68760828E+001  3.12808645E+002  3.93830456E+003
-  7.45438870E-007  1.55741570E-007  7.85761069E-008  3.86532138E+003 -2.92675379E+002  4.01277980E+002  1.42650311E+001  1.58404505E+001  1.62981060E+002  3.86860494E+003
-  7.24194724E-007  1.49413177E-007 -2.58567252E-008  3.81901830E+003 -2.23431692E+002  4.63576079E+002  5.19499698E+000  3.24748836E+001 -1.42409111E+001  3.74700418E+003
-  8.17538421E-007  1.61850921E-007 -1.68049397E-007  3.92321095E+003 -2.44916253E+002  4.93666164E+002  3.39644125E+001 -2.11253683E-001 -1.81434314E+002  3.86555288E+003
-  5.23262934E-006  4.29853319E-007  3.82726080E-007  3.99960908E+003 -1.99172221E-001 -2.18448976E+001  1.43943736E+000  3.60898728E+000 -1.61094384E+001  4.01077763E+003
-  3.83307167E-006  3.29948295E-007  3.59246321E-007  4.00490557E+003 -1.29634482E+001 -2.32195841E+001  4.02043148E+000  1.39416858E+001 -3.50516358E+001  4.02354346E+003
-  3.01447655E-006  2.73731402E-007  3.37309118E-007  4.02526082E+003 -3.06754833E+000 -3.57704926E+000 -4.32380902E+000  8.24761971E+000 -2.49826326E+001  4.02884781E+003
-  2.25049129E-006  2.21485500E-007  3.27640135E-007  4.02724581E+003 -3.89538570E+001  4.66213266E+001 -1.15649829E+001  1.38367113E+001  2.06507468E+001  4.02437474E+003
-  3.96704806E-006  3.73488415E-007 -3.08029498E-007  4.01246706E+003 -3.88486037E+000 -2.13764234E+001  2.76277244E+000 -8.62159728E+000  2.79034095E+001  4.02544689E+003
-  4.24541248E-006  3.88230446E-007 -4.82216074E-008  4.03343671E+003  1.84609719E+000 -3.15862968E+001 -5.31191466E+000 -2.37470364E+000  5.35005856E+000  4.04843349E+003
-  4.54855374E-006  3.95168819E-007  1.97583742E-007  4.01235346E+003 -5.66914106E+000 -2.91606731E+001  1.95140415E+000  4.09837577E+000 -1.25835733E+001  4.02988633E+003
-  1.93502145E-006  2.37728031E-007 -2.89356566E-007  4.01012716E+003  3.96925330E+000  7.18019298E+001 -2.05922417E+001 -1.12947979E+001 -2.60512064E+001  3.97314043E+003
-  2.86729390E-006  2.97771502E-007 -3.02005596E-007  4.02183326E+003 -2.10558283E+000 -4.62250261E+000 -1.28033979E+000 -1.28098608E+001  2.49716363E+001  4.02549203E+003
-  1.54485559E-006  1.95892968E-007  2.12066541E-007  3.94028325E+003  3.31104745E+001  1.60633404E+002 -3.57909294E+001  3.86351170E+001  5.66995923E+001  3.84733318E+003
-  1.51402804E-006  2.20016360E-007  3.87513797E-008  3.95245041E+003  5.41208924E+001  2.84771130E+002 -2.63880171E+001  1.45682284E+001  1.70241408E+001  3.78874875E+003
-  4.53301265E-006  3.76148483E-007  4.08797317E-007  3.99607627E+003 -4.91305574E+000 -1.42866091E+001  9.29877364E-001  1.63855136E+000 -2.43620424E+001  4.00590790E+003
-  1.41999785E-006  2.11695860E-007 -1.12103975E-007  3.99464334E+003  8.63196926E+001  3.05798724E+002 -2.75466663E+001 -2.15607015E+000 -6.53324475E+001  3.80532063E+003
-  2.46446220E-006  2.67116111E-007  1.24224145E-007  4.05242641E+003 -7.65309227E+000  6.09069634E+001 -1.85191678E+001  1.58280705E+001 -2.11465824E+000  4.02646006E+003
-  3.22081873E-006  3.22862341E-007 -8.39909648E-008  4.05513514E+003 -3.65596626E+000 -5.22071893E+000 -8.89457274E+000  3.16864624E+000  6.47817445E+000  4.05962215E+003
-  2.24123979E-006  2.63699763E-007 -1.00903675E-007  4.03814158E+003 -6.39263641E-001  5.37293982E+001 -1.52733517E+001 -2.98188069E+000  2.15699163E+000  4.01196510E+003
-  3.54928268E-006  3.32094080E-007  1.42448301E-007  4.03710184E+003 -3.55589919E+000 -2.80250630E+001 -6.65200590E+000  1.19902696E+001 -1.53406553E+001  4.05310440E+003
+  8.00087430E-032 -7.67335059E-025  6.86028856E-032 -1.49298322E+009 -1.54501647E+009 -8.75153178E+008 -5.72975454E+007 -1.92804122E+008  4.70338508E+008  1.09617215E+009  2.73000000E+002
+  7.05607777E-032  6.85955963E-032  7.93192785E-032 -1.75496157E+007  3.17431971E+008  2.27613705E+008  9.66057044E+007 -4.60966757E+007  3.68639006E+008  7.29554225E+008  1.00601971E+003
+  4.25226927E-032  3.50588518E-032  4.24547973E-032  4.11136438E+008  4.15308385E+008  6.25010650E+008  5.97369034E+005  1.86463035E+007  1.64197601E+008  3.56081442E+008  1.11229997E+003
+  4.89613387E-032  4.43479840E-032 -5.32673096E-025  1.60679745E+008  1.53881807E+008  5.81259030E+008  5.54072027E+007 -9.55607998E+007  9.53589034E+007  4.93637168E+008  1.04856529E+003
+ -5.60590519E-025  4.43644450E-032  5.38782051E-032  2.62328642E+008  2.80895406E+008  6.34872159E+008 -3.97042260E+007 -5.78331012E+007  2.31686404E+007  3.85473872E+008  9.42651964E+002
+ -5.41876555E-025  4.30809649E-032  4.86611724E-032  3.65628054E+008  4.95000251E+008  7.75476470E+008  8.47169059E+006  3.13758105E+007 -2.81455512E+005  3.67231221E+008  1.07011200E+003
+  4.71715011E-032  4.21198973E-032 -5.40014619E-025  3.81747551E+008  4.93062568E+008  8.13132021E+008 -1.70912425E+007  2.65893903E+007 -5.52585742E+007  4.03264023E+008  1.09520517E+003
+  4.90055253E-032  4.32352399E-032  5.28436412E-032  2.25519395E+008  2.11347169E+008  6.13813401E+008  4.52390511E+007 -8.14145097E+007 -7.06692178E+007  4.44390791E+008  9.33387226E+002
+  4.58580090E-032  4.06723487E-032 -9.48300097E-024  2.56239824E+008  2.65610838E+008  4.91762316E+008 -1.07811598E+007 -1.52026955E+008 -2.46964791E+008  5.53183229E+008  9.35833283E+002
+  8.63609108E-032  7.20851026E-032  8.48599138E-032 -1.78882655E+009 -2.10496562E+009 -1.87741536E+009 -6.65169144E+007 -5.07442951E+008 -3.96816748E+008  1.15669557E+009  2.73000000E+002
+ -7.52735229E-025  6.52801670E-032  6.55746354E-032 -1.58328255E+009 -1.21890572E+009 -9.14683496E+008  8.48666394E+007  2.02123934E+007 -3.71124598E+008  8.78752655E+008  2.73000000E+002
+  5.02048881E-032  4.23804619E-032  5.31716438E-032 -1.00048445E+009 -1.16830346E+009 -6.46370334E+008 -2.31580441E+007 -6.67091681E+006 -2.69595865E+008  6.57856585E+008  2.73000000E+002
+  4.94075441E-032  4.27794425E-032 -5.40614384E-025 -1.25766095E+009 -1.15865608E+009 -6.34750045E+008  1.69035082E+007 -2.46743501E+007 -9.18020284E+007  6.03419623E+008  2.73000000E+002
+  6.00480362E-032  4.58098927E-032 -6.69920860E-025 -1.14440039E+009 -1.32552861E+009 -5.37159647E+008  2.66903821E+007 -2.54825022E+007 -6.26097508E+007  7.26210942E+008  2.73000000E+002
+  5.78257525E-032 -5.06011690E-025 -5.88141582E-025 -1.21445762E+009 -1.39927147E+009 -5.67161777E+008 -8.87054749E+006  3.66212429E+006  1.33627252E+007  7.57356775E+008  2.73000000E+002
+  4.85637911E-032  4.32450441E-032  4.76742607E-032 -1.19693934E+009 -1.16504662E+009 -6.62976182E+008 -2.35814254E+007  9.24778280E+006  3.41242592E+007  5.23948921E+008  2.73000000E+002
+  5.01383725E-032  4.58372572E-032  5.34548846E-032 -1.01517798E+009 -8.97698793E+008 -4.95648314E+008  1.91942660E+007  4.94141519E+007  1.38485847E+008  5.37256025E+008  2.73000000E+002
+  5.09359532E-032  3.78971191E-032  4.89034221E-032 -1.08616341E+009 -1.34414347E+009 -5.61514319E+008 -5.58308983E+007 -1.58419863E+008  1.83272579E+008  8.13982631E+008  2.73000000E+002
+  3.88264481E-001 -1.66739596E+000  5.57709782E-001 -4.71314058E+008 -5.82372112E+008 -5.58232874E+008  2.65114955E+007 -5.51137099E+007  3.08166164E+007  1.55903400E+008  2.73000000E+002
+  2.62133841E-001 -1.71059892E+000  2.61626134E-001  4.73767596E+008  5.50668082E+008  3.73932716E+008 -2.20894979E+007  6.22289026E+007 -8.88597430E+007  2.45616260E+008  1.00964706E+003
+  2.55850832E-001 -1.31940802E+000  2.16688587E-001  6.08155709E+008  7.18005524E+008  6.45745314E+008  7.06816188E+006 -2.09826891E+006 -4.55957268E+006  9.78580763E+007  1.06585989E+003
+  2.43746006E-001 -9.73946335E-001  1.80041812E-001  6.49770436E+008  7.66981309E+008  6.41603237E+008  1.51622198E+007 -3.14758559E+006 -2.70711074E+007  1.32967333E+008  1.08282053E+003
+  2.22401505E-001 -6.86432727E-001  1.39190668E-001  5.89912223E+008  6.80722251E+008  5.94491759E+008 -2.05114392E+007 -3.45949922E+006 -2.03497510E+007  1.01940986E+008  1.00716545E+003
+  1.92983960E-001 -4.57024551E-001  8.87581705E-002  6.30766365E+008  7.12696869E+008  6.15789051E+008  3.76332231E+007  3.38924488E+007 -8.76975817E+006  1.26844885E+008  9.78659421E+002
+  1.60923816E-001 -2.57490629E-001  4.62811914E-002  3.80481296E+008  3.98509161E+008  4.18292873E+008  1.71598448E+008  1.30543024E+005  1.24344691E+007  2.99791659E+008  8.33604099E+002
+  1.08723722E-001 -1.06093536E-001  1.15183325E-002  5.27915023E+008  7.19734271E+008  4.77485650E+008  7.32633641E+007  4.70183063E+007  7.48115326E+007  2.97550149E+008  9.21093128E+002
+  1.47290226E-001 -5.35172047E-002  9.04623732E-002 -9.20451659E+008 -8.59057877E+008 -8.14784847E+008  9.36103186E+007 -1.04659939E+008  1.98604412E+008  4.31194049E+008  2.73000000E+002
+  2.31364494E-001 -2.27828866E-001  1.57803957E-001 -6.50007455E+008 -7.60354713E+008 -6.88963158E+008 -3.52499586E+007 -7.31945215E+007  8.72091693E+007  2.28060780E+008  2.73000000E+002
+  2.80922585E-001 -4.09998557E-001  2.31257421E-001 -5.63459293E+008 -6.34659908E+008 -5.28048719E+008  4.78307286E+007 -5.00249399E+007  2.74786299E+007  1.59626865E+008  2.73000000E+002
+  3.13526748E-001 -6.36771838E-001  3.16474681E-001 -4.70750011E+008 -4.92852699E+008 -5.35912816E+008  1.32543392E+008  4.75045100E+007  2.17593827E+007  2.53353797E+008  2.73000000E+002
+  3.40337858E-001 -9.10643855E-001  3.96154805E-001 -3.72365685E+008 -1.62531552E+008 -2.46628145E+008  1.42136596E+008 -1.41105915E+006  3.35526571E+007  3.12166648E+008  2.73000000E+002
+  3.64998298E-001 -1.26188157E+000  4.74842152E-001 -4.21590789E+008 -3.14970070E+008 -4.37524858E+008  1.22926503E+008 -6.97228385E+007  3.50242763E+007  2.77339993E+008  2.73000000E+002
+ -2.13309635E-001 -1.62017194E+000  7.47821803E-001 -3.65309304E+008 -4.17274660E+008 -3.14315833E+008  5.50179291E+007 -9.50557579E+006  1.11365356E+005  1.31539533E+008  2.73000000E+002
+ -1.32456565E-001 -1.68386687E+000  4.93102349E-001 -4.03425687E+008 -2.98686915E+008 -3.84077025E+008 -7.30141364E+006 -1.90913435E+007 -5.39501004E+007  1.38936087E+008  2.73000000E+002
+ -4.39690277E-002 -1.55934606E+000  4.32295998E-001  8.72971664E+008  9.00669526E+008  8.87283378E+008 -1.16635013E+007 -2.73937968E+007 -3.35325798E+007  8.12912458E+007  9.79223557E+002
+ -8.11155862E-003 -1.45721702E+000  3.82355861E-001  6.15522658E+008  7.69203318E+008  6.87627681E+008  1.34497995E+007 -2.30853998E+007 -1.67123062E+007  1.43927530E+008  1.08754250E+003
+  3.30269537E-002 -1.38742207E+000  3.61988663E-001  5.62274516E+008  6.33305423E+008  6.07594439E+008 -4.53734735E+006 -5.24104332E+007  3.61735922E+006  1.10552019E+008  1.02727510E+003
+  7.53827747E-002 -1.37178616E+000  3.47631062E-001  6.98309840E+008  7.92585842E+008  7.04891337E+008 -9.82111663E+005 -3.00924794E+007  1.83012042E+006  1.05073389E+008  1.12002740E+003
+  1.24319677E-001 -1.38631682E+000  3.29680508E-001  4.78295350E+008  4.88778401E+008  4.62677050E+008 -2.71147849E+007  4.17357601E+007  3.35409217E+007  1.06413294E+008  9.58304896E+002
+  1.77241195E-001 -1.44511281E+000  3.15368429E-001  5.27854571E+008  5.66766021E+008  4.81598091E+008  1.10723318E+006  8.02570336E+007 -3.90798868E+007  1.71355287E+008  9.71183292E+002
+  2.28549242E-001 -1.55371137E+000  2.94956644E-001  6.65645533E+008  6.62556379E+008  7.06712266E+008 -7.44732404E+007 -3.70213132E+007 -2.13444784E+007  1.54726096E+008  1.00682595E+003
+  3.13959659E-001 -1.50850822E+000  5.68198123E-001 -5.69906783E+008 -5.24027751E+008 -5.22982196E+008  6.89366443E+007  8.95958681E+007  2.11629613E+007  2.04539977E+008  2.73000000E+002
+  2.26343199E-001 -1.40218104E+000  5.87631837E-001 -5.65312133E+008 -5.57894549E+008 -6.03318429E+008 -3.61183736E+006  1.97575185E+007 -2.51335896E+007  6.99050836E+007  2.73000000E+002
+  1.52782151E-001 -1.35038672E+000  6.03388678E-001 -6.60444543E+008 -6.73787561E+008 -6.60673120E+008  4.17851714E+006  1.45258105E+007  2.00353583E+007  4.54385600E+007  2.73000000E+002
+  7.76365475E-002 -1.30674886E+000  6.16957744E-001 -3.09991201E+008 -1.50772631E+008 -3.32861266E+008 -2.09684173E+007  1.51520276E+008  1.71816659E+006  3.15781560E+008  2.73000000E+002
+  4.81305008E-003 -1.33769553E+000  6.29787113E-001 -6.21832994E+008 -4.45922813E+008 -4.51059132E+008 -2.23865290E+006  1.45294230E+008 -2.19625861E+004  3.05636252E+008  2.73000000E+002
+ -6.21928167E-002 -1.39181736E+000  6.49587267E-001 -3.50579999E+008 -1.49836608E+008 -3.26644556E+008 -1.35303534E+007  1.70860516E+008  7.28214450E+006  3.52638881E+008  2.73000000E+002
+ -1.23751563E-001 -1.49984441E+000  6.86728259E-001 -5.28573825E+008 -4.10397581E+008 -4.64871086E+008 -8.26657951E+006  8.13964037E+007 -3.38430161E+007  1.84425310E+008  2.73000000E+002
+ -1.36461838E-001 -1.04253024E-001  3.68147299E-002 -6.66881796E+008 -4.08351496E+008 -6.04276151E+008  5.89483492E+007  2.87657464E+007 -5.15960601E+007  2.74709874E+008  2.73000000E+002
+ -2.10487563E-001 -2.36550291E-001  1.07503719E-001 -1.36558981E+008 -1.99554779E+008 -3.39324916E+008  5.63591854E+007 -4.53325253E+007 -6.20498071E+007  2.44036505E+008  2.73000000E+002
+ -2.14935244E-001 -4.38892285E-001  1.69003527E-001 -2.95656153E+008 -2.43923606E+008 -5.11941177E+008  2.66938547E+007 -1.78926946E+007  5.48713840E+007  2.69768754E+008  2.73000000E+002
+ -2.24946437E-001 -6.92807204E-001  2.43090473E-001 -1.98051271E+008 -2.27254338E+008 -3.27410260E+008  4.40392734E+007 -2.27472874E+007 -1.15757968E+007  1.46906689E+008  2.73000000E+002
+ -2.17060125E-001 -1.00052693E+000  3.25809228E-001 -1.23233359E+008 -1.60790826E+008 -1.37604524E+008  2.93010643E+007 -1.76197152E+007  1.74356990E+007  7.41375757E+007  2.73000000E+002
+ -1.66655484E-001 -1.32755584E+000  4.16672119E-001 -4.04591135E+008 -3.78570402E+008 -5.10786409E+008  1.12700479E+006 -1.05657727E+007 -1.15184455E+007  1.24316268E+008  2.73000000E+002
+ -2.60824595E-001 -1.25643175E+000  6.58023641E-001 -2.20418930E+008 -1.86715366E+008 -2.70697032E+008 -7.06993919E+007  1.46032420E+007 -3.57384400E+007  1.57559682E+008  2.73000000E+002
+ -2.98033156E-001 -9.13261712E-001  5.43179998E-001  6.62613334E+007  2.68688109E+008  4.44712214E+007 -1.09849798E+008 -7.81451132E+007 -4.77845663E+007  3.27464983E+008  2.73000000E+002
+ -2.94619870E-001 -6.08891503E-001  4.31655315E-001  6.07704821E+007  1.38018553E+008  1.21122535E+008 -8.40786149E+007  1.50548572E+006 -5.75619535E+007  1.90005606E+008  2.73000000E+002
+ -2.84523945E-001 -3.48372699E-001  3.19394363E-001  1.04635783E+008  1.77204176E+008 -6.28103391E+007 -1.51126452E+008 -3.65602187E+007 -2.95339317E+007  3.47275097E+008  2.73000000E+002
+ -2.46430123E-001 -1.52158412E-001  2.07024811E-001  6.51174215E+007  1.90871059E+008  1.63736631E+008 -6.27459588E+007 -1.66575529E+007 -1.38880724E+008  2.89214723E+008  2.73000000E+002
+ -1.50743924E-001 -3.09982236E-002  1.01580630E-001 -5.08472023E+008 -3.64153805E+008 -3.43731584E+008  1.21324173E+007  4.01890391E+005 -1.48787563E+008  3.01740620E+008  2.73000000E+002
+ -6.02254863E-002  7.80348389E-004  1.18012524E-001 -4.92489190E+008 -5.14864298E+005 -5.81482440E+007 -3.06245004E+007  2.81228287E+007 -1.17534130E+008  5.13454259E+008  2.73000000E+002
+ -3.47404040E-002 -1.00972202E-002  1.15110747E-001 -9.44311923E+008 -8.83057489E+008 -5.62395701E+008 -5.11344112E+006 -1.18056695E+007 -6.51569247E+007  3.73431229E+008  2.73000000E+002
+ -8.39310904E-003  3.54113522E-003  1.10655624E-001 -9.60360902E+008 -8.64541911E+008 -6.10309257E+008  1.50581865E+007 -4.04854687E+006 -2.39413828E+007  3.17214165E+008  2.73000000E+002
+  1.51058451E-002  1.77553743E-003  1.06379364E-001 -9.40181289E+008 -8.15604484E+008 -5.53373849E+008  6.62533010E+006 -2.79126326E+006  2.79314812E+007  3.45612069E+008  2.73000000E+002
+  2.91078192E-002  1.58540260E-002  1.02992940E-001 -7.17053069E+008 -1.60651093E+008 -3.22167262E+008  8.90120514E+006  8.70202013E+007  6.46685989E+007  5.30381033E+008  2.73000000E+002
+  4.54998452E-002 -1.24025823E-002  9.69520923E-002 -9.70248268E+008 -9.16876221E+008 -6.96234772E+008 -3.44704104E+007 -2.79034495E+005  1.44693840E+008  3.60112612E+008  2.73000000E+002
+  1.22333846E-001 -7.35518082E-002  1.36840565E-001 -6.80026214E+008 -7.61044403E+008 -6.41856120E+008 -2.58364209E+007 -3.87892109E+007  1.06376530E+008  2.27107120E+008  2.73000000E+002
+  1.75739074E-001 -2.10001223E-001  2.16464981E-001 -6.63379976E+008 -5.98508701E+008 -6.38366026E+008 -3.13635475E+007 -1.09925213E+007  3.68720611E+007  1.02973117E+008  2.73000000E+002
+  2.24060827E-001 -4.17037274E-001  2.99607049E-001 -6.72347305E+008 -6.42990662E+008 -5.73739239E+008  2.48112284E+007 -7.77390801E+007  1.94499415E+007  1.69712542E+008  2.73000000E+002
+  2.60101612E-001 -6.87107540E-001  3.83115402E-001 -6.47147591E+008 -6.54117231E+008 -5.92032652E+008  3.85931832E+007 -4.55893935E+007  5.19226397E+006  1.19393142E+008  2.73000000E+002
+  2.95387869E-001 -1.03517321E+000  4.63939514E-001 -6.82547796E+008 -7.85460510E+008 -7.14912370E+008  2.68032888E+007 -1.57397181E+006 -3.37237611E+006  1.02491785E+008  2.73000000E+002
+  2.38592254E-001 -1.13934040E+000  5.22654880E-001 -6.35830569E+008 -7.36388065E+008 -6.25609547E+008 -1.46326065E+007  2.84940964E+007 -6.17610512E+006  1.20152373E+008  2.73000000E+002
+  1.71250772E-001 -1.01188351E+000  5.20765176E-001 -3.42346071E+008 -6.80518800E+007 -2.73361792E+008 -1.96226784E+006 -1.66122199E+007  1.98796844E+007  2.51195545E+008  2.73000000E+002
+  1.01047648E-001 -9.77715976E-001  5.40890068E-001 -6.25849877E+008 -6.00134716E+008 -6.02342571E+008  3.59234086E+007  6.27886913E+007  2.30260368E+007  1.33786012E+008  2.73000000E+002
+  2.19108564E-002 -9.82130232E-001  5.53186331E-001 -6.62909008E+008 -6.87560416E+008 -6.72943201E+008  1.75912233E+007  4.92385289E+006  7.54077439E+006  4.04066352E+007  2.73000000E+002
+ -4.95096738E-002 -1.03760538E+000  5.70303340E-001 -6.38327551E+008 -7.17366927E+008 -6.86414460E+008  4.64070333E+007  8.01988434E+006  3.05902215E+007  1.19247194E+008  2.73000000E+002
+ -1.12650567E-001 -1.15902972E+000  5.99771855E-001 -7.36008540E+008 -7.20896885E+008 -6.34996555E+008 -4.15647653E+006  4.65991458E+007 -1.42018582E+007  1.26793822E+008  2.73000000E+002
+ -1.86299621E-001 -1.05130119E+000  5.86775350E-001 -3.42164575E+008 -4.30518574E+008 -3.87134921E+008 -3.43669593E+007 -2.81320617E+006 -1.73515241E+007  1.01615371E+008  2.73000000E+002
+ -1.94491001E-001 -7.12432534E-001  4.80563692E-001 -3.04228240E+008 -3.72562259E+008 -3.39639926E+008 -2.73707138E+007 -1.86628502E+007 -5.12469691E+007  1.21139722E+008  2.73000000E+002
+ -1.87310864E-001 -4.32882627E-001  3.80546332E-001 -3.47654667E+008 -2.97562596E+008 -3.10077783E+008 -4.35025563E+007 -5.46801558E+007 -2.47644567E+007  1.36110045E+008  2.73000000E+002
+ -1.81271868E-001 -2.36085356E-001  2.91291504E-001 -2.34539642E+008 -2.13881152E+008 -1.84826193E+008 -3.13137248E+007 -2.92100686E+007 -3.33069493E+007  1.03443639E+008  2.73000000E+002
+ -1.21439131E-001 -9.85741483E-002  2.07794193E-001 -4.41658433E+008 -3.57908326E+008 -4.03758367E+008 -5.64190479E+007 -2.67371157E+007 -5.63717485E+007  1.62799355E+008  2.73000000E+002
+ -7.72990064E-002 -9.24154087E-002  2.11511104E-001 -9.26445454E+008 -8.22404750E+008 -6.68410591E+008 -2.62193389E+007 -2.99669119E+007 -7.10724706E+007  2.65463042E+008  2.73000000E+002
+ -2.73259103E-002 -6.55881616E-002  1.95914982E-001 -8.00660384E+008 -7.38195873E+008 -5.83455598E+008  1.92895107E+007 -3.14460518E+007 -3.15978892E+007  2.11164015E+008  2.73000000E+002
+  1.12779431E-002 -4.74939253E-002  1.87493434E-001 -7.89332765E+008 -6.45661047E+008 -5.70778008E+008 -8.95888188E+006 -1.58622703E+007  4.08301130E+005  1.94945445E+008  2.73000000E+002
+  5.35528315E-002 -7.57623287E-002  1.88476734E-001 -8.48107478E+008 -7.07769440E+008 -6.31980796E+008  1.92388897E+007 -7.63098556E+007  4.15697463E+007  2.44619769E+008  2.73000000E+002
+  9.44103488E-002 -7.15148782E-002  1.82760523E-001 -4.86664973E+008 -7.03900097E+007 -2.86694808E+008  1.32475596E+007  2.90847663E+006  1.24513250E+008  4.20824024E+008  2.73000000E+002
+  1.23503119E-001 -2.31365220E-001  2.68673922E-001 -6.98522872E+008 -6.80206365E+008 -6.30498165E+008 -1.53176913E+007 -4.60599206E+007  4.81462117E+007  1.33189704E+008  2.73000000E+002
+  1.70796147E-001 -4.95247237E-001  3.61174821E-001 -6.51470462E+008 -7.89106797E+008 -6.71910059E+008  2.05641720E+007  8.93908662E+005  2.85336728E+007  1.42344199E+008  2.73000000E+002
+  2.02037467E-001 -8.08242735E-001  4.50024253E-001 -6.43579181E+008 -7.80002430E+008 -6.23844530E+008  3.77522282E+006  2.08909753E+007  3.02906016E+007  1.60616443E+008  2.73000000E+002
+  1.17065549E-001 -6.64180530E-001  4.47154867E-001 -6.82372110E+008 -6.88852404E+008 -6.63121020E+008 -5.92233445E+007  3.98196812E+007 -1.18452252E+007  1.27425720E+008  2.73000000E+002
+  3.60190009E-002 -7.00078466E-001  4.81671540E-001 -6.70677990E+008 -7.22179666E+008 -5.98653517E+008 -2.21318800E+007  4.78386653E+007  8.63092903E+006  1.41802261E+008  2.73000000E+002
+ -4.83850627E-002 -6.68966013E-001  4.72594305E-001 -3.86903884E+008 -2.67104305E+008 -3.12298545E+008  9.15102234E+006 -2.44323523E+007 -1.98225640E+007  1.19168170E+008  2.73000000E+002
+ -1.18907862E-001 -8.43868368E-001  5.13406467E-001 -7.47233063E+008 -8.19980871E+008 -6.42835912E+008  1.11482915E+006  1.83499214E+007 -3.31800441E+006  1.57583589E+008  2.73000000E+002
+ -1.30161713E-001 -5.33808925E-001  4.23897320E-001 -7.21330944E+008 -7.27654207E+008 -6.05697655E+008 -6.19129731E+007 -1.96815052E+007 -9.09163594E+006  1.64474703E+008  2.73000000E+002
+ -1.23262146E-001 -2.54070415E-001  3.15495793E-001 -7.42390077E+008 -7.05484094E+008 -5.47980126E+008 -5.02581000E+007  5.84207447E+006 -6.80427577E+007  2.31412749E+008  2.73000000E+002
+ -3.71194190E-003 -1.39532659E-001  2.54716016E-001 -7.76060537E+008 -6.89526614E+008 -6.18878387E+008  8.54198666E+006 -2.71915402E+007 -7.72588860E+006  1.45632635E+008  2.73000000E+002
+  4.60483674E-002 -1.77377872E-001  2.68944011E-001 -7.31544931E+008 -7.21534276E+008 -5.83202099E+008 -1.95833919E+007 -5.80852192E+007  2.95769030E+007  1.85788551E+008  2.73000000E+002
+ -6.79860270E-002 -3.83495976E-001  3.77797761E-001 -6.69178864E+008 -7.45362828E+008 -6.57938737E+008 -8.48975811E+006  3.48736258E+007 -5.53418915E+006  1.03649763E+008  2.73000000E+002
+  5.18573425E-002 -4.61501482E-001  4.08526339E-001 -5.12623320E+008 -5.30420510E+008 -4.91140645E+008 -4.17535118E+006 -1.03345769E+007  4.45529139E+007  8.65342362E+007  2.73000000E+002
+  8.81490985E-002 -3.57642431E-001  3.52160536E-001 -7.09506955E+008 -8.03792326E+008 -6.64296679E+008 -1.92113963E+006  3.31580817E+007 -9.01141769E+006  1.36928567E+008  2.73000000E+002
+ -5.87820548E-003 -4.93165179E-001  4.18324801E-001 -7.20109461E+008 -7.52920701E+008 -6.33706255E+008  3.67832214E+007  5.40416466E+007  2.54899686E+007  1.61699777E+008  2.73000000E+002
+ -5.21184735E-002 -1.90465640E-001  2.89083246E-001 -6.98647466E+008 -7.52053169E+008 -5.74496934E+008  5.21187199E+006 -9.41557302E+006 -3.88518296E+007  1.72544818E+008  2.73000000E+002
+  6.34643502E-003 -2.92500869E-001  3.36256917E-001 -7.24595546E+008 -7.82813442E+008 -6.13061381E+008  1.53328395E+007  1.21424519E+007 -3.07258611E+006  1.53291896E+008  2.73000000E+002
+  4.64983862E-002 -4.37980369E-002  5.20650987E-002  4.08130094E+008  4.72013996E+008  4.23433006E+008  1.96813753E+007  2.46907666E+007  7.59268337E+007  1.53698881E+008  8.79029967E+002
+  2.55131408E-002 -4.80507342E-002  6.78829086E-002  4.61395080E+008  6.57288415E+008  6.85951892E+008 -5.58396844E+006 -4.45496860E+007  3.95850955E+007  2.35710167E+008  1.08955405E+003
+  8.68330124E-003 -4.39673998E-002  6.93436210E-002  5.10557667E+008  7.61732859E+008  6.92799011E+008  9.85220751E+006  6.36939688E+007  3.18264995E+007  2.56957430E+008  9.74788536E+002
+ -5.83233505E-003 -4.35018417E-002  7.33197077E-002  5.04408640E+008  7.62152950E+008  7.18519648E+008 -1.35672954E+007  3.46289266E+007 -5.39582974E+006  2.47642497E+008  9.63030903E+002
+ -3.25502791E-002 -5.04724460E-002  8.65071456E-002  4.61318746E+008  5.56351670E+008  6.44884809E+008 -2.29677976E+007  5.69775921E+007 -6.59024043E+007  2.22787374E+008  8.71635657E+002
+ -4.58985814E-002 -5.57785131E-002  6.22548656E-002  6.97430164E+008  8.00979433E+008  9.20269327E+008 -1.48049744E+007 -9.93038130E+006 -6.53516602E+007  2.25988559E+008  1.04599871E+003
+  1.90127464E-001 -1.05430871E+000  2.46213677E-001  5.14132109E+008  4.05726540E+008  4.44069328E+008  1.02766954E+007 -1.03053382E+007 -2.35034036E+007  1.06574042E+008  8.03261304E+002
+  1.75634298E-001 -6.94484186E-001  1.92457347E-001  6.43099857E+008  6.49724294E+008  6.17869360E+008 -4.22142587E+006  3.05429843E+007 -2.90058300E+006  6.10321397E+007  9.08249349E+002
+  1.66417896E-001 -4.49915922E-001  1.47656180E-001  5.14697203E+008  5.06984473E+008  4.82620223E+008 -7.31233078E+006  7.96395730E+007 -2.10291387E+007  1.46135167E+008  8.98949493E+002
+  1.42784142E-001 -3.01197245E-001  9.87523214E-002  6.57025352E+008  7.66499281E+008  6.67229340E+008  3.08616132E+007  2.53374085E+007 -1.03806821E+007  1.26799597E+008  9.91575034E+002
+ -5.90495085E-002 -1.20748906E+000  3.61942620E-001  6.42403068E+008  5.97966319E+008  6.66387033E+008  1.54075363E+007 -3.41888290E+007 -3.87421772E+007  1.11073391E+008  8.86181662E+002
+ -1.68326809E-002 -1.06435915E+000  3.31345268E-001  4.98711240E+008  4.76945593E+008  5.16102134E+008 -9.14787955E+006 -5.17938134E+006  4.62438569E+007  8.88916341E+007  8.76716854E+002
+  3.46853107E-002 -1.00368324E+000  3.14040337E-001  5.01213656E+008  5.09078595E+008  4.64677238E+008 -1.58703601E+007  3.76001035E+006 -6.27634527E+006  5.09933268E+007  8.97402135E+002
+  8.59688527E-002 -1.00428323E+000  3.00196428E-001  6.15077960E+008  6.16535249E+008  5.79321190E+008 -4.63921371E+007 -6.73221301E+007  1.85535312E+006  1.46275781E+008  9.69841945E+002
+  1.38104980E-001 -1.10127304E+000  2.88407494E-001  7.09714519E+008  7.67224840E+008  7.02957723E+008  3.28400704E+006 -8.15004353E+006  7.39624210E+006  6.43227312E+007  1.11397310E+003
+ -8.14658872E-002 -1.27961534E-001  1.20540030E-001  5.85430771E+008  5.65607453E+008  5.26526466E+008 -5.56039944E+006  9.57120222E+006 -4.37296670E+007  9.38052847E+007  8.01476687E+002
+ -1.14743057E-001 -2.77919979E-001  1.70702803E-001  7.62710278E+008  8.35633261E+008  7.98659306E+008  6.78418410E+006 -2.08515351E+007 -2.39136226E+007  8.45375819E+007  9.11474114E+002
+ -1.20647765E-001 -5.06384560E-001  2.25401550E-001  7.72176375E+008  7.98872182E+008  7.47473510E+008 -1.16582665E+007  3.74788535E+006  1.77079776E+006  4.94130874E+007  8.73615072E+002
+ -9.35823237E-002 -8.51132454E-001  2.98013178E-001  7.83428856E+008  7.37383804E+008  7.63268912E+008 -1.84979355E+007  1.08634391E+007  2.28246538E+006  5.47219993E+007  8.32445123E+002
+  1.07468736E-001 -1.54125945E-001  7.41309685E-002  5.37157947E+008  5.53961195E+008  5.19467283E+008  5.49671454E+007  2.85398764E+007  1.56977129E+007  1.14627915E+008  9.44312462E+002
+  3.87040087E-002 -1.15226445E-001  1.16688743E-001  4.71961916E+008  5.03531703E+008  5.46904939E+008  7.57968474E+006  9.30945288E+007  3.53636751E+007  1.84854186E+008  9.40596834E+002
+  8.50138085E-003 -1.17383311E-001  1.30961530E-001  5.53690888E+008  7.51308199E+008  6.70164661E+008  1.49648119E+007  3.46920017E+007  9.68206524E+006  1.84838244E+008  9.76761146E+002
+ -2.05358245E-002 -1.16747162E-001  1.28010066E-001  5.93607513E+008  7.08734495E+008  6.86969888E+008 -2.64319069E+007  6.14097326E+007 -2.22571572E+007  1.61609940E+008  9.44998003E+002
+  1.09046091E-001 -7.18577579E-001  2.45241474E-001  5.79214021E+008  5.90752863E+008  5.62608804E+008  1.75048177E+007 -5.20039733E+007 -1.52316048E+007  1.01631610E+008  9.08361255E+002
+  1.08799642E-001 -4.30809983E-001  1.93146756E-001  5.76016359E+008  5.95716917E+008  4.99953148E+008 -1.35633941E+007 -2.93003265E+007 -5.55800889E+006  1.04366232E+008  8.41525664E+002
+  1.00135182E-001 -2.40668927E-001  1.35049797E-001  5.66254943E+008  5.90610400E+008  5.68027196E+008  4.73800443E+007  6.43461238E+007  2.74680020E+007  1.48231290E+008  9.54048664E+002
+ -2.32490400E-002 -7.53917126E-001  2.81526306E-001  6.89304831E+008  7.16866060E+008  7.08954393E+008  2.95710393E+007  2.19845782E+007  2.46792767E+007  8.06515019E+007  1.04589142E+003
+  3.84947601E-002 -6.84099827E-001  2.67608600E-001  6.06039623E+008  6.40868109E+008  5.28724891E+008  2.55220063E+007 -2.43619562E+007  2.40755241E+007  1.23922847E+008  9.03541120E+002
+ -6.20089154E-002 -1.67042495E-001  1.50848733E-001  5.54366953E+008  5.62801104E+008  5.89720675E+008 -1.78732701E+007  3.97298692E+007 -1.47545631E+007  8.58468531E+007  8.61370338E+002
+ -6.98921091E-002 -3.44898442E-001  1.98877615E-001  6.29865762E+008  6.95098688E+008  6.47446522E+008 -4.88465476E+006  2.26277223E+006  8.72549631E+006  6.10975956E+007  9.36817560E+002
+  6.22172205E-002 -1.23617538E-001  9.16529952E-002  5.91062179E+008  7.28257042E+008  6.48993292E+008  3.55016955E+007  4.89282643E+006  5.79953967E+007  1.67850891E+008  1.14726583E+003
+ -6.61811616E-002 -5.78120894E-001  2.44071088E-001  6.26442869E+008  6.71286511E+008  6.36914391E+008  2.79406271E+007  1.74110211E+007 -3.90867418E+006  7.03443242E+007  9.65522410E+002
+ -1.11802853E-002 -2.44440542E-001  1.83052924E-001  6.01404151E+008  6.99035363E+008  6.26124731E+008 -1.13389784E+007  3.56855067E+007 -9.02179412E+006  1.10361779E+008  9.27064769E+002
+  4.26622910E-002 -4.25156706E-001  2.19955487E-001  6.23941478E+008  7.15901868E+008  6.24269793E+008 -1.53418455E+007  4.39481053E+007  1.87478093E+007  1.26417937E+008  9.32806310E+002
+ -1.29928034E-002 -4.63886302E-001  2.34229134E-001  5.48073296E+008  5.05710749E+008  5.02203058E+008 -6.34962372E+006 -2.68009000E+007  2.71481529E+007  8.02643665E+007  8.58237976E+002
+  4.94666834E-002 -2.45207896E-001  1.70437944E-001  6.19611194E+008  7.07467259E+008  6.19801084E+008  1.47117654E+007  5.65449564E+007  4.03515543E+006  1.34134981E+008  9.33040335E+002
