@@ -16,7 +16,8 @@ divisions = 10
 #  Heat expansion Coefficient = 23.1e-6
 #End
 
-matValues = """  Name = "Aluminium (generic) {0}"
+matValues = """Material {0}
+  Name = "Aluminium (generic) {0}"
   Heat Conductivity = {1}
   Youngs modulus = {2}
   Mesh Poisson ratio = {3}
@@ -25,6 +26,20 @@ matValues = """  Name = "Aluminium (generic) {0}"
   Poisson ratio = {6}
   Sound speed = {7}
   Heat expansion Coefficient = {8} \n"""
+  
+# Body 1
+#  Target Bodies(1) = 1
+#  Name = "Body 1"
+#  Equation = 1
+#  Material = 1
+# End
+  
+bodyValues = """Body {0}
+  Target Bodies(1) = {0}
+  Name = "Body {0}"
+  Equation = 1
+  Material = {0}
+End \n\n"""
 
 
 
@@ -40,10 +55,10 @@ max_HeatExpansionCoefficient = 23.1e-6
 
 with open('material.txt', "wt") as fout:
 	for i in range(0,divisions):
-		fout.write('Material ' + str(i+1) +'\n')
+		#fout.write('Material ' + str(i+1) +'\n')
 		
 		fractionOfMax = i/float(divisions)
-		print fractionOfMax
+		#print fractionOfMax
 		
 		v=matValues.format(
 			i+1, 
@@ -59,4 +74,12 @@ with open('material.txt', "wt") as fout:
 		print v
 		
 		fout.write('End \n\n' )
+		
+		vv = bodyValues.format(
+			i+1,
+			i+1,
+			i+1,
+			i+1)
+		print vv
+		fout.write(vv)
 		
