@@ -1,0 +1,292 @@
+ELMER SOLVER (v 8.1) STARTED AT: 2015/12/20 19:50:09
+ParCommInit:  Initialize #PEs:            1
+MAIN: 
+MAIN: =============================================================
+MAIN: ElmerSolver finite element software, Welcome!
+MAIN: This program is free software licensed under (L)GPL
+MAIN: Copyright 1st April 1995 - , CSC - IT Center for Science Ltd.
+MAIN: Webpage http://www.csc.fi/elmer, Email elmeradm@csc.fi
+MAIN: Version: 8.1 (Rev: 5312baa, Compiled: 2015-12-15)
+MAIN: =============================================================
+MAIN: 
+MAIN: 
+MAIN: -------------------------------------
+MAIN: Reading Model: case.sif
+Loading user function library: [StressSolve]...[StressSolver_Init0]
+Loading user function library: [ResultOutputSolve]...[ResultOutputSolver_Init0]
+LoadMesh: Base mesh name: ./.
+LoadMesh: Elapsed time (CPU,REAL):     0.0007    0.0007 (s)
+MAIN: -------------------------------------
+Loading user function library: [StressSolve]...[StressSolver_Init]
+Loading user function library: [StressSolve]...[StressSolver]
+OptimizeBandwidth: ---------------------------------------------------------
+OptimizeBandwidth: Computing matrix structure for: linear elasticity...done.
+OptimizeBandwidth: Half bandwidth without optimization: 90
+OptimizeBandwidth: 
+OptimizeBandwidth: Bandwidth Optimization ...done.
+OptimizeBandwidth: Half bandwidth after optimization: 25
+OptimizeBandwidth: ---------------------------------------------------------
+Loading user function library: [ResultOutputSolve]...[ResultOutputSolver_Init]
+Loading user function library: [ResultOutputSolve]...[ResultOutputSolver]
+MAIN: 
+MAIN: -------------------------------------
+MAIN:  Steady state iteration:            1
+MAIN: -------------------------------------
+MAIN: 
+SingleSolver: Attempting to call solver
+SingleSolver: Solver Equation string is: linear elasticity
+StressSolve: 
+StressSolve: --------------------------------------------------
+StressSolve: Solving displacements from linear elasticity model
+StressSolve: --------------------------------------------------
+StressSolve:  Displacemet iteration:            1
+StressSolve: Starting assembly...
+StressSolve: Assembly:
+StressSolve: Bulk assembly done
+DefUtils::DefaultDirichletBCs: Setting Dirichlet boundary conditions
+DefUtils::DefaultDirichletBCs: Dirichlet boundary conditions set
+StressSolve: Set boundaries done
+       1 0.8075E+00
+       2 0.8096E+00
+       3 0.7930E+00
+       4 0.7973E+00
+       5 0.7866E+00
+       6 0.7489E+00
+       7 0.7634E+00
+       8 0.8027E+00
+       9 0.8317E+00
+      10 0.8377E+00
+      11 0.8291E+00
+      12 0.8114E+00
+      13 0.8083E+00
+      14 0.8172E+00
+      15 0.8081E+00
+      16 0.7823E+00
+      17 0.7534E+00
+      18 0.7141E+00
+      19 0.6719E+00
+      20 0.6394E+00
+      21 0.5983E+00
+      22 0.5551E+00
+      23 0.5256E+00
+      24 0.4981E+00
+      25 0.4758E+00
+      26 0.4555E+00
+      27 0.4403E+00
+      28 0.4271E+00
+      29 0.4139E+00
+      30 0.3969E+00
+      31 0.3768E+00
+      32 0.3603E+00
+      33 0.3469E+00
+      34 0.3399E+00
+      35 0.3355E+00
+      36 0.3333E+00
+      37 0.3332E+00
+      38 0.3324E+00
+      39 0.3300E+00
+      40 0.3261E+00
+      41 0.3197E+00
+      42 0.3104E+00
+      43 0.3014E+00
+      44 0.2831E+00
+      45 0.2614E+00
+      46 0.2327E+00
+      47 0.2106E+00
+      48 0.2009E+00
+      49 0.1957E+00
+      50 0.1651E+00
+      51 0.1571E+00
+      52 0.1404E+00
+      53 0.1381E+00
+      54 0.1306E+00
+      55 0.1172E+00
+      56 0.1153E+00
+      57 0.1152E+00
+      58 0.1129E+00
+      59 0.1118E+00
+      60 0.1132E+00
+      61 0.1106E+00
+      62 0.1100E+00
+      63 0.1094E+00
+      64 0.1088E+00
+      65 0.1084E+00
+      66 0.1083E+00
+      67 0.1077E+00
+      68 0.1073E+00
+      69 0.1083E+00
+      70 0.1024E+00
+      71 0.9732E-01
+      72 0.9715E-01
+      73 0.1599E+00
+      74 0.6771E-01
+      75 0.5454E-01
+      76 0.5476E-01
+      77 0.4375E-01
+      78 0.3704E-01
+      79 0.3762E-01
+      80 0.4199E-01
+      81 0.2908E-01
+      82 0.2215E-01
+      83 0.1982E-01
+      84 0.1526E-01
+      85 0.1295E-01
+      86 0.1145E-01
+      87 0.8974E-02
+      88 0.6946E-02
+      89 0.6666E-02
+      90 0.7830E-02
+      91 0.7338E-02
+      92 0.5555E-02
+      93 0.5548E-02
+      94 0.5303E-02
+      95 0.5085E-02
+      96 0.5017E-02
+      97 0.4885E-02
+      98 0.4819E-02
+      99 0.5031E-02
+     100 0.4831E-02
+     101 0.4649E-02
+     102 0.5022E-02
+     103 0.2809E-02
+     104 0.2514E-02
+     105 0.2508E-02
+     106 0.2502E-02
+     107 0.2501E-02
+     108 0.2480E-02
+     109 0.2463E-02
+     110 0.2499E-02
+     111 0.2422E-02
+     112 0.2374E-02
+     113 0.2343E-02
+     114 0.2310E-02
+     115 0.2288E-02
+     116 0.2296E-02
+     117 0.2292E-02
+     118 0.2284E-02
+     119 0.2284E-02
+     120 0.2281E-02
+     121 0.2277E-02
+     122 0.2270E-02
+     123 0.2272E-02
+     124 0.2270E-02
+     125 0.1677E-02
+     126 0.1958E-02
+     127 0.2072E-02
+     128 0.1352E-02
+     129 0.1514E-02
+     130 0.1447E-02
+     131 0.9479E-03
+     132 0.9836E-03
+     133 0.8266E-03
+     134 0.7384E-03
+     135 0.7383E-03
+     136 0.7777E-03
+     137 0.5906E-03
+     138 0.5898E-03
+     139 0.2011E-02
+     140 0.2746E-03
+     141 0.2812E-03
+     142 0.2601E-03
+     143 0.2590E-03
+     144 0.2590E-03
+     145 0.2576E-03
+     146 0.2573E-03
+     147 0.2572E-03
+     148 0.2571E-03
+     149 0.2567E-03
+     150 0.2557E-03
+     151 0.2547E-03
+     152 0.2542E-03
+     153 0.2559E-03
+     154 0.2558E-03
+     155 0.2555E-03
+     156 0.2553E-03
+     157 0.2551E-03
+     158 0.2539E-03
+     159 0.2545E-03
+     160 0.2472E-03
+     161 0.2473E-03
+     162 0.2409E-03
+     163 0.2410E-03
+     164 0.2329E-03
+     165 0.2329E-03
+     166 0.2981E-03
+     167 0.2215E-03
+     168 0.1532E-03
+     169 0.1026E-03
+     170 0.2729E-03
+     171 0.2430E-03
+     172 0.5451E-03
+     173 0.2471E-03
+     174 0.2482E-03
+     175 0.2471E-03
+     176 0.3716E-04
+     177 0.1489E-04
+     178 0.2162E-04
+     179 0.5462E-05
+     180 0.6927E-05
+     181 0.7262E-05
+     182 0.9878E-05
+     183 0.3874E-05
+     184 0.4530E-06
+     185 0.2429E-06
+     186 0.6561E-07
+     187 0.8467E-07
+     188 0.8478E-07
+     189 0.6475E-07
+     190 0.4676E-07
+     191 0.3370E-07
+     192 0.1405E-07
+     193 0.9497E-08
+     194 0.1023E-07
+     195 0.5335E-08
+     196 0.5925E-08
+     197 0.5958E-08
+     198 0.5963E-08
+     199 0.5952E-08
+     200 0.5865E-08
+     201 0.5991E-08
+     202 0.4255E-08
+     203 0.4564E-08
+     204 0.2337E-08
+     205 0.7721E-09
+     206 0.1695E-09
+     207 0.1709E-09
+     208 0.1224E-09
+     209 0.6032E-10
+     209 0.6032E-10
+ComputeChange: NS (ITER=1) (NRM,RELC): ( 0.23785989E-04  2.0000000     ) :: linear elasticity
+StressSolve:  Displacemet iteration:            2
+StressSolve: Starting assembly...
+StressSolve: Assembly:
+StressSolve: Bulk assembly done
+DefUtils::DefaultDirichletBCs: Setting Dirichlet boundary conditions
+DefUtils::DefaultDirichletBCs: Dirichlet boundary conditions set
+StressSolve: Set boundaries done
+       1 0.2570E-09
+       2 0.1967E-09
+       3 0.7692E-10
+       3 0.7692E-10
+ComputeChange: NS (ITER=2) (NRM,RELC): ( 0.23785989E-04 0.12503588E-11 ) :: linear elasticity
+StressSolver: All done
+StressSolver: ------------------------------------------
+ComputeChange: SS (ITER=1) (NRM,RELC): ( 0.23785989E-04  2.0000000     ) :: linear elasticity
+SingleSolver: Attempting to call solver
+SingleSolver: Solver Equation string is: result output
+ResultOutputSolver: -------------------------------------
+ResultOutputSolve: Saving with prefix: paraviewout
+ResultOutputSolver: Dimension of mesh: 3
+ResultOutputSolver: Creating list for saving - if not present
+ResultOutputSolver: Saving in unstructured VTK XML (.vtu) format
+VtuOutputSolver: Saving results in VTK XML format with prefix: paraviewout
+VtuOutputSolver: Saving number of partitions: 1
+VtuOutputSolver: Number of nodes to save:     104
+VtuOutputSolver: Number of elements to save:     416
+WARNING:: WriteVtuXMLFile: Nonexistent variable: stress
+ResultOutputSolver: -------------------------------------
+WritePostFile: Saving results in ElmerPost format to file ./case.ep
+ElmerSolver: *** Elmer Solver: ALL DONE ***
+ElmerSolver: The end
+SOLVER TOTAL TIME(CPU,REAL):         0.14        0.15
+ELMER SOLVER FINISHED AT: 2015/12/20 19:50:09
