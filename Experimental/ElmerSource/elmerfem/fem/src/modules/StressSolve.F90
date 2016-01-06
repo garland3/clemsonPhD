@@ -841,7 +841,7 @@ CONTAINS
        Atemp => Solver % Matrix
 
      !write(101,*) '--',t ! new element, stiffness
-      write(101,*) 'matrix format ' , Atemp % Format ,   ' end format'
+      !write(101,*) 'matrix format ' , Atemp % Format ,   ' end format'
 
 
       ! -----------------Anthony------------
@@ -1111,8 +1111,8 @@ CONTAINS
                 write(102,*) MASS(i,j) ! mass
             end do
 
-            write(101,*) "," ! stiffness
-            write(102,*) "," ! mass
+            !write(101,*) "," ! stiffness
+            !write(102,*) "," ! mass
         end do
 
 !------------------------------------------------------------------------------
