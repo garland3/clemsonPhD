@@ -175,7 +175,6 @@ classdef DesignVars
                 % OBJECTIVE FUNCTION AND SENSITIVITY ANALYSIS
                     obj.c = 0.; % c is the objective. Total strain energy
 
-
                         for ely = 1:settings.nely
                             rowMultiplier = ely-1;
                             for elx = 1:settings.nelx

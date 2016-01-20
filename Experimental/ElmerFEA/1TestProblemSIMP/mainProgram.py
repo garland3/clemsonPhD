@@ -1,309 +1,16 @@
-import re
-
 from vtk import *
-import matplotlib.pyplot as plt
-from scipy.interpolate import griddata
 import numpy as np
-import vtk
 from vtk.util.numpy_support import vtk_to_numpy
 from vtk import vtkXMLUnstructuredGridWriter
 
-# from evtk.hl import pointsToVTK 
+from ElementHelper import ElementHelper
+from Node import Node
+from Element import Element
+from NodeHelper import NodeHelper
 
-class ElementHelper:
-    def __init__(self):
-        self.example = 1
+from subprocess import call
 
-    # read the mesh.elememnt file and get the element number, type, and node number array
-    def readMeshFile(self, filename):
-        count = 1
-        elementsList = []
-        # ----------------------------
-        # Read the existing elements file
-        # ----------------------------
-        with open(filename, "rt") as fin:
-            for line in fin:
-                values = [int(s) for s in line.split() if s.isdigit()]
-                # elementNumber = re.search('/^[^\d]*(\d+)/', line)
-                #print values
-
-
-                l = len(values)
-
-                # number, body, typeNumber, nodesindex
-                newElement = Element(values[0], values[1], values[2], values[3:l])
-                newElement.numberNodes = l - 3  # record the number of nodes
-                #print g.nodes
-                elementsList.append(newElement)
-
-                count += 1
-        return elementsList
-
-    def writeMeshFile(self, filename, elementsList):
-
-        # ----------------------------
-        # Export the new elements file.
-        # ----------------------------
-        with open(filename, "wt") as fout:
-            for element in elementsList:
-                # print element.nodes
-                nodeString = " ".join(map(str, element.nodesIndex))
-                #print nodeString
-                #print element.nodeNumber
-                text = "{0} {1} {2}\n".format(element.nodeNumber, element.bodyNumber, nodeString)
-                #print text
-                fout.write(text)
-
-    def readLocalStiffnessFile(self, filename, elementsList):
-        with open(filename, "rt") as fin:
-            count = 0
-            countElement = -1  # the element indexes start at 0?? I think??
-
-            currentElement = elementsList[0]
-            newElement = re.compile('--')
-
-            # loop over the lines of the file
-            for line in fin:
-
-                # if found a '--' then a new element
-                m = newElement.search(line)
-                if m:
-                    found = m.group(0)
-                    countElement = countElement + 1
-                    # print countElement
-
-                    # update the current element
-                    currentElement = elementsList[countElement]
-                    count = 0
-                    continue  # go to the next line.
-
-                # add the current value to the stiffness matrix
-                currentElement.stiffnessMatrix.append(float(line))
-                count = count + 1
-
-    def readLocalMassFile(self, filename, elementsList):
-        with open(filename, "rt") as fin:
-            count = 0
-            countElement = -1  # the element indexes start at 0?? I think??
-
-            currentElement = elementsList[0]
-            newElement = re.compile('--')
-
-            # loop over the lines of the file
-            for line in fin:
-
-                # if found a '--' then a new element
-                m = newElement.search(line)
-                if m:
-                    found = m.group(0)
-                    countElement = countElement + 1
-                    # print countElement
-
-                    # update the current element
-                    currentElement = elementsList[countElement]
-                    count = 0
-                    continue  # go to the next line.
-
-                # add the current value to the mass matrix
-                currentElement.massMatrix.append(float(line))
-                count = count + 1
-
-
-class Element:
-    def __init__(self, number, body, typeNumber, nodesindex):
-        self.nodeNumber = number
-        self.bodyNumber = body
-        self.elementTypeNumber = typeNumber
-        self.nodesIndex = nodesindex  # list with nodes in this element
-        self.numberNodes = 0
-        self.massMatrix = []
-        self.stiffnessMatrix = []
-        self.mass = 0
-        self.densityDesignVar = 1
-        self.sensitivity = 0;
-
-
-class Node:
-    # the node number
-    number = 0
-
-    # location in 3 coordinates
-    x = 0
-    y = 0
-    z = 0
-
-    # displacement in the 3 dof
-    disp_x = 0
-    disp_y = 0
-    disp_z = 0
-
-    # sensitivity metrics
-    sensitivity = 0
-    numberOfElements = 0  # the number of elements contributing to this node
-
-    def __init__(self, Nodenumber):
-        self.number = Nodenumber
-
-    def setLocation(self, x, y, z):
-        self.x = x
-        self.y = y
-        self.z = z
-
-    def setDisplacement(self, dx, dy, dz):
-        self.disp_x = dx
-        self.disp_y = dy
-        self.disp_z = dz
-
-
-class NodeHelper:
-    pointDataVTK = []
-    cellsVTK = []
-    cellTypesVtk = []
-    cellLocationsArray = []
-
-    def calculateNodeSensitivity(self, listofElements, listOfNodes):
-        # loop over the elements
-        # get a list of the nodes for each element
-        # add the element sensitivity to the node sensitivity and increment the number of elements contributing to a node each time we add to it
-
-        # loop over the nodes and divide the sensitivity by the number of elements contributint to it.
-
-        for e in listofElements:
-            elementNodeList = e.nodesIndex  # list of nodes
-            # print 'node list ', elementNodeList
-            for i in elementNodeList:
-                currentNum = int(
-                    i) - 1  # minus 1 becasue the node numbers start at 1, but the list starts at 0, so subtract one to prevent overflow
-                #	print 'cur num' ,currentNum
-                currentNode = listOfNodes[currentNum]
-                currentNode.sensitivity += e.sensitivity
-                currentNode.numberOfElements += 1
-
-        for node in listOfNodes:
-            numElements = node.numberOfElements
-            node.sensitivity = node.sensitivity / float(numElements)
-            # print node.sensitivity
-
-        return listOfNodes
-
-    def readVTUfile(self, file_name):
-        nodeList = []
-
-        # Read the source file.
-        reader = vtkXMLUnstructuredGridReader()
-        reader.SetFileName(file_name)
-        reader.Update()  # Needed because of GetScalarRange
-
-        # Get the coordinates of nodes in the mesh
-        nodes_vtk_array = reader.GetOutput().GetPoints().GetData()
-
-        self.pointDataVTK = reader.GetOutput().GetPoints()
-        self.cellsVTK = reader.GetOutput().GetCells() #http://www.vtk.org/doc/release/4.2/html/classvtkUnstructuredGrid.html#z784_7
-        self.cellTypesVtk = reader.GetOutput().GetCellTypesArray() # http://www.vtk.org/doc/release/4.2/html/classvtkUnstructuredGrid.html#a4
-        self.cellLocationsArray = reader.GetOutput().GetCellLocationsArray() # http://www.vtk.org/doc/release/4.2/html/classvtkUnstructuredGrid.html#a5
-
-
-        # Get the coordinates of the nodes and their displacements
-        nodes_nummpy_array = vtk_to_numpy(nodes_vtk_array)
-        xlist, ylist, zlist = nodes_nummpy_array[:, 0], nodes_nummpy_array[:, 1], nodes_nummpy_array[:, 2]
-
-        #The "Displacement" field is the first and only scalar in my vtk file
-        displacement_vtk_array = reader.GetOutput().GetPointData().GetArray(0)
-        disp = vtk_to_numpy(displacement_vtk_array)
-
-        print "number of nodes is " + str(len(xlist))
-        # print disp
-
-        # -----------
-        # make the new nodes
-        # -------------
-
-        count = 0
-        for x in xlist:
-            #print i
-            newNode = Node(count)
-            newNode.setLocation(xlist[count], ylist[count], zlist[count])
-            newNode.setDisplacement(disp[count, 0], disp[count, 1], disp[count, 2])
-            nodeList.append(newNode)
-            count += 1
-
-        return nodeList
-
-
-
-    def writeSensitivityVTKFile(self, listofElements, listOfNodes):
-
-        da = vtkDoubleArray()
-        da.SetName('sensitivity')
-        da.SetNumberOfComponents(1)
-        da.SetNumberOfTuples(len(listofElements))
-
-
-        # #for i,pos in enumerate(atoms.get_positions()):
-        # #	p.InsertPoint(i,pos[0],pos[1],pos[2])
-
-        # # listOfXPoints = []
-        # # listOfYPoints = []
-        # # listOfZPoints = []
-        # listOfSensitivities = []
-        count = 1
-
-        # with open('sensitivity.csv', "wt") as fout:
-        # fout.write('x coord, y coord, z coord, scalar\n')
-        for node in listOfNodes:
-
-        # #listOfXPoints.append(node.x)
-        # #listOfYPoints.append(node.y)
-        # #listOfZPoints.append(node.z)
-        # #listOfSensitivities.append(node.sensitivity)
-        # # p.InsertPoint(count,node.x,node.y,node.z)
-            da.InsertTuple1(count,node.sensitivity)
-            count+=1
-        # fout.write('{0}, {1} ,{2},{3}\n'.format(node.x,node.y,node.z,node.sensitivity))
-
-        ugd = vtkUnstructuredGrid()
-        ugd.SetPoints(self.pointDataVTK)
-        # print self.cellTypesVtk
-
-        # http://www.vtk.org/doc/release/4.2/html/classvtkUnstructuredGrid.html#z784_6
-        ugd.SetCells(self.cellTypesVtk,self.cellLocationsArray, self.cellsVTK )
-
-       # bloc.SetCells(
-        #>         numpy_support.numpy_to_vtk(cellstypes, deep = 1, array_type =
-        #> vtk.vtkUnsignedCharArray().GetDataType()),
-        #>         numpy_support.numpy_to_vtk(cellslocations, deep = 1, array_type =
-        #> vtk.vtkIdTypeArray().GetDataType()),
-        #>         vtkCells
-        #>         )
-
-
-        upd = ugd.GetPointData() # type(spd) is vtkPointData
-        upd.SetScalars(da)
-
-        # # http://www.programcreek.com/python/example/65341/vtk.vtkXMLUnstructuredGridWriter
-        # # http://www.vtk.org/Wiki/VTK/Examples/Python/DataManipulation/Cube.py
-
-
-        writer = vtkXMLUnstructuredGridWriter()
-        writer.SetFileName("sensitivity.vtu")
-        writer.SetDataModeToAscii()
-
-        # # apparently some api stuff was changed
-        # # http://www.vtk.org/Wiki/VTK/VTK_6_Migration/Replacement_of_SetInput
-        writer.SetInputData(ugd)
-        writer.Update()
-        writer.Write()
-
-
-def create_points(array):
-    """Create vtkPoints from double array"""
-    vtk_points = vtkPoints()
-    double_array = vtkDoubleArray()
-    double_array.SetVoidArray(array, len(array), 1)
-    double_array.SetNumberOfComponents(3)
-    vtk_points.SetData(double_array)
-    return vtk_points
-
+import os, sys, shutil
 
 # calculate the element sensitivity
 def calculateElementSensitivity(elementsList, nodeList):
@@ -312,9 +19,6 @@ def calculateElementSensitivity(elementsList, nodeList):
     # s = mass*u*K*u^T
     for e in elementsList:
         e.mass = sum(e.massMatrix)
-        # print e.massMatrix
-        # print e.mass
-
         localDisplacementVector = []
 
         # get the element displacement matrix
@@ -332,72 +36,58 @@ def calculateElementSensitivity(elementsList, nodeList):
             localDisplacementVector.append(currentNode.disp_z)
 
         localDispVector = np.asarray(localDisplacementVector)  # convert to array
-        # print localDisplacementVector
-
         localStiffness = np.asarray(e.stiffnessMatrix)  # convert to np array
-
         DOF = 3
         sizes = e.numberNodes * DOF  # should be 12
-        # print sizes
 
-        #resizedLStiff= np.reshape(localStiffness,(sizes, -1)) # convert to 12 by 12 array
-        #resizedLStiff = localStiffness.resize((sizes,sizes))
-        resizedLStiff = np.reshape(localStiffness, [12, 12])
-
-        # print localStiffness
-
+        resizedLStiff = np.reshape(localStiffness, [sizes, sizes])
 
         tr = np.transpose(localDispVector)
-        #print localDispVector.shape
-        #print tr.size
-        #print localStiffness.shape
-        #print resizedLStiff.shape
-        #print e.mass.size
 
-        #s = localDispVector*resizedLStiff*tr*e.mass
-        s = np.dot(np.dot(localDispVector, resizedLStiff), tr) * e.mass
-        e.sensitivity = s  # store the sensitivity
-    # print s
+        penalty = 3
+        # -penal*x(ely,elx)^(penal-1)*Ue'*KE*Ue;
+        x= e.densityDesignVar
+        s = - penalty * x**(penalty-1) * np.dot(np.dot(localDispVector, resizedLStiff), tr) * e.mass
+        print s
+        #s = (np.dot(np.dot(localDispVector, resizedLStiff), tr) * e.mass)**3
+        # s = e.densityDesignVar #penalize intermediate values
+
+        e.sensitivity = s*1e10  # store the sensitivity
+
+def callElmer(loopNumber):
+        cmd = "./ElmerSolver case.sif"
+        call(cmd)
 
 
 # The main executable for this program.
 def main():
+    rootFileDirectory = """C:\Users\Anthony G\Git\clemsonPhD\Experimental\ElmerFEA\\1TestProblemSIMP\sw\Mesh_1"""
     helper = ElementHelper()
-    elementsList = helper.readMeshFile('original_mesh.elements')
+    elementsList = helper.readMeshFile(rootFileDirectory,'original_mesh.elements')
 
     # Read the vtk file and get the node locations and displacements
     file_name = "paraviewout0001.vtu"
     nHelper = NodeHelper()
-    nodeList = nHelper.readVTUfile(file_name)
-
-    helper.readLocalStiffnessFile('lstiffness.txt', elementsList)
-
-    helper.readLocalMassFile('lmass.txt', elementsList)
-
+    nodeList = nHelper.readVTUfile(rootFileDirectory,file_name)
+    helper.readLocalStiffnessFile(rootFileDirectory,'lstiffness.txt', elementsList)
+    helper.readLocalMassFile(rootFileDirectory,'lmass.txt', elementsList)
     calculateElementSensitivity(elementsList, nodeList)
-
+    # these 2 functions are for visualization only
+    filename = 'sensitivity.vtu'
     nodeList = nHelper.calculateNodeSensitivity(elementsList, nodeList)
+    nHelper.writeSensitivityVTKFile(rootFileDirectory,filename, elementsList, nodeList)
 
-    nHelper.writeSensitivityVTKFile(elementsList, nodeList)
+    targetVolFraction = 0.5
+    helper.updateElementDensities(elementsList, nodeList,targetVolFraction)
+    helper.writeElementMeshFile(rootFileDirectory,'mesh.elements', elementsList)
 
-# for n in nodeList:
-#	disp = []
-#	disp.append(n.disp_x)
-#	disp.append(n.disp_y)
-#	disp.append(n.disp_z)
-#	print disp
-
-
-# ----------------------------
-# Change all the elements to body 10
-# ----------------------------
-#for element in elementsList:
-#	element.bodyNumber= 5
-
-# helper.writeMeshFile('mesh.elements',elementsList)
+    # these 2 functions are for visualization only
+    # Calcualte the node sensitivies so we can plot them in paraview
+    nodeList = nHelper.calculateNodeDensities(elementsList, nodeList)
+    nHelper.writeDensityVTKFile(rootFileDirectory,'density.vtu',elementsList, nodeList)
 
 
-
+    # nHelper.writeDensityVTKFile(elementsList, nodeList)
 
 
 if __name__ == "__main__":

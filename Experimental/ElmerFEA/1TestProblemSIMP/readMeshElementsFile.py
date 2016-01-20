@@ -1,3 +1,5 @@
+import os
+
 
 class Element:
 	def __init__(self,number, body, nodes):
@@ -15,11 +17,14 @@ class Element:
 def main():
 	count=1
 	elementsList = []
-	
+	rootFileDirectory = """C:\Users\Anthony G\Git\clemsonPhD\Experimental\ElmerFEA\\1TestProblemSIMP\sw\Mesh_1"""
+	filenameInput = 'original_mesh.elements'
+	filenameOUTput = 'mesh.elements'
 	# ----------------------------
 	# Read the existing elements file
 	# ----------------------------
-	with open('original_mesh.elements', "rt") as fin:
+	f = os.path.join(rootFileDirectory,filenameInput)
+	with open(f, "rt") as fin:
 		for line in fin:
 			values = [int(s) for s in line.split() if s.isdigit()]
 			#elementNumber = re.search('/^[^\d]*(\d+)/', line)
@@ -41,7 +46,8 @@ def main():
 	# ----------------------------
 	# Export the new elements file. 
 	# ----------------------------
-	with open('mesh.elements', "wt") as fout:
+	ff = os.path.join(rootFileDirectory,filenameOUTput)
+	with open(ff, "wt") as fout:
 		for element in elementsList:
 			#print element.nodes
 			nodeString =  " ".join(map(str, element.nodes))

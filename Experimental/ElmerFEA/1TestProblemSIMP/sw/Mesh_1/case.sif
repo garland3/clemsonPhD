@@ -16,7 +16,6 @@ Simulation
   BDF Order = 1
   Solver Input File = case.sif
   Post File = case.ep
-  Binary output = False
 End
 
 Constants
@@ -27,16 +26,6 @@ Constants
   Unit Charge = 1.602e-19
 End
 
-Solver 2
-  Equation = Result Output
-  Procedure = "ResultOutputSolve" "ResultOutputSolver"  
-  Output File Name = paraviewOut
-  Binary Output = False 
-  Output Format = Vtu
-  Scalar Field 1 = Displacement
-  Scalar Field 2 = Stress
-  Exec Solver = Always
-End
 
 Solver 1
   Equation = Linear elasticity
@@ -65,27 +54,39 @@ Solver 1
   Linear System Precondition Recompute = 1
 End
 
+Solver 2
+  Equation = Result Output
+  Procedure = "ResultOutputSolve" "ResultOutputSolver"  
+  Output File Name = paraviewOut
+  Binary Output = False 
+  Output Format = Vtu
+  Scalar Field 1 = Displacement
+  Scalar Field 2 = Stress
+  Exec Solver = Always
+End
+
 Equation 1
   Name = "Equation 1"
   Calculate Stresses = True
-  Active Solvers(1) = 1
+  Active Solvers(1) = 1 
 End
 
 
 
 Boundary Condition 1
-  Target Boundaries(1) = 3 
+  Target Boundaries(1) = 1 
+  Name = "negYforce"
+  Force 2 = -500
+End
+
+Boundary Condition 2
+  Target Boundaries(1) = 6 
   Name = "fixed"
   Displacement 3 = 0
   Displacement 2 = 0
   Displacement 1 = 0
 End
 
-Boundary Condition 2
-  Target Boundaries(1) = 7 
-  Name = "negYLoad"
-  Force 2 = -500
-End
 
 Material 1
   Name = "Aluminium (generic) 1"
@@ -276,4 +277,3 @@ Body 10
   Equation = 1
   Material = 10
 End 
-
