@@ -2,7 +2,7 @@ function [T, maxF,maxT]=FE_elasticV2(designVars, settings, matProp)
 
 % loading condition
 FappliedLoad = -1000;
-fixedElementsCase = 'middleDown'; % 'sidesMiddle'
+fixedElementsCase = 'leftClamped'; % 'sidesMiddle'
 
 
 % E = matProp.E_material1; % Young's mod
@@ -113,7 +113,21 @@ elseif(strcmp(fixedElementsCase,'middleDown'))
     forceNodes = [ 2+(ceil(column/2)*row*2):2:2+row*2+(ceil(column/2)*row*2)];
      F(forceNodes)=  FappliedLoad; % middle row, downward force
    
-
+elseif(strcmp(fixedElementsCase,'leftClamped'))   
+%      Essential = [ 1 2 ]; % 
+%      for i = 1:column-1
+%          Essential = [Essential (i*row*2)+3 (i*row*2)+4 ]; % 
+%      end
+    tt=   1:2*row :2*row*(column-1); % ... % left side
+    t2=tt+1;
+     Essential=[tt t2];
+       Essential = unique(Essential);
+       if(isinteger(column/2))
+            F((column/2)*row*2) = FappliedLoad;
+       else
+             F(ceil(column/2)*row*2) = FappliedLoad/2.0;
+             F(floor(column/2)*row*2) = FappliedLoad/2.0;
+       end
 end
 
 alldofs     = [1:ndof];

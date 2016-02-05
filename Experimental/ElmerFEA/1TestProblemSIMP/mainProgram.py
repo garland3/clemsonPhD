@@ -72,6 +72,7 @@ def main():
     helper.readLocalStiffnessFile(rootFileDirectory,'lstiffness.txt', elementsList)
     helper.readLocalMassFile(rootFileDirectory,'lmass.txt', elementsList)
     calculateElementSensitivity(elementsList, nodeList)
+
     # these 2 functions are for visualization only
     filename = 'sensitivity.vtu'
     nodeList = nHelper.calculateNodeSensitivity(elementsList, nodeList)

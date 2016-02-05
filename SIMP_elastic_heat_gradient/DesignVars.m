@@ -12,6 +12,9 @@ classdef DesignVars
          lambda1 = 0;
          mu1 = 1;
          c = 0; % objective. 
+         cCompliance = 0;
+         cHeat = 0;
+         storeOptimizationVar= []
          
          % --------------------------
          % Support vars
@@ -174,6 +177,8 @@ classdef DesignVars
 
                 % OBJECTIVE FUNCTION AND SENSITIVITY ANALYSIS
                     obj.c = 0.; % c is the objective. Total strain energy
+                      obj.cCompliance = 0;
+                      obj. cHeat = 0;
 
                         for ely = 1:settings.nely
                             rowMultiplier = ely-1;
@@ -227,8 +232,13 @@ classdef DesignVars
                                    
                                    total =  settings.w1*(term1 + term2 + term3);
                                    [complianceTotal ,total];
+                                    obj.cCompliance = total;  
+                                   h = settings.w2*obj.x(ely,elx)^settings.penal*U_heat'*KEHeat*U_heat;  
+                                   obj.cHeat = h;
+                                   
                                    obj.c =  obj.c +total;
-                                   obj.c =  obj.c + settings.w2*obj.x(ely,elx)^settings.penal*U_heat'*KEHeat*U_heat;     
+                                   obj.c =  obj.c + h;
+                                   
                                    
                                    % Derivative of  D
                                    % (constitutive matrix) with respect to
@@ -275,8 +285,12 @@ classdef DesignVars
                                  obj.g1heat(ely,elx) = obj.x(ely,elx)^(settings.penal)*U_heat'*matProp.dKheat*U_heat;
                             end
                         end
+                         obj.storeOptimizationVar = [obj.storeOptimizationVar;obj.c,  obj.cCompliance, obj.cHeat ];
               
           end
+          
+        
+          
           
       end
      

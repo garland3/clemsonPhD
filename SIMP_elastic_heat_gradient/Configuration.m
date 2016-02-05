@@ -14,7 +14,7 @@ classdef Configuration
         mode =3; % 1 = topology only, 2 = material optimization only. 3 = both
         
         referenceTemperature = 0; % for thermal expansion, assume that there is not strain when at this temperature. 
-        addThermalExpansion = 1; % Set to 1 to incorporate thermal expansion
+        addThermalExpansion = 0; % Set to 1 to incorporate thermal expansion
 
        
         timestep = 0.1; % time step for the volume fraction update algorithm
@@ -27,8 +27,8 @@ classdef Configuration
         voidMaterialDensityCutOff = 0.1; % everything below this density is considered void. 
         
         
-        doPlotHeat = 1;
-        doPlotSensitivityComparison = 1;
+        doPlotHeat = 0;
+        doPlotSensitivityComparison = 0;
         v1 = 1;
         v2 = 1;
         totalVolume; % = v1+v2;
@@ -53,19 +53,12 @@ classdef Configuration
         
         % -----------------
         % Use different mixture rules for effective Heat properteis
-        % 1. Simple linear interpolation, Vigot rule of miztures E = w(E1)*(1-w)*E2
-       
+        % 1. Simple linear interpolation, Vigot rule of miztures E = w(E1)*(1-w)*E2       
         % 3. Reuss -rule, 1/E = w/E1+(1-w)/E2 (not implemented yet)
         % 4. Kingery's, metal ceramic composite
         % ---------------------        
-        heatMaterialInterpMethod = 1; 
-
-       
-
-
-        
-    end
-    
+        heatMaterialInterpMethod = 1;         
+    end    
     
     methods
         
@@ -83,16 +76,13 @@ classdef Configuration
                 obj. plotToCSVFile = 0;
 
             elseif obj.mode ==3
-                 obj.v1 = 0.10; % fraction of material 1 to use
-                 obj.v2 = 0.10; % fraction of material 2 to use
-                 obj.doPlotHeat = 1;
-                 
-
+                 obj.v1 = 0.20; % fraction of material 1 to use
+                 obj.v2 = 0.40; % fraction of material 2 to use
+                 obj.doPlotHeat = 0;  
              end
             
             obj.w2  = 1- obj.w1; % weight heat transfer
-            obj.totalVolume = obj.v1+obj.v2;
-            
+            obj.totalVolume = obj.v1+obj.v2;            
         end
         
     end

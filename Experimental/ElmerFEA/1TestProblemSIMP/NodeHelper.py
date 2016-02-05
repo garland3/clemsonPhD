@@ -33,10 +33,12 @@ class NodeHelper:
                 currentNode.sensitivity += e.sensitivity
                 currentNode.numberOfElements += 1
 
+        c = 0
         print 'node sensitivty'
         for node in listOfNodes:
+            c +=1
             numElements = node.numberOfElements
-            node.sensitivity = 1e8*node.sensitivity / float(numElements)
+            node.sensitivity = node.sensitivity / float(numElements)
             print "{0} node elem {1}".format(node.sensitivity , numElements)
 
         return listOfNodes

@@ -6,26 +6,25 @@ classdef MaterialProperties
         
         % steel AISI 2080 is material 1
         % copper is material 2
-        E_material1 = 200000; % N/mm^2 The elastic mod of material 1
-        E_material2 = 110000; % The elastic mod of material 2
-        
-        K_material1 = 47/1000; %  W/ (mm*K)heat conduction of material 1
-        K_material2 = 390/1000; % heat conduction of material 2   
-        
-        alpha1 = 1.5e-5; %thermal expansion coefficient for material 1
-        alpha2 = 2.4e-5; % thermal expansion coefficient for material 2
-        
-         % steel AISI 2080 is material 1
-        % copper is material 2
-%         E_material1 = 4; % N/mm^2 The elastic mod of material 1
-%         E_material2 = 2; % The elastic mod of material 2
+%         E_material1 = 200000; % N/mm^2 The elastic mod of material 1
+%         E_material2 = 110000; % The elastic mod of material 2
 %         
-%         K_material1 = 2; %  W/ (mm*K)heat conduction of material 1
-%         K_material2 = 4; % heat conduction of material 2   
+%         K_material1 = 47/1000; %  W/ (mm*K)heat conduction of material 1
+%         K_material2 = 390/1000; % heat conduction of material 2   
 %         
-%         alpha1 =0.001; %thermal expansion coefficient for material 1
-%         alpha2 =0.001; % thermal expansion coefficient for material 2
-%         
+%         alpha1 = 1.5e-5; %thermal expansion coefficient for material 1
+%         alpha2 = 2.4e-5; % thermal expansion coefficient for material 2
+        
+       
+        E_material1 = 4; % N/mm^2 The elastic mod of material 1
+        E_material2 = 2; % The elastic mod of material 2
+        
+        K_material1 = 2; %  W/ (mm*K)heat conduction of material 1
+        K_material2 = 4; % heat conduction of material 2   
+        
+        alpha1 =0.001; %thermal expansion coefficient for material 1
+        alpha2 =0.001; % thermal expansion coefficient for material 2
+        
         
         
         v = 0.3; % Piossons ratio

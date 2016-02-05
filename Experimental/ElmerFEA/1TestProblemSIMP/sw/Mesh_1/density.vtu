@@ -3,8 +3,8 @@
   <UnstructuredGrid>
     <Piece NumberOfPoints="240" NumberOfCells="309">
       <PointData Scalars="density">
-        <DataArray type="Float64" Name="density" format="ascii" RangeMin="1.1663955521e-315" RangeMax="0.5">
-          1.1663955521e-315 0.5 0.5 0.5 0.5 0.0077546190021
+        <DataArray type="Float64" Name="density" format="ascii" RangeMin="1.1632212001e-315" RangeMax="0.5">
+          1.1632212001e-315 0.5 0.5 0.5 0.5 0.0077546190021
           0.0077546190014 0.0077546190015 0.0077546190022 0.41862543849 0.22958648713 0.22958648713
           0.41862543849 0.5 0.5 0.41862543849 0.22958648713 0.22958648713
           0.41862543849 0.5 0.5 0.5 0.47677775381 0.43874794483

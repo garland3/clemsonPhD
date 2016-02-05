@@ -64,103 +64,53 @@ classdef plotResults
             structGradArrayElastic(1:settings.nely,1:settings.nelx)  = 0; % Initialize
            %  structGradArrayHeat(1:settings.nely,1:settings.nelx)  = 0; % Initialize
             
-            
+               smallerE = min( matProp.E_material2, matProp.E_material1);
+               largerE = max( matProp.E_material2, matProp.E_material1);
+               diffE = largerE-smallerE;
             
          
              for i = 1:settings.nelx
                 for j = 1:settings.nely
                     
                     x_local = designVars.x(j,i);
-                    if(x_local <= settings.voidMaterialDensityCutOff) % if void region
-                       % E_atElement(j,i) = E_empty;
-                       % K_atElement(i,j) = K_empty;
-
-                       smallerE = min( matProp.E_material2, matProp.E_material1);
-                       largerE = max( matProp.E_material2, matProp.E_material1);
-                       diffE = largerE-smallerE;
-                      % structGradArrayElastic(j,i) =smallerE-diffE*0.1; % make the void region 10 less than the least strong material for plotting purposes
+                    if(x_local <= settings.voidMaterialDensityCutOff) % if void region                      
                        structGradArrayElastic(j,i) =0; % make the void region 10 less than the least strong material for plotting purposes
-                       %structGradArrayHeat(j,i) = matProp.E_material1-1;
-
-
-                    else % if a filled region
-                       volFraclocal = designVars.w(j,i);
-%                        volume1 = volume1 +volFraclocal; % sum up the total use of material 1 
-%                        volume2 = volume2 + (1- volFraclocal); % sum up the total use of material 2 
-
-                      % K_atElement(i,j) = KheatPLA*volFraclocal+(1-volFraclocal)*KheatNylon;
-                      
-                      
-                       %E_heat_atElement = matProp.effectiveHeatProperties(volFraclocal, settings);
+                     else % if a filled region
+                       volFraclocal = designVars.w(j,i);                     
                        E_atElement=  matProp.effectiveElasticProperties(volFraclocal,settings);  % simple mixture ratio
-                       structGradArrayElastic(j,i) = E_atElement;
-                       %structGradArrayHeat(j,i) = E_heat_atElement;
+                       structGradArrayElastic(j,i) = E_atElement;                    
                     end
                 end
-             end
+             end             
              
-             
-             TcontourMatrix = 1;
-
- 
-  
+            TcontourMatrix = 1;  
             if settings.doPlotHeat ==1
                 numNodesInRow = settings.nelx +1;
-                numNodesInColumn = settings.nely+1;
-                
+                numNodesInColumn = settings.nely+1;                
                 TcontourMatrix = zeros(numNodesInRow,numNodesInColumn);
                 for j = 1:numNodesInColumn % y
-                      rowMultiplier = j-1;
-                     for i = 1:numNodesInRow % x
+                        rowMultiplier = j-1;
+                        for i = 1:numNodesInRow % x
                          nodeNumber = i+numNodesInRow*rowMultiplier;
                          TcontourMatrix(i,j) = designVars.U_heatColumn(nodeNumber);
-
                      end
                 end
-            end
-            
+            end            
              
              ActualPlotStructGradArray(obj,structGradArrayElastic,TcontourMatrix, settings,matProp,designVars, loopNumb)
-             
-            
-            
-%              figure(1)
-%             subplot(2,2,4);
-%             imagesc(structGradArrayHeat); axis equal; axis tight; axis off;
-%             set(gca,'YDir','normal'); % http://www.mathworks.com/matlabcentral/answers/94170-how-can-i-reverse-the-y-axis-when-i-use-the-image-or-imagesc-function-to-display-an-image-in-matlab
-%             % caxis([-1 1 ]);
-%             title('Structure and heat condunction Gradient')
-%             %colormap winter
-%             %  cmap = colormap;
-%             rgbSteps = matProp.K_material2- matProp.K_material1;  % plus 1 for 1 below the Enylon for void
-%             rgbSteps = rgbSteps*50;
-%             % [cmin,cmax] = caxis;
-%             caxis([matProp.E_material2+1,matProp.E_material1])
-%             map = colormap; % current colormap
-%             %map = [colormap(1,1):1/rgbSteps:colormap(1:-1)
-%             map(rgbSteps,:) = [1,1,1];
-%             map(rgbSteps-1,:) = [1,1,1];
-%             for zz =    1:rgbSteps-1
-%                 
-%                 map(zz,:) = [0,       zz*7/(8*rgbSteps)+1/8,          0.5];
-%             end    
-%             colormap(map)   
-%             colorbar
-            
         end
         
         
         function ActualPlotStructGradArray(obj,structGradArrayElastic, temperatureField, settings,matProp,designVars, loopNum)
             
-            if(settings.plotToCSVFile ==1)                
-                 
+            if(settings.plotToCSVFile ==1)                                 
                  % -------------------------------
                  % Plot to CSV file
                  % ------------------------------
-                % loopNumb
+                 % loopNumb
                 folderNum = settings.iterationNum;
-                  name = sprintf('./out%i/gradAndStuct%i.csv',folderNum, loopNum);
-                    csvwrite(name,structGradArrayElastic);
+                name = sprintf('./out%i/gradAndStuct%i.csv',folderNum, loopNum);
+                csvwrite(name,structGradArrayElastic);
                     
             else
                 

@@ -21,15 +21,15 @@ settings = Configuration;
     
      settings.iterationNum = str2num(iterationNum)   ;
      settings.nelx = 80;
-     settings.nely = 80;
+     settings.nely = 40;
      
      settings.plotToCSVFile = 1;
      settings.plotFinal = 0;
  else
 
      settings.nelx = 40;
-     settings.nely = 40;  
-      settings.w1 = 0; % do not set to zero, instead set to 0.0001. Else we will get NA for temp2
+     settings.nely = 20;  
+      settings.w1 = 1; % do not set to zero, instead set to 0.0001. Else we will get NA for temp2
        settings.iterationNum = 0;
 
  end
@@ -78,7 +78,7 @@ FEACalls = 0;
 change = 1.;
 
 % START ITERATION
-while change > 0.01  && masterloop<=15 && FEACalls<=100
+while change > 0.01  && masterloop<=15 && FEACalls<=150
   masterloop = masterloop + 1;
   
         % --------------------------------
@@ -159,6 +159,8 @@ while change > 0.01  && masterloop<=15 && FEACalls<=100
             end
         end
 end 
+
+csvwrite('storeOptimizationVar.csv',designVars.storeOptimizationVar);
 
 % if recvid==1
 %          close(vidObj);  %close video
