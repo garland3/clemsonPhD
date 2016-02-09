@@ -11,12 +11,16 @@ settings = Configuration;
 
 % plotting tool
 plotter = plotResults;
-settings.plotFinal = 1; % set to final plotting mode. 
-settings.plotToCSVFile = 0; % do not replot to the file. 
-settings.doPlotHeat = 0;
-settings.doPlotSensitivityComparison = 0;
 
-% set the design var object. 
+settings.doPlotVolFractionDesignVar = 1;
+settings.doPlotTopologyDesignVar = 1;
+settings.doPlotHeat = 0;
+settings.doPlotHeatSensitivityTopology = 0;
+settings.doPlotStress = 0;
+settings.doPlotFinal = 1;
+settings.doSaveDesignVarsToCSVFile = 0; % set to 1 to write plotFinal csv file instead
+
+% set the design var object.
 designVars = DesignVars(settings);
 recvid = 1;
 
@@ -24,10 +28,10 @@ lsitOfFolders = ls( 'out*');
 count = 0;
 for folderS = lsitOfFolders'
     folderS = folderS';
-    folder = folderS(1,:);   
+    folder = folderS(1,:);
     folder = strtrim(folder)
     
-   %  totalStringLength = numel(folder);
+    %  totalStringLength = numel(folder);
     iterationNum = str2num(folder(4:end));
     
     
@@ -42,41 +46,42 @@ for folderS = lsitOfFolders'
     
     settings.w1 = iterationNum/10;
     %count = count+1;
-
+    
     for i = 1:256
-        name = sprintf('./%s/gradAndStuct%i.csv',folder, i);
-
-        % if the file does not exist, then save the final graph, and break. 
-        if exist(name, 'file') == 0
-            
-           %  nameGraph = sprintf('./%s/gradTopOptimization%i',folder, i);
+        nameTopology = sprintf('./%s/topDensity%i.csv',folder, i);
+        nameVolFractionGrad = sprintf('./%s/volFractionVar%i.csv',folder, i);
+        
+        % if the file does not exist, then save the final graph, and break.
+        if exist(nameTopology, 'file') == 0
+            %  nameGraph = sprintf('./%s/gradTopOptimization%i',folder, i);
             nameGraph = sprintf('./gradTopOptimization%f.png', settings.w1);
             print(nameGraph,'-dpng')
             break;
         end
-        name
-
-        structGradArray = csvread(name);
-        figure(1)
-
+        [nameTopology nameVolFractionGrad]        
         
-       % plotter.ActualPlotStructGradArray(structGradArray, settings,matProp,i)
-       loopNum=i;
-       plotter.ActualPlotStructGradArray(structGradArray, 0, settings,matProp,designVars, loopNum)
-        %designVars.
-
-
-             if recvid==1
-                 drawnow
-                F(vid) = getframe(figure(1)); %#ok<AGROW> %Get frame of the topology in each iteration
-                writeVideo(vidObj,F(vid)); %Save the topology in the video
-                vid=vid+1;
-            end
-
+        %-----------------------
+        % Read the actual files
+        % ---------------------
+        designVars.x = csvread(nameTopology);
+        designVars.w = csvread(nameVolFractionGrad);        
+        
+        FEACalls = i;
+        plotter.plotTopAndFraction(designVars,  settings, matProp, FEACalls); % plot the results.
+      
+        if recvid==1
+            drawnow
+            F(vid) = getframe(figure(1)); % %Get frame of the topology in each iteration
+            writeVideo(vidObj,F(vid)); %Save the topology in the video
+            vid=vid+1;
+        end
+        
     end
-
-
+        
     if recvid==1
         close(vidObj);  %close video
     end
 end
+
+
+% designVars.storeOptimizationVar = [designVars.storeOptimizationVar;designVars.c, designVars.cCompliance, designVars.cHeat,vol1Fraction,vol2Fraction,fractionCurrent_V1Local,densitySum];

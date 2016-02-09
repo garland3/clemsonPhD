@@ -232,11 +232,11 @@ T(Essential) = u0;
 
 maxT = full(max(T));
 
-plotForces =1;
-if(plotForces ==1)
-    subplot(2,2,4);
-    quiver(reshape(designVars.XLocations, ndof/2,1),reshape(designVars.YLocations, ndof/2,1),F(1:2:ndof),F(2:2:ndof));
-end
+% plotForces =1;
+% if(plotForces ==1)
+%     subplot(2,2,4);
+%     quiver(reshape(designVars.XLocations, ndof/2,1),reshape(designVars.YLocations, ndof/2,1),F(1:2:ndof),F(2:2:ndof));
+% end
   
 % disp('The temperature at each node is');
 % T_column = [transpose(T),transpose(1:nn)]  

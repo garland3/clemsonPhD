@@ -32,22 +32,22 @@ end
 
 numNodesInRow = settings.nelx+1;
 numNodesInColumn = settings.nely+1;
-XLocations=zeros(numNodesInRow,numNodesInColumn);
-YLocations=zeros(numNodesInRow,numNodesInColumn);
+% XLocations=zeros(numNodesInRow,numNodesInColumn);
+% YLocations=zeros(numNodesInRow,numNodesInColumn);
 
 % Find and store the global positions of each node
 % Each element square is 1 by 1 units
 % Store both the X and Y positions
-globalPosition = zeros(nn,2);
-count = 1;
-for i = 1:numNodesInColumn  % y
-    for j= 1:numNodesInRow % x
-        globalPosition(count,:) = [j-1 i-1];
-        count = count+1;        
-        XLocations(j,i) = j-1;
-        YLocations(j,i) = i-1;
-    end
-end 
+% globalPosition = zeros(nn,2);
+% count = 1;
+% for i = 1:numNodesInColumn  % y
+%     for j= 1:numNodesInRow % x
+%         globalPosition(count,:) = [j-1 i-1];
+%         count = count+1;        
+%         XLocations(j,i) = j-1;
+%         YLocations(j,i) = i-1;
+%     end
+% end 
 
 % Specifiy the constrained nodes where there are essential boundary
 % conditions
@@ -93,20 +93,20 @@ elseif  (strcmp(loadingScenario,'sourceMiddleRightSinkMiddleLeft'))
      Essential = [1+(ceil(column/2)*row)]; % sink in left middle
 elseif (strcmp(loadingScenario,'sourceMiddleSinkBoundaries'))
      F = zeros(nn,1);
-    F([ceil(row/2)+(ceil(column/2)*row) (ceil(row/2)+1)+(ceil(column/2)*row)]) =  20; % heat source in the middle
-   
+    F([ceil(row/2)+(ceil(column/2)*row) (ceil(row/2)+1)+(ceil(column/2)*row)]) =  20; % heat source in the middle   
     % Set the 4 corners. 
     bottomRow = 1:row;
     topRow = (column-1)*row+1:column*row;
     left = 1:row:(column-1)*row+1;
     right = row:row:column*row;
-    Essential =   [bottomRow topRow left right] ; % 4 sides
+    Essential =   [bottomRow topRow left right] ; % 4 sides    
+elseif (strcmp(loadingScenario,'sourceEverywhereSinkMiddle'))    
+    F = ones(nn,1)*0.001;
+    Essential=[ceil(row/2)+(ceil(column/2)*row) (ceil(row/2)+1)+(ceil(column/2)*row)]; % heat sink in the middle   
     
-elseif (strcmp(loadingScenario,'sourceEverywhereSinkMiddle'))
-    
-    F = ones(nn,1)*0.01;
-    Essential=[ceil(row/2)+(ceil(column/2)*row) (ceil(row/2)+1)+(ceil(column/2)*row)]; % heat source in the middle
-    
+elseif (strcmp(loadingScenario,'sourceEverywhereSinkBottomLeft'))  
+     F = ones(nn,1)*0.001;
+      Essential=[1 2 row+1];
 end
 
 Essential = unique(Essential);

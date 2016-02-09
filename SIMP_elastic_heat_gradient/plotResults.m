@@ -4,196 +4,288 @@ classdef plotResults
         end
         
         function plotTopAndFraction(obj,designVars, settings, matProp, loopNumb)
-         
-           %  ----------------------------
-           % Plot Topology Optimization DENSITIES  
-           %  ----------------------------
-           if(settings.plotFinal ~=1)
-                 figure(1)
-               subplot(2,2,1);
-
-               %colormap(winter); 
-               imagesc(designVars.x); 
-                 title('Topology Opt');
-               set(gca,'YDir','normal'); % Flips the image so that row 1 is not at the top
-               % image(x); 
-               axis equal; axis tight; axis off;
-
-
-               %  ----------------------------
-               % Plot Volume Fraction Optimization
-               %  ----------------------------
-    %              subplot(2,2,1);
-    %            imagesc(designVars.w);
-    %             title('w');
-    %             colorbar;
-    %            set(gca,'YDir','normal'); % Flips the image so that row 1 is not at the top
-    %            % image(x); 
-    %            axis equal; axis tight; axis off;pause(1e-6);
-
-                  figure(1)
-               subplot(2,2,2);
-
-             %  colormap(winter); 
-               imagesc(designVars.w*matProp.E_material1+(1-designVars.w)*matProp.E_material2);
-                title('Effective Elastic Fraction Opt');
-                colorbar;
-               set(gca,'YDir','normal'); % Flips the image so that row 1 is not at the top
-               % image(x); 
-               axis equal; axis tight; axis off;pause(1e-6);
-
-
-               %    F(vid) = getframe; %Get frame of the topology in each iteration
-               %      writeVideo(vidObj,F(vid)); %Save the topology in the video
-               %      vid=vid+1;
-           end
-           
-%            if settings.mode ==1 || 2||3
-              obj.PlotStrucAndGrad(designVars, settings, matProp,loopNumb)
-%            end
+            
+            % ------------------------------------------------------
+            % Count how many things to plot.
+            % Geneate the subplot number
+            % Use if statements for each potential plot
+            % ------------------------------------------------------
+            
+            numberOfPlots=obj.CountPlots(settings);
+            bestSquareSize = ceil(sqrt(numberOfPlots));
+            plotDim2 = ceil(numberOfPlots/sqrt(numberOfPlots));
+            plotDim1=bestSquareSize;
+            clf
+            plotcount = 1;
+            figure(1)
+            
+            %  ----------------------------
+            % Plot Topology Optimization DENSITIES design vars
+            %  ----------------------------
+            if(settings.doPlotTopologyDesignVar ==1)
+                titleText = 'Topology Opt density';
+                subplot(plotDim1,plotDim2,plotcount); plotcount = plotcount + 1;
+                obj.PlotArrayGeneric(designVars.x,titleText)
+            end
+            
+            %  ----------------------------
+            % Plot Topology Optimization volume fraction design vars
+            %  ----------------------------
+            if(settings.doPlotVolFractionDesignVar ==1)
+                titleText = 'Vol Fraction Design Var';
+                subplot(plotDim1,plotDim2,plotcount); plotcount = plotcount + 1;
+                obj.PlotArrayGeneric(designVars.w,titleText)
+            end
+            
+            %  ----------------------------
+            % Plot Heat
+            %  ----------------------------
+            if(settings.doPlotHeat ==1)
+                figure(1)
+                subplot(plotDim1,plotDim2,plotcount); plotcount = plotcount + 1;
+                obj.PlotTemperatures(settings, designVars)
+                colorbar
+            end
+            
+            %  ----------------------------
+            % Plot Stress
+            %  ----------------------------
+            if(settings.doPlotStress ==1)
+                subplot(plotDim1,plotDim2,plotcount); plotcount = plotcount + 1;
+                titleText = sprintf('Von Mises Stress, maxF = %f, maxU=%f', designVars. maxF, designVars.maxU );
+                obj.PlotArrayGeneric(designVars.totalStress,titleText)
+            end
+            
+            %  ----------------------------
+            % Plot Final
+            %  ----------------------------
+            if(settings.doPlotFinal == 1)
+                subplot(plotDim1,plotDim2,plotcount); plotcount = plotcount + 1;
+                obj.PlotStrucAndGrad(designVars, settings, matProp,loopNumb)
+            end
+            
+            
+            %  ----------------------------
+            % Plot Heat topology sensitivity, temp2
+            %  ----------------------------
+            if(settings.doPlotHeatSensitivityTopology == 1)
+                subplot(plotDim1,plotDim2,plotcount); plotcount = plotcount + 1;
+                titleText = sprintf('Heat Top Sensit');
+                obj.PlotArrayGeneric(designVars.temp2,titleText)
+            end
+            
+             %  ----------------------------
+            % Plot Design Update Metrics
+            %  ----------------------------
+            if(settings.doPlotMetrics == 1)
+                obj.PlotDesignMetrics(designVars, settings, matProp, loopNumb);
+            end
+            
+            drawnow
+            
+            if(settings.doSaveDesignVarsToCSVFile ==1)                
+                % -------------------------------
+                % Plot to CSV file
+                % ------------------------------
+                % loopNumb
+                folderNum = settings.iterationNum;
+                name = sprintf('./out%i/topDensity%i.csv',folderNum, loopNumb);
+                csvwrite(name,designVars.x);
+                
+                name = sprintf('./out%i/volFractionVar%i.csv',folderNum, loopNumb);
+                csvwrite(name,designVars.w);                
+            end
+            
             
         end
         
+        
+        % Plots an array
+        function PlotArrayGeneric(obj, array, titleText)
+            imagesc(array); axis equal; axis tight; axis off;
+            % colormap winter
+            set(gca,'YDir','normal');
+            title(titleText);
+            colorbar
+        end        
+        
+        % --------------------------------------------
+        % Plots temperature countours
+        % --------------------------------------------
+        function PlotTemperatures(obj,settings, designVars)
+            % Set up temperature array
+            TcontourMatrix = 1;
+            if settings.doPlotHeat ==1
+                numNodesInRow = settings.nelx +1;
+                numNodesInColumn = settings.nely+1;
+                TcontourMatrix = zeros(numNodesInRow,numNodesInColumn);
+                for j = 1:numNodesInColumn % y
+                    rowMultiplier = j-1;
+                    for i = 1:numNodesInRow % x
+                        nodeNumber = i+numNodesInRow*rowMultiplier;
+                        TcontourMatrix(i,j) = designVars.U_heatColumn(nodeNumber);
+                    end
+                end
+            end
+            
+            % Plot Contours
+            averageTemp = mean2(TcontourMatrix);
+            contour(designVars.XLocations,designVars.YLocations,TcontourMatrix,'ShowText','on');
+            set(gca,'YDir','normal'); % http://www.mathworks.com/matlabcentral/an
+            titleText = sprintf('Heat,\n average T=%f',averageTemp);
+            title(titleText);
+            freezeColors
+            
+        end
+        
+        
+        
+        % ==============================================
+        % -----------------------------------------------
+        % Counts the number of Plots needed based on the configuration
+        % settings
+        % -----------------------------------------------
+        function [numberOfPlots]=CountPlots(obj,settings)
+            
+            numberOfPlots = 0;
+            
+            % Plotting information
+            %         doPlotVolFractionDesignVar = 0;
+            %         doPlotTopologyDesignVar = 1;
+            %         doPlotHeat = 1;
+            %         doPlotHeatSensitivityTopology = 1;
+            %         doPlotStress = 0;
+            %         doPlotFinal = 1;
+            
+            if(settings.doPlotHeat ==1)
+                numberOfPlots = numberOfPlots+1;
+            end
+            
+            if(settings.doPlotStress ==1)
+                numberOfPlots = numberOfPlots+1;
+            end
+            
+            if(settings.doPlotFinal ==1)
+                numberOfPlots = numberOfPlots+1;
+            end
+            
+            if(settings.doPlotTopologyDesignVar ==1)
+                numberOfPlots = numberOfPlots+1;
+            end
+            
+            if(settings.doPlotVolFractionDesignVar ==1)
+                numberOfPlots = numberOfPlots+1;
+            end
+            
+            if(settings.doPlotHeatSensitivityTopology ==1)
+                numberOfPlots = numberOfPlots+1;
+            end
+            
+            if(settings.doPlotMetrics ==1)
+                numberOfPlots = numberOfPlots+1;
+            end
+            
+        end
+        
+        
+        
+        
+        % -------------------------------------
         % Plot a graph showing the topology optimization results and the
-        % gradient optimization results. 
+        % gradient optimization results.
+        % -------------------------------------
         function PlotStrucAndGrad(obj, designVars, settings, matProp,loopNumb)
             
             % ----------------------------------
-             % Generate the matrix used for ploitting. 
-             % ----------------------------------
-            structGradArrayElastic(1:settings.nely,1:settings.nelx)  = 0; % Initialize
-           %  structGradArrayHeat(1:settings.nely,1:settings.nelx)  = 0; % Initialize
+            % Generate the matrix used for ploitting.
+            % ----------------------------------
+            % structGradArrayElastic(1:settings.nely,1:settings.nelx)  = 0; % Initialize
+            structGradDesignVarArray(1:settings.nely,1:settings.nelx)  = 0; % Initialize
+            %  structGradArrayHeat(1:settings.nely,1:settings.nelx)  = 0; % Initialize
             
-               smallerE = min( matProp.E_material2, matProp.E_material1);
-               largerE = max( matProp.E_material2, matProp.E_material1);
-               diffE = largerE-smallerE;
+            %smallerE = min( matProp.E_material2, matProp.E_material1);
+            %largerE = max( matProp.E_material2, matProp.E_material1);
+            %diffE = largerE-smallerE;
             
-         
-             for i = 1:settings.nelx
+            for i = 1:settings.nelx
                 for j = 1:settings.nely
-                    
                     x_local = designVars.x(j,i);
-                    if(x_local <= settings.voidMaterialDensityCutOff) % if void region                      
-                       structGradArrayElastic(j,i) =0; % make the void region 10 less than the least strong material for plotting purposes
-                     else % if a filled region
-                       volFraclocal = designVars.w(j,i);                     
-                       E_atElement=  matProp.effectiveElasticProperties(volFraclocal,settings);  % simple mixture ratio
-                       structGradArrayElastic(j,i) = E_atElement;                    
+                    if(x_local <= settings.voidMaterialDensityCutOff) % if void region
+                        % structGradArrayElastic(j,i) =0; % make the void region 10 less than the least strong material for plotting purposes
+                        structGradDesignVarArray(j,i) =-0.5;
+                    else % if a filled region
+                        volFraclocal = designVars.w(j,i);
+                        % E_atElement=  matProp.effectiveElasticProperties(volFraclocal,settings);  % simple mixture ratio
+                        %structGradArrayElastic(j,i) = E_atElement;
+                        structGradDesignVarArray(j,i) = volFraclocal;
                     end
                 end
-             end             
-             
-            TcontourMatrix = 1;  
-            if settings.doPlotHeat ==1
-                numNodesInRow = settings.nelx +1;
-                numNodesInColumn = settings.nely+1;                
-                TcontourMatrix = zeros(numNodesInRow,numNodesInColumn);
-                for j = 1:numNodesInColumn % y
-                        rowMultiplier = j-1;
-                        for i = 1:numNodesInRow % x
-                         nodeNumber = i+numNodesInRow*rowMultiplier;
-                         TcontourMatrix(i,j) = designVars.U_heatColumn(nodeNumber);
-                     end
-                end
-            end            
-             
-             ActualPlotStructGradArray(obj,structGradArrayElastic,TcontourMatrix, settings,matProp,designVars, loopNumb)
+            end
+            ActualPlotStructGradArray(obj,structGradDesignVarArray, settings,matProp,designVars, loopNumb)
         end
         
-        
-        function ActualPlotStructGradArray(obj,structGradArrayElastic, temperatureField, settings,matProp,designVars, loopNum)
+        % -------------------------------------
+        % ActualPlotStructGradArray
+        % -------------------------------------
+        function ActualPlotStructGradArray(obj,structGradDesignVarArray,  settings,matProp,designVars, loopNum)
             
-            if(settings.plotToCSVFile ==1)                                 
-                 % -------------------------------
-                 % Plot to CSV file
-                 % ------------------------------
-                 % loopNumb
-                folderNum = settings.iterationNum;
-                name = sprintf('./out%i/gradAndStuct%i.csv',folderNum, loopNum);
-                csvwrite(name,structGradArrayElastic);
-                    
-            else
-                
-                % Plot normally. 
-              figure(1)
-             if(settings.doPlotHeat ==1 && settings.doPlotSensitivityComparison~=1)
-                    subplot(1,2,1);
-                    averageTemp = mean2(temperatureField);
-                    contour(designVars.XLocations,designVars.YLocations,temperatureField,'ShowText','on');
-                    set(gca,'YDir','normal'); % http://www.mathworks.com/matlabcentral/an                    
-                    titleText = sprintf('Heat,\n average T=%f',averageTemp);
-                    title(titleText);
-                    subplot(1,2,2);
-                    freezeColors
-             elseif(settings.doPlotSensitivityComparison ==1 && settings.doPlotHeat ==1)
-                 % PLot heat
-                 subplot(2,2,1);
-                    averageTemp = mean2(temperatureField);
-                    contour(designVars.XLocations,designVars.YLocations,temperatureField,'ShowText','on');
-                    set(gca,'YDir','normal'); % http://www.mathworks.com/matlabcentral/an                    
-                    titleText = sprintf('Heat,\n average T=%f',averageTemp);
-                    title(titleText);
-                        freezeColors
-                    subplot(2,2,2);
-                
-                    
-                    
-                     % PLot comparison
-                     
-                    imagesc(designVars.totalStress); axis equal; axis tight; axis off;
-                    colormap winter
-                    set(gca,'YDir','normal'); % http://www.mathworks.com/m       
-                    titleText = sprintf('Von Mises Stress, maxF = %f, maxU=%f', designVars. maxF, designVars.maxU );
-                    title(titleText);
-                     colorbar
-                    freezeColors
-                     
-                     subplot(2,2,3);
-                    tStress= max(max(abs(designVars.totalStress)));
-                    fprintf('max Stress=%f\n', tStress);
-                     
-                 
-                 
-                 
-             else
-                   subplot(1,1,1);
-                 %  subplot(1,1,1);
-             end
-            imagesc(structGradArrayElastic); axis equal; axis tight; axis off;
+            %             if(settings.doPlotFinalToCSVFile == 1)
+            %                 % -------------------------------
+            %                 % Plot to CSV file
+            %                 % ------------------------------
+            %                 % loopNumb
+            %                 folderNum = settings.iterationNum;
+            %                 name = sprintf('./out%i/gradAndStuct%i.csv',folderNum, loopNum);
+            %                 csvwrite(name,structGradDesignVarArray);
+            %             else
+            % Plot normally.
+            %  figure(1)
+            %                 if(settings.doPlotHeat ==1 && settings.doPlotSensitivityComparison~=1)
+            %
+            %                 elseif(settings.doPlotSensitivityComparison ==1 && settings.doPlotHeat ==1)
+            %                     % PLot heat
+            %                     subplot(2,2,1);
+            %                     averageTemp = mean2(temperatureField);
+            %                     contour(designVars.XLocations,designVars.YLocations,temperatureField,'ShowText','on');
+            %                     set(gca,'YDir','normal'); % http://www.mathworks.com/matlabcentral/an
+            %                     titleText = sprintf('Heat,\n average T=%f',averageTemp);
+            %                     title(titleText);
+            %                     freezeColors
+            %                     % PLot comparison
+            %                     subplot(2,2,3);
+            %                     tStress= max(max(abs(designVars.totalStress)));
+            %                     fprintf('max Stress=%f\n', tStress);
+            %                 else
+            %                     subplot(1,1,1);
+            %                     %  subplot(1,1,1);
+            %                 end
+            
+            imagesc(structGradDesignVarArray); axis equal; axis tight; axis off;
             set(gca,'YDir','normal'); % http://www.mathworks.com/matlabcentral/answers/94170-how-can-i-reverse-the-y-axis-when-i-use-the-image-or-imagesc-function-to-display-an-image-in-matlab
             % caxis([-1 1 ]);
-            titleText = sprintf('Structure and Elastic Mod Gradient,\n w1=%f, iter = %i',settings.w1,loopNum);
+            titleText = sprintf('Structure and vol fraction,\n w1=%f, iter = %i',settings.w1,loopNum);
             title(titleText)
-            %colormap winter
-            %  cmap = colormap;
-
-            %rgbSteps = (matProp.E_material1- matProp.E_material2);  % plus 1 for 1 below the Enylon for void
-            
             rgbSteps = 100;
-            %rgbSteps = rgbSteps*50;
-            % [cmin,cmax] = caxis;
-             smallerE = min( matProp.E_material2, matProp.E_material1);
-             largerE = max( matProp.E_material2, matProp.E_material1);
-            % diffE = largerE-smallerE;
+            %smallerE = min( matProp.E_material2, matProp.E_material1);
+            %largerE = max( matProp.E_material2, matProp.E_material1);
             
-            caxis([smallerE-0.1*smallerE,largerE])
-            % caxis([smallerE,largerE])
-
+            caxis([-0.02,1])
+            
             map = colormap; % current colormap
             %map = [colormap(1,1):1/rgbSteps:colormap(1:-1)
             map(1,:) = [1,1,1];
             for zz =    2:rgbSteps
-                
                 map(zz,:) = [0,       zz*7/(8*rgbSteps)+1/8,          0.5];
-            end    
-            colormap(map)   
+            end
+            colormap(map)
             colorbar
             freezeColors
+            %             end
+        end
+        
+        
+        function PlotDesignMetrics(obj,designVars, settings, matProp, loopNumb)
             
-            drawnow
-            
-                 
-             end
         end
     end
 end

@@ -4,20 +4,28 @@ classdef Configuration
         % --------------------------------------
         % %% Settings
         % --------------------------------------------
-        nelx = 40; % 40 # of elements in the x direcction
+
+        nelx = 20; % 40 # of elements in the x direcction
         nely = 20; % 18 number of elements in the y direction
         penal = 3; % penality used for the SIMP method
-        rmin = 2; % smoothing radius for sensitivity smoothing.
+        rmin = 2; % smoothing radius for sensitivity smoothing. 
+        
         % Optimization mode and configurations
-        mode =3; % 1 = topology only, 2 = material optimization only. 3 = both        
+        mode =3; % 1 = topology only, 2 = material optimization only. 3 = both
+        
         referenceTemperature = 0; % for thermal expansion, assume that there is not strain when at this temperature. 
-        addThermalExpansion = 0; % Set to 1 to incorporate thermal expansion       
+        addThermalExpansion = 0; % Set to 1 to incorporate thermal expansion
+
+       
         timestep = 0.1; % time step for the volume fraction update algorithm
         volFractionDamping = 0.1;
         iterationsPerPlot = 5;
+
         w1 = 0; % weight elastic for multi-objective
-        w2;        
-        voidMaterialDensityCutOff = 0.3; % everything below this density is considered void.
+        w2;
+        
+        voidMaterialDensityCutOff = 0.2; % everything below this density is considered void.         
+        
         % Plotting information
         doPlotVolFractionDesignVar = 0;
         doPlotTopologyDesignVar = 1;
@@ -25,12 +33,14 @@ classdef Configuration
         doPlotHeatSensitivityTopology = 1;
         doPlotStress = 0;
         doPlotFinal = 0;
-        doPlotMetrics = 0;
-        doSaveDesignVarsToCSVFile = 0; % set to 1 to write plotFinal csv file instead      
+        doPlotFinalToCSVFile = 0; % set to 1 to write plotFinal csv file instead        
+        
         v1 = 1;
         v2 = 1;
         totalVolume; % = v1+v2;  
+        
         iterationNum=0; %  used for parallel computing. 
+
         % not much faster. 
         useGPU = 0; % set to 1 to try to solve matrix using gpu        
         % -----------------
