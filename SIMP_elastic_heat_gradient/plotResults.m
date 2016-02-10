@@ -73,16 +73,7 @@ classdef plotResults
                 titleText = sprintf('Heat Top Sensit');
                 obj.PlotArrayGeneric(designVars.temp2,titleText)
             end
-            
-             %  ----------------------------
-            % Plot Design Update Metrics
-            %  ----------------------------
-            if(settings.doPlotMetrics == 1)
-                obj.PlotDesignMetrics(designVars, settings, matProp, loopNumb);
-            end
-            
-            drawnow
-            
+                   
             if(settings.doSaveDesignVarsToCSVFile ==1)                
                 % -------------------------------
                 % Plot to CSV file
@@ -96,7 +87,28 @@ classdef plotResults
                 csvwrite(name,designVars.w);                
             end
             
+            %  ----------------------------
+            % Plot Design Update Metrics
+            %  ----------------------------
+            if(settings.doPlotMetrics == 1)
+                 subplot(plotDim1,plotDim2,plotcount); plotcount = plotcount + 1;
+                obj.PlotDesignMetrics(designVars, settings, matProp, loopNumb);
+            end
             
+              drawnow
+        end
+        
+        function PlotDesignMetrics(obj, designVars, settings, matProp, loopNumb)
+            %  designVars.c, designVars.cCompliance, designVars.cHeat,vol1Fraction,vol2Fraction,fractionCurrent_V1Local,densitySum];
+            x = 1:loopNumb;
+            y1 = designVars.storeOptimizationVar(1:loopNumb,1)';
+            y2 = designVars.storeOptimizationVar(1:loopNumb,2)';
+            y3 = designVars.storeOptimizationVar(1:loopNumb,3)';
+            y3 = designVars.storeOptimizationVar(1:loopNumb,4)';
+            y4 = designVars.storeOptimizationVar(1:loopNumb,5)'; % volume fraction material 1
+            y5 = designVars.storeOptimizationVar(1:loopNumb,6)'; % volume fraction material 2
+            plot(x, y4,'y', x, y5, 'm')            
+            legend('vol1', 'vol2')
         end
         
         
@@ -284,8 +296,6 @@ classdef plotResults
         end
         
         
-        function PlotDesignMetrics(obj,designVars, settings, matProp, loopNumb)
-            
-        end
+       
     end
 end

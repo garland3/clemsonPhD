@@ -172,7 +172,7 @@ classdef DesignVars
             % OBJECTIVE FUNCTION AND SENSITIVITY ANALYSIS
             obj.c = 0.; % c is the objective. Total strain energy
             obj.cCompliance = 0;
-            obj. cHeat = 0;
+            obj.cHeat = 0;
             
             for ely = 1:settings.nely
                 rowMultiplier = ely-1;
@@ -215,12 +215,13 @@ classdef DesignVars
                     % Sum the elastic compliance terms. 
                     total = (term1 + term2 + term3);
                   
-                    obj.cCompliance = total;
-                    h = settings.w2*obj.x(ely,elx)^settings.penal*U_heat'*KEHeat*U_heat;
-                    obj.cHeat = h;
+                    % Compliance, 
+                    % obj.cCompliance = total;
                     
-                    obj.c =  obj.c +total;
-                    obj.c =  obj.c + h;
+                    obj.cCompliance = obj.cCompliance + obj.x(ely,elx)^settings.penal*Ue'*KE*Ue;                 
+                    obj.cHeat =   obj.cHeat           + obj.x(ely,elx)^settings.penal*U_heat'*KEHeat*U_heat;
+                    
+                    
                     
                     % Derivative of  D
                     % (constitutive matrix) with respect to

@@ -82,7 +82,7 @@ change = 1.;
 
 
 % START ITERATION
-while change > 0.01  && masterloop<=15 && FEACalls<=50
+while change > 0.01  && masterloop<=15 && FEACalls<=150
     masterloop = masterloop + 1;
     
     % --------------------------------
@@ -163,14 +163,18 @@ while change > 0.01  && masterloop<=15 && FEACalls<=50
             disp([' FEA calls.: ' sprintf('%4i',FEACalls) ' Obj.: ' sprintf('%10.4f',designVars.c) ...
                 ' Vol. 1: ' sprintf('%6.3f', vol1Fraction) ...
                 ' Vol. 2: ' sprintf(    '%6.3f', vol2Fraction) ...
-                ' Lambda.: ' sprintf('%6.3f',designVars.lambda1  )])            
-            % obj.storeOptimizationVar = [obj.storeOptimizationVar;obj.c,  obj.cCompliance, obj.cHeat ];            
+                ' Lambda.: ' sprintf('%6.3f',designVars.lambda1  )])
+            
+            % obj.storeOptimizationVar = [obj.storeOptimizationVar;obj.c,  obj.cCompliance, obj.cHeat ];
+            
         end
     end
 end
 
 folderNum = settings.iterationNum;
-outname = sprintf('./out%i/storeOptimizationVar.csv',folderNum);
+name = sprintf('./out%i/storeOptimizationVar.csv',folderNum, loopNumb);
+csvwrite(name,designVars.x);
+outname = sprintf('storeOptimizationVar%2f.csv', settings.w1)
 csvwrite(outname,designVars.storeOptimizationVar);
 
 % if recvid==1

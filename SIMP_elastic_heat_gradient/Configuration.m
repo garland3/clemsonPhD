@@ -25,7 +25,7 @@ classdef Configuration
         doPlotHeatSensitivityTopology = 1;
         doPlotStress = 0;
         doPlotFinal = 0;
-        doPlotMetrics = 0;
+        doPlotMetrics = 1;
         doSaveDesignVarsToCSVFile = 0; % set to 1 to write plotFinal csv file instead      
         v1 = 1;
         v2 = 1;

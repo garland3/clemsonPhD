@@ -1,17 +1,12 @@
-
 clear
 clc
 close all
-
 % material properties Object
 matProp = MaterialProperties;
-
 % settings object
 settings = Configuration;
-
 % plotting tool
 plotter = plotResults;
-
 settings.doPlotVolFractionDesignVar = 1;
 settings.doPlotTopologyDesignVar = 1;
 settings.doPlotHeat = 0;
@@ -29,11 +24,9 @@ count = 0;
 for folderS = lsitOfFolders'
     folderS = folderS';
     folder = folderS(1,:);
-    folder = strtrim(folder)
-    
+    folder = strtrim(folder)    
     %  totalStringLength = numel(folder);
-    iterationNum = str2num(folder(4:end));
-    
+    iterationNum = str2num(folder(4:end));    
     
     if recvid==1
         videoOut = strcat(folder,'/resultsOuts.avi');
@@ -45,7 +38,11 @@ for folderS = lsitOfFolders'
     end
     
     settings.w1 = iterationNum/10;
-    %count = count+1;
+    %count = count+1;    
+    folderNum = iterationNum;
+    outname = sprintf('./out%i/storeOptimizationVar.csv',folderNum);
+    designVars.storeOptimizationVar = csvread(outname);
+  
     
     for i = 1:256
         nameTopology = sprintf('./%s/topDensity%i.csv',folder, i);
@@ -58,26 +55,24 @@ for folderS = lsitOfFolders'
             print(nameGraph,'-dpng')
             break;
         end
-        [nameTopology nameVolFractionGrad]        
+        [nameTopology nameVolFractionGrad]
         
         %-----------------------
         % Read the actual files
         % ---------------------
         designVars.x = csvread(nameTopology);
         designVars.w = csvread(nameVolFractionGrad);        
-        
         FEACalls = i;
         plotter.plotTopAndFraction(designVars,  settings, matProp, FEACalls); % plot the results.
-      
+        
         if recvid==1
             drawnow
             F(vid) = getframe(figure(1)); % %Get frame of the topology in each iteration
             writeVideo(vidObj,F(vid)); %Save the topology in the video
             vid=vid+1;
-        end
-        
+        end        
     end
-        
+    
     if recvid==1
         close(vidObj);  %close video
     end
