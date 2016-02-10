@@ -7,10 +7,7 @@ import subprocess
 
 # 
 # qsub -I
-# cd /scratch1/apg/clemsonPhD/SIMP_elastic_heat_gradient/
-# or cd /scratch2/apg/SimpGradient
-# dos2unix *.*; rm jobP*; rm jobweight*; rm -R out*; module add matlab/2015a
-# mcc -R -nodisplay  -m  combinedTopologyOptimization.m Configuration.m DesignVars.m  elementK_heat.m elK_elastic.m FE_elasticV2.m  MaterialProperties.m plotResults.m temperatureFEA_V3.m  
+#  cd /scratch2/apg/SimpGradient; dos2unix *.*; rm jobP*; rm jobweight*; rm -R out*; module add matlab/2015a; mcc -R -nodisplay  -m  combinedTopologyOptimization.m Configuration.m DesignVars.m  elementK_heat.m elK_elastic.m FE_elasticV2.m  MaterialProperties.m plotResults.m temperatureFEA_V3.m  
 # exit
  # cd /scratch1/apg/clemsonPhD/SIMP_elastic_heat_gradient
  # cd /scratch2/apg/SimpGradient

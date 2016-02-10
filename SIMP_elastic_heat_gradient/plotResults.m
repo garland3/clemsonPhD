@@ -102,13 +102,16 @@ classdef plotResults
             %  designVars.c, designVars.cCompliance, designVars.cHeat,vol1Fraction,vol2Fraction,fractionCurrent_V1Local,densitySum];
             x = 1:loopNumb;
             y1 = designVars.storeOptimizationVar(1:loopNumb,1)';
-            y2 = designVars.storeOptimizationVar(1:loopNumb,2)';
-            y3 = designVars.storeOptimizationVar(1:loopNumb,3)';
+            y2 = designVars.storeOptimizationVar(1:loopNumb,2)'; % Elastic Compliance
+            y3 = designVars.storeOptimizationVar(1:loopNumb,3)'; % Heat Compliance
             y3 = designVars.storeOptimizationVar(1:loopNumb,4)';
             y4 = designVars.storeOptimizationVar(1:loopNumb,5)'; % volume fraction material 1
             y5 = designVars.storeOptimizationVar(1:loopNumb,6)'; % volume fraction material 2
-            plot(x, y4,'y', x, y5, 'm')            
-            legend('vol1', 'vol2')
+            
+            y2 = y2/max(y2); % normalize to make plotting nice
+            y3 = y3/max(y3); % normalize to make plotting nice
+            plot(x, y4,'y', x, y5, 'm', x, y2, 'c', x, y3, 'r')            
+            legend('vol1', 'vol2','Elast Obj','Heat Obj')
         end
         
         

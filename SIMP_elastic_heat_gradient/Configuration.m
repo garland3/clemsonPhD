@@ -31,6 +31,7 @@ classdef Configuration
         v2 = 1;
         totalVolume; % = v1+v2;  
         iterationNum=0; %  used for parallel computing. 
+        maxFEACalls = 50;
         % not much faster. 
         useGPU = 0; % set to 1 to try to solve matrix using gpu        
         % -----------------

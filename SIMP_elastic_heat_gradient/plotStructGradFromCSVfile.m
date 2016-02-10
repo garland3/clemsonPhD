@@ -61,7 +61,10 @@ for folderS = lsitOfFolders'
         % Read the actual files
         % ---------------------
         designVars.x = csvread(nameTopology);
-        designVars.w = csvread(nameVolFractionGrad);        
+        designVars.w = csvread(nameVolFractionGrad);      
+        [settings.nelx]   = size(  designVars.x,2);
+          [   settings.nely] = size(  designVars.x,1);
+        
         FEACalls = i;
         plotter.plotTopAndFraction(designVars,  settings, matProp, FEACalls); % plot the results.
         

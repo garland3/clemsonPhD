@@ -25,6 +25,7 @@ if(str2num(useInputArgs) ==1)
     settings.doPlotStress = 0;
     settings.doPlotFinal = 0;
     settings.doSaveDesignVarsToCSVFile = 1; % set to 1 to write to csv file instead
+    settings.maxFEACalls = 350;
 else
     
     settings.nelx = 40;
@@ -82,7 +83,7 @@ change = 1.;
 
 
 % START ITERATION
-while change > 0.01  && masterloop<=15 && FEACalls<=50
+while change > 0.01  && masterloop<=15 && FEACalls<=settings.maxFEACalls
     masterloop = masterloop + 1;
     
     % --------------------------------
