@@ -168,6 +168,26 @@ while change > 0.01  && masterloop<=15 && FEACalls<=settings.maxFEACalls
             % obj.storeOptimizationVar = [obj.storeOptimizationVar;obj.c,  obj.cCompliance, obj.cHeat ];            
         end
     end
+    
+    if(mode ==4) % meso-structure design
+        designVars = CalculateSensitiviesMesoStructure(obj, settings, matProp, masterloop);
+        
+         % designVars.dc = settings.w1*designVars.temp1+settings.w2*designVars.temp2; % add the two sensitivies together using their weights
+         designVars.dc = designVars.temp1;
+            
+        % FILTERING OF SENSITIVITIES
+        [designVars.dc]   = check(settings.nelx,settings.nely,settings.rmin,designVars.x,designVars.dc);
+        % DESIGN UPDATE BY THE OPTIMALITY CRITERIA METHOD
+        [designVars.x]    = OC(settings.nelx,settings.nely,designVars.x,settings.totalVolume,designVars.dc, designVars, settings);
+        % PRINT RESULTS
+        %change = max(max(abs(designVars.x-designVars.xold)));
+        disp([' FEA calls.: ' sprintf('%4i',FEACalls) ' Obj.: ' sprintf('%10.4f',designVars.c) ...
+            ' Vol. 1: ' sprintf('%6.3f', vol1Fraction) ...
+            ' Vol. 2: ' sprintf('%6.3f', vol2Fraction) ...
+            ' Lambda.: ' sprintf('%6.3f',designVars.lambda1  )])
+        
+        
+    end
 end
 
 folderNum = settings.iterationNum;

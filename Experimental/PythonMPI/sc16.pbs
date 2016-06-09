@@ -1,0 +1,17 @@
+#!/bin/bash
+#PBS -N parSixTeen  
+#PBS -l select=2:mpiprocs=8,walltime=00:30:00
+source /etc/profile.d/modules.sh
+module purge
+module add gcc openmpi/1.6.4
+
+cd $PBS_O_WORKDIR
+
+
+
+
+mpicc -c master_slave.c
+gfortran -c projectCH9300.f
+mpic++ -o prog master_slave.o projectCH9300.o -lgfortran
+
+time mpiexec -np 16  prog > out.log

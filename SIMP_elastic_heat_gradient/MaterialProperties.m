@@ -38,6 +38,16 @@ classdef MaterialProperties
             obj.dKheat =  elementK_heat(heatCoefficient)*(obj.K_material1-obj.K_material2);
         end
         
+        % ---------------------------------------
+        %
+        % Elastic caculations
+        %
+        % ---------------------------------------
+        
+        %---------------
+        % Get D matrix (Effectie constitutive equation) for a particualar
+        % w1
+        % -----------------------------------------------
         function D = calculateEffectiveConstitutiveEquation(obj, material1Fraction, settings)
             E = effectiveElasticProperties(obj, material1Fraction, settings);
             D = [ 1 obj.v 0;
@@ -45,11 +55,16 @@ classdef MaterialProperties
                 0 0 1/2*(1-obj.v)]*E/(1-obj.v^2);
         end
         
+        %------------------------------------
         % Calculate Elastic mod
+        %------------------------------------
         function e =  effectiveElasticProperties(obj, material1Fraction, settings)
             e = material1Fraction*obj.E_material1+(1-material1Fraction)*obj.E_material2;
         end
         
+        %------------------------------------
+        % Calculate element stiffness matrix. 
+        %------------------------------------
         function [ke, kexpansionBar] = effectiveElasticKEmatrix(obj, material1Fraction, settings)
             % Calculate E, then calculate the K element matrix
             E = effectiveElasticProperties(obj, material1Fraction, settings);
@@ -59,14 +74,24 @@ classdef MaterialProperties
         % Calculate thermal expansion coefficient
         function e =  effectiveThermalExpansionCoefficient(obj,material1Fraction)
             e = material1Fraction*obj.alpha1+(1-material1Fraction)*obj.alpha2;
-        end        
+        end       
         
+        % ---------------------------------------
+        %
+        % Thermal properties caculations
+        %
+        % ---------------------------------------
+        
+        % ---------------------------------------
         % Calculate heat transfer coefficient
+        % ---------------------------------------
         function e =  effectiveHeatProperties(obj,material1Fraction)
             e = material1Fraction*obj.K_material1+(1-material1Fraction)*obj.K_material2;
         end
         
+        % ---------------------------------------
         % Calculate the heat conduction matrix
+        % ---------------------------------------
         function  kheat = effectiveHeatKEmatrix(obj, material1Fraction, settings)
             heatCoefficient = obj.effectiveHeatProperties(material1Fraction);
             [kheat]=elementK_heat(heatCoefficient);

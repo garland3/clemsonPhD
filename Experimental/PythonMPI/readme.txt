@@ -1,0 +1,1 @@
+Change the select statement to request the correct number of processors for each case. Also change the mpiexec -np command to have the correct number of processors. 

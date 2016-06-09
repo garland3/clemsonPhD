@@ -1,4 +1,4 @@
 function main(w1, outDir)
 
-combinedTopologyOptimization
+combinedTopologyOptimization('no', 'not used', 'not used')
 end

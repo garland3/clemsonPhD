@@ -269,5 +269,58 @@ classdef DesignVars
                 end % end, loop over nelx
             end % end, for loop over nely
         end % End Function, CalculateSenstivities
+        
+        
+         function obj = CalculateSensitiviesMesoStructure(obj, settings, matProp, loop)
+             
+            elementsInRow = settings.nelx+1;            
+            obj.xold = obj.x;
+            
+            % FE-ANALYSIS            
+            %[obj.U_heatColumn]=temperatureFEA_V3(obj, settings, matProp,loop);
+            %[obj.U, obj.maxF, obj.maxU]=FE_elasticV2(obj, settings, matProp);  
+            [obj.U, obj.maxF,obj.maxU] = AppliedStrain(obj, settings, matProp); 
+            
+            % OBJECTIVE FUNCTION AND SENSITIVITY ANALYSIS
+            obj.c = 0.; % c is the objective. Total strain energy
+            obj.cCompliance = 0;
+            obj.cHeat = 0;
+            
+            for ely = 1:settings.nely
+                rowMultiplier = ely-1;
+                for elx = 1:settings.nelx                    
+                    nodes1=[rowMultiplier*elementsInRow+elx;
+                        rowMultiplier*elementsInRow+elx+1;
+                        (rowMultiplier +1)*elementsInRow+elx+1;
+                        (rowMultiplier +1)*elementsInRow+elx];
+                    
+                    xNodes = nodes1*2-1;
+                    yNodes = nodes1*2;
+                    NodeNumbers = [xNodes(1) yNodes(1) xNodes(2) yNodes(2) xNodes(3) yNodes(3) xNodes(4) yNodes(4)];
+                    
+                    Ue = obj.U(NodeNumbers,:);
+                   % U_heat = obj.U_heatColumn(nodes1,:);
+                    %averageElementTemp = mean2(U_heat); % calculate the average temperature of the 4 nodes
+                    
+                    % Get the element K matrix for this partiular element
+                    KE = matProp.effectiveElasticKEmatrix(  obj.w(ely,elx),settings);
+                    % KEHeat = matProp.effectiveHeatKEmatrix(  obj.w(ely,elx), settings);
+                    Dmaterial = matProp.calculateEffectiveConstitutiveEquation( obj.w(ely,elx), settings); 
+                    
+                    % Find the elastic strain
+                    elasticStrain = obj.B*Ue;                    
+                    term1 = transpose(elasticStrain)*Dmaterial*elasticStrain*obj.x(ely,elx)^settings.penal;
+                    term2 = 0;
+                    term3= 0;
+                    
+                     % Sum the elastic compliance terms. 
+                    total = (term1 + term2 + term3);                    
+                    obj.temp1(ely,elx) = -total;
+                end
+            end             
+         end % end CalculateSensitiviesMesoStructure
+        
+        
+        
     end % End Methods
 end % End Class DesignVars

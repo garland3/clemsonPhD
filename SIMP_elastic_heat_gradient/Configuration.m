@@ -9,7 +9,7 @@ classdef Configuration
         penal = 3; % penality used for the SIMP method
         rmin = 2; % smoothing radius for sensitivity smoothing.
         % Optimization mode and configurations
-        mode =3; % 1 = topology only, 2 = material optimization only. 3 = both        
+        mode =4; % 1 = topology only, 2 = material optimization only. 3 = both, 4 = meso-structure testing        
         referenceTemperature = 0; % for thermal expansion, assume that there is not strain when at this temperature. 
         addThermalExpansion = 0; % Set to 1 to incorporate thermal expansion       
         timestep = 0.1; % time step for the volume fraction update algorithm
@@ -37,7 +37,7 @@ classdef Configuration
         % -----------------
         % Use different mixture rules for effective elastic properteis
         % 1. Simple linear interpolation, Vigot rule of miztures E = w(E1)*(1-w)*E2
-        % 2. Hashin–Shtrikam law
+        % 2. Hashin–Shtrikam law (average of upper and lower boundary)
         % 3. Reuss -rule, 1/E = w/E1+(1-w)/E2 (not implemented yet)
         % 4. Mori and Tanaka, metal ceramic composite
         % ---------------------        
@@ -47,6 +47,7 @@ classdef Configuration
         % 1. Simple linear interpolation, Vigot rule of miztures E = w(E1)*(1-w)*E2       
         % 3. Reuss -rule, 1/E = w/E1+(1-w)/E2 (not implemented yet)
         % 4. Kingery's, metal ceramic composite
+        % 5. Hashin–Shtrikam law (average of upper and lower boundary)
         % ---------------------        
         heatMaterialInterpMethod = 1;         
     end    
