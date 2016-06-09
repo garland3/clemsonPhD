@@ -1,16 +1,24 @@
 mat = MaterialProperties;
 
 % ceramic Al2O3
-mat.E_material2 = 380e9; % The elastic mod of material 1, 
-mat.K_material2 = 8.4; % heat conduction of material 1
+%mat.E_material2 = 380e9; % The elastic mod of material 1, 
+%mat.K_material2 = 8.4; % heat conduction of material 1
+
+mat.E_material2 =0.25; % The elastic mod of material 1, 
+mat.K_material2 =1; % heat conduction of material 1
 
 
 % TiC
-mat.E_material1 = 450e9; % The elastic mod of material 2
-mat.K_material1 = 24.28; % heat conduction of material 2    
+%mat.E_material1 = 450e9; % The elastic mod of material 2
+% mat.K_material1 = 24.28; % heat conduction of material 2    
+
+mat.E_material1 = 1; % The elastic mod of material 2
+mat.K_material1 = 5; % heat conduction of material 2    
    
    
 settings = Configuration;
+settings.elasticMaterialInterpMethod = 2; % Hashin–Shtrikam law (average of upper and lower boundary)
+settings.heatMaterialInterpMethod = 5; % Hashin–Shtrikam law (average of upper and lower boundary)
 
 
 

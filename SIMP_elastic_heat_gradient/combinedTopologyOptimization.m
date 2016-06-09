@@ -7,6 +7,8 @@ function combinedTopologyOptimization(useInputArgs, w1text, iterationNum)
 % %% Settings
 % --------------------------------------------
 settings = Configuration;
+settings.elasticMaterialInterpMethod = 2; % Hashin–Shtrikam law (average of upper and lower boundary)
+settings.heatMaterialInterpMethod = 5; % Hashin–Shtrikam law (average of upper and lower boundary)
 
 % if using input args, then override some configurations.
 % if using input args, then running on the cluster, so use high resolution,

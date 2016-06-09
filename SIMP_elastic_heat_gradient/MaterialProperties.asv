@@ -60,14 +60,7 @@ classdef MaterialProperties
         %------------------------------------
         function e =  effectiveElasticProperties(obj, material1Fraction, settings)
             
-            % linear case 
-            if(settings. elasticMaterialInterpMethod == 1)           
-                e = material1Fraction*obj.E_material1+(1-material1Fraction)*obj.E_material2;
-            
-            % HashinShtrikamAverage case    
-            elseif(settings. elasticMaterialInterpMethod == 2)
-                e = HashinShtrikamAverage(obj,obj.E_material1,obj.E_material2,material1Fraction);
-            end
+            e = material1Fraction*obj.E_material1+(1-material1Fraction)*obj.E_material2;
         end
         
         %------------------------------------
@@ -80,7 +73,7 @@ classdef MaterialProperties
         end
         
         % Calculate thermal expansion coefficient
-        function e =  effectiveThermalExpansionCoefficient(obj,material1Fraction,settings)
+        function e =  effectiveThermalExpansionCoefficient(obj,material1Fraction)
             e = material1Fraction*obj.alpha1+(1-material1Fraction)*obj.alpha2;
         end       
         
@@ -93,15 +86,8 @@ classdef MaterialProperties
         % ---------------------------------------
         % Calculate heat transfer coefficient
         % ---------------------------------------
-        function e =  effectiveHeatProperties(obj,material1Fraction,settings)
-            % linear case 
-            if(settings. heatMaterialInterpMethod == 1)           
-                 e = material1Fraction*obj.K_material1+(1-material1Fraction)*obj.K_material2;
-            
-            % HashinShtrikamAverage case    
-            elseif(settings. heatMaterialInterpMethod == 5)
-                e = HashinShtrikamAverage(obj,obj.K_material1,obj.K_material2,material1Fraction);
-            end
+        function e =  effectiveHeatProperties(obj,material1Fraction)
+            e = material1Fraction*obj.K_material1+(1-material1Fraction)*obj.K_material2;
         end
         
         % ---------------------------------------
@@ -116,14 +102,13 @@ classdef MaterialProperties
         % Calculate Hashin-Shtrikam upper and lower bound and then average
         % them
         % ---------------------------------------
-        function effective =  HashinShtrikamAverage(obj,mat1property, mat2property, volmat1)
+        function effective =  HashinShtrikamAverage(mat1property, mat2property, volmat1)
             w = volmat1;
             E1 = mat1property;
             E2 = mat2property;
             
             lower = ((2+w)*E1+(1-w)*E2)*E2/(2*(1-w)*E1+(1+2*w)*E2);
-            upper = (w*E1+(3-w)*E2)*E1/((3-2*w)*E1 +2*w*E2);
-            effective = (lower+upper)/2.0;
+            upper = (w*E1+(3-w)*
             
         end
     end
