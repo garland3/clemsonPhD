@@ -108,7 +108,7 @@ classdef MaterialProperties
         % Calculate the heat conduction matrix
         % ---------------------------------------
         function  kheat = effectiveHeatKEmatrix(obj, material1Fraction, settings)
-            heatCoefficient = obj.effectiveHeatProperties(material1Fraction);
+            heatCoefficient = obj.effectiveHeatProperties(material1Fraction,settings);
             [kheat]=elementK_heat(heatCoefficient);
         end
         

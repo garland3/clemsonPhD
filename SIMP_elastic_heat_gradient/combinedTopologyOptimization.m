@@ -10,6 +10,12 @@ settings = Configuration;
 settings.elasticMaterialInterpMethod = 2; % Hashin–Shtrikam law (average of upper and lower boundary)
 settings.heatMaterialInterpMethod = 5; % Hashin–Shtrikam law (average of upper and lower boundary)
 
+% target volumes of material 1 and 2
+settings.v1 = 0.2; 
+settings.v2 = 0.2;
+
+settings.mode = 3; % 1 = topology only, 2 = material optimization only. 3 = both, 4 = meso-structure testing     
+
 % if using input args, then override some configurations.
 % if using input args, then running on the cluster, so use high resolution,
 % otherwise use low resolution
@@ -34,15 +40,12 @@ else
     settings.nely = 20;
     settings.w1 = 0; % do not set to zero, instead set to 0.0001. Else we will get NA for temp2
     settings.iterationNum = 0;
-    settings.doSaveDesignVarsToCSVFile = 1
+    settings.doSaveDesignVarsToCSVFile = 1;
     
 end
 
-% Do not allow w1 to be zero. Divide by zero messes stuff up.
-if(settings.w1 ==0)
-    settings.w1=0.00001;
-end
-settings.w2 = 1-settings.w1;
+
+settings= settings.UpdateVolTargetsAndObjectiveWeights();
 settings
 % material properties Object
 matProp = MaterialProperties;
@@ -92,7 +95,7 @@ while change > 0.01  && masterloop<=15 && FEACalls<=settings.maxFEACalls
     % Topology Optimization
     % --------------------------------
     if ( settings.mode == 1 || settings.mode == 3)
-        for loopTop = 1:5
+        for loopTop = 1:3
             designVars = designVars.CalculateSensitivies(settings, matProp, masterloop);
             [vol1Fraction, vol2Fraction] =  designVars.CalculateVolumeFractions(settings);
             
@@ -128,7 +131,7 @@ while change > 0.01  && masterloop<=15 && FEACalls<=settings.maxFEACalls
     % Volume fraction optimization
     % --------------------------------
     if ( settings.mode ==2 || settings.mode ==3)
-        for loopVolFrac = 1:5
+        for loopVolFrac = 1:3
             designVars = designVars.CalculateSensitivies( settings, matProp, masterloop);
             FEACalls = FEACalls+1;
             
@@ -171,7 +174,7 @@ while change > 0.01  && masterloop<=15 && FEACalls<=settings.maxFEACalls
         end
     end
     
-    if(mode ==4) % meso-structure design
+    if(settings.mode ==4) % meso-structure design
         designVars = CalculateSensitiviesMesoStructure(obj, settings, matProp, masterloop);
         
          % designVars.dc = settings.w1*designVars.temp1+settings.w2*designVars.temp2; % add the two sensitivies together using their weights

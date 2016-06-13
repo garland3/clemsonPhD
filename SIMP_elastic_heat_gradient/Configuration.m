@@ -55,27 +55,43 @@ classdef Configuration
     methods
         
         function obj = Configuration()
-             if obj.mode ==1    
-                obj.doPlotHeat = 1;
-                obj.v1 = 0.2; % fraction of material 1 to use
-                obj.v2 = 0.2; % fraction of material 2 to use
-                 obj.doPlotHeat = 0;
-            elseif obj.mode ==2
-                obj.v1 = 0.5; % fraction of material 1 to use
-                obj.v2 = 0.5; % fraction of material 2 to use
-                 obj.doPlotHeat = 0;
-                obj. plotFinal = 1;
-                obj. plotToCSVFile = 0;
+%              if obj.mode ==1    
+%                 obj.doPlotHeat = 1;
+%                 obj.v1 = 0.2; % fraction of material 1 to use
+%                 obj.v2 = 0.2; % fraction of material 2 to use
+%                  obj.doPlotHeat = 0;
+%             elseif obj.mode ==2
+%                 obj.v1 = 0.5; % fraction of material 1 to use
+%                 obj.v2 = 0.5; % fraction of material 2 to use
+%                  obj.doPlotHeat = 0;
+%                 obj. plotFinal = 1;
+%                 obj. plotToCSVFile = 0;
+% 
+%             elseif obj.mode ==3
+%                  obj.v1 = 0.20; % fraction of material 1 to use
+%                  obj.v2 = 0.40; % fraction of material 2 to use
+%                
+%              end
 
-            elseif obj.mode ==3
-                 obj.v1 = 0.20; % fraction of material 1 to use
-                 obj.v2 = 0.40; % fraction of material 2 to use
-               
-             end
+                obj.v1 = 0.20; % fraction of material 1 to use
+                  obj.v2 = 0.20; % fraction of material 2 to use
+                
             
-            obj.w2  = 1- obj.w1; % weight heat transfer
-            obj.totalVolume = obj.v1+obj.v2;            
+              
         end
+        
+        function [obj]= UpdateVolTargetsAndObjectiveWeights(obj)
+             % Do not allow w1 to be zero. Divide by zero messes stuff up.
+            if(obj.w1 ==0)
+                obj.w1=0.00001;
+             end
+             
+             obj.w2  = 1- obj.w1; % weight heat transfer
+            obj.totalVolume = obj.v1+obj.v2;      
+            
+         
+             
+         end
         
     end
 end

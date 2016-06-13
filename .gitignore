@@ -15,6 +15,8 @@ SIMP_elastic_heat_gradient/out13/
 SIMP_elastic_heat_gradient/out14/
 SIMP_elastic_heat_gradient/out15/
 SIMP_elastic_heat_gradient/out16/
+SIMP_elastic_heat_gradient/80x40linearInterProper/
+SIMP_elastic_heat_gradient/80x40linearmaterials/
 
 
 *.png

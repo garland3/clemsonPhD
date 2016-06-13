@@ -3,18 +3,26 @@ import shutil
 import stat
 import subprocess
 
-# precompile the matlab code
-
+# ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+# 1. Run interactive job to compile code
+# 2. Exit interactive
+# 3. Run python script to submit each job to the cluster. 
 # 
+# ^^^^^^^^ Start new interactive job ^^^^^^^^^^^^^^^^
 # qsub -I
-#  cd /scratch2/apg/SimpGradient; dos2unix *.*; rm jobP*; rm jobweight*; rm -R out*; module add matlab/2015a; mcc -R -nodisplay  -m  combinedTopologyOptimization.m Configuration.m DesignVars.m  elementK_heat.m elK_elastic.m FE_elasticV2.m  MaterialProperties.m plotResults.m temperatureFEA_V3.m  
+#
+# ^^^^^^^^ Compile code ^^^^^^^^^^^^^^^^
+#  cd /scratch1/apg/combinedtopgrad; dos2unix *.*; rm jobP*; rm jobweight*; rm -R out*; module add matlab/2015a; mcc -R -nodisplay  -m  combinedTopologyOptimization.m Configuration.m DesignVars.m  elementK_heat.m elK_elastic.m FE_elasticV2.m  MaterialProperties.m plotResults.m temperatureFEA_V3.m 
+#
+# ^^^^^^^^ Exit interactive job ^^^^^^^^^^^^^^^^ 
 # exit
- # cd /scratch1/apg/clemsonPhD/SIMP_elastic_heat_gradient
- # cd /scratch2/apg/SimpGradient
+#
+# ^^^^^^^^ Run Python script ^^^^^^^^^^^^^^^^ 
+# 
+# cd /scratch1/apg/combinedtopgrad; module add python/2.7.6 ; python runMatlabInParallel.py
+#
+# ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-# module add python/2.7.6 
-# python runMatlabInParallel.py
-# --------------------
 # then watch the status with
 # qstat -u apg
 
@@ -81,40 +89,3 @@ for x in range(0, 11):
 	subprocess.call(["qsub",pbsname])
 		
 	
-	#newProgramLocation = os.path.join(directoryNew,programName)
-	#shutil.copyfile(programFullPath, newProgramLocation)
-	#os.chmod(newProgramLocation,stat.S_IEXEC)
-		
-	
-	
-# import subprocess
-
-# write several .pbs scripts,
-# where each one has a slightly different name
-# and where each on sends different args to the matblab code. 
-# Submit the .pbs file to job queue on the cluster using 'qsub'
-
-# for x in range(0, 11):
-    # pbsname = "job%imatlab.pbs"  % x
-  
-    # print pbsname
-    # name = "job%i" % x
-   
-    # Make different weightings of the objective functions
-    # w1 = x/10.
-    # w2 = 1-w1
-    # args = "  %f %f %i" % (w1, w2, x)
-                    
-                    
-    # with open(pbsname, "wt") as fout:
-         # with open("job.matlab.pbs", "rt") as fin:
-             # for line in fin:             
-                # if (line.find("{NAME}")  != -1):                    
-                    # fout.write(line.replace('{NAME}', name))
-                # elif (line.find("{ARGS_SCRPT_CALL}")  != -1):                    
-                    # fout.write(line.replace('{ARGS_SCRPT_CALL}', args))
-                # else:
-                 # fout.write(line)
-    
-    # cmd = "qsub "+ pbsname
-    # subprocess.call(["qsub",pbsname])
