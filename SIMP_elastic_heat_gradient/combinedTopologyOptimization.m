@@ -14,7 +14,7 @@ settings.heatMaterialInterpMethod = 5; % Hashin–Shtrikam law (average of upper a
 settings.v1 = 0.2; 
 settings.v2 = 0.2;
 
-settings.mode = 3; % 1 = topology only, 2 = material optimization only. 3 = both, 4 = meso-structure testing     
+settings.mode = 4; % 1 = topology only, 2 = material optimization only. 3 = both, 4 = meso-structure testing     
 
 % if using input args, then override some configurations.
 % if using input args, then running on the cluster, so use high resolution,
@@ -34,6 +34,7 @@ if(str2num(useInputArgs) ==1)
     settings.doPlotFinal = 0;
     settings.doSaveDesignVarsToCSVFile = 1; % set to 1 to write to csv file instead
     settings.maxFEACalls = 350;
+    settings.maxMasterLoops = 500; % make it so, the fea maxes out first. 
 else
     
     settings.nelx = 40;
@@ -41,6 +42,14 @@ else
     settings.w1 = 0; % do not set to zero, instead set to 0.0001. Else we will get NA for temp2
     settings.iterationNum = 0;
     settings.doSaveDesignVarsToCSVFile = 1;
+    settings.terminationCriteria =0.1; % 10%
+    
+    % if meso structure designing, then make a smaller initial mesh
+    if(settings.mode == 4)
+       settings.nelx = 20;
+       settings.nely = 20;
+        
+    end
     
 end
 
@@ -70,25 +79,28 @@ designVars = designVars.CalcIENmatrix(settings);
 designVars =  designVars.CalcElementLocation(settings);
 designVars = designVars.PreCalculateXYmapToNodeNumber(settings);
 
-
-% recvid=1;       %turn on or off the video recorder
-% %% FEA and Elastic problem initialization
-% if recvid==1
-%     vidObj = VideoWriter('results_homog_level_set.avi');    %Prepare the new file for video
-%     vidObj.FrameRate = 50;
-%     vidObj.Quality = 100;
-%     open(vidObj);
-%     vid=1;
-% end
+% if doing meso optimization, setup optimization configurations
+if ( settings.mode == 4) 
+%     homgSettings = Configuration;
+%     homgSettings.nelx = 40;
+%     homgSettings.nely = 40;
+%     homgSettings.w1 = 0; % do not set to zero, instead set to 0.0001. Else we will get NA for temp2
+%     homgSettings.iterationNum = 0;
+%     homgSettings.doSaveDesignVarsToCSVFile = 1;
+%     homgSettings.terminationCriteria =0.1; % 10%
+    
+    designVars = designVars.CalcElementNodeMapmatrixWithPeriodicXandY(settings);
+    designVars =  designVars.CalcNodeLocationMeso(settings);
+end
 
 
 masterloop = 0;
 FEACalls = 0;
-change = 1.;
+status=0;
 
 
 % START ITERATION
-while change > 0.01  && masterloop<=15 && FEACalls<=settings.maxFEACalls
+while status == 0  && masterloop<=settings.maxMasterLoops && FEACalls<=settings.maxFEACalls
     masterloop = masterloop + 1;
     
     % --------------------------------
@@ -124,9 +136,20 @@ while change > 0.01  && masterloop<=15 && FEACalls<=settings.maxFEACalls
             
             p = plotResults;
             p.plotTopAndFraction(designVars,  settings, matProp, FEACalls); % plot the results.
+            status = TestForTermaination(designVars, settings);
+            if(status ==1)
+                m = 'break in topology'
+                  break;
+             end
         end
     end
     
+    % exit the master loop if we termination criteria are true. 
+    if(status ==1)
+            m = 'exiting master (break in topology)'
+        break;
+    end
+
     % --------------------------------
     % Volume fraction optimization
     % --------------------------------
@@ -165,32 +188,56 @@ while change > 0.01  && masterloop<=15 && FEACalls<=settings.maxFEACalls
             designVars.storeOptimizationVar = [designVars.storeOptimizationVar;designVars.c, designVars.cCompliance, designVars.cHeat,vol1Fraction,vol2Fraction,fractionCurrent_V1Local,densitySum];
             p = plotResults;
             p.plotTopAndFraction(designVars, settings, matProp,FEACalls ); % plot the results.
+         
             
             disp([' FEA calls.: ' sprintf('%4i',FEACalls) ' Obj.: ' sprintf('%10.4f',designVars.c) ...
                 ' Vol. 1: ' sprintf('%6.3f', vol1Fraction) ...
                 ' Vol. 2: ' sprintf(    '%6.3f', vol2Fraction) ...
                 ' Lambda.: ' sprintf('%6.3f',designVars.lambda1  )])            
-            % obj.storeOptimizationVar = [obj.storeOptimizationVar;obj.c,  obj.cCompliance, obj.cHeat ];            
+            % obj.storeOptimizationVar = [obj.storeOptimizationVar;obj.c,  obj.cCompliance, obj.cHeat ];    
+              status = TestForTermaination(designVars, settings);
+              if(status ==1)
+                    m = 'break in vol fraction'
+                  break;
+              end
         end
     end
     
     if(settings.mode ==4) % meso-structure design
-        designVars = CalculateSensitiviesMesoStructure(obj, settings, matProp, masterloop);
+         settings.maxMasterLoops = 3; % make it small
+         
+         % this vector is just an element diplacement vector pulled from
+         % the main displacement vector U
+         
+       
+          % need to convert the strain into a displacement B^-1
+          % epsilon = B*d
+        material1Fraction = 1;
+        macroElemProps = macroElementProp;          
+        macroElemProps.disp = [-0.1 0    0.1 0    0.1 0   -0.1 0] ; % make these up for now
+        [macroElemProps.K ,~,macroElemProps.B] = matProp.effectiveElasticKEmatrix(material1Fraction, settings);
+        macroElemProps.strain = macroElemProps.B* transpose(macroElemProps.disp); % transpose the disp to be vertical
         
-         % designVars.dc = settings.w1*designVars.temp1+settings.w2*designVars.temp2; % add the two sensitivies together using their weights
-         designVars.dc = designVars.temp1;
+        
+        p = plotResults;
+          for mesoLoop = 1:4
+              designVars = designVars.CalculateSensitiviesMesoStructure( settings, matProp, masterloop,macroElemProps);
+              designVars.dc=designVars.temp1;              
+ 
+             % FILTERING OF SENSITIVITIES
+             [designVars.dc]   = check(settings.nelx,settings.nely,settings.rmin,designVars.x,designVars.dc);
+             % DESIGN UPDATE BY THE OPTIMALITY CRITERIA METHOD          
+             [designVars.x]    = OC(settings.nelx,settings.nely,designVars.x,settings.totalVolume,designVars.dc, designVars, settings);
+             
+             p.plotTopAndFraction(designVars, settings, matProp,FEACalls ); % plot the results.
+          end
+            macroElemProps = designVars.GetHomogenizedProperties(settings,settings, matProp, masterloop,macroElemProps);
+            macroElemProps.D_homog
             
-        % FILTERING OF SENSITIVITIES
-        [designVars.dc]   = check(settings.nelx,settings.nely,settings.rmin,designVars.x,designVars.dc);
-        % DESIGN UPDATE BY THE OPTIMALITY CRITERIA METHOD
-        [designVars.x]    = OC(settings.nelx,settings.nely,designVars.x,settings.totalVolume,designVars.dc, designVars, settings);
-        % PRINT RESULTS
-        %change = max(max(abs(designVars.x-designVars.xold)));
-        disp([' FEA calls.: ' sprintf('%4i',FEACalls) ' Obj.: ' sprintf('%10.4f',designVars.c) ...
-            ' Vol. 1: ' sprintf('%6.3f', vol1Fraction) ...
-            ' Vol. 2: ' sprintf('%6.3f', vol2Fraction) ...
-            ' Lambda.: ' sprintf('%6.3f',designVars.lambda1  )])
+         
+           %  p.plotTopAndFraction(mesoDesignVars, homgSettings, matProp,FEACalls ); % plot the results.
         
+      
         
     end
 end
@@ -198,6 +245,59 @@ end
 folderNum = settings.iterationNum;
 outname = sprintf('./out%i/storeOptimizationVar.csv',folderNum);
 csvwrite(outname,designVars.storeOptimizationVar);
+status
+
+
+% test for termaination of the function. 
+% normalize the objectives, compare to a moving average. If moving average
+% below target, then return 1
+% if not terminated, then return 0
+function status = TestForTermaination(designVars, settings)
+    status = 0;
+    y2 = designVars.storeOptimizationVar(:,2); % Elastic Compliance   
+    
+    t = settings.terminationAverageCount;
+    if(size(y2)<(t+3))
+        return;
+    end
+  
+  
+    y3 = designVars.storeOptimizationVar(:,3); % Heat Compliance
+    y4 = designVars.storeOptimizationVar(:,4); % material 1
+    y5 = designVars.storeOptimizationVar(:,5); % material 2
+    
+    avg_y2 = FindAvergeChangeOfLastValue(y2,settings); % elastic objective
+    avg_y3 = FindAvergeChangeOfLastValue(y3,settings); % heat objective
+    avg_y4 = FindAvergeChangeOfLastValue(y4,settings); % material 1
+    avg_y5 = FindAvergeChangeOfLastValue(y5,settings); % material 2
+    
+    
+   
+    
+    tt = settings.terminationCriteria;
+    if(        avg_y2<tt ...
+            && avg_y3<tt ...
+            && avg_y4<tt ...
+            && avg_y5<tt)
+        status=1;
+        % print the vars to screen
+     [avg_y2 avg_y3 avg_y4 avg_y5 ] 
+    end
+    
+    
+function [averageDiffOfLastValues] = FindAvergeChangeOfLastValue(arrayOfValues, settings)
+y2 = arrayOfValues;
+t = settings.terminationAverageCount;
+diff2 = y2-circshift(y2,1); % subtract the current one from the pervious on 
+diff2 = diff2(2:end-1); 
+
+ % normalize and take ABS
+ % we want to normalize by max(abs) over all differences, so 
+diff2 = abs(diff2)/(max(abs(diff2)));
+
+diff2 = diff2(end-t:end);
+averagey2diff = sum(diff2)/t;
+averageDiffOfLastValues = averagey2diff;
 
 % if recvid==1
 %          close(vidObj);  %close video
@@ -230,6 +330,7 @@ while (l2-l1 > 1e-4)
         l2 = lmid;
     end
 end
+
 
 %%%%%%%%%% OPTIMALITY CRITERIA UPDATE Gradient %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function [wnew]=OC_gradient(g1,designVar, settings)

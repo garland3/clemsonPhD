@@ -18,6 +18,9 @@ classdef plotResults
             clf
             plotcount = 1;
             figure(1)
+            if numberOfPlots == 2
+                plotDim2 =1;  plotDim1=2;
+            end
             
             %  ----------------------------
             % Plot Topology Optimization DENSITIES design vars
@@ -101,12 +104,11 @@ classdef plotResults
         function PlotDesignMetrics(obj, designVars, settings, matProp, loopNumb)
             %  designVars.c, designVars.cCompliance, designVars.cHeat,vol1Fraction,vol2Fraction,fractionCurrent_V1Local,densitySum];
             x = 1:loopNumb;
-            y1 = designVars.storeOptimizationVar(1:loopNumb,1)';
+           % y1 = designVars.storeOptimizationVar(1:loopNumb,1)';
             y2 = designVars.storeOptimizationVar(1:loopNumb,2)'; % Elastic Compliance
-            y3 = designVars.storeOptimizationVar(1:loopNumb,3)'; % Heat Compliance
-            y3 = designVars.storeOptimizationVar(1:loopNumb,4)';
-            y4 = designVars.storeOptimizationVar(1:loopNumb,5)'; % volume fraction material 1
-            y5 = designVars.storeOptimizationVar(1:loopNumb,6)'; % volume fraction material 2
+            y3 = designVars.storeOptimizationVar(1:loopNumb,3)'; % Heat Compliance         
+            y4 = designVars.storeOptimizationVar(1:loopNumb,4)'; % volume fraction material 1
+            y5 = designVars.storeOptimizationVar(1:loopNumb,5)'; % volume fraction material 2
             
             y2 = y2/max(y2); % normalize to make plotting nice
             y3 = y3/max(y3); % normalize to make plotting nice
@@ -296,6 +298,36 @@ classdef plotResults
             colorbar
             freezeColors
             %             end
+        end
+        
+        function status = plotParticularIterationNumInFolder(obj, folder, i, designVars, settings,matProp)
+            status = 1;
+            nameTopology = sprintf('./%s/topDensity%i.csv',folder, i);
+            nameVolFractionGrad = sprintf('./%s/volFractionVar%i.csv',folder, i);
+
+            % if the file does not exist, then save the final graph, and break.
+            if exist(nameTopology, 'file') == 0
+                %  nameGraph = sprintf('./%s/gradTopOptimization%i',folder, i);
+                nameGraph = sprintf('./gradTopOptimization%f.png', settings.w1);
+                print(nameGraph,'-dpng')
+               %  p = fig2plotly; needs more work, this looks horrible. 
+               status = -1;
+                return;
+            end
+            [nameTopology nameVolFractionGrad]
+            %-----------------------
+            % Read the actual files
+            % ---------------------
+            designVars.x = csvread(nameTopology);
+            designVars.w = csvread(nameVolFractionGrad);      
+            [settings.nelx]   = size(  designVars.x,2);
+              [   settings.nely] = size(  designVars.x,1);
+
+            FEACalls = i;
+            obj.plotTopAndFraction(designVars,  settings, matProp, FEACalls); % plot the results.
+
+            
+            
         end
         
         

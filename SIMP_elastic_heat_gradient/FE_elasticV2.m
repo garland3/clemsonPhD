@@ -1,8 +1,24 @@
 function [T, maxF,maxT]=FE_elasticV2(designVars, settings, matProp)
 
 % loading condition
-FappliedLoad = -1000;
-fixedElementsCase = 'leftClamped'; % 'sidesMiddle'
+if settings.loadingCase == 111
+    FappliedLoad = -1000;
+    fixedElementsCase = 'leftClamped'; % 'sidesMiddle'
+elseif settings.loadingCase ==1
+    % Testing K_xx
+     FappliedLoad = -1000;
+    settings.fixedElementsCase = 'bottom'; % 'sidesMiddle'
+elseif loadingCase ==2
+    % Testing K_yy
+    FappliedLoad = -1000;
+    settings.fixedElementsCase = 'right'; % 'sidesMiddle'
+elseif loadingCase ==3
+    FappliedLoad = -1000;
+    settings.fixedElementsCase = 'bottom'; % 'sidesMiddle'
+elseif loadingCase ==4
+    FappliedLoad = -1000;
+    settings.fixedElementsCase = 'bottom'; % 'sidesMiddle'
+end
 
 
 % E = matProp.E_material1; % Young's mod

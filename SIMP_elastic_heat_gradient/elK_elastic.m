@@ -1,4 +1,4 @@
-function [KE, kExpansion_bar, B]=elK_elastic(E,v, G)
+function [KE, kExpansion_bar, B_total, F_meso]=elK_elastic(E,v, G, strain)
 
 % Change this if statement to be not true if you need to see the
 % calculations
@@ -11,6 +11,8 @@ if(1==1)
     % E = materialProp.E_material1;
     % v = materialProp.v; % Piossons ratio
     % G = materialProp.G;
+    
+    % Plane stress problem. 
 
     D = [ 1 v 0;
         v 1 0;
@@ -34,9 +36,11 @@ if(1==1)
       weight = [ 1 1 1 1];
 
       ke = zeros(8,8);
+      F_meso = zeros(8,1);
       kExpansion_bar = 0;
-    %      ftemp = zeros(4,4);
+          ftemp = zeros(8,1);
     %  btemp = zeros(2,4);
+     B_total = zeros(3,8);
 
       % Loop over the guass points
       for gu = 1:4
@@ -72,9 +76,18 @@ if(1==1)
 
          B(3,[1,3,5,7]) = B_2by4_v2(2,1:4);
          B(3,[2,4,6,8]) = B_2by4_v2(1,1:4);   
+         B_total = B_total+ B*J_det*wght;
+         
 
          tempK = transpose(B)*D*B*J_det*wght;          
          ke = ke + tempK; 
+         
+         
+         % calculate the load force for a strain 
+         if(~isempty(strain))
+          ftemp = transpose(B)*D*transpose(strain)*J_det*wght;
+          F_meso = ftemp+F_meso;
+         end
          
          % Calcualte the thermal expansion matrix
          f_bar_temp =  transpose(B)*D*transpose([1 1  0])*J_det*wght;

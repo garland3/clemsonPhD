@@ -11,8 +11,8 @@ classdef MaterialProperties
         %         alpha1 = 1.5e-5; %thermal expansion coefficient for material 1
         %         alpha2 = 2.4e-5; % thermal expansion coefficient for material 2
         
-        E_material1 = 4; % N/mm^2 The elastic mod of material 1
-        E_material2 = 2; % The elastic mod of material 2
+        E_material1 = 1; %4 N/mm^2 The elastic mod of material 1
+        E_material2 = 0.5; %4 The elastic mod of material 2
         
         K_material1 = 0.02; %  W/ (mm*K)heat conduction of material 1
         K_material2 = 0.04; % heat conduction of material 2
@@ -32,7 +32,8 @@ classdef MaterialProperties
         function obj = MaterialProperties
             obj.G = obj.E_material1/(2*(1+obj.v));
             E = 1;
-            obj.dKelastic = elK_elastic(E,obj.v, obj.G)*(obj.E_material1-obj.E_material2);
+            strain = []; % empty matrix, 
+            obj.dKelastic = elK_elastic(E,obj.v, obj.G,strain)*(obj.E_material1-obj.E_material2);
             
             heatCoefficient = 1;
             obj.dKheat =  elementK_heat(heatCoefficient)*(obj.K_material1-obj.K_material2);
@@ -73,10 +74,19 @@ classdef MaterialProperties
         %------------------------------------
         % Calculate element stiffness matrix. 
         %------------------------------------
-        function [ke, kexpansionBar] = effectiveElasticKEmatrix(obj, material1Fraction, settings)
+        function [ke, kexpansionBar,B] = effectiveElasticKEmatrix(obj, material1Fraction, settings)
             % Calculate E, then calculate the K element matrix
             E = effectiveElasticProperties(obj, material1Fraction, settings);
-            [ke, kexpansionBar, ~]=elK_elastic(E,obj.v, obj.G);
+            [ke, kexpansionBar, B, ~]=elK_elastic(E,obj.v, obj.G,[]);
+        end
+        
+          %------------------------------------
+        % MESO
+          %------------------------------------
+         function [ke, kexpansionBar,B_total, F_meso] = effectiveElasticKEmatrix_meso(obj, material1Fraction, settings,strain)
+            % Calculate E, then calculate the K element matrix
+            E = effectiveElasticProperties(obj, material1Fraction, settings);
+            [ke, kexpansionBar,B_total,F_meso]=elK_elastic(E,obj.v, obj.G,strain);
         end
         
         % Calculate thermal expansion coefficient

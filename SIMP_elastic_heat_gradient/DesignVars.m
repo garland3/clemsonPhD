@@ -50,15 +50,19 @@ classdef DesignVars
             
             % Get the B matrix, the E,v,G do not matter and are not used
             % in the B calculation, so set them to 1.
-            E = 1; v= 1; G = 1;
-            [~, ~, B_out] = elK_elastic(E,v, G);
+            E = 1; v= 1; G = 1; strain = [];
+            [~, ~, B_out] = elK_elastic(E,v, G,strain);
             obj.B = B_out;
             
         end
         
+       
+        
         % Calcualte the Center of each element and put the information
         % into an array. Needed for the FEA
         % Calculate it here, so it only need to be calculated once.
+        %
+        % Think these are actually node locations
         function obj = CalcElementLocation(obj,settings)
             nn = (settings.nelx+1)*(settings.nely+1); % number of nodes
             
@@ -79,10 +83,73 @@ classdef DesignVars
             end
         end
         
+        
+        % Calcualte the Center of each element and put the information
+        % into an array. Needed for the FEA
+        % Calculate it here, so it only need to be calculated once.
+        function obj = CalcNodeLocationMeso(obj,settings)
+            nn = (settings.nelx)*(settings.nely); % number of nodes
+            
+            numNodesInRow = settings.nelx ;
+            numNodesInColumn = settings.nely ;
+            obj.XLocations=zeros(numNodesInRow,numNodesInColumn);
+            obj.YLocations=zeros(numNodesInRow,numNodesInColumn);
+            
+            obj.globalPosition = zeros(nn,2);
+            count = 1;
+            for i = 1:(numNodesInColumn)  % y
+                for j= 1:(numNodesInRow) % x
+                    obj.globalPosition(count,:) = [j-1 i-1];
+                    count = count+1;
+                    obj.XLocations(j,i) = j-1;
+                    obj.YLocations(j,i) = i-1;
+                end
+            end
+        end
+        
+        % IEN holds the node numbers for each element. 
+    % Each row is a new element
+    % The first column is element 1's global node number
+    % Second column is elemnt 2's global node number
+    %  and ....
+    % 
+    % Element nodes are as follows
+    %
+    %  4 ---- 3
+    %  |      |
+    %  |      |
+    %  1 ---- 2
+    %
+    %
+    % Let the x direction be the first dof and y direction the second
+    %  
+    %   y = 2
+    %   /\
+    %   |
+    %   |
+    %   *----> x = 1
+    %
+    %
+    %
+    % ---------------------------------------------
+    % Global matrix nodes are as follows
+    % row = nelx+1
+    % col = nely+1
+    %
+    % col*row+1-col*row+2-col*row+3-col*row+4...col*row+row-1-col*row+row
+    % .            .         .         .             .            .
+    % .            .         .         .             .            .
+    % .            .         .         .             .            .
+    % |            |         |         |             |            |
+    % 2*row+1 - 2*row+2 - 2*row+3 - 2*row+4 ... 2*row+row-1 - 2*row+row
+    % |            |         |         |             |            |
+    % 1*row+1 - 1*row+2 - 1*row+3 - 1*row+4 ... 1*row+row-1 - 1*row+row
+    % |            |         |         |             |            |
+    % 0*row+1 - 0*row+2 - 0*row+3 - 0*row+4 ... 0*row+row-1 - 0*row+row
         function obj =  CalcIENmatrix(obj,settings)
             
             count = 1;
-            elementsInRow = settings.nelx+1;
+            elementsInRow = settings.nelx+1; % think this is actually "nodes in a row. "
             nn = (settings.nelx+1)*(settings.nely+1); % number of nodes
             obj.IEN = zeros(nn,4);
             % Each row, so nely # of row
@@ -94,6 +161,60 @@ classdef DesignVars
                         rowMultiplier*elementsInRow+j+1, ...
                         (rowMultiplier +1)*elementsInRow+j+1,...
                         (rowMultiplier +1)*elementsInRow+j];
+                    count = count+1;
+                end
+            end
+        end
+        
+        % ---------------------------
+        %
+        %  Calcualte the element node map (IEN) for the homogenization meso
+        %  structure case. BAsically the map needs to have the displacement
+        %  field be periodic, so ti must loop back on itself on the edges. 
+        %
+        % ---------------------------
+         function obj =  CalcElementNodeMapmatrixWithPeriodicXandY(obj,settings)
+            
+            count = 1;
+            elementsInRow = settings.nelx;
+            nn = (settings.nelx)*(settings.nely); % number of nodes same as number of elements since it wraps
+            obj.IEN = zeros(nn,4);
+            % Each row, so nely # of row
+            for i = 1:settings.nely
+                rowMultiplier = i-1;
+                % Each column, so nelx # of row
+                for j= 1:settings.nelx
+                    
+                    % normal case
+                    if(j ~= settings.nelx && i ~= settings.nely )
+                        obj.IEN(count,:)=[rowMultiplier*elementsInRow+j, ...
+                            rowMultiplier*elementsInRow+j+1, ...
+                            (rowMultiplier +1)*elementsInRow+j+1,...
+                            (rowMultiplier +1)*elementsInRow+j];
+                    elseif(j == settings.nelx && i ~= settings.nely )
+                        % On the right side of the mesh case
+                        
+                         % loop back arround case case
+                        obj.IEN(count,:)=[rowMultiplier*elementsInRow+j, ...
+                            rowMultiplier*elementsInRow+1, ... % note the difference
+                            (rowMultiplier +1)*elementsInRow+1,... % note the difference
+                            (rowMultiplier +1)*elementsInRow+j]; 
+                    elseif(j ~= settings.nelx && i == settings.nely )
+                          % On the top side of the mesh case
+                          
+                            obj.IEN(count,:)=[rowMultiplier*elementsInRow+j, ...
+                            rowMultiplier*elementsInRow+j+1, ...
+                            0+j+1,... % note the difference
+                           0+j]; % note the difference
+                       
+                    elseif(j == settings.nelx && i == settings.nely )
+                         % On the top right  side of the mesh case
+                         obj.IEN(count,:)=[rowMultiplier*elementsInRow+j, ...
+                            rowMultiplier*elementsInRow+1, ...
+                              1,... % back to the node 1 
+                           j];
+                        
+                    end
                     count = count+1;
                 end
             end
@@ -160,6 +281,7 @@ classdef DesignVars
             volume2 = volume2/ne;
             
         end
+        %% 
         
         function obj = CalculateSensitivies(obj, settings, matProp, loop)
             elementsInRow = settings.nelx+1;            
@@ -271,15 +393,20 @@ classdef DesignVars
         end % End Function, CalculateSenstivities
         
         
-         function obj = CalculateSensitiviesMesoStructure(obj, settings, matProp, loop)
+         % ------------------------------------------------------------
+         %
+         % CalculateSensitiviesMesoStructure
+         %
+         % ------------------------------------------------------------
+         function obj = CalculateSensitiviesMesoStructure(obj, settings, matProp, loop,macroElemProps)
              
-            elementsInRow = settings.nelx+1;            
+            elementsInRow = settings.nelx;            
             obj.xold = obj.x;
             
             % FE-ANALYSIS            
             %[obj.U_heatColumn]=temperatureFEA_V3(obj, settings, matProp,loop);
             %[obj.U, obj.maxF, obj.maxU]=FE_elasticV2(obj, settings, matProp);  
-            [obj.U, obj.maxF,obj.maxU] = AppliedStrain(obj, settings, matProp); 
+            [obj.U, obj.maxF,obj.maxU] = AppliedStrain(obj, settings, matProp,macroElemProps); 
             
             % OBJECTIVE FUNCTION AND SENSITIVITY ANALYSIS
             obj.c = 0.; % c is the objective. Total strain energy
@@ -288,39 +415,102 @@ classdef DesignVars
             
             for ely = 1:settings.nely
                 rowMultiplier = ely-1;
-                for elx = 1:settings.nelx                    
-                    nodes1=[rowMultiplier*elementsInRow+elx;
-                        rowMultiplier*elementsInRow+elx+1;
-                        (rowMultiplier +1)*elementsInRow+elx+1;
-                        (rowMultiplier +1)*elementsInRow+elx];
+                for elx = 1:settings.nelx     
+                    count = rowMultiplier*elementsInRow+elx;
+                   nodes1=  obj.IEN(count,:);
+                   % nodes1=[rowMultiplier*elementsInRow+elx;
+                    %    rowMultiplier*elementsInRow+elx+1;
+                     %   (rowMultiplier +1)*elementsInRow+elx+1;
+                      %  (rowMultiplier +1)*elementsInRow+elx];
                     
                     xNodes = nodes1*2-1;
                     yNodes = nodes1*2;
-                    NodeNumbers = [xNodes(1) yNodes(1) xNodes(2) yNodes(2) xNodes(3) yNodes(3) xNodes(4) yNodes(4)];
+                    dofNumbers = [xNodes(1) yNodes(1) xNodes(2) yNodes(2) xNodes(3) yNodes(3) xNodes(4) yNodes(4)];
                     
-                    Ue = obj.U(NodeNumbers,:);
+                    Ue = obj.U(dofNumbers,:);
                    % U_heat = obj.U_heatColumn(nodes1,:);
                     %averageElementTemp = mean2(U_heat); % calculate the average temperature of the 4 nodes
                     
                     % Get the element K matrix for this partiular element
                     KE = matProp.effectiveElasticKEmatrix(  obj.w(ely,elx),settings);
                     % KEHeat = matProp.effectiveHeatKEmatrix(  obj.w(ely,elx), settings);
-                    Dmaterial = matProp.calculateEffectiveConstitutiveEquation( obj.w(ely,elx), settings); 
+                    % Dmaterial = matProp.calculateEffectiveConstitutiveEquation( obj.w(ely,elx), settings); 
                     
                     % Find the elastic strain
-                    elasticStrain = obj.B*Ue;                    
-                    term1 = transpose(elasticStrain)*Dmaterial*elasticStrain*obj.x(ely,elx)^settings.penal;
-                    term2 = 0;
-                    term3= 0;
+                   % elasticStrain = obj.B*Ue;                    
+                    term1 = transpose(Ue)*KE*Ue*obj.x(ely,elx)^settings.penal;
+                  %  term2 = 0;
+                   % term3= 0;
                     
                      % Sum the elastic compliance terms. 
-                    total = (term1 + term2 + term3);                    
-                    obj.temp1(ely,elx) = -total;
+                   % total = (term1 + term2 + term3);                    
+                    obj.temp1(ely,elx) = -term1;
+                    
+                    % calculate the minim temp sensitivity
+                   % obj.temp2(ely,elx) = -settings.penal*obj.x(ely,elx)^(settings.penal-1)*U_heat'*KEHeat*U_heat;
                 end
             end             
          end % end CalculateSensitiviesMesoStructure
+         
+         % ------------------------------------------------------------
+         % GetHomogenizedProperties
+         % ------------------------------------------------------------
+         %
+         % For meso strudcture design HOmogenize the matrix and get K_h
+         % Return the K_matrix that discribes this meso structure's
+         % properties
+         % ------------------------------------------------------------
+          function macroElemProps = GetHomogenizedProperties(obj, settings,homgSettings, matProp, loop,macroElemProps)
+              
+           
+             
+             % Test 3 loading cases. XX, YY, XY
+%              loadstrain = [1 0 0;
+%                            0 1 0;
+%                            0 0 1]
+             
+             %load  = 1:3
+             %for ll = load
+             % I call the constiut
+                  [macroElemProps.D_homog]=FE_elasticV2_homgonization(obj, settings, matProp);      
+             %end
+              
+              
+         end % end CalculateSensitiviesMesoStructure
         
-        
+         
+         
+           % ------------------------------------------------------------
+           %
+           % Tiles the micro leve to a meso
+           %
+            % ------------------------------------------------------------
+         function obj = TileMesoStructure(obj,  homgSettings, designVarsMicro, settingsMicro)
+            
+            nn = (homgSettings.nelx+1)*(homgSettings.nely+1); % number of nodes
+            
+            numNodesInRow = homgSettings.nelx + 1;
+            numNodesInColumn = homgSettings.nely + 1;
+            obj.XLocations=zeros(numNodesInRow,numNodesInColumn);
+            obj.YLocations=zeros(numNodesInRow,numNodesInColumn);
+            
+          
+            count = 1;
+            for i = 1:homgSettings.nely  % y
+                for j= 1:homgSettings.nelx % x
+                    %obj.globalPosition(count,:) = [j-1 i-1];
+                    %count = count+1;
+                    %obj.XLocations(j,i) = j-1;
+                    %obj.YLocations(j,i) = i-1;
+                    %obj.
+                    microY = mod(i-1,settingsMicro.nely)+1;
+                    microX = mod(j-1,settingsMicro.nelx)+1;
+                    obj.x(i,j) = designVarsMicro.x(microY,microX);
+                    
+                    
+                end
+            end
+        end
         
     end % End Methods
 end % End Class DesignVars

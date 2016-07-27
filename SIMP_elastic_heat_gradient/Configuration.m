@@ -4,6 +4,8 @@ classdef Configuration
         % --------------------------------------
         % %% Settings
         % --------------------------------------------
+        settingsMeso;
+        
         nelx = 40; % 40 # of elements in the x direcction
         nely = 20; % 18 number of elements in the y direction
         penal = 3; % penality used for the SIMP method
@@ -21,17 +23,20 @@ classdef Configuration
         % Plotting information
         doPlotVolFractionDesignVar = 0;
         doPlotTopologyDesignVar = 1;
-        doPlotHeat = 1;
-        doPlotHeatSensitivityTopology = 1;
+        doPlotHeat = 0;
+        doPlotHeatSensitivityTopology = 0;
         doPlotStress = 0;
         doPlotFinal = 0;
-        doPlotMetrics = 1;
+        doPlotMetrics = 0;
         doSaveDesignVarsToCSVFile = 0; % set to 1 to write plotFinal csv file instead      
         v1 = 1;
         v2 = 1;
         totalVolume; % = v1+v2;  
         iterationNum=0; %  used for parallel computing. 
         maxFEACalls = 50;
+        maxMasterLoops = 15;
+        terminationAverageCount = 4; % the average change over this number of iterations must be below the termination criteria
+        terminationCriteria = 0.01; % if the normalized average change over  terminationAverageCount of iterations is below this value then termainted. ie. 1% change
         % not much faster. 
         useGPU = 0; % set to 1 to try to solve matrix using gpu        
         % -----------------
@@ -49,7 +54,10 @@ classdef Configuration
         % 4. Kingery's, metal ceramic composite
         % 5. Hashin–Shtrikam law (average of upper and lower boundary)
         % ---------------------        
-        heatMaterialInterpMethod = 1;         
+        heatMaterialInterpMethod = 1;   
+        
+        
+        loadingCase = 111; % left clamped
     end    
     
     methods
