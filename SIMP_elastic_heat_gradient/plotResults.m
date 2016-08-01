@@ -119,7 +119,7 @@ classdef plotResults
         
         % Plots an array
         function PlotArrayGeneric(obj, array, titleText)
-            imagesc(array); axis equal; axis tight; axis off;
+                imagesc(array); axis equal; axis tight; axis off;
             % colormap winter
             set(gca,'YDir','normal');
             title(titleText);

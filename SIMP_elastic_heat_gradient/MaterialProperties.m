@@ -11,8 +11,8 @@ classdef MaterialProperties
         %         alpha1 = 1.5e-5; %thermal expansion coefficient for material 1
         %         alpha2 = 2.4e-5; % thermal expansion coefficient for material 2
         
-        E_material1 = 1; %4 N/mm^2 The elastic mod of material 1
-        E_material2 = 0.5; %4 The elastic mod of material 2
+        E_material1 = 100000; %4 N/mm^2 The elastic mod of material 1
+        E_material2 = 50000; %4 The elastic mod of material 2
         
         K_material1 = 0.02; %  W/ (mm*K)heat conduction of material 1
         K_material2 = 0.04; % heat conduction of material 2

@@ -7,7 +7,7 @@ function combinedTopologyOptimization(useInputArgs, w1text, iterationNum)
 % %% Settings
 % --------------------------------------------
 settings = Configuration;
-settings.mode = 7;
+settings.mode = 6;
 % 1 = topology only, 2 = material optimization only. 3 = both,4 = meso only.
 % 5 = meso-structure   6. Testing reading .csv files and designing each
 % meso structure
@@ -204,11 +204,6 @@ while status == 0  && masterloop<=settings.maxMasterLoops && FEACalls<=settings.
                 break;
             end
         end
-        
-        folderNum = settings.iterationNum;
-        outname = sprintf('./out%i/storeOptimizationVar.csv',folderNum);
-        csvwrite(outname,designVars.storeOptimizationVar);
-        status
     end
 end
 
@@ -262,7 +257,7 @@ if(settings.mode ==6 || settings.mode ==10)
         e        
         macroElementProps = GetMacroElementPropertiesFromCSV(settings,e,macro_meso_iteration);
         
-        plotting = 0; % this was for debugging
+        plotting = 1; % this was for debugging
         plottingMesoDesign = 1; % this was for debugging
         if(plotting ==1)
             U2 = macroElementProps.disp;
@@ -283,8 +278,7 @@ if(settings.mode ==6 || settings.mode ==10)
             
             % Set the target infill for the meso as the vol fraction of
             % material 1 for now. 
-%              designVars.x(y,x)
-            mesoSettings.v1=macroElementProps.material1Fraction*macroElementProps.density^settings.penal;
+            mesoSettings.v1=macroElementProps.material1Fraction;
              mesoSettings.v2=0;
             mesoSettings.totalVolume=macroElementProps.material1Fraction;
             [D_homog,designVarsMeso,macroElementProps]= MesoStructureDesign(matProp,mesoSettings,designVarsMeso,masterloop,FEACalls,macroElementProps);
@@ -293,10 +287,8 @@ if(settings.mode ==6 || settings.mode ==10)
             D_homog_flat = reshape(D_homog,1,9);
             
             if(plottingMesoDesign ==1)
-                p = plotResults;
-                outname = sprintf('meso structure for macro element %i',e);
-                p.PlotArrayGeneric(designVarsMeso.x,outname);
-                drawnow
+                p = plotResults
+                p.PlotArrayGeneric(designVarsMeso.x,'unit cell'
             end
         else
             D_homog_flat = zeros(1,9);
@@ -350,7 +342,10 @@ if(settings.mode ==7 || settings.mode ==10 )
     
 end
 
-
+folderNum = settings.iterationNum;
+outname = sprintf('./out%i/storeOptimizationVar.csv',folderNum);
+csvwrite(outname,designVars.storeOptimizationVar);
+status
 
 
 % test for termaination of the function.

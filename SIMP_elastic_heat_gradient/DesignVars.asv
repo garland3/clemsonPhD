@@ -546,7 +546,7 @@ classdef DesignVars
         % same thing as above, but use a tiled version.
         % --------------------------------------------
         function obj = CalculateSensitiviesMesoStructure_Tile(obj, settings, matProp, loop,macroElemProps, U)
-            doplot = settings.plotSensitivityWhilerunning;
+            doplot = 0;
             if(doplot ==1)
                 p = plotResults;
             end
@@ -570,12 +570,10 @@ classdef DesignVars
             % tile. 
             for e = 1:ne
                 
-                columnsUp = settings.nely+floor(e/settings.nely);
-                offset = eleInRow*columnsUp  +  settings.nelx;
+                offset = eleInRow*settings.nely+settings.nelx;
                 
-                rowsOver = mod(e,settings.nelx);
-                tiledElementNum = rowsOver+offset;
-                eTile=tiledElementNum;
+                te+offset;
+                
                 
                 % loop over local node numbers to get their node global node numbers
                 nodes1 = obj.IENTile(eTile,:);
@@ -604,8 +602,8 @@ classdef DesignVars
                 % Sum the elastic compliance terms.
                 % total = (term1 + term2 + term3);
                 
-              
-                [elxSingle,elySingle]= obj.GivenNodeNumberGetXY(e);
+                elementNotTiledEquivalent = e-start+1;
+                [elxSingle,elySingle]= obj.GivenNodeNumberGetXY(elementNotTiledEquivalent);
                 obj.temp1(elySingle,elxSingle) = -term1;
                 
                 if(doplot ==1)
