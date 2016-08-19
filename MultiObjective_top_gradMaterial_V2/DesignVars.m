@@ -23,11 +23,11 @@ classdef DesignVars
         temp1; % Sensitivity 1
         temp2; % Sensitivity 2
         
-        complianceSensitivity; %
+        %complianceSensitivity; %
         totalStress;
         dc; % Derivative of c (hence dc). C is the objective.
         g1elastic; % Derivative of c with respect to a material change for the elastic
-        g1heat; %  Derivative of c with respect to a material change for the heat
+        g1heat; %  Derivative of cHeat with respect to a material change for the heat
         IEN; % element to node map. Save this matrix, so it does not need to be recalculated every time.
         XLocations; %=zeros(numNodesInRow,numNodesInColumn);
         YLocations; %=zeros(numNodesInRow,numNodesInColumn);
@@ -64,7 +64,7 @@ classdef DesignVars
             % Get the B matrix, the E,v,G do not matter and are not used
             % in the B calculation, so set them to 1.
             E = 1; v= 1; G = 1; strain = [];
-            [~, ~, B_out] = elK_elastic(E,v, G,strain);
+            [~, ~, B_out] = elK_elastic(E,v, G,strain,[]);
             obj.B = B_out;
             
         end
@@ -370,7 +370,8 @@ classdef DesignVars
         end
         %%
         
-        function obj = CalculateSensitivies(obj, settings, matProp, loop)
+        function obj = CalculateSensitivies(obj, settings, matProp, loop,macro_meso_iteration)
+            Dgiven = [];
             elementsInRow = settings.nelx+1;
             %             obj.xold = obj.x;
             
@@ -382,6 +383,8 @@ classdef DesignVars
             obj.c = 0.; % c is the objective. Total strain energy
             obj.cCompliance = 0;
             obj.cHeat = 0;
+            
+            count =1;
             
             for ely = 1:settings.nely
                 rowMultiplier = ely-1;
@@ -400,9 +403,13 @@ classdef DesignVars
                     averageElementTemp = mean2(U_heat); % calculate the average temperature of the 4 nodes
                     
                     % Get the element K matrix for this partiular element
-                    KE = matProp.effectiveElasticKEmatrix(  obj.w(ely,elx),settings);
+                    if(macro_meso_iteration>1)
+                        e = count;
+                        Dgiven =matProp.GetSavedDMatrix(e);
+                    end
+                    KE = matProp.effectiveElasticKEmatrix(  obj.w(ely,elx),settings,Dgiven);
                     KEHeat = matProp.effectiveHeatKEmatrix(  obj.w(ely,elx), settings);
-                    Dmaterial = matProp.calculateEffectiveConstitutiveEquation( obj.w(ely,elx), settings);
+                    Dmaterial = matProp.calculateEffectiveConstitutiveEquation( obj.w(ely,elx), settings,Dgiven);
                     
                     % Find the elastic strain
                     elasticStrain = obj.B*Ue;
@@ -421,16 +428,11 @@ classdef DesignVars
                         thermalStrain=0;
                     end
                     
-                    % Sum the elastic compliance terms.
-                    total = (term1 + term2 + term3);
-                    
-                    % Compliance,
-                    % obj.cCompliance = total;
+                    % Sum the elastic compliance terms.   % Compliance,
+                    total = (term1 + term2 + term3);                   
                     
                     obj.cCompliance = obj.cCompliance + obj.x(ely,elx)^settings.penal*Ue'*KE*Ue;
                     obj.cHeat =   obj.cHeat           + obj.x(ely,elx)^settings.penal*U_heat'*KEHeat*U_heat;
-                    
-                    
                     
                     % Derivative of  D
                     % (constitutive matrix) with respect to
@@ -446,10 +448,12 @@ classdef DesignVars
                         dTerm3=0;
                     end
                     
-                    totalStrain=thermalStrain+elasticStrain;
-                    totalSressLocal=Dmaterial*totalStrain*obj.x(ely,elx)^settings.penal;
-                    vonM = sqrt(totalSressLocal(1)^2  +   totalSressLocal(2)^2 -  totalSressLocal(1)*totalSressLocal(2)  +   3*(totalSressLocal(3))^2);
-                    obj.totalStress(ely,elx)=vonM;
+                    if (settings.doPlotStress == 1)
+                        totalStrain=thermalStrain+elasticStrain;
+                        totalSressLocal=Dmaterial*totalStrain*obj.x(ely,elx)^settings.penal;
+                        vonM = sqrt(totalSressLocal(1)^2  +   totalSressLocal(2)^2 -  totalSressLocal(1)*totalSressLocal(2)  +   3*(totalSressLocal(3))^2);
+                        obj.totalStress(ely,elx)=vonM;
+                    end
                     
                     % Topology sensitivies
                     %
@@ -465,8 +469,7 @@ classdef DesignVars
                     %obj.temp1(ely,elx) = obj.complianceSensitivity(ely,elx);
                     
                     % calculate the minim temp sensitivity
-                    obj.temp2(ely,elx) = -settings.penal*obj.x(ely,elx)^(settings.penal-1)*U_heat'*KEHeat*U_heat;
-                    
+                    obj.temp2(ely,elx) = -settings.penal*obj.x(ely,elx)^(settings.penal-1)*U_heat'*KEHeat*U_heat;                    
                     
                     % Calculate the derivative with respect to a material
                     % volume fraction composition change (not density change)
@@ -475,6 +478,7 @@ classdef DesignVars
                     %  obj.g1elastic(ely,elx) = obj.x(ely,elx)^(settings.penal)*Ue'*matProp.dKelastic*Ue;
                     
                     obj.g1heat(ely,elx) = obj.x(ely,elx)^(settings.penal)*U_heat'*matProp.dKheat*U_heat;
+                    count=count+1;
                 end % end, loop over nelx
             end % end, for loop over nely
         end % End Function, CalculateSenstivities
@@ -546,7 +550,7 @@ classdef DesignVars
         % same thing as above, but use a tiled version.
         % --------------------------------------------
         function obj = CalculateSensitiviesMesoStructure_Tile(obj, settings, matProp, loop,macroElemProps, U)
-            doplot = 0;
+            doplot = settings.plotSensitivityWhilerunning;
             if(doplot ==1)
                 p = plotResults;
             end
@@ -570,10 +574,12 @@ classdef DesignVars
             % tile. 
             for e = 1:ne
                 
-                offset = eleInRow*settings.nely+settings.nelx;
+                columnsUp = settings.nely+floor(e/settings.nely);
+                offset = eleInRow*columnsUp  +  settings.nelx;
                 
-                te+offset;
-                
+                rowsOver = mod(e,settings.nelx);
+                tiledElementNum = rowsOver+offset;
+                eTile=tiledElementNum;
                 
                 % loop over local node numbers to get their node global node numbers
                 nodes1 = obj.IENTile(eTile,:);
@@ -590,7 +596,7 @@ classdef DesignVars
                 %averageElementTemp = mean2(U_heat); % calculate the average temperature of the 4 nodes
                 
                 % Get the element K matrix for this partiular element
-                KE = matProp.effectiveElasticKEmatrix(  obj.wTile(ely,elx),settings);
+                KE = matProp.effectiveElasticKEmatrix(  obj.wTile(ely,elx),settings,[]);
                 % KEHeat = matProp.effectiveHeatKEmatrix(  obj.w(ely,elx), settings);
                 % Dmaterial = matProp.calculateEffectiveConstitutiveEquation( obj.w(ely,elx), settings);
                 
@@ -602,8 +608,9 @@ classdef DesignVars
                 % Sum the elastic compliance terms.
                 % total = (term1 + term2 + term3);
                 
-                elementNotTiledEquivalent = e-start+1;
-                [elxSingle,elySingle]= obj.GivenNodeNumberGetXY(elementNotTiledEquivalent);
+              result = obj.globalPosition(e,:);
+              elxSingle=result(1)+1;    elySingle=result(2)+1;
+%                 [elxSingle,elySingle]= obj.GivenNodeNumberGetXY(e);
                 obj.temp1(elySingle,elxSingle) = -term1;
                 
                 if(doplot ==1)
@@ -626,21 +633,16 @@ classdef DesignVars
         % properties
         % ------------------------------------------------------------
         function macroElemProps = GetHomogenizedProperties(obj, settings,homgSettings, matProp, loop,macroElemProps)
-            
-            
-            
             % Test 3 loading cases. XX, YY, XY
             %              loadstrain = [1 0 0;
             %                            0 1 0;
             %                            0 0 1]
             
-            %load  = 1:3
-            %for ll = load
+            % load  = 1:3
+            % for ll = load
             % I call the constiut
             [macroElemProps.D_homog]=FE_elasticV2_homgonization(obj, settings, matProp);
             %end
-            
-            
         end % end CalculateSensitiviesMesoStructure
         
     end % End Methods

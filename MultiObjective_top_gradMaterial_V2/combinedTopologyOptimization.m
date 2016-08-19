@@ -1,4 +1,4 @@
-function combinedTopologyOptimization(useInputArgs, w1text, iterationNum)
+function combinedTopologyOptimization(useInputArgs, w1text, iterationNum,macro_meso_iteration)
 % input args, useInputArgs = 1 if to use the input args
 % w1 weight1 for weighted objective.
 % iterationNum, used to know where to output files.
@@ -7,11 +7,14 @@ function combinedTopologyOptimization(useInputArgs, w1text, iterationNum)
 % %% Settings
 % --------------------------------------------
 settings = Configuration;
-settings.mode = 6;
-% 1 = topology only, 2 = material optimization only. 3 = both,4 = meso only.
-% 5 = meso-structure   6. Testing reading .csv files and designing each
-% meso structure
-% 7 for testing recombinging the meso structure designs.
+settings.mode = 4;
+% 1 = topology only,
+% 2 = material optimization only.
+% 3 = both mateiral vol fraction and topology
+% 4 = meso testing only.
+% 5 = test saving macro structure info to .csv files.  meso-structure
+% 6.= Testing reading .csv files and designing each meso structure
+% 7= testing recombinging the meso structure designs.
 % 10 = everything working!!!
 
 settings.elasticMaterialInterpMethod = 2; % Hashin–Shtrikam law (average of upper and lower boundary)
@@ -50,16 +53,7 @@ else
     settings.doPlotFinal = 1;
     settings.terminationCriteria =0.1; % 10%
     
-    % if meso structure designing, then make a smaller initial mesh
-    if(settings.mode == 4)
-        settings.doPlotTopologyDesignVar
-        settings.nelx = 5;
-        settings.nely = 5;
-        
-    end
-    
 end
-
 
 settings= settings.UpdateVolTargetsAndObjectiveWeights();
 settings
@@ -76,8 +70,11 @@ fractionCurrent_V1Local =1;
 
 designVars.temp1(1:settings.nely,1:settings.nelx) = 0;
 designVars.temp2(1:settings.nely,1:settings.nelx) = 0;
-designVars.complianceSensitivity(1:settings.nely,1:settings.nelx) = 0;
-designVars.totalStress(1:settings.nely,1:settings.nelx) = 0;
+%designVars.complianceSensitivity(1:settings.nely,1:settings.nelx) = 0;
+ 
+if (settings.doPlotStress == 1)
+    designVars.totalStress(1:settings.nely,1:settings.nelx) = 0;
+end
 
 designVars.g1elastic(1:settings.nely,1:settings.nelx) = 0;
 designVars.g1heat(1:settings.nely,1:settings.nelx) = 0;
@@ -86,36 +83,30 @@ designVars = designVars.CalcIENmatrix(settings);
 designVars =  designVars.CalcElementLocation(settings);
 designVars = designVars.PreCalculateXYmapToNodeNumber(settings);
 
-% if doing meso optimization, setup optimization configurations
-if ( settings.mode == 4)
-    %     homgSettings = Configuration;
-    %     homgSettings.nelx = 40;
-    %     homgSettings.nely = 40;
-    %     homgSettings.w1 = 0; % do not set to zero, instead set to 0.0001. Else we will get NA for temp2
-    %     homgSettings.iterationNum = 0;
-    %     homgSettings.doSaveDesignVarsToCSVFile = 1;
-    %     homgSettings.terminationCriteria =0.1; % 10%
-    
-    designVars = designVars.CalcElementNodeMapmatrixWithPeriodicXandY(settings);
-    designVars =  designVars.CalcNodeLocationMeso(settings);
-end
-
-
 masterloop = 0;
 FEACalls = 0;
 status=0;
 
+% macro_meso_iteration = 1;
+
+if ( settings.mode == 1 || settings.mode == 3 || settings.mode == 10 || settings.mode ==5)
+    matProp=  matProp.ReadConstitutiveMatrixesFromFiles( macro_meso_iteration, settings);
+end
 
 % START ITERATION
 while status == 0  && masterloop<=settings.maxMasterLoops && FEACalls<=settings.maxFEACalls
     masterloop = masterloop + 1;
+    
+    %     if macro_meso_iteration>1
+    
+    %     end
     
     % --------------------------------
     % Topology Optimization
     % --------------------------------
     if ( settings.mode == 1 || settings.mode == 3 || settings.mode == 10 || settings.mode ==5)
         for loopTop = 1:3
-            designVars = designVars.CalculateSensitivies(settings, matProp, masterloop);
+            designVars = designVars.CalculateSensitivies(settings, matProp, masterloop,macro_meso_iteration);
             [vol1Fraction, vol2Fraction] =  designVars.CalculateVolumeFractions(settings);
             
             FEACalls = FEACalls+1;
@@ -162,7 +153,7 @@ while status == 0  && masterloop<=settings.maxMasterLoops && FEACalls<=settings.
     % --------------------------------
     if ( settings.mode ==2 || settings.mode ==3 || settings.mode == 10 || settings.mode ==5)
         for loopVolFrac = 1:3
-            designVars = designVars.CalculateSensitivies( settings, matProp, masterloop);
+            designVars = designVars.CalculateSensitivies( settings, matProp, masterloop,macro_meso_iteration);
             FEACalls = FEACalls+1;
             
             % for j = 1:5
@@ -185,7 +176,7 @@ while status == 0  && masterloop<=settings.maxMasterLoops && FEACalls<=settings.
             designVars.w = max(min( designVars.w,1),0);    % Don't allow the    vol fraction to go above 1 or below 0
             designVars.lambda1 =  designVars.lambda1 -1/(designVars.mu1)*(targetFraction_v1-fractionCurrent_V1Local)*settings.volFractionDamping;
             
-                     
+            
             % PRINT RESULTS
             %change = max(max(abs(designVars.x-designVars.xold)));
             designVars.storeOptimizationVar = [designVars.storeOptimizationVar;designVars.c, designVars.cCompliance, designVars.cHeat,vol1Fraction,vol2Fraction,fractionCurrent_V1Local,densitySum];
@@ -204,9 +195,17 @@ while status == 0  && masterloop<=settings.maxMasterLoops && FEACalls<=settings.
                 break;
             end
         end
+        
+        
     end
 end
 
+if ( settings.mode ==2 || settings.mode ==3 || settings.mode == 10 || settings.mode ==5)
+    folderNum = settings.iterationNum;
+    outname = sprintf('./out%i/storeOptimizationVarMacroLoop%i.csv',folderNum,macro_meso_iteration);
+    csvwrite(outname,designVars.storeOptimizationVar);
+    status
+end
 % ---------------------------------------------
 %
 %         MESO DESIGN TESTING, MODE = 4
@@ -215,6 +214,9 @@ end
 % ---------------------------------------------
 % For testing only
 if(settings.mode ==4) % meso-structure design
+    designVars = designVars.CalcElementNodeMapmatrixWithPeriodicXandY(settings);
+    designVars =  designVars.CalcNodeLocationMeso(settings);
+    
     settings.maxMasterLoops = 3; % make it small
     macroElemProps = macroElementProp;
     macroElemProps.material1Fraction = 0.5;
@@ -231,10 +233,10 @@ end
 %         vol fraction must also have an  || settings.mode ==5
 %
 % ---------------------------------------------
-macro_meso_iteration = 1;
-if(settings.mode ==5  || settings.mode ==10) 
+
+if(settings.mode ==5  || settings.mode ==10)
     % write the displacement field to a .csv
-    SaveMacroProblemStateToCSV(settings,designVars,macro_meso_iteration);
+    SaveMacroProblemStateToCSV(settings,designVars,macro_meso_iteration,matProp);
 end
 
 
@@ -248,18 +250,19 @@ if(settings.mode ==6 || settings.mode ==10)
     % saving the important data to disk (.csv files).
     clear designVars
     
-    ne = settings.nelx*settings.nely; % number of elements    
-    SavedDmatrix = zeros(ne,9);    
+    ne = settings.nelx*settings.nely; % number of elements
+    %SavedDmatrix = zeros(ne,9);
     coord(:,1) = [0 1 1 0];
-    coord(:,2)  = [0 0 1 1];   
+    coord(:,2)  = [0 0 1 1];
     
     for e = 1:ne
-        e        
+        e
         macroElementProps = GetMacroElementPropertiesFromCSV(settings,e,macro_meso_iteration);
         
         plotting = 1; % this was for debugging
         plottingMesoDesign = 1; % this was for debugging
         if(plotting ==1)
+            figure(1)
             U2 = macroElementProps.disp;
             coordD = zeros(5,2);
             for temp = 1:4
@@ -269,31 +272,45 @@ if(settings.mode ==6 || settings.mode ==10)
             coord2 = coord;
             coordD(5,:) = coordD(1,:) ;
             coord2(5,:) = coord2(1,:);
+            subplot(1,2,1);
             plot(coordD(:,1),coordD(:,2), '-b');
+            axis square
         end
         
         % Check if void
         if(macroElementProps.density>settings.voidMaterialDensityCutOff)
-            [designVarsMeso mesoSettings] = GenerateDesignVarsForMesoProblem();
+            [designVarsMeso mesoSettings] = GenerateDesignVarsForMesoProblem(settings,e,macro_meso_iteration);
             
             % Set the target infill for the meso as the vol fraction of
-            % material 1 for now. 
-            mesoSettings.v1=macroElementProps.material1Fraction;
-             mesoSettings.v2=0;
+            % material 1 for now.
+            %              designVars.x(y,x)
+            %             mesoSettings.v1=macroElementProps.material1Fraction*macroElementProps.density^settings.penal;
+            mesoSettings.v1=max(macroElementProps.material1Fraction,0.3);
+            mesoSettings.v2=0;
             mesoSettings.totalVolume=macroElementProps.material1Fraction;
             [D_homog,designVarsMeso,macroElementProps]= MesoStructureDesign(matProp,mesoSettings,designVarsMeso,masterloop,FEACalls,macroElementProps);
-            D_homog
-            SaveMesoUnitCellDesignToCSV(designVarsMeso,macroElementProps,settings.iterationNum,macro_meso_iteration,e);
-            D_homog_flat = reshape(D_homog,1,9);
+            %             D_homog
+            
+            %D_homog_flat = reshape(D_homog,1,9);
             
             if(plottingMesoDesign ==1)
-                p = plotResults
-                p.PlotArrayGeneric(designVarsMeso.x,'unit cell'
+                p = plotResults;
+                figure(1)
+                subplot(1,2,2);
+                outname = sprintf('meso structure for macro element %i density %f',e, mesoSettings.v1);
+                p.PlotArrayGeneric(designVarsMeso.x,outname);
+                drawnow
             end
+            newDesign = 1; % true
         else
-            D_homog_flat = zeros(1,9);
+            %D_homog_flat = zeros(1,9);
+            newDesign = 0; % false
+            designVarsMeso=[];
         end
-        SavedDmatrix(e,:) = D_homog_flat;
+        
+        SaveMesoUnitCellDesignToCSV(designVarsMeso,macroElementProps,settings.iterationNum,macro_meso_iteration,e,newDesign);
+        
+        % SavedDmatrix(e,:) = D_homog_flat;
         
         % write the density, volume fraction and topology fields to .csv files
         % make a list of elemenents that have material (ie, we don't need to
@@ -312,14 +329,16 @@ end
 clear designVarsMeso
 
 % -------------------------------------
-% Generate macro-meso complete structure. 
+% Generate macro-meso complete structure.
 % 7 is for testing the recombining of the meso structures.
 % -------------------------------------
 if(settings.mode ==7 || settings.mode ==10 )
-    [designVarsMeso mesoSettings] = GenerateDesignVarsForMesoProblem();
+    [designVarsMeso mesoSettings] = GenerateDesignVarsForMesoProblem(settings,1,1);
     % Generate huge area
-    totalX=settings.nelx*mesoSettings.nelx;
-    totalY=settings.nely*mesoSettings.nely;
+    numTilesX=settings.numTilesX;
+    numTilesY = settings.numTilesY;
+    totalX=settings.nelx*mesoSettings.nelx*numTilesX;
+    totalY=settings.nely*mesoSettings.nely*numTilesY;
     
     completeStruct = zeros(totalY,totalX);
     ne = settings.nelx*settings.nely; % number of elements
@@ -331,21 +350,25 @@ if(settings.mode ==7 || settings.mode ==10 )
         if(macroElementProps.density>settings.voidMaterialDensityCutOff)
             x=GetMesoUnitCellDesignFromCSV(settings.iterationNum,macro_meso_iteration,e);
             
-            yShift = (macroElementProps.yPosition-1)*mesoSettings.nely+1;
-            xShift = (macroElementProps.xPosition-1)*mesoSettings.nelx+1;
-            completeStruct(yShift:(yShift+mesoSettings.nely-1),xShift:(xShift+mesoSettings.nelx-1))=x;
+            yShift = (macroElementProps.yPosition-1)*mesoSettings.nely*numTilesY+1;
+            xShift = (macroElementProps.xPosition-1)*mesoSettings.nelx*numTilesX+1;
+            
+            designVarsMeso.x = x;
+            designVarsMeso=TileMesoStructure(mesoSettings, designVarsMeso);
+            
+            completeStruct(yShift:(yShift+mesoSettings.nely*numTilesY-1),xShift:(xShift+mesoSettings.nelx*numTilesX-1))=designVarsMeso.xTile;
         end
     end
+    close all
     p = plotResults;
     p.PlotArrayGeneric( completeStruct, 'complete structure')
+    nameGraph = sprintf('./completeStucture%f_macroIteration_%i.png', settings.w1,macro_meso_iteration);
+    print(nameGraph,'-dpng')
     
     
 end
 
-folderNum = settings.iterationNum;
-outname = sprintf('./out%i/storeOptimizationVar.csv',folderNum);
-csvwrite(outname,designVars.storeOptimizationVar);
-status
+
 
 
 % test for termaination of the function.

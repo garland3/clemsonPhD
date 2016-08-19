@@ -64,7 +64,7 @@ classdef DesignVars
             % Get the B matrix, the E,v,G do not matter and are not used
             % in the B calculation, so set them to 1.
             E = 1; v= 1; G = 1; strain = [];
-            [~, ~, B_out] = elK_elastic(E,v, G,strain);
+            [~, ~, B_out] = elK_elastic(E,v, G,strain,[]);
             obj.B = B_out;
             
         end
@@ -370,7 +370,8 @@ classdef DesignVars
         end
         %%
         
-        function obj = CalculateSensitivies(obj, settings, matProp, loop)
+        function obj = CalculateSensitivies(obj, settings, matProp, loop,macro_meso_iteration)
+            Dgiven = [];
             elementsInRow = settings.nelx+1;
             %             obj.xold = obj.x;
             
@@ -382,6 +383,8 @@ classdef DesignVars
             obj.c = 0.; % c is the objective. Total strain energy
             obj.cCompliance = 0;
             obj.cHeat = 0;
+            
+            count =1;
             
             for ely = 1:settings.nely
                 rowMultiplier = ely-1;
@@ -400,9 +403,13 @@ classdef DesignVars
                     averageElementTemp = mean2(U_heat); % calculate the average temperature of the 4 nodes
                     
                     % Get the element K matrix for this partiular element
-                    KE = matProp.effectiveElasticKEmatrix(  obj.w(ely,elx),settings);
+                    if(macro_meso_iteration>1)
+                        e = count;
+                        Dgiven =matProp.GetSavedDMatrix(e);
+                    end
+                    KE = matProp.effectiveElasticKEmatrix(  obj.w(ely,elx),settings,Dgiven);
                     KEHeat = matProp.effectiveHeatKEmatrix(  obj.w(ely,elx), settings);
-                    Dmaterial = matProp.calculateEffectiveConstitutiveEquation( obj.w(ely,elx), settings);
+                    Dmaterial = matProp.calculateEffectiveConstitutiveEquation( obj.w(ely,elx), settings,Dgiven);
                     
                     % Find the elastic strain
                     elasticStrain = obj.B*Ue;
@@ -429,8 +436,6 @@ classdef DesignVars
                     
                     obj.cCompliance = obj.cCompliance + obj.x(ely,elx)^settings.penal*Ue'*KE*Ue;
                     obj.cHeat =   obj.cHeat           + obj.x(ely,elx)^settings.penal*U_heat'*KEHeat*U_heat;
-                    
-                    
                     
                     % Derivative of  D
                     % (constitutive matrix) with respect to
@@ -475,6 +480,7 @@ classdef DesignVars
                     %  obj.g1elastic(ely,elx) = obj.x(ely,elx)^(settings.penal)*Ue'*matProp.dKelastic*Ue;
                     
                     obj.g1heat(ely,elx) = obj.x(ely,elx)^(settings.penal)*U_heat'*matProp.dKheat*U_heat;
+                    count=count+1;
                 end % end, loop over nelx
             end % end, for loop over nely
         end % End Function, CalculateSenstivities
@@ -592,7 +598,7 @@ classdef DesignVars
                 %averageElementTemp = mean2(U_heat); % calculate the average temperature of the 4 nodes
                 
                 % Get the element K matrix for this partiular element
-                KE = matProp.effectiveElasticKEmatrix(  obj.wTile(ely,elx),settings);
+                KE = matProp.effectiveElasticKEmatrix(  obj.wTile(ely,elx),settings,[]);
                 % KEHeat = matProp.effectiveHeatKEmatrix(  obj.w(ely,elx), settings);
                 % Dmaterial = matProp.calculateEffectiveConstitutiveEquation( obj.w(ely,elx), settings);
                 
@@ -604,8 +610,9 @@ classdef DesignVars
                 % Sum the elastic compliance terms.
                 % total = (term1 + term2 + term3);
                 
-              
-                [elxSingle,elySingle]= obj.GivenNodeNumberGetXY(e);
+              result = obj.globalPosition(e,:);
+              elxSingle=result(1)+1;    elySingle=result(2)+1;
+%                 [elxSingle,elySingle]= obj.GivenNodeNumberGetXY(e);
                 obj.temp1(elySingle,elxSingle) = -term1;
                 
                 if(doplot ==1)

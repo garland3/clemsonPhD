@@ -12,7 +12,7 @@ doPlot =0; % For debugging allow plotting of some information.
 
 % Calcualte the strain, epsilon = B*d
 % get the B matrix. 
-[macroElemProps.K ,~,macroElemProps.B] = matProp.effectiveElasticKEmatrix( macroElemProps.material1Fraction, mesoSettings);
+[macroElemProps.K ,~,macroElemProps.B] = matProp.effectiveElasticKEmatrix( macroElemProps.material1Fraction, mesoSettings,[]);
 macroElemProps.strain = macroElemProps.B* transpose(macroElemProps.disp); % transpose the disp to be vertical
 
 if(doPlot ==1)
