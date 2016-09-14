@@ -57,9 +57,7 @@ classdef DesignVars
     
     methods
         % Constructur method
-        function obj = DesignVars(settings)
-            obj.CalcIENmatrix(settings);
-            obj.CalcElementLocation(settings);
+        function obj = DesignVars(settings)     
             
             % Get the B matrix, the E,v,G do not matter and are not used
             % in the B calculation, so set them to 1.
@@ -513,15 +511,16 @@ classdef DesignVars
                 yNodes = nodes1*2;
                 dofNumbers = [xNodes(1) yNodes(1) xNodes(2) yNodes(2) xNodes(3) yNodes(3) xNodes(4) yNodes(4)];
                 
-                Ue = obj.U(dofNumbers,:);
+                Ue = U(dofNumbers);
                 % U_heat = obj.U_heatColumn(nodes1,:);
                 %averageElementTemp = mean2(U_heat); % calculate the average temperature of the 4 nodes
                 
                 % Get the element K matrix for this partiular element
-                KE = matProp.effectiveElasticKEmatrix(  obj.w(ely,elx),settings);
+                KE = matProp.effectiveElasticKEmatrix(  obj.w(ely,elx),settings,[]);
+             
                 % KEHeat = matProp.effectiveHeatKEmatrix(  obj.w(ely,elx), settings);
                 % Dmaterial = matProp.calculateEffectiveConstitutiveEquation( obj.w(ely,elx), settings);
-                
+%                 settings.nelx
                 % Find the elastic strain
                 % elasticStrain = obj.B*Ue;
                 term1 = transpose(Ue)*KE*Ue*obj.x(ely,elx)^settings.penal;
@@ -535,12 +534,20 @@ classdef DesignVars
                 obj.temp1(ely,elx) = -term1;
                 
                 if(doplot ==1)
-                    p.PlotArrayGeneric(obj.temp1, 'plotting sensitivities while running. ')
-                    drawnow
+                    if(mod(e,10) ==0)
+                        p.PlotArrayGeneric(obj.temp1, 'plotting sensitivities while running. ')
+                        drawnow
+                    end
                 end
                 % calculate the minim temp sensitivity
                 % obj.temp2(ely,elx) = -settings.penal*obj.x(ely,elx)^(settings.penal-1)*U_heat'*KEHeat*U_heat;
             end
+            
+            % Do final plot
+            if(doplot ==1)
+                p.PlotArrayGeneric(obj.temp1, 'final plotting sensitivities while running. ')
+                    drawnow
+             end
             %             end
         end % end CalculateSensitiviesMesoStructure
         
@@ -551,6 +558,7 @@ classdef DesignVars
         % --------------------------------------------
         function obj = CalculateSensitiviesMesoStructure_Tile(obj, settings, matProp, loop,macroElemProps, U)
             doplot = settings.plotSensitivityWhilerunning;
+%             doplot = 1;
             if(doplot ==1)
                 p = plotResults;
             end
@@ -559,10 +567,10 @@ classdef DesignVars
             obj.cCompliance = 0;
             obj.cHeat = 0;
             
-            ne = obj.nelyTile *obj.nelxTile ; % number of elements
-            elementsPerTile = settings.nely*settings.nelx;
-            start = (settings.sensitivityTile-1)*elementsPerTile;
-            endElement = (settings.sensitivityTile)*elementsPerTile;
+%             ne = obj.nelyTile *obj.nelxTile ; % number of elements
+%             elementsPerTile = settings.nely*settings.nelx;
+%             start = (settings.sensitivityTile-1)*elementsPerTile;
+%             endElement = (settings.sensitivityTile)*elementsPerTile;
             %             for e = start:endElement
             
             
@@ -570,14 +578,14 @@ classdef DesignVars
             
                eleInRow = settings.nelx*settings.numTilesX;
             
-            % loop over the single unit cell ,and then map to the middle
-            % tile. 
+            % loop over the single unit cell ,and get sensitivity 
             for e = 1:ne
                 
-                columnsUp = settings.nely+floor(e/settings.nely);
+%                 columnsUp = settings.nely+floor(e/settings.nely);
+                columnsUp = settings.nely+floor((e-1)/settings.nely);
                 offset = eleInRow*columnsUp  +  settings.nelx;
                 
-                rowsOver = mod(e,settings.nelx);
+                rowsOver = mod(e-1,settings.nelx)+1;
                 tiledElementNum = rowsOver+offset;
                 eTile=tiledElementNum;
                 
@@ -620,8 +628,8 @@ classdef DesignVars
                 % calculate the minim temp sensitivity
                 % obj.temp2(ely,elx) = -settings.penal*obj.x(ely,elx)^(settings.penal-1)*U_heat'*KEHeat*U_heat;
             end
-            %             p = plotResults;
-            %             p.PlotArrayGeneric( obj.temp1,'sensitivity');
+%                         p = plotResults;
+%                         p.PlotArrayGeneric( obj.temp1,'sensitivity');
         end % end CalculateSensitiviesMesoStructure
         
         % ------------------------------------------------------------

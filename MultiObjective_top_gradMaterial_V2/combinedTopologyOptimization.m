@@ -7,7 +7,7 @@ function combinedTopologyOptimization(useInputArgs, w1text, iterationNum,macro_m
 % %% Settings
 % --------------------------------------------
 settings = Configuration;
-settings.mode = 4;
+settings.mode = 5;
 % 1 = topology only,
 % 2 = material optimization only.
 % 3 = both mateiral vol fraction and topology
@@ -23,6 +23,10 @@ settings.heatMaterialInterpMethod = 5; % Hashin–Shtrikam law (average of upper a
 % target volumes of material 1 and 2
 settings.v1 = 0.2;
 settings.v2 = 0.2;
+
+% This is as the new way, but try to make compatible with old
+% Each design var controls several elements. 
+settings.doUseMultiElePerDV =1;
 
 % if using input args, then override some configurations.
 % if using input args, then running on the cluster, so use high resolution,
@@ -46,7 +50,7 @@ if(str2num(useInputArgs) ==1)
 else
     
     settings.nelx = 20;
-    settings.nely = 10;
+    settings.nely = 20;
     settings.w1 = 1; % do not set to zero, instead set to 0.0001. Else we will get NA for temp2
     settings.iterationNum = 0;
     settings.doSaveDesignVarsToCSVFile = 0;
@@ -259,11 +263,13 @@ if(settings.mode ==6 || settings.mode ==10)
         e
         macroElementProps = GetMacroElementPropertiesFromCSV(settings,e,macro_meso_iteration);
         
+        scalePlot = 5;
+        
         plotting = 1; % this was for debugging
         plottingMesoDesign = 1; % this was for debugging
         if(plotting ==1)
             figure(1)
-            U2 = macroElementProps.disp;
+            U2 = macroElementProps.disp*scalePlot;
             coordD = zeros(5,2);
             for temp = 1:4
                 coordD(temp,1) =  coord(temp,1)+ U2(2*temp-1); % X value
@@ -272,8 +278,9 @@ if(settings.mode ==6 || settings.mode ==10)
             coord2 = coord;
             coordD(5,:) = coordD(1,:) ;
             coord2(5,:) = coord2(1,:);
-            subplot(1,2,1);
-            plot(coordD(:,1),coordD(:,2), '-b');
+            subplot(2,2,1);
+            plot(coordD(:,1),coordD(:,2), '-b',coord2(:,1),coord2(:,2), '-g');
+            axis([-0.3 1.3 -0.3 1.3])
             axis square
         end
         
@@ -289,16 +296,22 @@ if(settings.mode ==6 || settings.mode ==10)
             mesoSettings.v2=0;
             mesoSettings.totalVolume=macroElementProps.material1Fraction;
             [D_homog,designVarsMeso,macroElementProps]= MesoStructureDesign(matProp,mesoSettings,designVarsMeso,masterloop,FEACalls,macroElementProps);
-            %             D_homog
+                        D_homog
             
             %D_homog_flat = reshape(D_homog,1,9);
             
             if(plottingMesoDesign ==1)
                 p = plotResults;
                 figure(1)
-                subplot(1,2,2);
+                subplot(2,2,2);
                 outname = sprintf('meso structure for macro element %i density %f',e, mesoSettings.v1);
                 p.PlotArrayGeneric(designVarsMeso.x,outname);
+                
+                subplot(2,2,3);
+                outname = sprintf('meso structure sensitivity %i density %f',e, mesoSettings.v1);
+                p.PlotArrayGeneric(designVarsMeso.temp1,outname);
+                
+                
                 drawnow
             end
             newDesign = 1; % true

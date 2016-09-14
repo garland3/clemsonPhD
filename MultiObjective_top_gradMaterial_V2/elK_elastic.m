@@ -34,14 +34,16 @@ if(1==1)
     %         1 1;
     %         0 1];
 
-      etaRow(1,:) = [1/sqrt(3) 1/sqrt(3) -1/sqrt(3) -1/sqrt(3)];
-      zetaRow(1,:) = [1/sqrt(3) -1/sqrt(3) -1/sqrt(3) 1/sqrt(3)];
-      weight = [ 1 1 1 1];
+     % etaRow(1,:) = [1/sqrt(3) 1/sqrt(3) -1/sqrt(3) -1/sqrt(3)];
+     etaRow(1,:)= [0.5774    0.5774   -0.5774   -0.5774];
+     % zetaRow(1,:) = [1/sqrt(3) -1/sqrt(3) -1/sqrt(3) 1/sqrt(3)];
+     zetaRow(1,:) =  [  0.5774   -0.5774   -0.5774    0.5774];
+     weight = [ 1 1 1 1];
 
-      ke = zeros(8,8);
-      F_meso = zeros(8,1);
-      kExpansion_bar = 0;
-          ftemp = zeros(8,1);
+     ke = zeros(8,8);
+     F_meso = zeros(8,1);
+     kExpansion_bar = 0;
+     ftemp = zeros(8,1);
     %  btemp = zeros(2,4);
      B_total = zeros(3,8);
 
@@ -86,11 +88,7 @@ if(1==1)
          ke = ke + tempK; 
          
          
-         % calculate the load force for a strain 
-         if(~isempty(strain))
-          ftemp = transpose(B)*D*transpose(strain)*J_det*wght;
-          F_meso = ftemp+F_meso;
-         end
+       
          
          % Calcualte the thermal expansion matrix
          f_bar_temp =  transpose(B)*D*transpose([1 1  0])*J_det*wght;
@@ -99,6 +97,10 @@ if(1==1)
       
       KE = ke;
       
+    % calculate the load force for a strain 
+     if(~isempty(strain))
+      F_meso = transpose(B_total)*D*transpose(strain);
+     end
       
      
       

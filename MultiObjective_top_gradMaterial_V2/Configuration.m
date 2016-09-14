@@ -5,9 +5,17 @@ classdef Configuration
         % %% Settings
         % --------------------------------------------
         
+        % each design var will control the density and volume fraction
+        % material of several clustered elements. 
+        doUseMultiElePerDV; % do use multiple elements per (1) design varriable. 
+        numXElmPerDV= 2; % Number of elements in the X direction for 1 (per) design varriable. 
+        numYElmPerDV =3; % Number of elements in the X direction for 1 (per) design varriable. 
         
-        nelx = 40; % 40 # of elements in the x direcction
-        nely = 20; % 18 number of elements in the y direction
+        
+        
+        
+        nelx = 40; % 40 # of elements in the x direcction, must be a multiple of numXElmPerDV
+        nely = 20; % 18 number of elements in the y direction, must be a multiple of numYElmPerDV
         penal = 3; % penality used for the SIMP method
         rmin = 2; % smoothing radius for sensitivity smoothing.
         % Optimization mode and configurations
@@ -64,7 +72,7 @@ classdef Configuration
         %--------------
         numTilesX = 3;
         numTilesY = 3;
-        sensitivityTile = 5; % use this tile to calcualte the sensitivity
+%         sensitivityTile = 5; % use this tile to calcualte the sensitivity
         plotSensitivityWhilerunning = 0;
        
         

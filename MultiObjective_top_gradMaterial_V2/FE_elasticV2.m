@@ -138,11 +138,14 @@ elseif(strcmp(fixedElementsCase,'leftClamped'))
     t2=tt+1;
      Essential=[tt t2];
        Essential = unique(Essential);
+       
+       forceLeft = 1; % force left = 1 results in force being left, force left = 0, results in a downward force. 
        if(isinteger(column/2))
-            F((column/2)*row*2) = FappliedLoad;
+            dof = (column/2)*row*2-forceLeft;
+            F(dof) = FappliedLoad;
        else
-             F(ceil(column/2)*row*2) = FappliedLoad/2.0;
-             F(floor(column/2)*row*2) = FappliedLoad/2.0;
+             F(ceil(column/2)*row*2-forceLeft) = FappliedLoad/2.0;
+             F(floor(column/2)*row*2-forceLeft) = FappliedLoad/2.0;
        end
 end
 

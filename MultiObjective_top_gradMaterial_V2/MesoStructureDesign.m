@@ -1,5 +1,5 @@
 function [D_homog,designVarsMeso,macroElemProps]=MesoStructureDesign(matProp,mesoSettings,designVarsMeso,masterloop,FEACalls,macroElemProps)
-% 	1. Tile the meso design domain
+% 	------------------ nope 1. Tile the meso design domain
 % 	2. Apply the strain 
 % 	3. Calcualute sensitive of every locaiton. 
 % 	4. Then, sum the tiled sensitives together. 
@@ -8,7 +8,7 @@ function [D_homog,designVarsMeso,macroElemProps]=MesoStructureDesign(matProp,mes
 % 		1. Do this 3 times, (no need to rerun the applystrain method).             % 
 % 	6. Get homogenous properties
 
-doPlot =0; % For debugging allow plotting of some information. 
+doPlot = 0; % For debugging allow plotting of some information. 
 
 % Calcualte the strain, epsilon = B*d
 % get the B matrix. 
@@ -20,9 +20,8 @@ if(doPlot ==1)
 end
 
 % --------------------------------------------
-%       TILE THE MESO STRUCTURE
+%       TILE THE MESO STRUCTURE%      
 % --------------------------------------------
-
 designVarsMeso = TileMesoStructure(mesoSettings, designVarsMeso);
 
 % --------------------------------------------
@@ -30,7 +29,7 @@ designVarsMeso = TileMesoStructure(mesoSettings, designVarsMeso);
 %       BY APPLYING THE DISPLACEMENTS OF THE MACRO ELEMENT
 % --------------------------------------------
  % Get displacements (by applying a strain from the macro)        
-%[U, maxF,maxU] = AppliedStrain(designVarsMeso, mesoSettings, matProp,macroElemProps);
+% [U, maxF,maxU] = AppliedStrain(designVarsMeso, mesoSettings, matProp,macroElemProps);
 [U, maxF,maxU] = AppliedStrainTiled(designVarsMeso, mesoSettings, matProp,macroElemProps);
 
 % --------------------------------------------
@@ -39,8 +38,10 @@ designVarsMeso = TileMesoStructure(mesoSettings, designVarsMeso);
 %    UPDATE THE DESGIN OF THE UNIT CELL
 % --------------------------------------------
 % Loop 2 times. Calculatint the sensitivity and changing the design var X
-for mesoLoop = 1:2
-    designVarsMeso = designVarsMeso.CalculateSensitiviesMesoStructure_Tile( mesoSettings, matProp, masterloop,macroElemProps,U);
+for mesoLoop = 1:5
+%     designVarsMeso = designVarsMeso.CalculateSensitiviesMesoStructure( mesoSettings, matProp, masterloop,macroElemProps,U);
+     designVarsMeso = designVarsMeso.CalculateSensitiviesMesoStructure_Tile( mesoSettings, matProp, masterloop,macroElemProps,U);
+    
     designVarsMeso.dc=designVarsMeso.temp1;
     
     % FILTERING OF SENSITIVITIES
@@ -61,5 +62,9 @@ end
 %    need for the macro optimization
 % --------------------------------------------
 
+% give periodic boundary condition. 
+
+
+
 macroElemProps = designVarsMeso.GetHomogenizedProperties(mesoSettings,mesoSettings, matProp, masterloop,macroElemProps);
-D_homog =  macroElemProps.D_homog
+D_homog =  macroElemProps.D_homog;
