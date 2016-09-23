@@ -3,7 +3,8 @@ function []= SaveMesoUnitCellDesignToCSV(designVarsMeso,macroElemProps,folderNum
 if(newDesign ==1)
     % save the density field
     outname = sprintf('./out%i/densityfield%iforElement%i.csv',folderNum,macro_meso_iteration,elementNumber);
-    csvwrite(outname,designVarsMeso.x);
+    x = designVarsMeso.x;
+    csvwrite(outname,x);
 
     % save the density field
     outname = sprintf('./out%i/densityfield%iforElement%i.csv',folderNum,macro_meso_iteration,elementNumber);

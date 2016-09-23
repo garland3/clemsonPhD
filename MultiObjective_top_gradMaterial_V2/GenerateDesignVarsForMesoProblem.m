@@ -22,14 +22,9 @@ meso_settings.terminationCriteria =0.1; % 10%
 
 % if meso structure designing, then make a smaller initial mesh
 
-meso_settings.nelx = 15;
-meso_settings.nely =15;
-        
-
+meso_settings.nelx = 10;
+meso_settings.nely =10;
     
-
-
-
 meso_settings= meso_settings.UpdateVolTargetsAndObjectiveWeights();
 %meso_settings
 
@@ -73,8 +68,8 @@ designVars = designVars.PreCalculateXYmapToNodeNumber(meso_settings);
 % if doing meso optimization, setup optimization configurations
 %if ( meso_settings.mode == 4) 
 
-designVars = designVars.CalcElementNodeMapmatrixWithPeriodicXandY(meso_settings);
-designVars =  designVars.CalcNodeLocationMeso(meso_settings);
+% designVars = designVars.CalcElementNodeMapmatrixWithPeriodicXandY(meso_settings);
+% designVars =  designVars.CalcNodeLocationMeso(meso_settings);
 %end
 
 designVarsMeso=designVars;

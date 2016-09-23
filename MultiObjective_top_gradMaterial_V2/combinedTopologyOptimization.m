@@ -2,12 +2,17 @@ function combinedTopologyOptimization(useInputArgs, w1text, iterationNum,macro_m
 % input args, useInputArgs = 1 if to use the input args
 % w1 weight1 for weighted objective.
 % iterationNum, used to know where to output files.
+close all
+% h = figure(1);hh = figure(2);
+% set(h,'visible','off');
+% set(hh,'visible','off');
 
 % --------------------------------------
 % %% Settings
 % --------------------------------------------
 settings = Configuration;
-settings.mode = 5;
+settings.macro_meso_iteration = macro_meso_iteration;
+settings.mode =6;
 % 1 = topology only,
 % 2 = material optimization only.
 % 3 = both mateiral vol fraction and topology
@@ -15,6 +20,7 @@ settings.mode = 5;
 % 5 = test saving macro structure info to .csv files.  meso-structure
 % 6.= Testing reading .csv files and designing each meso structure
 % 7= testing recombinging the meso structure designs.
+% 8= modes 6 and 7 combined
 % 10 = everything working!!!
 
 settings.elasticMaterialInterpMethod = 2; % Hashin–Shtrikam law (average of upper and lower boundary)
@@ -49,7 +55,7 @@ if(str2num(useInputArgs) ==1)
     settings.maxMasterLoops = 500; % make it so, the fea maxes out first.
 else
     
-    settings.nelx = 20;
+    settings.nelx = 15;
     settings.nely = 20;
     settings.w1 = 1; % do not set to zero, instead set to 0.0001. Else we will get NA for temp2
     settings.iterationNum = 0;
@@ -61,6 +67,7 @@ end
 
 settings= settings.UpdateVolTargetsAndObjectiveWeights();
 settings
+onlyTopChangeOnFirstIteration = 1; % 1 = true, 0 = false;
 % material properties Object
 matProp = MaterialProperties;
 
@@ -86,6 +93,7 @@ designVars.g1heat(1:settings.nely,1:settings.nelx) = 0;
 designVars = designVars.CalcIENmatrix(settings);
 designVars =  designVars.CalcElementLocation(settings);
 designVars = designVars.PreCalculateXYmapToNodeNumber(settings);
+designVars = designVars.CalcElementXYposition(settings);
 
 masterloop = 0;
 FEACalls = 0;
@@ -95,6 +103,10 @@ status=0;
 
 if ( settings.mode == 1 || settings.mode == 3 || settings.mode == 10 || settings.mode ==5)
     matProp=  matProp.ReadConstitutiveMatrixesFromFiles( macro_meso_iteration, settings);
+end
+
+if ( settings.mode == 10 && onlyTopChangeOnFirstIteration ==1 )
+   designVars= ReadXMacroFromCSV(macro_meso_iteration, settings,designVars);
 end
 
 % START ITERATION
@@ -109,39 +121,42 @@ while status == 0  && masterloop<=settings.maxMasterLoops && FEACalls<=settings.
     % Topology Optimization
     % --------------------------------
     if ( settings.mode == 1 || settings.mode == 3 || settings.mode == 10 || settings.mode ==5)
-        for loopTop = 1:3
-            designVars = designVars.CalculateSensitivies(settings, matProp, masterloop,macro_meso_iteration);
-            [vol1Fraction, vol2Fraction] =  designVars.CalculateVolumeFractions(settings);
-            
-            FEACalls = FEACalls+1;
-            % normalize the sensitivies  by dividing by their max values.
-            temp1Max =-1* min(min(designVars.temp1));
-            designVars.temp1 = designVars.temp1/temp1Max;
-            temp2Max = -1* min(min(designVars.temp2));
-            designVars.temp2 = designVars.temp2/temp2Max;
-            
-            designVars.dc = settings.w1*designVars.temp1+settings.w2*designVars.temp2; % add the two sensitivies together using their weights
-            
-            % FILTERING OF SENSITIVITIES
-            [designVars.dc]   = check(settings.nelx,settings.nely,settings.rmin,designVars.x,designVars.dc);
-            % DESIGN UPDATE BY THE OPTIMALITY CRITERIA METHOD
-            [designVars.x]    = OC(settings.nelx,settings.nely,designVars.x,settings.totalVolume,designVars.dc, designVars, settings);
-            % PRINT RESULTS
-            %change = max(max(abs(designVars.x-designVars.xold)));
-            disp([' FEA calls.: ' sprintf('%4i',FEACalls) ' Obj.: ' sprintf('%10.4f',designVars.c) ...
-                ' Vol. 1: ' sprintf('%6.3f', vol1Fraction) ...
-                ' Vol. 2: ' sprintf('%6.3f', vol2Fraction) ...
-                ' Lambda.: ' sprintf('%6.3f',designVars.lambda1  )])
-            
-            densitySum = sum(sum(designVars.x));
-            designVars.storeOptimizationVar = [designVars.storeOptimizationVar;designVars.c, designVars.cCompliance, designVars.cHeat,vol1Fraction,vol2Fraction,fractionCurrent_V1Local,densitySum];
-            
-            p = plotResults;
-            p.plotTopAndFraction(designVars,  settings, matProp, FEACalls); % plot the results.
-            status = TestForTermaination(designVars, settings);
-            if(status ==1)
-                m = 'break in topology'
-                break;
+        
+        if(macro_meso_iteration==1 || (onlyTopChangeOnFirstIteration == 0))
+            for loopTop = 1:1
+                designVars = designVars.CalculateSensitivies(settings, matProp, masterloop,macro_meso_iteration);
+                [vol1Fraction, vol2Fraction] =  designVars.CalculateVolumeFractions(settings);
+
+                FEACalls = FEACalls+1;
+                % normalize the sensitivies  by dividing by their max values.
+                temp1Max =-1* min(min(designVars.temp1));
+                designVars.temp1 = designVars.temp1/temp1Max;
+                temp2Max = -1* min(min(designVars.temp2));
+                designVars.temp2 = designVars.temp2/temp2Max;
+
+                designVars.dc = settings.w1*designVars.temp1+settings.w2*designVars.temp2; % add the two sensitivies together using their weights
+
+                % FILTERING OF SENSITIVITIES
+                [designVars.dc]   = check(settings.nelx,settings.nely,settings.rmin,designVars.x,designVars.dc);
+                % DESIGN UPDATE BY THE OPTIMALITY CRITERIA METHOD
+                [designVars.x]    = OC(settings.nelx,settings.nely,designVars.x,settings.totalVolume,designVars.dc, designVars, settings);
+                % PRINT RESULTS
+                %change = max(max(abs(designVars.x-designVars.xold)));
+                disp([' FEA calls.: ' sprintf('%4i',FEACalls) ' Obj.: ' sprintf('%10.4f',designVars.c) ...
+                    ' Vol. 1: ' sprintf('%6.3f', vol1Fraction) ...
+                    ' Vol. 2: ' sprintf('%6.3f', vol2Fraction) ...
+                    ' Lambda.: ' sprintf('%6.3f',designVars.lambda1  )])
+
+                densitySum = sum(sum(designVars.x));
+                designVars.storeOptimizationVar = [designVars.storeOptimizationVar;designVars.c, designVars.cCompliance, designVars.cHeat,vol1Fraction,vol2Fraction,fractionCurrent_V1Local,densitySum];
+
+                p = plotResults;
+                p.plotTopAndFraction(designVars,  settings, matProp, FEACalls); % plot the results.
+                status = TestForTermaination(designVars, settings);
+                if(status ==1)
+                    m = 'break in topology'
+                    break;
+                end
             end
         end
     end
@@ -156,7 +171,7 @@ while status == 0  && masterloop<=settings.maxMasterLoops && FEACalls<=settings.
     % Volume fraction optimization
     % --------------------------------
     if ( settings.mode ==2 || settings.mode ==3 || settings.mode == 10 || settings.mode ==5)
-        for loopVolFrac = 1:3
+        for loopVolFrac = 1:1
             designVars = designVars.CalculateSensitivies( settings, matProp, masterloop,macro_meso_iteration);
             FEACalls = FEACalls+1;
             
@@ -183,6 +198,7 @@ while status == 0  && masterloop<=settings.maxMasterLoops && FEACalls<=settings.
             
             % PRINT RESULTS
             %change = max(max(abs(designVars.x-designVars.xold)));
+            densitySum = sum(sum(designVars.x));
             designVars.storeOptimizationVar = [designVars.storeOptimizationVar;designVars.c, designVars.cCompliance, designVars.cHeat,vol1Fraction,vol2Fraction,fractionCurrent_V1Local,densitySum];
             p = plotResults;
             p.plotTopAndFraction(designVars, settings, matProp,FEACalls ); % plot the results.
@@ -205,7 +221,12 @@ while status == 0  && masterloop<=settings.maxMasterLoops && FEACalls<=settings.
 end
 
 if ( settings.mode ==2 || settings.mode ==3 || settings.mode == 10 || settings.mode ==5)
-    folderNum = settings.iterationNum;
+     folderNum = settings.iterationNum;
+    if(1==1)
+        plotStrainField(settings,designVars,folderNum,macro_meso_iteration)
+    end
+    
+   
     outname = sprintf('./out%i/storeOptimizationVarMacroLoop%i.csv',folderNum,macro_meso_iteration);
     csvwrite(outname,designVars.storeOptimizationVar);
     status
@@ -218,15 +239,18 @@ end
 % ---------------------------------------------
 % For testing only
 if(settings.mode ==4) % meso-structure design
-    designVars = designVars.CalcElementNodeMapmatrixWithPeriodicXandY(settings);
-    designVars =  designVars.CalcNodeLocationMeso(settings);
+%     designVars = designVars.CalcElementNodeMapmatrixWithPeriodicXandY(settings);
+%     designVars =  designVars.CalcNodeLocationMeso(settings);
     
-    settings.maxMasterLoops = 3; % make it small
+%     settings.maxMasterLoops = 3; % make it small
+    
     macroElemProps = macroElementProp;
     macroElemProps.material1Fraction = 0.5;
-    %  macroElemProps.disp = [0         0   -0.0554   -0.0452   -0.0026   -0.0356         0         0] ; % make these up for now
-    macroElemProps.disp = [   -0.0554   -0.0452   -0.0026   -0.0356         0  0     0 0] ; % make these up for now
+    macroElemProps.disp = [0         0   0   0   .1   0        0.2        0] ; % make these up for now
+%     macroElemProps.disp = [0         0   0   0   .1   0        0.1        0] ; % make these up for now
+    %macroElemProps.disp = [   -0.0554   -0.0452   -0.0026   -0.0356         0  0     0 0] ; % make these up for now
     mesoSettings = settings;
+    mesoSettings.doPlotAppliedStrain = 1;
     MesoStructureDesign(matProp,mesoSettings,designVars,masterloop,FEACalls,macroElemProps);
 end
 
@@ -239,6 +263,7 @@ end
 % ---------------------------------------------
 
 if(settings.mode ==5  || settings.mode ==10)
+    
     % write the displacement field to a .csv
     SaveMacroProblemStateToCSV(settings,designVars,macro_meso_iteration,matProp);
 end
@@ -249,7 +274,7 @@ end
 %         LOOP OVER MACRO ELEMENTS AND DESIGN MESO STRUCTURE = MODE 6
 %
 % ---------------------------------------------
-if(settings.mode ==6 || settings.mode ==10)
+if(settings.mode ==6 ||settings.mode ==8 || settings.mode ==10)
     % the design var object is huge, so I want to garbage collect after
     % saving the important data to disk (.csv files).
     clear designVars
@@ -263,41 +288,57 @@ if(settings.mode ==6 || settings.mode ==10)
         e
         macroElementProps = GetMacroElementPropertiesFromCSV(settings,e,macro_meso_iteration);
         
-        scalePlot = 5;
+        scalePlot = 10;
         
-        plotting = 1; % this was for debugging
-        plottingMesoDesign = 1; % this was for debugging
-        if(plotting ==1)
-            figure(1)
-            U2 = macroElementProps.disp*scalePlot;
-            coordD = zeros(5,2);
-            for temp = 1:4
-                coordD(temp,1) =  coord(temp,1)+ U2(2*temp-1); % X value
-                coordD(temp,2) =  coord(temp,2)+ U2(2*temp); % Y value
+%         plotting = 1; % this was for debugging
+
+           % Check if void
+         if(macroElementProps.density>settings.voidMaterialDensityCutOff)
+             
+              % Only plot a few
+              plotfrequency = 1;
+                if(mod(e,plotfrequency) ==0)
+                      plottingMesoDesign = 1; % this was for debugging
+                       plotting = 1; % this was for debugging
+                       settings.doPlotAppliedStrain = 1;
+                else
+                     plottingMesoDesign = 0; % this was for debugging
+                       plotting = 0; % this was for debugging
+                         settings.doPlotAppliedStrain = 0;
+                end
+             
+            if(plotting ==1)
+                figure(1)
+                U2 = macroElementProps.disp*scalePlot;
+                coordD = zeros(5,2);
+                for temp = 1:4
+                    coordD(temp,1) =  coord(temp,1)+ U2(2*temp-1); % X value
+                    coordD(temp,2) =  coord(temp,2)+ U2(2*temp); % Y value
+                end
+                coord2 = coord;
+                coordD(5,:) = coordD(1,:) ;
+                coord2(5,:) = coord2(1,:);
+    %             coord3 = coord2;
+
+                subplot(2,2,1);
+                plot(coordD(:,1),coordD(:,2), '-b',coord2(:,1),coord2(:,2), '-g');
+                axis([-0.3 1.3 -0.3 1.3])
+                axis square
             end
-            coord2 = coord;
-            coordD(5,:) = coordD(1,:) ;
-            coord2(5,:) = coord2(1,:);
-            subplot(2,2,1);
-            plot(coordD(:,1),coordD(:,2), '-b',coord2(:,1),coord2(:,2), '-g');
-            axis([-0.3 1.3 -0.3 1.3])
-            axis square
-        end
         
-        % Check if void
-        if(macroElementProps.density>settings.voidMaterialDensityCutOff)
-            [designVarsMeso mesoSettings] = GenerateDesignVarsForMesoProblem(settings,e,macro_meso_iteration);
+            [designVarsMeso, mesoSettings] = GenerateDesignVarsForMesoProblem(settings,e,macro_meso_iteration);
+            mesoSettings.doPlotAppliedStrain =   settings.doPlotAppliedStrain ;
             
             % Set the target infill for the meso as the vol fraction of
             % material 1 for now.
             %              designVars.x(y,x)
             %             mesoSettings.v1=macroElementProps.material1Fraction*macroElementProps.density^settings.penal;
-            mesoSettings.v1=max(macroElementProps.material1Fraction,0.3);
+            mesoSettings.v1=0.5+(macroElementProps.material1Fraction*macroElementProps.density^settings.penal)/2;
             mesoSettings.v2=0;
-            mesoSettings.totalVolume=macroElementProps.material1Fraction;
+            mesoSettings.totalVolume= mesoSettings.v1+0;
             [D_homog,designVarsMeso,macroElementProps]= MesoStructureDesign(matProp,mesoSettings,designVarsMeso,masterloop,FEACalls,macroElementProps);
                         D_homog
-            
+%             macroElemProps.strain
             %D_homog_flat = reshape(D_homog,1,9);
             
             if(plottingMesoDesign ==1)
@@ -307,12 +348,14 @@ if(settings.mode ==6 || settings.mode ==10)
                 outname = sprintf('meso structure for macro element %i density %f',e, mesoSettings.v1);
                 p.PlotArrayGeneric(designVarsMeso.x,outname);
                 
-                subplot(2,2,3);
-                outname = sprintf('meso structure sensitivity %i density %f',e, mesoSettings.v1);
-                p.PlotArrayGeneric(designVarsMeso.temp1,outname);
+%                 subplot(2,2,3);
+%                 outname = sprintf('meso structure sensitivity %i density %f',e, mesoSettings.v1);
+%                 p.PlotArrayGeneric(designVarsMeso.temp1,outname);
                 
                 
                 drawnow
+                 nameGraph = sprintf('./out%i/elementpicture%i.png',settings.iterationNum, e);
+                   print(nameGraph,'-dpng')
             end
             newDesign = 1; % true
         else
@@ -345,7 +388,9 @@ clear designVarsMeso
 % Generate macro-meso complete structure.
 % 7 is for testing the recombining of the meso structures.
 % -------------------------------------
-if(settings.mode ==7 || settings.mode ==10 )
+if(settings.mode ==7||settings.mode ==8  || settings.mode ==10 )
+    close all
+    p = plotResults;
     [designVarsMeso mesoSettings] = GenerateDesignVarsForMesoProblem(settings,1,1);
     % Generate huge area
     numTilesX=settings.numTilesX;
@@ -367,13 +412,18 @@ if(settings.mode ==7 || settings.mode ==10 )
             xShift = (macroElementProps.xPosition-1)*mesoSettings.nelx*numTilesX+1;
             
             designVarsMeso.x = x;
-            designVarsMeso=TileMesoStructure(mesoSettings, designVarsMeso);
+%             subplot(2,2,1);
+%              p.PlotArrayGeneric( x, 'local X structure')
+             
+             designVarsMeso=TileMesoStructure(mesoSettings, designVarsMeso);
+%              subplot(2,2,2);
+%              p.PlotArrayGeneric( designVarsMeso.xTile, 'local X structure tile')
             
             completeStruct(yShift:(yShift+mesoSettings.nely*numTilesY-1),xShift:(xShift+mesoSettings.nelx*numTilesX-1))=designVarsMeso.xTile;
         end
     end
-    close all
-    p = plotResults;
+   
+%           subplot(2,2,3);
     p.PlotArrayGeneric( completeStruct, 'complete structure')
     nameGraph = sprintf('./completeStucture%f_macroIteration_%i.png', settings.w1,macro_meso_iteration);
     print(nameGraph,'-dpng')

@@ -134,19 +134,22 @@ elseif(strcmp(fixedElementsCase,'leftClamped'))
 %      for i = 1:column-1
 %          Essential = [Essential (i*row*2)+3 (i*row*2)+4 ]; % 
 %      end
-    tt=   1:2*row :2*row*(column-1); % ... % left side
+    tt=   1:2*row :2*row*(column); % ... % left side
     t2=tt+1;
      Essential=[tt t2];
        Essential = unique(Essential);
        
-       forceLeft = 1; % force left = 1 results in force being left, force left = 0, results in a downward force. 
-       if(isinteger(column/2))
-            dof = (column/2)*row*2-forceLeft;
-            F(dof) = FappliedLoad;
-       else
-             F(ceil(column/2)*row*2-forceLeft) = FappliedLoad/2.0;
-             F(floor(column/2)*row*2-forceLeft) = FappliedLoad/2.0;
-       end
+%        forceLeft = 0; % force left = 1 results in force being left, force left = 0, results in a downward force. 
+%        if(isinteger(column/2))
+%             dof = (column/2)*row*2-forceLeft;
+%             F(dof) = FappliedLoad;
+%        else
+%              F(ceil(column/2)*row*2-forceLeft) = FappliedLoad/2.0;
+%              F(floor(column/2)*row*2-forceLeft) = FappliedLoad/2.0;
+%        end
+
+        % Down in the top right corner
+        F(ndof) = FappliedLoad;
 end
 
 alldofs     = [1:ndof];
@@ -180,8 +183,16 @@ for e = 1:ne
       end
       
       [x,y]= designVars.GivenNodeNumberGetXY(e);
+      
+       % Get the element K matrix for this partiular element
+        if(settings.macro_meso_iteration>1)
+            %e = count;
+            Dgiven =matProp.GetSavedDMatrix(e);
+        else
+            Dgiven = [];
+        end
 
-      [ke, KexpansionBar] = matProp.effectiveElasticKEmatrix(designVars.w(y,x), settings,[]);
+      [ke, KexpansionBar] = matProp.effectiveElasticKEmatrix(designVars.w(y,x), settings,Dgiven);
       % [ke] = matProp.effectiveElasticKEmatrix(  designVars.w(y,x), settings);
       
       
@@ -269,63 +280,62 @@ maxT = full(max(T));
 % 
 %  subplot(2,2,2)
 %  
-% % % loop over the elements
-%  for e = 1:ne
+% % % % % loop over the elements
+% %  for e = 1:ne
+% % %     
+% % %     coord = zeros(3,2);
+% % %     xsum = 0;
+% % %     ysum = 0;
+% % %     % loop over local node numbers to get their node global node numbers
+% %      for j = 1:4
+% %           % Get the node number
+% %           coordNodeNumber = designVars.IEN(e,j);
+% %            % get the global X,Y position of each node and put in array
+% %            coord(j,:) = designVars.globalPosition(coordNodeNumber,:);
+% %       end
+% %       
+% %     %  [x,y]= designVars.GivenNodeNumberGetXY(e);
+% % %     elemcenterLocations(e,:) = [xsum/4 ysum/4];
 % %     
-% %     coord = zeros(3,2);
-% %     xsum = 0;
-% %     ysum = 0;
-% %     % loop over local node numbers to get their node global node numbers
-%      for j = 1:4
-% %         % Get the node number
-%          coordNodeNumber = IEN(e,j);
-%           % get the global X,Y position of each node and put in array
-%           coord(j,:) = globalPosition(coordNodeNumber,:);
-% %          local_t(j) = T(coordNodeNumber);
-% %          xsum = xsum+coord(j,1);
-% %          ysum = ysum+coord(j,2);
-%      end
-%     elemcenterLocations(e,:) = [xsum/4 ysum/4];
-%     
-%     % see version 3 of notes page 13 Also, see version 5 of the notes page
-%     % 27
-%    
-%     eta = 0; Zeta = 0; % We are at the center, so both are zero
-%    
-%     % B_hat (Derivative of N1 with respect to zeta and eta)
-%      B_hat = 1/4*[-(1-eta) (1-eta) (1+eta) -(1+eta);
-%                   -(1-Zeta) -(1+Zeta) (1+Zeta) (1-Zeta)];
-% 
-%      % Calculate the Jacobian
-%      J=B_hat*coord;
-% 
-%      % Calculate the determinate
-%      %J_det = det(J);
-%      J_transpose = transpose(J);
-%      J_transpose_inv = inv(J_transpose);
-% 
-%      % Form the B matrix
-%      B = J_transpose_inv*B_hat;
-%     
-%     qLocal = -kmaterial*B*local_t';
-%     qstored(e,:) = qLocal';
-%     
-%     qMag = (qLocal(1)^2+qLocal(2)^2)^(1/2);
-%     qMag_stored(e) =qMag;
-%     
-%     % plot the element outline
-%      hold on
-%      coord(5,:) = coord(1,:); 
-%      plot(coord(:,1),coord(:,2));    
-%     
-%  end
-% 
- 
-% %xlabel('radial distance, meters') % y-axis label
-% %ylabel('Height') % x-axis label
-% tti= strcat('Flux from each element . Number of elements=', int2str(ne));
-% title(tti);
-%  hold off
+% %     % see version 3 of notes page 13 Also, see version 5 of the notes page
+% %     % 27
+% % %    
+% % %     eta = 0; Zeta = 0; % We are at the center, so both are zero
+% % %    
+% % %     % B_hat (Derivative of N1 with respect to zeta and eta)
+% % %      B_hat = 1/4*[-(1-eta) (1-eta) (1+eta) -(1+eta);
+% % %                   -(1-Zeta) -(1+Zeta) (1+Zeta) (1-Zeta)];
+% % % 
+% % %      % Calculate the Jacobian
+% % %      J=B_hat*coord;
+% % % 
+% % %      % Calculate the determinate
+% % %      %J_det = det(J);
+% % %      J_transpose = transpose(J);
+% % %      J_transpose_inv = inv(J_transpose);
+% % % 
+% % %      % Form the B matrix
+% % %      B = J_transpose_inv*B_hat;
+% % %     
+% % %     qLocal = -kmaterial*B*local_t';
+% % %     qstored(e,:) = qLocal';
+% % %     
+% % %     qMag = (qLocal(1)^2+qLocal(2)^2)^(1/2);
+% % %     qMag_stored(e) =qMag;
+% %     
+% %     % plot the element outline
+% %      hold on
+% %      coord(5,:) = coord(1,:); 
+% %      plot(coord(:,1),coord(:,2));    
+% %     
+% %  end
+% % % 
+% %  
+% % % %xlabel('radial distance, meters') % y-axis label
+% % % %ylabel('Height') % x-axis label
+% % % tti= strcat('Flux from each element . Number of elements=', int2str(ne));
+% % % title(tti);
+% %   hold off
 % 
 % q_mags = [qMag_stored,transpose(1:nn)]
 % 

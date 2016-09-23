@@ -37,8 +37,9 @@ classdef Configuration
         doPlotFinal = 0;
         doPlotMetrics = 0;
         doSaveDesignVarsToCSVFile = 0; % set to 1 to write plotFinal csv file instead
-        v1 = 0.2; % amount of material 1 to use. default to 20%
-        v2 = 0.2; % amount of material 2 to use. default to 20%
+        doPlotAppliedStrain = 0; % For debugging only 
+        v1 = 0.10; % amount of material 1 to use. default to 20%
+        v2 = 0.10; % amount of material 2 to use. default to 20%, reduced so there is less meso structures to compute
         totalVolume; % = v1+v2;
         iterationNum=0; %  used for parallel computing.
         maxFEACalls = 50;
@@ -74,6 +75,9 @@ classdef Configuration
         numTilesY = 3;
 %         sensitivityTile = 5; % use this tile to calcualte the sensitivity
         plotSensitivityWhilerunning = 0;
+        
+        
+        macro_meso_iteration = 0; % master loop of the whole macro meso system
        
         
     end

@@ -8,21 +8,23 @@ function [D_homog,designVarsMeso,macroElemProps]=MesoStructureDesign(matProp,mes
 % 		1. Do this 3 times, (no need to rerun the applystrain method).             % 
 % 	6. Get homogenous properties
 
-doPlot = 0; % For debugging allow plotting of some information. 
+doPlot = 1; % For debugging allow plotting of some information. 
 
 % Calcualte the strain, epsilon = B*d
 % get the B matrix. 
-[macroElemProps.K ,~,macroElemProps.B] = matProp.effectiveElasticKEmatrix( macroElemProps.material1Fraction, mesoSettings,[]);
-macroElemProps.strain = macroElemProps.B* transpose(macroElemProps.disp); % transpose the disp to be vertical
+% [macroElemProps.K ,~,macroElemProps.B] = matProp.effectiveElasticKEmatrix( macroElemProps.material1Fraction, mesoSettings,[]);
+% macroElemProps.strain = macroElemProps.B* transpose(macroElemProps.disp); % transpose the disp to be vertical
 
 if(doPlot ==1)
     p = plotResults;
+    figure(1)
+    subplot(2,2,3);
 end
 
 % --------------------------------------------
 %       TILE THE MESO STRUCTURE%      
 % --------------------------------------------
-designVarsMeso = TileMesoStructure(mesoSettings, designVarsMeso);
+% designVarsMeso = TileMesoStructure(mesoSettings, designVarsMeso);
 
 % --------------------------------------------
 %      GET THE DISPLACEMENT OF THE MESO STRUCTURE
@@ -30,7 +32,9 @@ designVarsMeso = TileMesoStructure(mesoSettings, designVarsMeso);
 % --------------------------------------------
  % Get displacements (by applying a strain from the macro)        
 % [U, maxF,maxU] = AppliedStrain(designVarsMeso, mesoSettings, matProp,macroElemProps);
-[U, maxF,maxU] = AppliedStrainTiled(designVarsMeso, mesoSettings, matProp,macroElemProps);
+% [U, maxF,maxU] = AppliedStrainTiled(designVarsMeso, mesoSettings, matProp,macroElemProps);
+[U, ~,~] = AppliedStrainNoPeriodicNoTile(designVarsMeso, mesoSettings, matProp,macroElemProps);
+
 
 % --------------------------------------------
 %    CALCULATE SENSITIVITY
@@ -38,9 +42,10 @@ designVarsMeso = TileMesoStructure(mesoSettings, designVarsMeso);
 %    UPDATE THE DESGIN OF THE UNIT CELL
 % --------------------------------------------
 % Loop 2 times. Calculatint the sensitivity and changing the design var X
-for mesoLoop = 1:5
+for mesoLoop = 1:10
 %     designVarsMeso = designVarsMeso.CalculateSensitiviesMesoStructure( mesoSettings, matProp, masterloop,macroElemProps,U);
-     designVarsMeso = designVarsMeso.CalculateSensitiviesMesoStructure_Tile( mesoSettings, matProp, masterloop,macroElemProps,U);
+     % designVarsMeso = designVarsMeso.CalculateSensitiviesMesoStructure_Tile( mesoSettings, matProp, masterloop,macroElemProps,U);
+      designVarsMeso = designVarsMeso.CalculateSensitiviesMesoStructureNoPeriodic( mesoSettings, matProp, masterloop,macroElemProps,U);
     
     designVarsMeso.dc=designVarsMeso.temp1;
     
@@ -48,12 +53,12 @@ for mesoLoop = 1:5
     [designVarsMeso.dc]   = check(mesoSettings.nelx,mesoSettings.nely,mesoSettings.rmin,designVarsMeso.x,designVarsMeso.dc);
     
     % DESIGN UPDATE BY THE OPTIMALITY CRITERIA METHOD
-    [designVarsMeso.x]    = OC(mesoSettings.nelx,mesoSettings.nely,designVarsMeso.x,mesoSettings.totalVolume,designVarsMeso.dc, designVarsMeso, mesoSettings);
+    [designVarsMeso.x] = OC_meso(mesoSettings.nelx,mesoSettings.nely,designVarsMeso.x,mesoSettings.totalVolume,designVarsMeso.dc, designVarsMeso, mesoSettings);
     
     if(doPlot ==1)
         figure(2)
         p.PlotArrayGeneric(designVarsMeso.x,'meso design -> topology var'); % plot the results.
-        figure(3)
+%         figure(3)
     end
 end
 
@@ -64,7 +69,8 @@ end
 
 % give periodic boundary condition. 
 
-
+designVarsMeso = designVarsMeso.CalcElementNodeMapmatrixWithPeriodicXandY(mesoSettings);
+designVarsMeso =  designVarsMeso.CalcNodeLocationMeso(mesoSettings);
 
 macroElemProps = designVarsMeso.GetHomogenizedProperties(mesoSettings,mesoSettings, matProp, masterloop,macroElemProps);
 D_homog =  macroElemProps.D_homog;

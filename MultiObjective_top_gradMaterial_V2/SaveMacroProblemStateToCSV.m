@@ -7,13 +7,16 @@ outname = sprintf('./out%i/elementNodeMap%i.csv',folderNum,macro_meso_iteration)
 csvwrite(outname,designVars.IEN);
 
 % Save element to XY position map (needed for x and w vars retrival)
-outname = sprintf('./out%i/NodeToXYArrayMap%i.csv',folderNum,macro_meso_iteration);
-csvwrite(outname,designVars.NodeToXYArrayMap);
+outname = sprintf('./out%i/elementXYposition%i.csv',folderNum,macro_meso_iteration);
+csvwrite(outname,designVars.elementXYposition);
+
+
 
 
 % Save displacement field
 outname = sprintf('./out%i/displacement%i.csv',folderNum,macro_meso_iteration);
-csvwrite(outname,full(designVars.U));
+uout = full(designVars.U);
+csvwrite(outname,uout);
 
 % save the density field
 outname = sprintf('./out%i/densityfield%i.csv',folderNum,macro_meso_iteration);

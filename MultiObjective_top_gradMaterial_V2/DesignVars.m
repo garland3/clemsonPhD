@@ -33,6 +33,7 @@ classdef DesignVars
         YLocations; %=zeros(numNodesInRow,numNodesInColumn);
         globalPosition; %  = zeros(nn,2);
         NodeToXYArrayMap; % map of node numbers to their X,Y position in FEA arrays
+        elementXYposition; % or othe position in the X ad W matrixes
         
         U_heatColumn; % temperature matrix, gives the temperature at each node (not at the element centers)
         U; % displacement matrix
@@ -252,6 +253,8 @@ classdef DesignVars
             end
         end
         
+       
+        
         
         % --------------------------------------------
         %
@@ -366,8 +369,30 @@ classdef DesignVars
             volume2 = volume2/ne;
             
         end
-        %%
         
+        %% 
+        
+        % --------------------------------------------
+        %
+        %      Calculate the element XY position. 
+        %
+        % --------------------------------------------
+        function obj = CalcElementXYposition(obj,settings)
+            nelm = settings.nelx*settings.nely;
+          
+            obj.elementXYposition =   zeros(nelm,2);
+            
+            e_count = 1;
+            for ely = 1:settings.nely
+%                 rowMultiplier = ely-1;
+                for elx = 1:settings.nelx
+                    obj.elementXYposition(e_count,:)=[ely,elx];
+                    e_count = e_count+1;
+                end
+            end
+        end        
+        
+        %% 
         function obj = CalculateSensitivies(obj, settings, matProp, loop,macro_meso_iteration)
             Dgiven = [];
             elementsInRow = settings.nelx+1;
@@ -481,17 +506,19 @@ classdef DesignVars
             end % end, for loop over nely
         end % End Function, CalculateSenstivities
         
-        
         % ------------------------------------------------------------
         %
-        % CalculateSensitiviesMesoStructure
+        % CalculateSensitiviesMesoStructure no periodic 
         %
         % ------------------------------------------------------------
-        function obj = CalculateSensitiviesMesoStructure(obj, settings, matProp, loop,macroElemProps, U)
+        function obj = CalculateSensitiviesMesoStructureNoPeriodic(obj, settings, matProp, loop,macroElemProps, U)
             
             doplot = 0;
-            if(doplot ==1)
+            doplotfinal = 0;
+            if(doplot ==1 || doplotfinal==1)
+                
                 p = plotResults;
+                figure(1);
             end
             
             % OBJECTIVE FUNCTION AND SENSITIVITY ANALYSIS
@@ -504,8 +531,7 @@ classdef DesignVars
                 
                 % loop over local node numbers to get their node global node numbers
                 nodes1 = obj.IEN(e,:);
-                [elx,ely]= obj.GivenNodeNumberGetXY(e);
-                
+                [elx,ely]= obj.GivenNodeNumberGetXY(e);                
                 
                 xNodes = nodes1*2-1;
                 yNodes = nodes1*2;
@@ -523,114 +549,218 @@ classdef DesignVars
 %                 settings.nelx
                 % Find the elastic strain
                 % elasticStrain = obj.B*Ue;
-                term1 = transpose(Ue)*KE*Ue*obj.x(ely,elx)^settings.penal;
+                term1 = transpose(Ue)*KE*Ue*obj.x(ely,elx)^(settings.penal-1)*settings.penal;
                 %  term2 = 0;
                 % term3= 0;
                 
                 % Sum the elastic compliance terms.
-                % total = (term1 + term2 + term3);
-                %
-                
-                obj.temp1(ely,elx) = -term1;
+                % total = (term1 + term2 + term3);                             
+                obj.temp1(ely,elx) = term1;
                 
                 if(doplot ==1)
-                    if(mod(e,10) ==0)
+%                     if(mod(e,10) ==0)
+                      
                         p.PlotArrayGeneric(obj.temp1, 'plotting sensitivities while running. ')
                         drawnow
-                    end
+%                     end
                 end
                 % calculate the minim temp sensitivity
                 % obj.temp2(ely,elx) = -settings.penal*obj.x(ely,elx)^(settings.penal-1)*U_heat'*KEHeat*U_heat;
             end
             
             % Do final plot
-            if(doplot ==1)
-                p.PlotArrayGeneric(obj.temp1, 'final plotting sensitivities while running. ')
-                    drawnow
+            if(doplotfinal ==1)
+                  subplot(2,2,3);
+                p.PlotArrayGeneric(obj.temp1, 'final plotting sensitivities after running. ')
+               drawnow
              end
             %             end
-        end % end CalculateSensitiviesMesoStructure
+        end % end CalculateSensitiviesMesoStructureNoPeriodic
+        
+        % ------------------------------------------------------------
+        %
+        % CalculateSensitiviesMesoStructure
+        %
+        % ------------------------------------------------------------
+%         function obj = CalculateSensitiviesMesoStructure(obj, settings, matProp, loop,macroElemProps, U)
+%             
+%             doplot = 0;
+%             if(doplot ==1)
+%                 p = plotResults;
+%             end
+%             
+%             % OBJECTIVE FUNCTION AND SENSITIVITY ANALYSIS
+%             obj.c = 0.; % c is the objective. Total strain energy
+%             obj.cCompliance = 0;
+%             obj.cHeat = 0;
+%             
+%             ne = settings.nelx*settings.nely; % number of elements
+%             for e = 1:ne
+%                 
+%                 % loop over local node numbers to get their node global node numbers
+%                 nodes1 = obj.IEN(e,:);
+%                 [elx,ely]= obj.GivenNodeNumberGetXY(e);
+%                 
+%                 
+%                 xNodes = nodes1*2-1;
+%                 yNodes = nodes1*2;
+%                 dofNumbers = [xNodes(1) yNodes(1) xNodes(2) yNodes(2) xNodes(3) yNodes(3) xNodes(4) yNodes(4)];
+%                 
+%                 Ue = U(dofNumbers);
+%                 % U_heat = obj.U_heatColumn(nodes1,:);
+%                 %averageElementTemp = mean2(U_heat); % calculate the average temperature of the 4 nodes
+%                 
+%                 % Get the element K matrix for this partiular element
+%                 KE = matProp.effectiveElasticKEmatrix(  obj.w(ely,elx),settings,[]);
+%              
+%                 % KEHeat = matProp.effectiveHeatKEmatrix(  obj.w(ely,elx), settings);
+%                 % Dmaterial = matProp.calculateEffectiveConstitutiveEquation( obj.w(ely,elx), settings);
+% %                 settings.nelx
+%                 % Find the elastic strain
+%                 % elasticStrain = obj.B*Ue;
+%                 term1 = transpose(Ue)*KE*Ue*obj.x(ely,elx)^settings.penal;
+%                 %  term2 = 0;
+%                 % term3= 0;
+%                 
+%                 % Sum the elastic compliance terms.
+%                 % total = (term1 + term2 + term3);
+%                 %
+%                 
+%                 obj.temp1(ely,elx) = -term1;
+%                 
+%                 if(doplot ==1)
+%                     if(mod(e,10) ==0)
+%                         p.PlotArrayGeneric(obj.temp1, 'plotting sensitivities while running. ')
+%                         drawnow
+%                     end
+%                 end
+%                 % calculate the minim temp sensitivity
+%                 % obj.temp2(ely,elx) = -settings.penal*obj.x(ely,elx)^(settings.penal-1)*U_heat'*KEHeat*U_heat;
+%             end
+%             
+%             % Do final plot
+%             if(doplot ==1)
+%                 p.PlotArrayGeneric(obj.temp1, 'final plotting sensitivities while running. ')
+%                     drawnow
+%              end
+%             %             end
+%         end % end CalculateSensitiviesMesoStructure
+        
+        
         
         % --------------------------------------------
         % The matrix given is 9 repeating unit cells. Only use the middle
         % one
         % same thing as above, but use a tiled version.
         % --------------------------------------------
-        function obj = CalculateSensitiviesMesoStructure_Tile(obj, settings, matProp, loop,macroElemProps, U)
-            doplot = settings.plotSensitivityWhilerunning;
-%             doplot = 1;
-            if(doplot ==1)
-                p = plotResults;
-            end
-            % OBJECTIVE FUNCTION AND SENSITIVITY ANALYSIS
-            obj.c = 0.; % c is the objective. Total strain energy
-            obj.cCompliance = 0;
-            obj.cHeat = 0;
-            
-%             ne = obj.nelyTile *obj.nelxTile ; % number of elements
-%             elementsPerTile = settings.nely*settings.nelx;
-%             start = (settings.sensitivityTile-1)*elementsPerTile;
-%             endElement = (settings.sensitivityTile)*elementsPerTile;
-            %             for e = start:endElement
-            
-            
-            ne = settings.nelx*settings.nely; % number of elements
-            
-               eleInRow = settings.nelx*settings.numTilesX;
-            
-            % loop over the single unit cell ,and get sensitivity 
-            for e = 1:ne
-                
-%                 columnsUp = settings.nely+floor(e/settings.nely);
-                columnsUp = settings.nely+floor((e-1)/settings.nely);
-                offset = eleInRow*columnsUp  +  settings.nelx;
-                
-                rowsOver = mod(e-1,settings.nelx)+1;
-                tiledElementNum = rowsOver+offset;
-                eTile=tiledElementNum;
-                
-                % loop over local node numbers to get their node global node numbers
-                nodes1 = obj.IENTile(eTile,:);
-                results = obj.globalPositionTile(eTile,:);
-                elx=results(1); ely= results(2);
-                
-                %                 [elx,ely]= obj.GivenNodeNumberGetXY(e);
-                
-                xNodes = nodes1*2-1;
-                yNodes = nodes1*2;
-                dofNumbers = [xNodes(1) yNodes(1) xNodes(2) yNodes(2) xNodes(3) yNodes(3) xNodes(4) yNodes(4)];
-                Ue = U(dofNumbers); % Ue = obj.U(dofNumbers,:);
-                % U_heat = obj.U_heatColumn(nodes1,:);
-                %averageElementTemp = mean2(U_heat); % calculate the average temperature of the 4 nodes
-                
-                % Get the element K matrix for this partiular element
-                KE = matProp.effectiveElasticKEmatrix(  obj.wTile(ely,elx),settings,[]);
-                % KEHeat = matProp.effectiveHeatKEmatrix(  obj.w(ely,elx), settings);
-                % Dmaterial = matProp.calculateEffectiveConstitutiveEquation( obj.w(ely,elx), settings);
-                
-                % Find the elastic strain
-                % elasticStrain = obj.B*Ue;
-                term1 = transpose(Ue)*KE*Ue*obj.xTile(ely,elx)^settings.penal;
-                %  term2 = 0;
-                % term3= 0;
-                % Sum the elastic compliance terms.
-                % total = (term1 + term2 + term3);
-                
-              result = obj.globalPosition(e,:);
-              elxSingle=result(1)+1;    elySingle=result(2)+1;
-%                 [elxSingle,elySingle]= obj.GivenNodeNumberGetXY(e);
-                obj.temp1(elySingle,elxSingle) = -term1;
-                
-                if(doplot ==1)
-                    p.PlotArrayGeneric(obj.temp1, 'plotting sensitivities while running. ')
-                    drawnow
-                end
-                % calculate the minim temp sensitivity
-                % obj.temp2(ely,elx) = -settings.penal*obj.x(ely,elx)^(settings.penal-1)*U_heat'*KEHeat*U_heat;
-            end
-%                         p = plotResults;
-%                         p.PlotArrayGeneric( obj.temp1,'sensitivity');
-        end % end CalculateSensitiviesMesoStructure
+%         function obj = CalculateSensitiviesMesoStructure_Tile(obj, settings, matProp, loop,macroElemProps, U)
+%             doplot = settings.plotSensitivityWhilerunning;
+%              doplot = 1;
+%             if(doplot ==1)
+%                 p = plotResults;
+%             end
+%             % OBJECTIVE FUNCTION AND SENSITIVITY ANALYSIS
+%             obj.c = 0.; % c is the objective. Total strain energy
+%             obj.cCompliance = 0;
+%             obj.cHeat = 0;
+%             
+% %             ne = obj.nelyTile *obj.nelxTile ; % number of elements
+% %             elementsPerTile = settings.nely*settings.nelx;
+% %             start = (settings.sensitivityTile-1)*elementsPerTile;
+% %             endElement = (settings.sensitivityTile)*elementsPerTile;
+%             %             for e = start:endElement
+%             
+%             
+%             ne = settings.nelx*settings.nely; % number of elements
+%             
+%                eleInRow = settings.nelx*settings.numTilesX;
+%             
+%             % loop over the single unit cell ,and get sensitivity 
+%             for e = 1:ne
+%                 
+% %                 columnsUp = settings.nely+floor(e/settings.nely);
+%                 columnsUp = settings.nely+floor((e-1)/settings.nely);
+%                 offset = eleInRow*columnsUp  +  settings.nelx;
+%                 
+%                 rowsOver = mod(e-1,settings.nelx)+1;
+%                 tiledElementNum = rowsOver+offset;
+%                 eTile=tiledElementNum;
+%                 
+%                 % loop over local node numbers to get their node global node numbers
+%                 nodes1 = obj.IENTile(eTile,:);
+%                 results = obj.globalPositionTile(eTile,:);
+%                 elx=results(1); ely= results(2);
+%                 
+%                 %                 [elx,ely]= obj.GivenNodeNumberGetXY(e);
+%                 
+%                 xNodes = nodes1*2-1;
+%                 yNodes = nodes1*2;
+%                 dofNumbers = [xNodes(1) yNodes(1) xNodes(2) yNodes(2) xNodes(3) yNodes(3) xNodes(4) yNodes(4)];
+%                 Ue = U(dofNumbers); % Ue = obj.U(dofNumbers,:);
+%                 % U_heat = obj.U_heatColumn(nodes1,:);
+%                 %averageElementTemp = mean2(U_heat); % calculate the average temperature of the 4 nodes
+%                 
+%                 % Get the element K matrix for this partiular element
+%                 KE = matProp.effectiveElasticKEmatrix(  obj.wTile(ely,elx),settings,[]);
+%                 % KEHeat = matProp.effectiveHeatKEmatrix(  obj.w(ely,elx), settings);
+%                 % Dmaterial = matProp.calculateEffectiveConstitutiveEquation( obj.w(ely,elx), settings);
+%                 
+%                 % Find the elastic strain
+%                 % elasticStrain = obj.B*Ue;
+%                 term1 = transpose(Ue)*KE*Ue*obj.xTile(ely,elx)^settings.penal;
+%                 %  term2 = 0;
+%                 % term3= 0;
+%                 % Sum the elastic compliance terms.
+%                 % total = (term1 + term2 + term3);
+%                 
+%               result = obj.globalPosition(e,:);
+%               elxSingle=result(1)+1;    elySingle=result(2)+1;
+%               
+%               plotdisplacement = 1;
+%               if(plotdisplacement ==1)
+%                     j = 1:4;
+%                     % Get the node number
+%                     coordNodeNumber = obj.IEN(e,j);
+%                     %   arrayCoordNumber(j) = coordNodeNumber;
+%                     % get the global X,Y position of each node and put in array
+%                     coord(j,:) = obj.globalPosition(coordNodeNumber,:);
+%                     coord = coord +0.5;
+%                     %  end
+%                     arrayCoordNumber = coordNodeNumber;
+% 
+%                     % plot the element outline                   
+%                     hold on
+%                     coordD = zeros(5,2);
+%                     %           for
+%                     temp = 1:4;
+%                     %nodeNumber = IEN(e,j);
+%                     %arrayCoordNumber(j) = coordNodeNumber(temp;
+%                     multiplierScale = 1;
+%                     coordD(temp,1) =  coord(temp,1) + multiplierScale*U(2*arrayCoordNumber(temp)-1); % X value
+%                     coordD(temp,2) =  coord(temp,2) + multiplierScale*U(2*arrayCoordNumber(temp)); % Y value                   
+% 
+%                     coord2 = coord;
+%                     coordD(5,:) = coordD(1,:) ;
+%                     coord2(5,:) = coord2(1,:);
+%                     plot(coord2(:,1),coord2(:,2),'-g');
+%                     plot(coordD(:,1),coordD(:,2), '-b');   
+%               end
+% 
+%                
+%                 coord(j,:) 
+% %                 [elxSingle,elySingle]= obj.GivenNodeNumberGetXY(e);
+%                 obj.temp1(elySingle,elxSingle) = -term1;
+%                 
+%                 if(doplot ==1)
+%                     p.PlotArrayGeneric(obj.temp1, 'plotting sensitivities while running. ')
+%                     drawnow
+%                 end
+%                 % calculate the minim temp sensitivity
+%                 % obj.temp2(ely,elx) = -settings.penal*obj.x(ely,elx)^(settings.penal-1)*U_heat'*KEHeat*U_heat;
+%             end
+% %                         p = plotResults;
+% %                         p.PlotArrayGeneric( obj.temp1,'sensitivity');
+%         end % end CalculateSensitiviesMesoStructure
         
         % ------------------------------------------------------------
         % GetHomogenizedProperties

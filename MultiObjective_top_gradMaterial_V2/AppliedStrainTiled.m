@@ -8,22 +8,23 @@ macrodisplacementvector = macroElemProps.disp;
 xdim =  designVars.nelxTile;
 ydim =   designVars.nelxTile;
 displacementTargetX = [ 0 0 macrodisplacementvector(1);
-    xdim 0 macrodisplacementvector(3);
-    xdim ydim   macrodisplacementvector(5);
-    0 ydim   macrodisplacementvector(7)];
+                        xdim 0 macrodisplacementvector(3);
+                        xdim ydim   macrodisplacementvector(5);
+                        0 ydim   macrodisplacementvector(7)];
 
 displacementTargetY = [ 0 0 macrodisplacementvector(2);
-   xdim 0 macrodisplacementvector(4);
-   xdim ydim      macrodisplacementvector(6);
-    0 ydim   macrodisplacementvector(8)];
+                       xdim 0 macrodisplacementvector(4);
+                       xdim ydim      macrodisplacementvector(6);
+                        0 ydim   macrodisplacementvector(8)];
 
 
-multiplierScale = 100;
-doplotDisplacement = 1;
+multiplierScale = 10;
+doplotDisplacement = 0;
 if doplotDisplacement ==1
          figure(1)
        h3 =   subplot(2,2,4);
        cla(h3);
+         set(h3,'YDir','normal');
 end
  nn = designVars.nelyTile *designVars.nelxTile ; % number of nodes = number elements since it wraps around
 % nn = (settings.nely+1) *(settings.nelx+1) ; % No wrap around any more. 
@@ -95,8 +96,7 @@ if doplotDisplacement ==1
         coordD(5,:) = coordD(1,:) ;
         coord2(5,:) = coord2(1,:);
         plot(coord2(:,1),coord2(:,2),'-g');
-        plot(coordD(:,1),coordD(:,2), '-b');
-        
+        plot(coordD(:,1),coordD(:,2), '-b');        
 %         if(mod(e, designVars.nelyTile )==0)
 %             drawnow
 %         end
