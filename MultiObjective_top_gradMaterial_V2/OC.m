@@ -8,6 +8,14 @@ if absL <1000
     dc = dc*100000.0/absL;
 end
 
+multiplier = 1;
+
+if(settings.doUseMultiElePerDV) % if elements per design var.     
+   multiplier = settings.numVarsX*settings.numVarsY;   
+else
+    multiplier=nelx*nely;
+end
+
 l1 = 0; l2 = 100000; move = 0.2;
 while (l2-l1 > 1e-4)
     lmid = 0.5*(l2+l1);
@@ -20,7 +28,7 @@ while (l2-l1 > 1e-4)
     
     %if currentvolume - volfrac > 0;
     
-    if sum(sum(xnew)) - volfrac*nelx*nely > 0;
+    if sum(sum(xnew)) - volfrac*multiplier > 0;
         l1 = lmid;
     else
         l2 = lmid;

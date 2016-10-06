@@ -126,7 +126,7 @@ for loadcaseIndex = 1:t2
         coord(:,1) = [0 1 1 0]*( settings.nelx);
         coord(:,2)  = [0 0 1 1]*( settings.nely);
 
-        U3 = macroElemProps.disp(loadcaseIndex,:)*multiplierScale;
+        U3 = macroElemProps.disp*multiplierScale;
         coordD = zeros(5,2);
         for temp = 1:4
             coordD(temp,1) =  coord(temp,1)+ U3(2*temp-1); % X value
@@ -158,8 +158,5 @@ for loadcaseIndex = 1:t2
 
     maxF=1;
     maxU=1;
-  
+    U2 = transpose(U2);
 end
-
-
-U2 = transpose(U2);

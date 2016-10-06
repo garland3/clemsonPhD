@@ -7,9 +7,11 @@ classdef Configuration
         
         % each design var will control the density and volume fraction
         % material of several clustered elements. 
-        doUseMultiElePerDV; % do use multiple elements per (1) design varriable. 
+        doUseMultiElePerDV; % 1= true, 0 = false do use multiple elements per (1) design varriable. 
         numXElmPerDV= 2; % Number of elements in the X direction for 1 (per) design varriable. 
-        numYElmPerDV =3; % Number of elements in the X direction for 1 (per) design varriable. 
+        numYElmPerDV =2; % Number of elements in the X direction for 1 (per) design varriable. 
+        numVarsX;
+        numVarsY;
         
         
         
@@ -66,13 +68,14 @@ classdef Configuration
         heatMaterialInterpMethod = 1;
         
         
-        loadingCase = 111; % left clamped
+        loadingCase = [111 112 113]; % left clamped
+        
         
         % --------------
         % Meso tiling info
         %--------------
-        numTilesX = 3;
-        numTilesY = 3;
+        numTilesX = 5;
+        numTilesY = 5;
 %         sensitivityTile = 5; % use this tile to calcualte the sensitivity
         plotSensitivityWhilerunning = 0;
         
@@ -94,6 +97,61 @@ classdef Configuration
             end
             obj.w2  = 1- obj.w1; % weight heat transfer
             obj.totalVolume = obj.v1+obj.v2;
-        end        
+        end
+        
+        function obj = CalculateDesignVarsPerFEAelement(obj)
+            
+            if(obj.doUseMultiElePerDV ==1)
+                if(mod(obj.nely,obj.numYElmPerDV)~=0 || mod(obj.nelx,obj.numXElmPerDV)~=0 )
+                    disp('nely and numYElmPerDV or nelx and numXElmPerDV not compatible Exiting MATLAB')
+                    exit
+                end
+                  
+                obj.numVarsX = obj.nelx/obj.numXElmPerDV;
+                obj.numVarsY = obj.nely/obj.numYElmPerDV;
+                
+            end
+        end
+        
+         % -----------------------------
+       % Given design var position, get list of elements X,Y that are
+       % controlled by the design var. Since there are multiple elements
+       % the x and y returned values are an array. 
+       %
+       % Only applicable when multiple elements per design var is true. 
+       %
+       % -----------------------------
+       function [eleXnums, eleYnums,xNodeNums,yNodeNums, macroXdesignVarindex,macroYdesignVarindex] = GetElementsForDesignVar(obj,designvarNumber)
+           % 1. Get the x,y position of the design var. 
+           % 2. multiply by elements per design var to get positions. 
+         
+           numVarsinRow =obj.numVarsX;
+           numVarsinColumn =obj.numVarsY;
+           ydesignVar =   floor( designvarNumber/numVarsinRow)+1;
+           xdesignVar = mod(designvarNumber/numVarsinColumn);   
+           
+           macroXdesignVarindex = xdesignVar;
+           macroYdesignVarindex = ydesignVar;
+           
+           xStart = xdesignVar*obj.numXElmPerDV-(obj.numXElmPerDV);
+           yStart = ydesignVar*obj.numYElmPerDV-(obj.numYElmPerDV);
+           
+           numElementsPerDV = obj.numXElmPerDV*obj.numYElmPerDV;
+           eleXnums = zeros(numElementsPerDV,1);
+           eleYnums = zeros(numElementsPerDV,1);
+           
+           count = 1;
+            for j = 1:obj.numYElmPerDV
+                 for i = 1:obj.numXElmPerDV             
+                       eleXnums(count) = xStart+i;
+                       eleYnums(count) = yStart+j;
+
+                      count =count+1;
+                 end
+           end
+           
+          
+           
+       end
     end
 end

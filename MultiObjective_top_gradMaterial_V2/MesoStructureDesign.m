@@ -8,7 +8,7 @@ function [D_homog,designVarsMeso,macroElemProps]=MesoStructureDesign(matProp,mes
 % 		1. Do this 3 times, (no need to rerun the applystrain method).             % 
 % 	6. Get homogenous properties
 
-doPlot = 1; % For debugging allow plotting of some information. 
+doPlot = 0; % For debugging allow plotting of some information. 
 
 % Calcualte the strain, epsilon = B*d
 % get the B matrix. 

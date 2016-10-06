@@ -217,15 +217,31 @@ classdef plotResults
             % Generate the matrix used for ploitting.
             % ----------------------------------
             % structGradArrayElastic(1:settings.nely,1:settings.nelx)  = 0; % Initialize
-            structGradDesignVarArray(1:settings.nely,1:settings.nelx)  = 0; % Initialize
+%             structGradDesignVarArray(1:settings.nely,1:settings.nelx)  = 0; % Initialize
             %  structGradArrayHeat(1:settings.nely,1:settings.nelx)  = 0; % Initialize
             
             %smallerE = min( matProp.E_material2, matProp.E_material1);
             %largerE = max( matProp.E_material2, matProp.E_material1);
             %diffE = largerE-smallerE;
             
-            for i = 1:settings.nelx
-                for j = 1:settings.nely
+%             endingx = settings.nelx;
+%             endingy = settings.nely;
+%             multiplier = 1;
+            
+            if(settings.doUseMultiElePerDV ==1)
+                endingx = settings.numVarsX;
+                endingy = settings.numVarsY;
+%                structGradDesignVarArray(1:endingy,1:endingx)  = 0; % Initialize
+            else
+                 endingx = settings.nelx;
+                  endingy = settings.nely;
+%                  structGradDesignVarArray(1:settings.nely,1:settings.nelx)  = 0; % Initialize
+            end
+            
+             structGradDesignVarArray(1:endingy,1:endingx)  = 0; % Initialize
+            
+            for i = 1:endingx
+                for j = 1:endingy
                     x_local = designVars.x(j,i);
                     if(x_local <= settings.voidMaterialDensityCutOff) % if void region
                         % structGradArrayElastic(j,i) =0; % make the void region 10 less than the least strong material for plotting purposes

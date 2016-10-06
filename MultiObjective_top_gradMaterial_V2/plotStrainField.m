@@ -1,7 +1,7 @@
-function  []= plotStrainField(settings,designVars,folderNum,macro_meso_iteration)
+function  []= plotStrainField(settings,designVars,folderNum,macro_meso_iteration,loadcaseIndex)
 
 ne = settings.nelx*settings.nely; % number of elements
-U2 = transpose(designVars.U);
+U2 = (designVars.U(loadcaseIndex,:));
 % maxU = max(U2);
 multiplierScale=2;
 
@@ -34,14 +34,32 @@ for e = 1:ne
         %              coordD(temp,2) =  coord(temp,2)+ multiplierScale*U_displaced(arrayCoordNumber(temp),2); % Y value
         %           end
 
+            
         coord2 = coord;
         coordD(5,:) = coordD(1,:) ;
         coord2(5,:) = coord2(1,:);
+        
+        coordD = coordD+0.5;
+        coord2 = coord2+0.5;
+        
+        
+        if(settings.doUseMultiElePerDV ==1)
+            coord2(:,1)=coord2(:,1)/settings.numXElmPerDV;
+            coordD(:,1)=coordD(:,1)/settings.numXElmPerDV;
+            
+            coord2(:,2)=coord2(:,2)/settings.numYElmPerDV;
+            coordD(:,2)=coordD(:,2)/settings.numYElmPerDV;
+            
+            
+        end
+        
         plot(coord2(:,1),coord2(:,2),'-g');
         plot(coordD(:,1),coordD(:,2), '-b');
 %     end
 end
+hold off
+  nameGraph = sprintf('Iter: %i, meso-macro iter %i, load case %i',folderNum,macro_meso_iteration,loadcaseIndex);
+       title(nameGraph);
 
-
-  nameGraph = sprintf('./out%i/strainGraph%i.png',folderNum,macro_meso_iteration);
-print(nameGraph,'-dpng')
+%   nameGraph = sprintf('./out%i/strainGraph%i.png',folderNum,macro_meso_iteration);
+% print(nameGraph,'-dpng')

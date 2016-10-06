@@ -25,5 +25,15 @@ classdef macroElementProp
         D_homog; % calculated by homogenization of 3 strains
         D_given; % the D read from a file
         % eventually these should converge. 
+        
+        
+        % --------------------------------------
+        % %% Multiple elements per Design Var,then use these. 
+        % --------------------------------------------
+        mesoXnodelocations;
+        mesoYnodelocations;
+        xDisplacements;
+        yDisplacements;
+        
     end
 end

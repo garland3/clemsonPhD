@@ -479,14 +479,11 @@ classdef DesignVars
             % allow multiple loading cases.
             [~, t2] = size(settings.loadingCase);
             
-            for loadcaseIndex = 1:t2
-                loadcase = settings.loadingCase(loadcaseIndex);
+            for loadcase = 1:t2
                 
                 % FE-ANALYSIS
                 [obj.U_heatColumn]=temperatureFEA_V3(obj, settings, matProp,loop,loadcase);
-                [UloadCase, obj.maxF, obj.maxU]=FE_elasticV2(obj, settings, matProp,loadcase);
-                
-                obj.U(loadcaseIndex,:)=UloadCase;
+                [obj.U, obj.maxF, obj.maxU]=FE_elasticV2(obj, settings, matProp,loadcase);
                 
                 % OBJECTIVE FUNCTION AND SENSITIVITY ANALYSIS
                 obj.c = 0.; % c is the objective. Total strain energy
@@ -507,7 +504,7 @@ classdef DesignVars
                         yNodes = nodes1*2;
                         NodeNumbers = [xNodes(1) yNodes(1) xNodes(2) yNodes(2) xNodes(3) yNodes(3) xNodes(4) yNodes(4)];
                         
-                        Ue = UloadCase(NodeNumbers,:);
+                        Ue = obj.U(NodeNumbers,:);
                         U_heat = obj.U_heatColumn(nodes1,:);
                         averageElementTemp = mean2(U_heat); % calculate the average temperature of the 4 nodes
                         
@@ -599,11 +596,10 @@ classdef DesignVars
                 
             end % end for loop over load cases. 
             
-            % average the values. 
              obj.temp1 =  obj.temp1/t2;
              obj.temp2 =  obj.temp2/t2;
-             obj.g1elastic =  obj.g1elastic/t2;
-             obj.g1heat =  obj.g1heat/t2;
+             obj.g1elastic =  obj.temp1/g1elastic;
+             obj.g1heat =  obj.temp1/t2;
             
         end % End Function, CalculateSenstivities
         

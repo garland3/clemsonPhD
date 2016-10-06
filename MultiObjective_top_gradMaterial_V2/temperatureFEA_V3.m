@@ -1,4 +1,4 @@
-function [T]  = temperatureFEA_V3(designVars, settings, matProp,loop)
+function [T]  = temperatureFEA_V3(designVars, settings, matProp,loop, loadcase)
 
 
 u0 =0; % value at essentail boundaries
@@ -14,24 +14,24 @@ ne = settings.nelx*settings.nely; % number of elements
 % Second column is elemnt 2's global node number
 %  and ....
 
-count = 1;
-elementsInRow = settings.nelx+1;
-IEN = zeros(nn,4);
-% Each row, so nely # of row
-for i = 1:settings.nely
-     rowMultiplier = i-1;
-    % Each column, so nelx # of row
-    for j= 1:settings.nelx        
-        IEN(count,:)=[rowMultiplier*elementsInRow+j,
-                      rowMultiplier*elementsInRow+j+1,
-                      (rowMultiplier +1)*elementsInRow+j+1,
-                       (rowMultiplier +1)*elementsInRow+j];
-        count = count+1;
-    end
-end
-
-numNodesInRow = settings.nelx+1;
-numNodesInColumn = settings.nely+1;
+% count = 1;
+% elementsInRow = settings.nelx+1;
+% IEN = zeros(nn,4);
+% % Each row, so nely # of row
+% for i = 1:settings.nely
+%      rowMultiplier = i-1;
+%     % Each column, so nelx # of row
+%     for j= 1:settings.nelx        
+%         IEN(count,:)=[rowMultiplier*elementsInRow+j,
+%                       rowMultiplier*elementsInRow+j+1,
+%                       (rowMultiplier +1)*elementsInRow+j+1,
+%                        (rowMultiplier +1)*elementsInRow+j];
+%         count = count+1;
+%     end
+% end
+% 
+% numNodesInRow = settings.nelx+1;
+% numNodesInColumn = settings.nely+1;
 % XLocations=zeros(numNodesInRow,numNodesInColumn);
 % YLocations=zeros(numNodesInRow,numNodesInColumn);
 
@@ -116,31 +116,37 @@ Free    = setdiff(alldofs,Essential);
 
 
   
-xLoc = 1;
-yLoc = 1;
+% xLoc = 1;
+% yLoc = 1;
 % loop over the elements
 for e = 1:ne
     
       % Get the precalculated element stiffness matrix. 
      % ke = elementK_heat();
       [elx,ely]= designVars.GivenNodeNumberGetXY(e);
+      
+        %xx= nelx; yy = nely;
+      if(settings.doUseMultiElePerDV==1) % if elements per design var. 
+         [elx,ely] = designVars.GetDesignVarPositionGivenXYElement(settings,elx,ely);
+      end
+      
       ke = matProp.effectiveHeatKEmatrix(  designVars.w(ely,elx), settings);
 
       
       
       % Insert the element stiffness matrix into the global.    
-      node = IEN(e,:);
+      node = designVars.IEN(e,:);
       
       % for the x location
       % The first number is the row - "y value"
       % The second number is the column "x value"
-       K(node,node) = K(node,node) + designVars.x(yLoc,xLoc)^settings.penal*ke;
+       K(node,node) = K(node,node) + designVars.x(ely,elx)^settings.penal*ke;
        
-       xLoc = xLoc+1;
-       if(xLoc>settings.nelx)
-           xLoc = 1;
-           yLoc = yLoc+1;
-       end
+%        xLoc = xLoc+1;
+%        if(xLoc>settings.nelx)
+%            xLoc = 1;
+%            yLoc = yLoc+1;
+%        end
 
 end
  

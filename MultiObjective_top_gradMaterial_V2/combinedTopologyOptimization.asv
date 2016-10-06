@@ -400,7 +400,7 @@ if(settings.mode ==6 ||settings.mode ==8 || settings.mode ==10)
             
             [designVarsMeso, mesoSettings] = GenerateDesignVarsForMesoProblem(settings,e,macro_meso_iteration);
             mesoSettings.doPlotAppliedStrain =   settings.doPlotAppliedStrain ;
-            mesoSettings.loadingCase =   settings.loadingCase ;
+              mesoSettings.loadingCase =   settings.loadingCase ;
 
             % Set the target infill for the meso as the vol fraction of
             mesoSettings.v1=0.5+(macroElementProps.material1Fraction*macroElementProps.density^settings.penal)/2;

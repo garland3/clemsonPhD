@@ -22,8 +22,8 @@ meso_settings.terminationCriteria =0.1; % 10%
 
 % if meso structure designing, then make a smaller initial mesh
 
-meso_settings.nelx = 10;
-meso_settings.nely =10;
+meso_settings.nelx = 25;
+meso_settings.nely =25;
     
 meso_settings= meso_settings.UpdateVolTargetsAndObjectiveWeights();
 %meso_settings

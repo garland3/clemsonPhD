@@ -6,7 +6,7 @@ folderNum = settings.iterationNum;
 outname = sprintf('./out%i/elementNodeMap%i.csv',folderNum,macro_meso_iteration);
 csvwrite(outname,designVars.IEN);
 
-% Save element to XY position map (needed for x and w vars retrival)
+% % Save element to XY position map (needed for x and w vars retrival)
 outname = sprintf('./out%i/elementXYposition%i.csv',folderNum,macro_meso_iteration);
 csvwrite(outname,designVars.elementXYposition);
 
