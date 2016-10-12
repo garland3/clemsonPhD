@@ -9,15 +9,30 @@ if doplotDisplacement ==1
     cla(hi);
 end
 
+
 % ------------------------------------------------------
 % For each displacement field case
 % ------------------------------------------------------
-[~, t2] = size(settings.loadingCase);        
-for loadcaseIndex = 1:t2
+[~, temp3] = size(settings.loadingCase);    
+
+
+if( settings.averageMultiElementStrain==1)
+    elementsPerDesignVar = settings.numXElmPerDV*settings.numYElmPerDV;
+    temp3 = temp3*elementsPerDesignVar;
+end
+countElementsX = 1;
+countElementsY = 1;
+macroLoadCase = 1;
+
+nn = (settings.nelx+1)*(settings.nely+1); % number of nodes
+U2 = zeros(temp3,nn*2);
+
+for loadcaseIndex = 1:temp3
+     
     % ------------------------------------------------------
     % Single element per design var.
     % ------------------------------------------------------
-    if(settings.doUseMultiElePerDV==0)
+    if(settings.doUseMultiElePerDV==0 )
         [Y,X] = ndgrid(0:1,0:1);  
         X = X*(  settings.nelx);
         Y = Y*(settings.nely);  
@@ -27,37 +42,84 @@ for loadcaseIndex = 1:t2
             macrodisplacementvector(7)  macrodisplacementvector(5)];
 
         YD = [macrodisplacementvector(2)  macrodisplacementvector(4);
-            macrodisplacementvector(8)  macrodisplacementvector(6)];    
-
-
-
+            macrodisplacementvector(8)  macrodisplacementvector(6)];   
 
         Fx = griddedInterpolant(Y,X,XD,'linear');
         Fy = griddedInterpolant(Y,X,YD,'linear');
-    else
+    elseif(settings.doUseMultiElePerDV==1 && settings.averageMultiElementStrain==1)
+        % ------------------------------------------------------
+        % Multiple element per design var. But, average the strain fields. 
+        % ------------------------------------------------------
+          [Y,X] = ndgrid(0:1,0:1);  
+          X = X*(  settings.nelx);
+          Y = Y*(settings.nely); 
+          [t1,t2] = size( macroElemProps.mesoXnodelocations);
+          
+        %  macroLoadCase = floor((loadcaseIndex-1)/elementsPerDesignVar)+1;
+        xd = macroElemProps.xDisplacements(macroLoadCase,:)';
+        XD = reshape(xd,t2,t1)';
+
+        yd = macroElemProps.yDisplacements(macroLoadCase,:)';
+        YD = reshape(yd,t2,t1)';
+        
+        % then get the xd, yd for this element only
+       elementsInRow = t1; % think this is actually "nodes in a row. "
+        
+        j = countElementsX;
+        i = countElementsY;
+         rowMultiplier = i-1;
+         
+         % not quite the same as IEN
+        nodes = [rowMultiplier*elementsInRow+j, ...
+                    rowMultiplier*elementsInRow+j+1, ...
+%                     (rowMultiplier +1)*elementsInRow+j+1,...
+                    (rowMultiplier +1)*elementsInRow+j,...
+                      (rowMultiplier +1)*elementsInRow+j+1];
+        
+        [ macroLoadCase countElementsX countElementsY loadcaseIndex]
+        countElementsX =  countElementsX +1;
+        if(countElementsX>(t2-1)) % t2 is nodes, but we want elements, so minus 1
+             countElementsY =  countElementsY + 1;
+             countElementsX=1;
+        end
+        if(countElementsY>(t1-1)) % t2 is nodes, but we want elements, so minus 1
+             countElementsY =  1; % reset to loading case. All elements finished. 
+             countElementsX=1;
+             macroLoadCase = macroLoadCase+1;
+        end
+   
+
+        XD = XD(nodes);
+        YD = YD(nodes);
+        
+       
+        
+        Fx = griddedInterpolant(Y,X,XD,'linear');
+        Fy = griddedInterpolant(Y,X,YD,'linear');
+        
+        
+    elseif(settings.doUseMultiElePerDV==1&& settings.averageMultiElementStrain~=1)
         % ------------------------------------------------------
         % Multiple element per design var.
         % ------------------------------------------------------
         X = macroElemProps.mesoXnodelocations;
         Y = macroElemProps.mesoYnodelocations;
-        [t1,t2] = size(X);
-        X = X*(  settings.nelx)/(t2-1);
+        [t1,temp3] = size(X);
+        X = X*(  settings.nelx)/(temp3-1);
         Y = Y*(settings.nely)/(t1-1); 
 
         xd = macroElemProps.xDisplacements(loadcaseIndex,:)';
-        XD = reshape(xd,t2,t1)';
+        XD = reshape(xd,temp3,t1)';
 
         yd = macroElemProps.yDisplacements(loadcaseIndex,:)';
-        YD = reshape(yd,t2,t1)';
+        YD = reshape(yd,temp3,t1)';
 
 
         Fx = griddedInterpolant(Y,X,XD,'linear');
         Fy = griddedInterpolant(Y,X,YD,'linear');
 
     end
-    nn = (settings.nelx+1)*(settings.nely+1); % number of nodes
-
-    U2 = zeros(t2,nn*2);
+   
 
     % Fx = scatteredInterpolant(displacementTargetX(:,1),displacementTargetX(:,2),displacementTargetX(:,3));
     % Fy = scatteredInterpolant(displacementTargetY(:,1),displacementTargetY(:,2),displacementTargetY(:,3));
@@ -83,6 +145,7 @@ for loadcaseIndex = 1:t2
 
     % loop over the elements
     if(doplotDisplacement ==1)
+         subplot(1,temp3,loadcaseIndex)
         ne = settings.nelx*settings.nely; % number of elements
         for e = 1:ne
             % loop over local node numbers to get their node global node numbers
@@ -116,7 +179,9 @@ for loadcaseIndex = 1:t2
                 coord2(5,:) = coord2(1,:);
                 %             plot(coord2(:,1),coord2(:,2),'-g');
                 plot(coordD(:,1),coordD(:,2), '-b');
+                 axis square
             end
+            hold off
         end
     end
 

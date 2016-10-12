@@ -6,9 +6,9 @@ if(newDesign ==1)
     x = designVarsMeso.x;
     csvwrite(outname,x);
 
-    % save the density field
-    outname = sprintf('./out%i/densityfield%iforElement%i.csv',folderNum,macro_meso_iteration,elementNumber);
-    csvwrite(outname,designVarsMeso.x);
+    % save the sensitivity field
+     outname = sprintf('./out%i/sensitivity%iforElement%i.csv',folderNum,macro_meso_iteration,elementNumber);
+     csvwrite(outname,designVarsMeso.temp1);
     
     D = macroElemProps.D_homog;
 else

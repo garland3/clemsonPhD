@@ -1,4 +1,4 @@
-function [D_homog,designVarsMeso,macroElemProps]=MesoStructureDesign(matProp,mesoSettings,designVarsMeso,masterloop,FEACalls,macroElemProps)
+function [D_homog,designVarsMeso,macroElemProps]=MesoStructureDesign(matProp,mesoSettings,designVarsMeso,masterloop,~,macroElemProps,dcGiven)
 % 	------------------ nope 1. Tile the meso design domain
 % 	2. Apply the strain 
 % 	3. Calcualute sensitive of every locaiton. 
@@ -33,7 +33,9 @@ end
  % Get displacements (by applying a strain from the macro)        
 % [U, maxF,maxU] = AppliedStrain(designVarsMeso, mesoSettings, matProp,macroElemProps);
 % [U, maxF,maxU] = AppliedStrainTiled(designVarsMeso, mesoSettings, matProp,macroElemProps);
-[U, ~,~] = AppliedStrainNoPeriodicNoTile(designVarsMeso, mesoSettings, matProp,macroElemProps);
+if(dcGiven~=1)
+    [U, ~,~] = AppliedStrainNoPeriodicNoTile(designVarsMeso, mesoSettings, matProp,macroElemProps);
+end
 
 
 % --------------------------------------------
@@ -45,9 +47,11 @@ end
 for mesoLoop = 1:10
 %     designVarsMeso = designVarsMeso.CalculateSensitiviesMesoStructure( mesoSettings, matProp, masterloop,macroElemProps,U);
      % designVarsMeso = designVarsMeso.CalculateSensitiviesMesoStructure_Tile( mesoSettings, matProp, masterloop,macroElemProps,U);
-      designVarsMeso = designVarsMeso.CalculateSensitiviesMesoStructureNoPeriodic( mesoSettings, matProp, masterloop,macroElemProps,U);
+     if(dcGiven~=1)
+        designVarsMeso = designVarsMeso.CalculateSensitiviesMesoStructureNoPeriodic( mesoSettings, matProp, masterloop,macroElemProps,U);
     
-    designVarsMeso.dc=designVarsMeso.temp1;
+        designVarsMeso.dc=designVarsMeso.temp1;
+     end
     
     % FILTERING OF SENSITIVITIES
     [designVarsMeso.dc]   = check(mesoSettings.nelx,mesoSettings.nely,mesoSettings.rmin,designVarsMeso.x,designVarsMeso.dc);

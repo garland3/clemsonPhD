@@ -14,6 +14,8 @@ outname = sprintf('./out%i/displacement%i.csv',folderNum,macro_meso_iteration);
 U =  csvread(outname);
 
 
+
+
 % -----------------------------------
 %
 % 1 element per design var case on macro level
@@ -30,7 +32,7 @@ if(settings.doUseMultiElePerDV~=1) % if elements per design var.
     % plan for multi-loading cases. 
     [~, t2] = size(settings.loadingCase);        
     for loadcaseIndex = 1:t2
-        utemp = designVars.U(loadcaseIndex,:);    
+        utemp = U(loadcaseIndex,:);    
         u_local =   utemp(dofNumbers);
    
         %         offsetX = mean(u_local([1 3 5 7]));

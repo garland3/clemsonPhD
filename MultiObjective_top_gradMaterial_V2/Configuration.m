@@ -8,13 +8,16 @@ classdef Configuration
         % each design var will control the density and volume fraction
         % material of several clustered elements. 
         doUseMultiElePerDV; % 1= true, 0 = false do use multiple elements per (1) design varriable. 
+        averageMultiElementStrain; % 1= true, 0 = false instead of making 1 large strain field, make sevral and average the sensitivies
+        singleMesoDesign; % 1 = yes, 0 = true. 
         numXElmPerDV= 2; % Number of elements in the X direction for 1 (per) design varriable. 
         numYElmPerDV =2; % Number of elements in the X direction for 1 (per) design varriable. 
         numVarsX;
         numVarsY;
         
         
-        
+        nelxMeso = 5;
+          nelyMeso = 5;
         
         nelx = 40; % 40 # of elements in the x direcction, must be a multiple of numXElmPerDV
         nely = 20; % 18 number of elements in the y direction, must be a multiple of numYElmPerDV
@@ -68,7 +71,12 @@ classdef Configuration
         heatMaterialInterpMethod = 1;
         
         
-        loadingCase = [111 112 113]; % left clamped
+         loadingCase = [111 112 113]; % left clamped
+        % loadingCase = [111 120 121]; % up, down, right in top right corrner, left clamp. 
+%         loadingCase = [111 120]; % up, down, right in top right corrner, left clamp. 
+%             loadingCase = [111];
+            
+%                  loadingCase = [444]; % bridge
         
         
         % --------------

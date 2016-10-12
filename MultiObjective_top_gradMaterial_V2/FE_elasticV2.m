@@ -13,10 +13,15 @@ elseif loadingCase ==113
     FappliedLoad = 500;
     fixedElementsCase = 'leftClamped3'; % 'sidesMiddle'
     
-elseif loadingCase ==1
+elseif loadingCase ==120
     % Testing K_xx
-    FappliedLoad = -1000;
-    fixedElementsCase = 'bottom'; % 'sidesMiddle'
+    FappliedLoad = -500; % same as 111, but reverse direction of load
+    fixedElementsCase = 'leftClamped'; % 'sidesMiddle'
+    
+elseif loadingCase ==121
+    % Testing K_xx
+    FappliedLoad = 500;
+    fixedElementsCase = 'leftClamped6'; % 'sidesMiddle'
 elseif loadingCase ==2
     % Testing K_yy
     FappliedLoad = -1000;
@@ -27,6 +32,9 @@ elseif loadingCase ==3
 elseif loadingCase ==4
     FappliedLoad = -1000;
     fixedElementsCase = 'bottomCorners'; % 'bottomCorners'
+elseif loadingCase ==444
+    FappliedLoad = 500;
+    fixedElementsCase = 'bridge'; % 'bottomCorners'
 end
 
 
@@ -79,6 +87,7 @@ elseif(strcmp(fixedElementsCase,'leftClamped'))
     Essential = unique(Essential);        
     % Down in the top right corner
     F(ndof) = FappliedLoad;    
+  
 elseif(strcmp(fixedElementsCase,'leftClamped2'))    
     tt=   1:2*row :2*row*(column); % ... % left side
     t2=tt+1;
@@ -95,7 +104,36 @@ elseif(strcmp(fixedElementsCase,'leftClamped3'))
   
      F( (row*2)*floor(column/2)-1) = FappliedLoad; % middle to the right
 %     F(ndof) = FappliedLoad/2;
+elseif(strcmp(fixedElementsCase,'leftClamped6'))    
+    tt=   1:2*row :2*row*(column); % ... % left side
+    t2=tt+1;
+    Essential=[tt t2];
+    Essential = unique(Essential);        
+    % Down in the top right corner
+    F(ndof-1) = FappliedLoad;  
+elseif(strcmp(fixedElementsCase,'bridge'))    
+%     tt=   1:2*row :2*row*(column); % ... % left side
+%     t2=tt+1;
+    
+%     left, middle, right on bottom
+%     load down on middle row. 
+    left = [1 2];
+%     middle = [floor(row/2)*2 floor(row/2)*2+1];
+% middle = [];
+    right = [row*2 row*2+1];
+    
+    Essential=[left right];
+    Essential = unique(Essential);
+    
+    shiftupLeft = floor(column/2)*row*2+3;
+     shiftupRight = (floor(column/2)+1)*row*2+1;
+     tt = shiftupLeft:2:shiftupRight;
+   
+    F(tt) = -FappliedLoad;  
+
 end
+
+
 
 alldofs     = [1:ndof];
 Free    = setdiff(alldofs,Essential);

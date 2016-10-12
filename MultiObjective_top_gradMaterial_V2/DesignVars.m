@@ -627,55 +627,67 @@ classdef DesignVars
             obj.cCompliance = 0;
             obj.cHeat = 0;
             
-            ne = settings.nelx*settings.nely; % number of elements
-            for e = 1:ne
-                
-                % loop over local node numbers to get their node global node numbers
-                nodes1 = obj.IEN(e,:);
-                [elx,ely]= obj.GivenNodeNumberGetXY(e);
-                
-                xNodes = nodes1*2-1;
-                yNodes = nodes1*2;
-                dofNumbers = [xNodes(1) yNodes(1) xNodes(2) yNodes(2) xNodes(3) yNodes(3) xNodes(4) yNodes(4)];
-                
-                Ue = U(dofNumbers);
-                % U_heat = obj.U_heatColumn(nodes1,:);
-                %averageElementTemp = mean2(U_heat); % calculate the average temperature of the 4 nodes
-                
-                % Get the element K matrix for this partiular element
-                KE = matProp.effectiveElasticKEmatrix(  obj.w(ely,elx),settings,[]);
-                
-                % KEHeat = matProp.effectiveHeatKEmatrix(  obj.w(ely,elx), settings);
-                % Dmaterial = matProp.calculateEffectiveConstitutiveEquation( obj.w(ely,elx), settings);
-                %                 settings.nelx
-                % Find the elastic strain
-                % elasticStrain = obj.B*Ue;
-                term1 = transpose(Ue)*KE*Ue*obj.x(ely,elx)^(settings.penal-1)*settings.penal;
-                %  term2 = 0;
-                % term3= 0;
-                
-                % Sum the elastic compliance terms.
-                % total = (term1 + term2 + term3);
-                obj.temp1(ely,elx) = term1;
-                
-                if(doplot ==1)
-                    %                     if(mod(e,10) ==0)
-                    
-                    p.PlotArrayGeneric(obj.temp1, 'plotting sensitivities while running. ')
-                    drawnow
-                    %                     end
-                end
-                % calculate the minim temp sensitivity
-                % obj.temp2(ely,elx) = -settings.penal*obj.x(ely,elx)^(settings.penal-1)*U_heat'*KEHeat*U_heat;
-            end
+            [~, t2] = size(settings.loadingCase);  
+             % allow multiple loading cases.
+        
             
-            % Do final plot
-            if(doplotfinal ==1)
-                subplot(2,2,3);
-                p.PlotArrayGeneric(obj.temp1, 'final plotting sensitivities after running. ')
-                drawnow
-            end
-            %             end
+            for loadcaseIndex = 1:t2
+                Ucase = U(:,loadcaseIndex);
+                loadcase = settings.loadingCase(loadcaseIndex);
+                ne = settings.nelx*settings.nely; % number of elements
+                for e = 1:ne
+
+                    % loop over local node numbers to get their node global node numbers
+                    nodes1 = obj.IEN(e,:);
+                    [elx,ely]= obj.GivenNodeNumberGetXY(e);
+
+                    xNodes = nodes1*2-1;
+                    yNodes = nodes1*2;
+                    dofNumbers = [xNodes(1) yNodes(1) xNodes(2) yNodes(2) xNodes(3) yNodes(3) xNodes(4) yNodes(4)];
+
+                    Ue = Ucase(dofNumbers);
+                     
+                    % U_heat = obj.U_heatColumn(nodes1,:);
+                    %averageElementTemp = mean2(U_heat); % calculate the average temperature of the 4 nodes
+
+                    % Get the element K matrix for this partiular element
+                    KE = matProp.effectiveElasticKEmatrix(  obj.w(ely,elx),settings,[]);
+
+                    % KEHeat = matProp.effectiveHeatKEmatrix(  obj.w(ely,elx), settings);
+                    % Dmaterial = matProp.calculateEffectiveConstitutiveEquation( obj.w(ely,elx), settings);
+                    %                 settings.nelx
+                    % Find the elastic strain
+                    % elasticStrain = obj.B*Ue;
+                    term1 = transpose(Ue)*KE*Ue*obj.x(ely,elx)^(settings.penal-1)*settings.penal;
+                    %  term2 = 0;
+                    % term3= 0;
+
+                    % Sum the elastic compliance terms.
+                    % total = (term1 + term2 + term3);
+                    obj.temp1(ely,elx) = term1+obj.temp1(ely,elx);
+
+                    if(doplot ==1)
+                        %                     if(mod(e,10) ==0)
+
+                        p.PlotArrayGeneric(obj.temp1, 'plotting sensitivities while running. ')
+                        drawnow
+                        %                     end
+                    end
+                    % calculate the minim temp sensitivity
+                    % obj.temp2(ely,elx) = -settings.penal*obj.x(ely,elx)^(settings.penal-1)*U_heat'*KEHeat*U_heat;
+                end
+
+                % Do final plot
+                if(doplotfinal ==1)
+                    subplot(2,2,3);
+                    p.PlotArrayGeneric(obj.temp1, 'final plotting sensitivities after running. ')
+                    drawnow
+                end
+                %             end
+            end % end loading cases 
+            
+            
+               obj.temp1(ely,elx)  =    obj.temp1(ely,elx) /t2; % average the cases
         end % end CalculateSensitiviesMesoStructureNoPeriodic
         
         

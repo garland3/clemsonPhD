@@ -1,9 +1,17 @@
-function [designVarsMeso meso_settings] = GenerateDesignVarsForMesoProblem(settings,e,macro_meso_iteration)
+function [designVarsMeso, meso_settings] = GenerateDesignVarsForMesoProblem(settings,e,macro_meso_iteration)
 
 % --------------------------------------
 % %% meso_settings
 % --------------------------------------------
 meso_settings = Configuration;
+
+% copy a bunch of var set earlier
+meso_settings.numXElmPerDV=settings.numXElmPerDV;
+meso_settings.numYElmPerDV=    settings.numYElmPerDV;
+meso_settings.doPlotAppliedStrain =   settings.doPlotAppliedStrain ;
+meso_settings.loadingCase =   settings.loadingCase ;
+meso_settings.doUseMultiElePerDV= settings.doUseMultiElePerDV; % Tell the meso settings about the mode.
+
 meso_settings.elasticMaterialInterpMethod = 2; % Hashin–Shtrikam law (average of upper and lower boundary)
 meso_settings.heatMaterialInterpMethod = 5; % Hashin–Shtrikam law (average of upper and lower boundary)
 
@@ -22,8 +30,8 @@ meso_settings.terminationCriteria =0.1; % 10%
 
 % if meso structure designing, then make a smaller initial mesh
 
-meso_settings.nelx = 25;
-meso_settings.nely =25;
+meso_settings.nelx = settings.nelxMeso;
+meso_settings.nely =settings.nelyMeso;
     
 meso_settings= meso_settings.UpdateVolTargetsAndObjectiveWeights();
 %meso_settings
@@ -71,6 +79,8 @@ designVars = designVars.PreCalculateXYmapToNodeNumber(meso_settings);
 % designVars = designVars.CalcElementNodeMapmatrixWithPeriodicXandY(meso_settings);
 % designVars =  designVars.CalcNodeLocationMeso(meso_settings);
 %end
+
+
 
 designVarsMeso=designVars;
 

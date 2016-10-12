@@ -12,7 +12,7 @@ classdef MaterialProperties
         %         alpha2 = 2.4e-5; % thermal expansion coefficient for material 2
         
         E_material1 = 100000; %4 N/mm^2 The elastic mod of material 1
-        E_material2 = 50000;%E_material1/2; %4 The elastic mod of material 2
+        E_material2 = 10000;%E_material1/2; %4 The elastic mod of material 2
         
         K_material1 = 0.02; %  W/ (mm*K)heat conduction of material 1
         K_material2 = 0.04; % heat conduction of material 2
@@ -44,6 +44,17 @@ classdef MaterialProperties
             obj.dKheat =  elementK_heat(heatCoefficient)*(obj.K_material1-obj.K_material2);
         end
         
+        % -------------------------------------------------------
+        % w is vol fraction of material 1, x is density, at this meso
+        % element or design var. 
+        % -------------------------------------------------------
+        function [density]=CalculateDensityTargetforMeso(obj,w,x,settings)
+%             density=0.5+(w*x^settings.penal)/2;
+            
+%             density = home much greater than nothing material 2 is (scaled to 0 to 1) + (vol fraction * density^p)/how much is between v2 and 1
+                offset = obj.E_material2/obj.E_material1;
+               density = offset+(w*x^settings.penal)/(1-offset);
+        end
         
         % ------------------------------------------------
         %
