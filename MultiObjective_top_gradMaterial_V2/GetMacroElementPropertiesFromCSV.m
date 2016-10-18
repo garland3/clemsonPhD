@@ -1,5 +1,6 @@
-function  macroElementProps = GetMacroElementPropertiesFromCSV(settings,e,macro_meso_iteration)
+function  macroElementProps = GetMacroElementPropertiesFromCSV(settings,e)
 
+macro_meso_iteration = settings.macro_meso_iteration;
 macroElementProps = macroElementProp;
 macroElementProps.elementNumber = e;
 

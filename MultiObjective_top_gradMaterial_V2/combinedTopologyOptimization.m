@@ -42,14 +42,11 @@ settings.singleMesoDesign = 0;
 % if using input args, then running on the cluster, so use high resolution,
 % otherwise use low resolution
 if(str2num(useInputArgs) ==1)
-    settings.w1 = str2num(w1text);
-    
-    settings.mode = str2num(mode);
-    
+    settings.w1 = str2num(w1text);    
+    settings.mode = str2num(mode);    
     settings.iterationNum = str2num(iterationNum);
     settings.nelx = 80;
-    settings.nely = 40;
-    
+    settings.nely = 40;    
     settings.doPlotVolFractionDesignVar = 0;
     settings.doPlotTopologyDesignVar = 0;
     settings.doPlotHeat = 0;
@@ -61,20 +58,19 @@ if(str2num(useInputArgs) ==1)
     settings.maxMasterLoops = 500; % make it so, the fea maxes out first.
 else
     
-    settings.nelx = 40;
+    settings.nelx = 20;
     settings.nely = 20;
     settings.numXElmPerDV=1;
-    settings.numYElmPerDV=1;
+    settings.numYElmPerDV=1;    
     
-    settings.nelxMeso = 15;
-     settings.nelyMeso =20;
-    
+    settings.nelxMeso = 11;
+    settings.nelyMeso =11;    
     settings.w1 = 1; % do not set to zero, instead set to 0.0001. Else we will get NA for temp2
     settings.iterationNum = 0;
     settings.doSaveDesignVarsToCSVFile = 0;
     settings.doPlotFinal = 1;
-  %  settings.terminationCriteria =0.1; % 10%
-       settings.terminationCriteria =0.03; % 3%
+    %  settings.terminationCriteria =0.1; % 10%
+    settings.terminationCriteria =0.03; % 3%
     
 end
 
@@ -133,11 +129,11 @@ status=0;
 % macro_meso_iteration = 1;
 
 if ( settings.mode == 1 || settings.mode == 3 || settings.mode == 10 || settings.mode ==5)
-    matProp=  matProp.ReadConstitutiveMatrixesFromFiles( macro_meso_iteration, settings);
+    matProp=  matProp.ReadConstitutiveMatrixesFromFiles(  settings);
 end
 
 if ( settings.mode == 10 && onlyTopChangeOnFirstIteration ==1 )
-    designVars= ReadXMacroFromCSV(macro_meso_iteration, settings,designVars);
+    designVars= ReadXMacroFromCSV( settings,designVars);
 end
 
 xx= settings.nelx;
@@ -157,9 +153,9 @@ while status == 0  && masterloop<=settings.maxMasterLoops && FEACalls<=settings.
     % --------------------------------
     if ( settings.mode == 1 || settings.mode == 3 || settings.mode == 10 || settings.mode ==5)
         
-        if(macro_meso_iteration==1 || (onlyTopChangeOnFirstIteration == 0))
+        if(settings.macro_meso_iteration==1 || (onlyTopChangeOnFirstIteration == 0))
             for loopTop = 1:1
-                designVars = designVars.CalculateSensitivies(settings, matProp, masterloop,macro_meso_iteration);
+                designVars = designVars.CalculateSensitivies(settings, matProp, masterloop);
                 [vol1Fraction, vol2Fraction] =  designVars.CalculateVolumeFractions(settings);
                 
                 FEACalls = FEACalls+1;
@@ -208,7 +204,7 @@ while status == 0  && masterloop<=settings.maxMasterLoops && FEACalls<=settings.
     % --------------------------------
     if ( settings.mode ==2 || settings.mode ==3 || settings.mode == 10 || settings.mode ==5)
         for loopVolFrac = 1:1
-            designVars = designVars.CalculateSensitivies( settings, matProp, masterloop,macro_meso_iteration);
+            designVars = designVars.CalculateSensitivies( settings, matProp, masterloop);
             FEACalls = FEACalls+1;
             
             % for j = 1:5
@@ -264,8 +260,8 @@ if ( settings.mode ==2 || settings.mode ==3 || settings.mode == 10 || settings.m
         for loadcaseIndex = 1:t2
             %             loadcase = settings.loadingCase(loadcaseIndex);
             p.plotTopAndFraction(designVars, settings, matProp,FEACalls ); % plot the results.
-            plotStrainField(settings,designVars,folderNum,macro_meso_iteration,loadcaseIndex)
-            nameGraph = sprintf('./gradTopOptimization%fwithmesh%i_load%i.png', settings.w1,macro_meso_iteration,loadcaseIndex);
+            plotStrainField(settings,designVars,folderNum,loadcaseIndex)
+            nameGraph = sprintf('./gradTopOptimization%fwithmesh%i_load%i.png', settings.w1,settings.macro_meso_iteration,loadcaseIndex);
             print(nameGraph,'-dpng');
             hi=  figure(1);
             cla(hi);
@@ -273,7 +269,7 @@ if ( settings.mode ==2 || settings.mode ==3 || settings.mode == 10 || settings.m
     end
     
     
-    outname = sprintf('./out%i/storeOptimizationVarMacroLoop%i.csv',folderNum,macro_meso_iteration);
+    outname = sprintf('./out%i/storeOptimizationVarMacroLoop%i.csv',folderNum,settings.macro_meso_iteration);
     csvwrite(outname,designVars.storeOptimizationVar);
     status
 end
@@ -285,19 +281,8 @@ end
 % ---------------------------------------------
 % For testing only
 if(settings.mode ==4) % meso-structure design
-    %     designVars = designVars.CalcElementNodeMapmatrixWithPeriodicXandY(settings);
-    %     designVars =  designVars.CalcNodeLocationMeso(settings);
-    
-    %     settings.maxMasterLoops = 3; % make it small
-    
-    macroElemProps = macroElementProp;
-    macroElemProps.material1Fraction = 0.5;
-    macroElemProps.disp = [0         0   0   0   .1   0        0.2        0] ; % make these up for now
-    %     macroElemProps.disp = [0         0   0   0   .1   0        0.1        0] ; % make these up for now
-    %macroElemProps.disp = [   -0.0554   -0.0452   -0.0026   -0.0356         0  0     0 0] ; % make these up for now
-    mesoSettings = settings;
-    mesoSettings.doPlotAppliedStrain = 1;
-    MesoStructureDesign(matProp,mesoSettings,designVars,masterloop,FEACalls,macroElemProps);
+    TestMesoDesign(designVars,settings,matProp);
+   
 end
 
 % ---------------------------------------------
@@ -311,7 +296,7 @@ end
 if(settings.mode ==5  || settings.mode ==10)
     
     % write the displacement field to a .csv
-    SaveMacroProblemStateToCSV(settings,designVars,macro_meso_iteration,matProp);
+    SaveMacroProblemStateToCSV(settings,designVars,matProp);
 end
 
 
@@ -331,33 +316,39 @@ if(settings.mode ==6 ||settings.mode ==8 || settings.mode ==10)
     else
         ne = settings.nelx*settings.nely; % number of elements
         %SavedDmatrix = zeros(ne,9);
-        coord(:,1) = [0 1 1 0];
+   
+    end
+         coord(:,1) = [0 1 1 0];
         coord(:,2)  = [0 0 1 1];
-    end
     
-    % Set up parallel computing. 
-    myCluster = parcluster('local');
-    myCluster.NumWorkers = 4;
-    saveProfile(myCluster);
-    myCluster
-    
-    
-    poolobj = gcp('nocreate'); % If no pool,create new one.
-    if isempty(poolobj)
-        parpool('local',4)
-        poolsize = 4;
-    else
-        poolsize = poolobj.NumWorkers;
-    end
-    poolsize
-%     poolobj = parpool;
+        parallel =0;
+    if(parallel==1)
+        % Set up parallel computing.
+        myCluster = parcluster('local');
+        myCluster.NumWorkers = 4;
+        saveProfile(myCluster);
+        myCluster
+
+
+        poolobj = gcp('nocreate'); % If no pool,create new one.
+        if isempty(poolobj)
+            parpool('local',4)
+            poolsize = 4;
+        else
+            poolsize = poolobj.NumWorkers;
+        end
+        poolsize
+        %     poolobj = parpool;
+
+
 
     
-   
-    parfor  e = 1:ne
-        settingscopy = settings; % need for parfor loop. 
+    end
+    %  parfor  e = 1:ne    
+      for  e = 1:ne
+        settingscopy = settings; % need for parfor loop.
         e
-        macroElementPropsParFor = GetMacroElementPropertiesFromCSV(settingscopy,e,macro_meso_iteration);
+        macroElementPropsParFor = GetMacroElementPropertiesFromCSV(settingscopy,e);
         scalePlot = 1;
         
         % Check if void
@@ -365,7 +356,7 @@ if(settings.mode ==6 ||settings.mode ==8 || settings.mode ==10)
         if(macroElementPropsParFor.density>0.02)
             
             % Only plot a few
-            plotfrequency = 500;
+            plotfrequency = 200;
             if(mod(e,plotfrequency) ==0)
                 settingscopy.doPlotAppliedStrain = 1;  plottingMesoDesign = 1;  plotting = 1; % this was for debugging % this was for debugging
             else
@@ -401,6 +392,12 @@ if(settings.mode ==6 ||settings.mode ==8 || settings.mode ==10)
                 % ------------------------------------------------------
                 % Multiple element per design var.
                 % ------------------------------------------------------
+                
+                if(e==-1)
+                   macroElementPropsParFor.xDisplacements = [ 0 0 0 0 0 0  1 1 1]*0.1;
+                   macroElementPropsParFor.yDisplacements = [ 0 0 0 0 0 0  1 1 1]*0.1;
+                end
+                
                 if(plotting ==1)
                     figure(1)
                     [~, t2] = size(settingscopy.loadingCase);
@@ -422,11 +419,11 @@ if(settings.mode ==6 ||settings.mode ==8 || settings.mode ==10)
                 end
             end
             
-            [designVarsMeso, mesoSettings] = GenerateDesignVarsForMesoProblem(settingscopy,e,macro_meso_iteration);
+            [designVarsMeso, mesoSettings] = GenerateDesignVarsForMesoProblem(settingscopy,e);
             
             
             % Set the target infill for the meso as the vol fraction of
-%             mesoSettings.v1=0.5+(macroElementPropsParFor.material1Fraction*macroElementPropsParFor.density^settings.penal)/2;
+            %             mesoSettings.v1=0.5+(macroElementPropsParFor.material1Fraction*macroElementPropsParFor.density^settings.penal)/2;
             w = macroElementPropsParFor.material1Fraction;
             x = macroElementPropsParFor.density;
             mesoSettings.v1=matProp.CalculateDensityTargetforMeso(w,x,settingscopy);
@@ -434,6 +431,7 @@ if(settings.mode ==6 ||settings.mode ==8 || settings.mode ==10)
             mesoSettings.totalVolume= mesoSettings.v1+0;
             
             mesoSettings.averageMultiElementStrain= settingscopy.averageMultiElementStrain;
+            mesoSettings.doPlotAppliedStrain=settingscopy.doPlotAppliedStrain;
             [D_homog,designVarsMeso,macroElementPropsParFor]= MesoStructureDesign(matProp,mesoSettings,designVarsMeso,masterloop,FEACalls,macroElementPropsParFor,0);
             D_homog
             
@@ -459,7 +457,7 @@ if(settings.mode ==6 ||settings.mode ==8 || settings.mode ==10)
             designVarsMeso=[];
         end
         
-        SaveMesoUnitCellDesignToCSV(designVarsMeso,macroElementPropsParFor,settingscopy.iterationNum,macro_meso_iteration,e,newDesign);
+        SaveMesoUnitCellDesignToCSV(designVarsMeso,macroElementPropsParFor,settingscopy.iterationNum,settingscopy.macro_meso_iteration,e,newDesign);
         
         % SavedDmatrix(e,:) = D_homog_flat;
         
@@ -472,8 +470,9 @@ if(settings.mode ==6 ||settings.mode ==8 || settings.mode ==10)
         % 3. Save the results of the meso-structure to a .csv file.
     end
     
-    
+      if(parallel==1)
     delete(poolobj)
+      end
     
     % Loop over the elements and get the design fields, and make one
     % huge array showing the actual shape of the structure, tile the
@@ -491,7 +490,7 @@ if(settings.mode ==7||settings.mode ==8  || settings.mode ==10 )
     p = plotResults;
     
     
-    [designVarsMeso, mesoSettings] = GenerateDesignVarsForMesoProblem(settings,1,1);
+    [designVarsMeso, mesoSettings] = GenerateDesignVarsForMesoProblem(settings,1);
     mesoSettings.doUseMultiElePerDV =settings.doUseMultiElePerDV;
     numTilesX=settings.numTilesX;
     numTilesY = settings.numTilesY;
@@ -516,24 +515,26 @@ if(settings.mode ==7||settings.mode ==8  || settings.mode ==10 )
     %     xaverage = zeros(mesoSettings.nely,mesoSettings.nelx);% [];
     if(settings.singleMesoDesign)
         temp1average = zeros(mesoSettings.nely,mesoSettings.nelx);% [];
-        if(macro_meso_iteration>1)
-%              outname = sprintf('./out%i/singleMesoD_mesoMacro%i.csv',folderNum,macro_meso_iteration);
-%            csvwrite(outname, D_homog);
-            folderNum=settings.iterationNum
-           outname = sprintf('./out%i/singleXmesoDesign%i.csv',folderNum,macro_meso_iteration-1);
-           savedX=csvread(outname);
-              
+        if(settings.macro_meso_iteration>1)
+            %              outname = sprintf('./out%i/singleMesoD_mesoMacro%i.csv',folderNum,macro_meso_iteration);
+            %            csvwrite(outname, D_homog);
+            folderNum=settings.iterationNum;
+            outname = sprintf('./out%i/singleXmesoDesign%i.csv',folderNum,settings.macro_meso_iteration-1);
+            savedX=csvread(outname);
+            
         end
     end
     count = 1;
     for e = 1:ne
         
-        macroElementProps = GetMacroElementPropertiesFromCSV(settings,e,macro_meso_iteration);
+        macroElementProps = GetMacroElementPropertiesFromCSV(settings,e);
         
         % Check if void
         if(macroElementProps.density>settings.voidMaterialDensityCutOff)
-            if(settings.singleMesoDesign ~=1 ||macro_meso_iteration==1 )
-                x=GetMesoUnitCellDesignFromCSV(settings.iterationNum,macro_meso_iteration,e);
+            if(settings.singleMesoDesign ~=1 ||settings.macro_meso_iteration==1 )
+                x=GetMesoUnitCellDesignFromCSV(settings,e);
+                % x = fliplr(flip(x));
+                % x = flip(x);
             else
                 x = savedX;
             end
@@ -556,7 +557,7 @@ if(settings.mode ==7||settings.mode ==8  || settings.mode ==10 )
             if(settings.singleMesoDesign)
                 % save the sensitivity field
                 elementNumber=e;folderNum = settings.iterationNum;
-                outname = sprintf('./out%i/sensitivity%iforElement%i.csv',folderNum,macro_meso_iteration,elementNumber);
+                outname = sprintf('./out%i/sensitivity%iforElement%i.csv',folderNum,settings.macro_meso_iteration,elementNumber);
                 temp1 = csvread(outname);
                 temp1average = temp1average+temp1;count=count+1;
             end
@@ -565,12 +566,12 @@ if(settings.mode ==7||settings.mode ==8  || settings.mode ==10 )
     
     %           subplot(2,2,3);
     p.PlotArrayGeneric( completeStruct, 'complete structure')
-    nameGraph = sprintf('./completeStucture%f_macroIteration_%i.png', settings.w1,macro_meso_iteration);
+    nameGraph = sprintf('./completeStucture%f_macroIteration_%i.png', settings.w1,settings.macro_meso_iteration);
     print(nameGraph,'-dpng')
     
     if(settings.singleMesoDesign)
         temp1average=temp1average/count;
-%         p.PlotArrayGeneric( temp1average, 'average meso')
+        %         p.PlotArrayGeneric( temp1average, 'average meso')
         doPlot= 1;
         designVarsMeso.x =  zeros(mesoSettings.nely,mesoSettings.nelx);% [];
         mesoSettings.totalVolume = 0.5;
@@ -579,19 +580,19 @@ if(settings.mode ==7||settings.mode ==8  || settings.mode ==10 )
             [designVarsMeso.x] = OC_meso(mesoSettings.nelx,mesoSettings.nely,designVarsMeso.x,mesoSettings.totalVolume,designVarsMeso.dc, designVarsMeso, mesoSettings);
             if(doPlot ==1)
                 figure(2)
-                p.PlotArrayGeneric(designVarsMeso.x,'meso design -> topology var'); % plot the results.               
+                p.PlotArrayGeneric(designVarsMeso.x,'meso design -> topology var'); % plot the results.
             end
         end
-        % find out the constiutive matrix for this design. 
+        % find out the constiutive matrix for this design.
         designVarsMeso = designVarsMeso.CalcElementNodeMapmatrixWithPeriodicXandY(mesoSettings);
         designVarsMeso =  designVarsMeso.CalcNodeLocationMeso(mesoSettings);
-        macroElementProps = designVarsMeso.GetHomogenizedProperties(mesoSettings,mesoSettings, matProp, masterloop,macroElementProps);     
+        macroElementProps = designVarsMeso.GetHomogenizedProperties(mesoSettings,mesoSettings, matProp, masterloop,macroElementProps);
         D_homog =  macroElementProps.D_homog
-        % save it. 
-       outname = sprintf('./out%i/singleMesoD_mesoMacro%i.csv',folderNum,macro_meso_iteration);
-       csvwrite(outname, D_homog);
-       outname = sprintf('./out%i/singleXmesoDesign%i.csv',folderNum,macro_meso_iteration);
-       csvwrite(outname, designVarsMeso.x);
+        % save it.
+        outname = sprintf('./out%i/singleMesoD_mesoMacro%i.csv',folderNum,settings.macro_meso_iteration);
+        csvwrite(outname, D_homog);
+        outname = sprintf('./out%i/singleXmesoDesign%i.csv',folderNum,settings.macro_meso_iteration);
+        csvwrite(outname, designVarsMeso.x);
     end
     
     %

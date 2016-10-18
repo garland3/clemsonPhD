@@ -60,7 +60,8 @@ for mesoLoop = 1:10
     [designVarsMeso.x] = OC_meso(mesoSettings.nelx,mesoSettings.nely,designVarsMeso.x,mesoSettings.totalVolume,designVarsMeso.dc, designVarsMeso, mesoSettings);
     
     if(doPlot ==1)
-        figure(2)
+        figure(1)
+        subplot(2,2,4)
         p.PlotArrayGeneric(designVarsMeso.x,'meso design -> topology var'); % plot the results.
 %         figure(3)
     end

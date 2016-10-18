@@ -22,7 +22,7 @@ F3 = zeros(ndof,1);
 K = zeros(ndof,ndof);
 % row = settings.nelx;
 % column= settings.nely;
-Essential = [1 2];
+Essential = [1 2 4];
 
 alldofs     = [1:ndof];
 Free    = setdiff(alldofs,Essential);

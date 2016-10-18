@@ -1,9 +1,9 @@
-function  []= plotStrainField(settings,designVars,folderNum,macro_meso_iteration,loadcaseIndex)
+function  []= plotStrainField(settings,designVars,folderNum,loadcaseIndex)
 
 ne = settings.nelx*settings.nely; % number of elements
 U2 = (designVars.U(loadcaseIndex,:));
-% maxU = max(U2);
-multiplierScale=2;
+ maxU = max(max(designVars.U));
+multiplierScale=1/maxU;
 
 for e = 1:ne
 %     if(designVars.x>settings.voidMaterialDensityCutOff
@@ -58,7 +58,7 @@ for e = 1:ne
 %     end
 end
 hold off
-  nameGraph = sprintf('Iter: %i, meso-macro iter %i, load case %i',folderNum,macro_meso_iteration,loadcaseIndex);
+  nameGraph = sprintf('Iter: %i, meso-macro iter %i, load case %i',folderNum,settings.macro_meso_iteration,loadcaseIndex);
        title(nameGraph);
 
 %   nameGraph = sprintf('./out%i/strainGraph%i.png',folderNum,macro_meso_iteration);

@@ -83,10 +83,18 @@ elseif(strcmp(fixedElementsCase,'middleDown'))
 elseif(strcmp(fixedElementsCase,'leftClamped'))    
     tt=   1:2*row :2*row*(column); % ... % left side
     t2=tt+1;
-    Essential=[tt t2];
+    
+%    t3 = [1 2 3 4 row*2-1 row*2 row*2+1 row*2+2];
+%      t3 = [ 1     2         row+1    row+2  ]*2;
+%      t4 = t3-1;
+t3 = [];
+t4 = [];
+    u3 = 0;
+    Essential=[tt t2 t3 t4];
     Essential = unique(Essential);        
     % Down in the top right corner
     F(ndof) = FappliedLoad;    
+    
   
 elseif(strcmp(fixedElementsCase,'leftClamped2'))    
     tt=   1:2*row :2*row*(column); % ... % left side
@@ -117,19 +125,33 @@ elseif(strcmp(fixedElementsCase,'bridge'))
     
 %     left, middle, right on bottom
 %     load down on middle row. 
-    left = [1 2];
-%     middle = [floor(row/2)*2 floor(row/2)*2+1];
+%     left = [1 2];
+% %      middle = [floor(row/2)*2 floor(row/2)*2+1];
 % middle = [];
-    right = [row*2 row*2+1];
+%     right = [row*2 row*2+1];
     
-    Essential=[left right];
+  
+    
+    nodeLeft =  floor(column/2)*row+1;
+     nodeRight =  (floor(column/2)+1)*row;
+     
+    left =  nodeLeft*2;
+    right = nodeRight*2;
+% %     tt = leftynode:2:rightynode;
+%     right = ndof;
+%     left = ndof-row*2;
+    tt = left:2:right;
+    [~, scale] = size(tt);
+   % scale = scale(
+   
+      Essential=[left (left -1)  right (right-1)];
     Essential = unique(Essential);
     
-    shiftupLeft = floor(column/2)*row*2+3;
-     shiftupRight = (floor(column/2)+1)*row*2+1;
-     tt = shiftupLeft:2:shiftupRight;
+%     shiftupLeft = floor(column/2)*row*2+3;
+%      shiftupRight = (floor(column/2)+1)*row*2+1;
+%      tt = shiftupLeft:2:shiftupRight;
    
-    F(tt) = -FappliedLoad;  
+    F(tt) = -FappliedLoad/scale;  
 
 end
 

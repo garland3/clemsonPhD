@@ -71,10 +71,10 @@ classdef Configuration
         heatMaterialInterpMethod = 1;
         
         
-         loadingCase = [111 112 113]; % left clamped
+%          loadingCase = [111 112 113]; % left clamped
         % loadingCase = [111 120 121]; % up, down, right in top right corrner, left clamp. 
 %         loadingCase = [111 120]; % up, down, right in top right corrner, left clamp. 
-%             loadingCase = [111];
+             loadingCase = [111];
             
 %                  loadingCase = [444]; % bridge
         

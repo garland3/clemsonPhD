@@ -472,7 +472,7 @@ classdef DesignVars
         end
         
         %%
-        function obj = CalculateSensitivies(obj, settings, matProp, loop,macro_meso_iteration)
+        function obj = CalculateSensitivies(obj, settings, matProp, loop)
             Dgiven = [];
             elementsInRow = settings.nelx+1;
             
@@ -512,7 +512,7 @@ classdef DesignVars
                         averageElementTemp = mean2(U_heat); % calculate the average temperature of the 4 nodes
                         
                         % Get the element K matrix for this partiular element
-                        if(macro_meso_iteration>1)
+                        if(settings.macro_meso_iteration>1)
                             e = count;
                             Dgiven =matProp.GetSavedDMatrix(e);
                         end
@@ -687,7 +687,8 @@ classdef DesignVars
             end % end loading cases 
             
             
-               obj.temp1(ely,elx)  =    obj.temp1(ely,elx) /t2; % average the cases
+%                obj.temp1(ely,elx)  =    obj.temp1(ely,elx) /t2; % average the cases
+                 obj.temp1  =    obj.temp1 /t2; % average the cases
         end % end CalculateSensitiviesMesoStructureNoPeriodic
         
         

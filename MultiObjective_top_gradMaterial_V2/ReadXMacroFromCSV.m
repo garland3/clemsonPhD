@@ -1,8 +1,8 @@
-function[ designVars]= ReadXMacroFromCSV(macro_meso_iteration, settings,designVars)
+function[ designVars]= ReadXMacroFromCSV( settings,designVars)
 
-if(macro_meso_iteration>1)
+if(settings.macro_meso_iteration>1)
     folderNum = settings.iterationNum;
-    previousIterationNum = macro_meso_iteration-1;
+    previousIterationNum = settings.macro_meso_iteration-1;
     outname = sprintf('./out%i/densityfield%i.csv',folderNum,previousIterationNum);
     designVars.x = csvread(outname);
 else

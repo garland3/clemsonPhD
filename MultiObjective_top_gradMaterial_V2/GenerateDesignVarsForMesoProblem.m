@@ -1,10 +1,10 @@
-function [designVarsMeso, meso_settings] = GenerateDesignVarsForMesoProblem(settings,e,macro_meso_iteration)
+function [designVarsMeso, meso_settings] = GenerateDesignVarsForMesoProblem(settings,e)
 
 % --------------------------------------
 % %% meso_settings
 % --------------------------------------------
-meso_settings = Configuration;
-
+meso_settings = settings;
+meso_settings.macro_meso_iteration = settings.macro_meso_iteration;
 % copy a bunch of var set earlier
 meso_settings.numXElmPerDV=settings.numXElmPerDV;
 meso_settings.numYElmPerDV=    settings.numYElmPerDV;
@@ -43,8 +43,8 @@ meso_settings= meso_settings.UpdateVolTargetsAndObjectiveWeights();
 designVars = DesignVars(meso_settings);
 
 % Reuse the existing X matrix if it exists. 
-if(macro_meso_iteration>1)
-    oldDesignNumber = macro_meso_iteration-1
+if(settings.macro_meso_iteration>1)
+    oldDesignNumber = settings.macro_meso_iteration-1;
     folderNum = settings.iterationNum;
      outname = sprintf('./out%i/densityfield%iforElement%i.csv',folderNum,oldDesignNumber,e);
      if exist(outname, 'file') == 2
