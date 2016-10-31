@@ -77,5 +77,17 @@ end
 designVarsMeso = designVarsMeso.CalcElementNodeMapmatrixWithPeriodicXandY(mesoSettings);
 designVarsMeso =  designVarsMeso.CalcNodeLocationMeso(mesoSettings);
 
+% designVarsMeso.x = ones(mesoSettings.nely,mesoSettings.nelx)*0.75;
 macroElemProps = designVarsMeso.GetHomogenizedProperties(mesoSettings,mesoSettings, matProp, masterloop,macroElemProps);
 D_homog =  macroElemProps.D_homog;
+
+
+%   E_base =    matProp.effectiveElasticProperties( 1, mesoSettings);
+%   E = E_base;
+%     v = 0.3; % Piossons ratio
+%     
+%     % D is called C* in some journal papers.
+%     D = [ 1 v 0;
+%         v 1 0;
+%         0 0 1/2*(1-v)]*E/(1-v^2)
+ 

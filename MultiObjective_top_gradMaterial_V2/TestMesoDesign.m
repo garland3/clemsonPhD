@@ -1,8 +1,10 @@
 function TestMesoDesign(designVars,settings,matProp)
 
+
+
 macroElemProps = macroElementProp;
 macroElemProps.material1Fraction = 0.5;
-scalePlot = 30;
+scalePlot = 1;
 
 e = 1;
 macroElemProps = GetMacroElementPropertiesFromCSV(settings,e);
@@ -42,9 +44,21 @@ else
     % ------------------------------------------------------
     % Multiple element per design var.
     % ------------------------------------------------------
-     macroElemProps.xDisplacements = [ 0 0 0 0 0 0  1 1 1]*0.01;
-     macroElemProps.yDisplacements = [ 0 0 0 0 0 0  1 1 1]*0.01;
-       
+%      macroElemProps.xDisplacements(1,:) = [ 0 0 0 0 0 0  1 1 1]*0.01;
+%      macroElemProps.yDisplacements(1,:) = [ 0 0 0 0 0 0  1 1 1]*0.01;
+     macroElemProps.xDisplacements(1,:) = [ 0 0 0 1 ]*0.01;
+     macroElemProps.yDisplacements(1,:) = [ 0 0 0 0 ]*0.01;
+     
+     macroElemProps.xDisplacements(2,:) = [ 0 0 0 0 ]*0.01;
+     macroElemProps.yDisplacements(2,:) = [ 0 0 0 1 ]*0.01;
+     
+     macroElemProps.xDisplacements(3,:) = [ 0 0 0 0 ]*0.01;
+     macroElemProps.yDisplacements(3,:) = [ 0 1 0 0 ]*0.01;
+     
+       macroElemProps.xDisplacements(4,:) = [ 0 0 1 0 ]*0.01;
+     macroElemProps.yDisplacements(4,:) = [ 0 0 0 0 ]*0.01;
+     
+        settings.loadingCase = [1 2 3 4];
        
     [Y,X] = ndgrid(0:settings.numYElmPerDV,0:settings.numXElmPerDV);
     [t1, t2] = size(X);
@@ -84,4 +98,21 @@ masterloop = 1;
 FEACalls = 1;
 dcGiven = 0;
 mesoSettings.doPlotAppliedStrain = 1;  
-MesoStructureDesign(matProp,mesoSettings,designVars,masterloop,FEACalls,macroElemProps,dcGiven);
+
+ mesoSettings.v1
+ mesoSettings.v2
+mesoSettings.totalVolume
+
+ [D_homog,designVarsMeso,macroElementPropsParFor] = MesoStructureDesignV2(matProp,mesoSettings,designVars,masterloop,FEACalls,macroElemProps,dcGiven);
+ 
+ D_homog
+
+p = plotResults;
+figure(3)
+% subplot(2,2,2);
+outname = sprintf('meso structure for macro element %i density %f',e, mesoSettings.v1);
+p.PlotArrayGeneric(designVarsMeso.x,outname);
+%                 subplot(2,2,3);
+%                 outname = sprintf('meso structure sensitivity %i density %f',e, mesoSettings.v1);
+%                 p.PlotArrayGeneric(designVarsMeso.temp1,outname);
+drawnow

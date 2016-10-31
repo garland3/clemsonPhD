@@ -28,6 +28,10 @@ csvwrite(outname,designVars.x);
 outname = sprintf('./out%i/volfractionfield%i.csv',folderNum,mm_iteration);
 csvwrite(outname,designVars.w);
 
+% save the lambda value
+outname = sprintf('./out%i/lambda%i.csv',folderNum,mm_iteration);
+csvwrite(outname,designVars.lambda1);
+
 % Write the D constituitive matrix to .csv files. 
 ne = settings.nelx*settings.nely;
 for e = 1:ne

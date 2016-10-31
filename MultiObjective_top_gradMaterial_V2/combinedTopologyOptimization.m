@@ -12,7 +12,7 @@ close all
 % --------------------------------------------
 settings = Configuration;
 settings.macro_meso_iteration = macro_meso_iteration;
-settings.mode =10;
+settings.mode =6;
 % 1 = topology only,
 % 2 = material optimization only.
 % 3 = both mateiral vol fraction and topology
@@ -37,6 +37,7 @@ settings.v2 = 0.2;
 settings.doUseMultiElePerDV = 0;
 settings.averageMultiElementStrain = 0;
 settings.singleMesoDesign = 0;
+settings.mesoplotfrequency = 1;
 
 % if using input args, then override some configurations.
 % if using input args, then running on the cluster, so use high resolution,
@@ -58,19 +59,19 @@ if(str2num(useInputArgs) ==1)
     settings.maxMasterLoops = 500; % make it so, the fea maxes out first.
 else
     
-    settings.nelx = 20;
-    settings.nely = 20;
+    settings.nelx = 10;
+    settings.nely = 10;
     settings.numXElmPerDV=1;
     settings.numYElmPerDV=1;    
     
-    settings.nelxMeso = 11;
-    settings.nelyMeso =11;    
+    settings.nelxMeso = 25;
+    settings.nelyMeso =25;    
     settings.w1 = 1; % do not set to zero, instead set to 0.0001. Else we will get NA for temp2
     settings.iterationNum = 0;
     settings.doSaveDesignVarsToCSVFile = 0;
     settings.doPlotFinal = 1;
     %  settings.terminationCriteria =0.1; % 10%
-    settings.terminationCriteria =0.03; % 3%
+    settings.terminationCriteria =0.01; % 3%
     
 end
 
@@ -344,7 +345,7 @@ if(settings.mode ==6 ||settings.mode ==8 || settings.mode ==10)
 
     
     end
-    %  parfor  e = 1:ne    
+   %   parfor  e = 1:ne    
       for  e = 1:ne
         settingscopy = settings; % need for parfor loop.
         e
@@ -356,8 +357,8 @@ if(settings.mode ==6 ||settings.mode ==8 || settings.mode ==10)
         if(macroElementPropsParFor.density>0.02)
             
             % Only plot a few
-            plotfrequency = 200;
-            if(mod(e,plotfrequency) ==0)
+            settingscopy.mesoplotfrequency = 200;
+            if(mod(e,settings.mesoplotfrequency) ==0)
                 settingscopy.doPlotAppliedStrain = 1;  plottingMesoDesign = 1;  plotting = 1; % this was for debugging % this was for debugging
             else
                 settingscopy.doPlotAppliedStrain = 0; plottingMesoDesign = 0;    plotting = 0; % this was for debugging
@@ -429,10 +430,11 @@ if(settings.mode ==6 ||settings.mode ==8 || settings.mode ==10)
             mesoSettings.v1=matProp.CalculateDensityTargetforMeso(w,x,settingscopy);
             mesoSettings.v2=0;
             mesoSettings.totalVolume= mesoSettings.v1+0;
+           
             
             mesoSettings.averageMultiElementStrain= settingscopy.averageMultiElementStrain;
             mesoSettings.doPlotAppliedStrain=settingscopy.doPlotAppliedStrain;
-            [D_homog,designVarsMeso,macroElementPropsParFor]= MesoStructureDesign(matProp,mesoSettings,designVarsMeso,masterloop,FEACalls,macroElementPropsParFor,0);
+            [D_homog,designVarsMeso,macroElementPropsParFor]= MesoStructureDesignV2(matProp,mesoSettings,designVarsMeso,masterloop,FEACalls,macroElementPropsParFor,0);
             D_homog
             
             newDesign = 1;
@@ -470,9 +472,9 @@ if(settings.mode ==6 ||settings.mode ==8 || settings.mode ==10)
         % 3. Save the results of the meso-structure to a .csv file.
     end
     
-      if(parallel==1)
-    delete(poolobj)
-      end
+%       if(parallel==1)
+%     delete(poolobj)
+%       end
     
     % Loop over the elements and get the design fields, and make one
     % huge array showing the actual shape of the structure, tile the

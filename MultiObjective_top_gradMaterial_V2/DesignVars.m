@@ -629,6 +629,12 @@ classdef DesignVars
             
             [~, t2] = size(settings.loadingCase);  
              % allow multiple loading cases.
+             
+            %  [~, ~, B_total, ~]=elK_elastic(1,0.1, 1, [],[]);
+%               B = [   -0.5000         0    0.5000         0    0.5000         0   -0.5000         0;
+%                  0   -0.5000         0   -0.5000         0    0.5000         0    0.5000;
+%            -0.5000   -0.5000   -0.5000    0.5000    0.5000    0.5000    0.5000   -0.5000];
+
         
             
             for loadcaseIndex = 1:t2
@@ -657,8 +663,13 @@ classdef DesignVars
                     % Dmaterial = matProp.calculateEffectiveConstitutiveEquation( obj.w(ely,elx), settings);
                     %                 settings.nelx
                     % Find the elastic strain
-                    % elasticStrain = obj.B*Ue;
-                    term1 = transpose(Ue)*KE*Ue*obj.x(ely,elx)^(settings.penal-1)*settings.penal;
+                    elasticStrain = obj.B*Ue;
+                   
+                   % term1 = transpose(Ue)*KE*Ue*obj.x(ely,elx)^(settings.penal-1)*settings.penal;
+                    
+                     term1 = transpose(Ue)*KE*Ue*obj.x(ely,elx)^(settings.penal-1)*settings.penal;
+                     
+%                      term1_method2 = (eye(3)-elasticStrain);
                     %  term2 = 0;
                     % term3= 0;
 

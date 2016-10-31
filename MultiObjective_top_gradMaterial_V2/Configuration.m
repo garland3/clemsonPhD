@@ -15,6 +15,7 @@ classdef Configuration
         numVarsX;
         numVarsY;
         
+        mesoplotfrequency; % how often to plot the meso level design. 
         
         nelxMeso = 5;
           nelyMeso = 5;
@@ -71,10 +72,11 @@ classdef Configuration
         heatMaterialInterpMethod = 1;
         
         
-%          loadingCase = [111 112 113]; % left clamped
+       %   loadingCase = [111 112 113]; % left clamped
+           loadingCase = [111 112 ]; % left clamped
         % loadingCase = [111 120 121]; % up, down, right in top right corrner, left clamp. 
 %         loadingCase = [111 120]; % up, down, right in top right corrner, left clamp. 
-             loadingCase = [111];
+%              loadingCase = [111];
             
 %                  loadingCase = [444]; % bridge
         
@@ -82,8 +84,8 @@ classdef Configuration
         % --------------
         % Meso tiling info
         %--------------
-        numTilesX = 5;
-        numTilesY = 5;
+        numTilesX = 10;
+        numTilesY = 10;
 %         sensitivityTile = 5; % use this tile to calcualte the sensitivity
         plotSensitivityWhilerunning = 0;
         

@@ -104,15 +104,15 @@ for loadcaseIndex = 1:temp3
         % ------------------------------------------------------
         X = macroElemProps.mesoXnodelocations;
         Y = macroElemProps.mesoYnodelocations;
-        [t1,temp3] = size(X);
-        X = X*(  settings.nelx)/(temp3-1);
+        [t1,temp4] = size(X);
+        X = X*(  settings.nelx)/(temp4-1);
         Y = Y*(settings.nely)/(t1-1); 
 
         xd = macroElemProps.xDisplacements(loadcaseIndex,:)';
-        XD = reshape(xd,temp3,t1)';
+        XD = reshape(xd,temp4,t1)';
 
         yd = macroElemProps.yDisplacements(loadcaseIndex,:)';
-        YD = reshape(yd,temp3,t1)';
+        YD = reshape(yd,temp4,t1)';
 
 
         Fx = griddedInterpolant(Y,X,XD,'linear');

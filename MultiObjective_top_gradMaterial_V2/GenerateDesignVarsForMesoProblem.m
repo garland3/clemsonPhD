@@ -54,7 +54,8 @@ if(settings.macro_meso_iteration>1)
      end
     
 else
-    designVars.x(1:meso_settings.nely,1:meso_settings.nelx) = meso_settings.totalVolume; % artificial density of the elements
+    %designVars.x(1:meso_settings.nely,1:meso_settings.nelx) = meso_settings.totalVolume; % artificial density of the elements
+    designVars.x(1:meso_settings.nely,1:meso_settings.nelx) = randi([0, meso_settings.totalVolume*100],meso_settings.nely,meso_settings.nelx)/100; % artificial density of the elements, can not be unifrom or else sensitivity will be 0 everywhere. 
 end
 designVars.w(1:meso_settings.nely,1:meso_settings.nelx)  = 1; % actual volume fraction composition of each element
 fractionCurrent_V1Local =1;

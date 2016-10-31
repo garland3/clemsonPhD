@@ -73,8 +73,8 @@ for folderS = lsitOfFolders'
         status = plotter.plotParticularIterationNumInFolder( folder, finaliterationNumber,designVars, settings,matProp);
         nameGraph = sprintf('./gradTopOptimization%f.png', settings.w1);
         print(nameGraph,'-dpng')
-        response = fig2plotly()
-        plotly_url = response.url;
+%         response = fig2plotly()
+%         plotly_url = response.url;
         
     else
   

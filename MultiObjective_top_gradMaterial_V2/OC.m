@@ -8,6 +8,10 @@ if absL <1000
     dc = dc*100000.0/absL;
 end
 
+if absL>10000000
+      dc = dc/100000.0;
+end
+
 multiplier = 1;
 
 if(settings.doUseMultiElePerDV) % if elements per design var.     
@@ -16,7 +20,7 @@ else
     multiplier=nelx*nely;
 end
 
-l1 = 0; l2 = 100000; move = 0.2;
+l1 = 0; l2 = 10000000; move = 0.2;
 while (l2-l1 > 1e-4)
     lmid = 0.5*(l2+l1);
     xnew = max(0.01,max(x-move,min(1.,min(x+move,x.*sqrt(-dc./lmid)))));
@@ -34,3 +38,4 @@ while (l2-l1 > 1e-4)
         l2 = lmid;
     end
 end
+t=1
