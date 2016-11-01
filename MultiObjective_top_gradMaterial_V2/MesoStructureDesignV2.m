@@ -1,4 +1,5 @@
-function [D_homog,designVarsMeso,macroElemProps]=MesoStructureDesignV2(matProp,mesoSettings,designVarsMeso,masterloop,~,macroElemProps,dcGiven)
+function [D_homog,designVarsMeso,macroElemProps]=MesoStructureDesignV2(matProp,mesoSettings,designVarsMeso,macroElemProps,dcGiven)
+
 % 	------------------ nope 1. Tile the meso design domain
 % 	2. Apply the strain 
 % 	3. Calcualute sensitive of every locaiton. 
@@ -8,7 +9,7 @@ function [D_homog,designVarsMeso,macroElemProps]=MesoStructureDesignV2(matProp,m
 % 		1. Do this 3 times, (no need to rerun the applystrain method).             % 
 % 	6. Get homogenous properties
 
-doPlot = 1; % For debugging allow plotting of some information. 
+doPlot = 0; % For debugging allow plotting of some information. 
 
 % Calcualte the strain, epsilon = B*d
 % get the B matrix. 
@@ -33,9 +34,20 @@ designVarsMeso =  designVarsMeso.CalcNodeLocationMeso(mesoSettings);
 % 
 %    UPDATE THE DESGIN OF THE UNIT CELL
 % --------------------------------------------
-% Loop 2 times. Calculatint the sensitivity and changing the design var X
-for mesoLoop = 1:20
-    designVarsMeso = anthonyHomgenization(designVarsMeso, mesoSettings, matProp, macroElemProps,mesoLoop);
+% Loop Calculatint the sensitivity and changing the design var X
+objectiveold = 0;
+for mesoLoop = 1:50
+   
+   [ designVarsMeso ,D_h, objective] = anthonyHomgenization(designVarsMeso, mesoSettings, matProp, macroElemProps,mesoLoop);
+    change=objectiveold-objective;
+    objectiveold=objective;
+    
+    if(abs(change)<0.01)
+       break; 
+    end
+    
+    
+    
 %     designVarsMeso = designVarsMeso.CalculateSensitiviesMesoStructure( mesoSettings, matProp, masterloop,macroElemProps,U);
      % designVarsMeso = designVarsMeso.CalculateSensitiviesMesoStructure_Tile( mesoSettings, matProp, masterloop,macroElemProps,U);
 %      if(dcGiven~=1)
@@ -62,6 +74,8 @@ for mesoLoop = 1:20
     end
 end
 
+disp(['Meso Design #: ' sprintf('%4i',macroElemProps.elementNumber ) ' after '  sprintf('%4i',mesoLoop ) ' meso iterations']);
+
 % --------------------------------------------
 %    CALCULATE Effective constitutive matrix of the meso structure. This is
 %    need for the macro optimization
@@ -72,5 +86,6 @@ end
 % designVarsMeso = designVarsMeso.CalcElementNodeMapmatrixWithPeriodicXandY(mesoSettings);
 % designVarsMeso =  designVarsMeso.CalcNodeLocationMeso(mesoSettings);
 
-macroElemProps = designVarsMeso.GetHomogenizedProperties(mesoSettings,mesoSettings, matProp, masterloop,macroElemProps);
-D_homog =  macroElemProps.D_homog;
+% macroElemProps = designVarsMeso.GetHomogenizedProperties(mesoSettings,mesoSettings, matProp, masterloop,macroElemProps);
+ macroElemProps.D_homog=D_h;
+ D_homog=D_h;

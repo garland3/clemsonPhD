@@ -1,11 +1,11 @@
-function [designVars]=anthonyHomgenization(designVars, settings, matProp,macroElemProps,mesoLoop)
+function [designVars, D_h, objective]=anthonyHomgenization(designVars, settings, matProp,macroElemProps,~)
 
 % ---------------------
 % Use the wrap around FEA
 % -------------------
 strainMultiplier = 1;
 
-u0 =0; % value at essentail boundaries
+% u0 =0; % value at essentail boundaries
 % nn = (settings.nelx+1)*(settings.nely+1); % number of nodes
 nn = (settings.nelx)*(settings.nely); % number of nodes wrap arround.
 ne = settings.nelx*settings.nely; % number of elements
@@ -24,7 +24,7 @@ K = zeros(ndof,ndof);
 % column= settings.nely;
 Essential = [1 2 4];
 
-alldofs     = [1:ndof];
+alldofs     = 1:ndof;
 Free    = setdiff(alldofs,Essential);
 
 
@@ -45,12 +45,12 @@ matvolFraction = 1;
 for e = 1:ne
     
     % loop over local node numbers to get their node global node numbers
-    for j = 1:4
-        % Get the node number
-        coordNodeNumber = designVars.IEN(e,j);
-        % get the global X,Y position of each node and put in array
-        coord(j,:) = designVars.globalPosition(coordNodeNumber,:);
-    end
+%     for j = 1:4
+%         % Get the node number
+%         coordNodeNumber = designVars.IEN(e,j);
+%         % get the global X,Y position of each node and put in array
+%         coord(j,:) = designVars.globalPosition(coordNodeNumber,:);
+%     end
     
     [x,y]= designVars.GivenNodeNumberGetXY(e);
     
@@ -100,7 +100,7 @@ for e = 1:ne
         deltaTemp = averageElementTemp- settings.referenceTemperature;
         f_temperature = alpha*deltaTemp*KexpansionBar;
         F1(NodeNumbers) = F1(NodeNumbers) + f_temperature;
-    end  
+    end
     
 end
 
@@ -112,7 +112,7 @@ F_f1 = F1(Free);
 F_f2 = F2(Free);
 F_f3 = F3(Free);
 K_ff = K(Free,Free);
-K_fe = K(Free,Essential);
+% K_fe = K(Free,Essential);
 % http://www.mathworks.com/help/distcomp/gpuarray.html
 % http://www.mathworks.com/matlabcentral/answers/63692-matlab-cuda-slow-in-solving-matrix-vector-equation-a-x-b
 
@@ -123,7 +123,7 @@ if(settings.useGPU ==1)
     T_gpu = K_ff_gpu\F_f_gpu;
     T1(Free) = gather(T_gpu);
 else
-    % normal matrix solve    
+    % normal matrix solve
     T1(Free) = K_ff \ F_f1;
     T2(Free) = K_ff \ F_f2;
     T3(Free) = K_ff \ F_f3;
@@ -139,15 +139,16 @@ T3(Essential) = u0;
 D_h = zeros(3,3);
 
 % macroElemProps.strain = macroElemProps.strain*100;
-E0 = matProp.effectiveElasticProperties(1, settings);
+% E0 = matProp.effectiveElasticProperties(1, settings);
 designVars.dc = zeros(settings.nely,settings.nelx);
 
 [~, t2] = size(settings.loadingCase);
+objective = 0;
 for loadcaseIndex = 1:t2
     for e = 1:ne
         
         [x,y]= designVars.GivenNodeNumberGetXY(e);
-        nodes1=  designVars.IEN(e,:);      
+        nodes1=  designVars.IEN(e,:);
         xNodes = nodes1*2-1;
         yNodes = nodes1*2;
         dofNumbers = [xNodes(1) yNodes(1) xNodes(2) yNodes(2) xNodes(3) yNodes(3) xNodes(4) yNodes(4)];
@@ -156,8 +157,8 @@ for loadcaseIndex = 1:t2
         Ulocal2 = T2(dofNumbers);
         Ulocal3 = T3(dofNumbers);
         
-        material1Fraction = designVars.w(y,x); % 100% of material 1 right now.
-        %     material1Fraction=1;
+%         material1Fraction = designVars.w(y,x); % 100% of material 1 right now.
+         material1Fraction=1;
         
         E_base =    matProp.effectiveElasticProperties( material1Fraction, settings);
         %     E = E_base;
@@ -168,45 +169,47 @@ for loadcaseIndex = 1:t2
         % D is called C* in some journal papers.
         D = [ 1 v 0;
             v 1 0;
-            0 0 1/2*(1-v)]*E/(1-v^2);
-        
-        
-        %temp1 = [Ulocal1; Ulocal2; Ulocal3]
+            0 0 1/2*(1-v)]*E/(1-v^2);    
+       
         Ulocal1 = full(Ulocal1);Ulocal2 = full(Ulocal2);Ulocal3 = full(Ulocal3);
-        temp1_X = [transpose(Ulocal1) transpose(Ulocal2) transpose(Ulocal3)];
-        %temp1 = full(temp1);
+        temp1_X = [transpose(Ulocal1) transpose(Ulocal2) transpose(Ulocal3)];      
         temp2_BX = B_total*temp1_X;
         temp3 = (eye(3)*strainMultiplier-temp2_BX);
-       
-       D_h_element = transpose(temp3)*D*temp3;
-    
-       D_h = D_h_element+D_h;
         
-       dH =  settings.penal*E0*  designVars.x(y,x)^(settings.penal-1)*D_h_element;
-       
-%          dQ{i,j} = penal*(E0-Emin)*xPhys.*(penal-1).*qe{i,j};
+        D_h_element = transpose(temp3)*D*temp3;
         
-%            designVars.dc(y,x) =-dH(3,3);
-%            designVars.dc(y,x) =-(dH(1,1)+dH(2,2)+ dH(1,2)+dH(2,1)); % 
-%             designVars.dc(y,x) = -dH(2,2);
-
- designVars.dc(y,x)  = -macroElemProps.strain(:,loadcaseIndex)'*dH*macroElemProps.strain(:,loadcaseIndex)+ designVars.dc(y,x)  ;
-  
-%          designVars.dc(y,x) =-(dH(1,2)-(0.95^mesoLoop)*(dH(1,1)+dH(2,2)));
+        D_h = D_h_element+D_h;
+        
+        dH =  settings.penal*  designVars.x(y,x)^(settings.penal-1)*D_h_element;
+        
+        
+        % inverse homogenization maximize the shear stiffness
+        % designVars.dc(y,x) =-dH(3,3);
+        
+        % maxmize the bulk modulus
+        % designVars.dc(y,x) =-(dH(1,1)+dH(2,2)+ dH(1,2)+dH(2,1)); %
+        
+        % maximize the stiffness in the y direciton
+        % designVars.dc(y,x) = -dH(2,2);
+        
+        % two scale optimization
+        designVars.dc(y,x)  = -macroElemProps.strain(:,loadcaseIndex)'*dH*macroElemProps.strain(:,loadcaseIndex)+ designVars.dc(y,x)  ;
+        
         
     end
+    
 end
 
-% force to be negative. 
+D_h = D_h/ne;
+
+% now that we have D_h, calculate the energy objective. 
+for loadcaseIndex = 1:t2
+    objective =objective+ macroElemProps.strain(:,loadcaseIndex)'*D_h*macroElemProps.strain(:,loadcaseIndex);
+end
+
+% force to be negative.
 maxdc = max(max( designVars.dc));
 if(maxdc>-0.001)
-     designVars.dc =  designVars.dc-maxdc-1;
+    designVars.dc =  designVars.dc-maxdc-1;
 end
-    
-%    p = plotResults;
-%     figure(5)
-%      p.PlotArrayGeneric(designVars.temp1,'meso sensitivity'); % plot the results.
-D_h = D_h/ne
-% % D_homog = D_h;
-% % T1 = transpose(T1);
-% f = 1;
+

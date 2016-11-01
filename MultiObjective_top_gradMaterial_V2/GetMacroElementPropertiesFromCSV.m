@@ -45,7 +45,7 @@ if(settings.doUseMultiElePerDV~=1) % if elements per design var.
         macroElementProps.disp(loadcaseIndex,:)  = u_local;
     end
     
-    macroElementProps.elementNumber
+%     macroElementProps.elementNumber
     % Save element to XY position map (needed for x and w vars retrival)
     outname = sprintf('./out%i/elementXYposition%i.csv',folderNum,macro_meso_iteration);
     elementXYposition=csvread(outname);
@@ -91,7 +91,7 @@ else
     %     num Xnodes = settings.numXElmPerDV
     %      [X,Y] = ndgrid(0:settings.numXElmPerDV,0:settings.numYElmPerDV);
     [Y,X] = ndgrid(0:settings.numYElmPerDV,0:settings.numXElmPerDV);
-    [t1, t2] = size(X);
+%     [t1, t2] = size(X);
 %     displacementsX = zeros(t1,t2);
 %     displacementsY = displacementsX;
     
@@ -129,7 +129,7 @@ else
     
     % nodes1=  IEN(e,:);
     macroElementProps.elementNodes=nodelist;
-    [t1,t2]= size(nodelist);
+%     [t1,t2]= size(nodelist);
     
     
     % multiloading cases. 

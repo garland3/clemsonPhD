@@ -8,7 +8,7 @@ function [D_homog,designVarsMeso,macroElemProps]=MesoStructureDesignV2(matProp,m
 % 		1. Do this 3 times, (no need to rerun the applystrain method).             % 
 % 	6. Get homogenous properties
 
-doPlot = 1; % For debugging allow plotting of some information. 
+doPlot = 0; % For debugging allow plotting of some information. 
 
 % Calcualte the strain, epsilon = B*d
 % get the B matrix. 
@@ -33,9 +33,20 @@ designVarsMeso =  designVarsMeso.CalcNodeLocationMeso(mesoSettings);
 % 
 %    UPDATE THE DESGIN OF THE UNIT CELL
 % --------------------------------------------
-% Loop 2 times. Calculatint the sensitivity and changing the design var X
-for mesoLoop = 1:10
-    designVarsMeso = anthonyHomgenization(designVarsMeso, mesoSettings, matProp, macroElemProps);
+% Loop Calculatint the sensitivity and changing the design var X
+objectiveold = 0;
+for mesoLoop = 1:25
+   
+   [ designVarsMeso ,D_h, objective] = anthonyHomgenization(designVarsMeso, mesoSettings, matProp, macroElemProps,mesoLoop);
+    change=objectiveold-objective;
+    objectiveold=objective;
+    
+    if(abs(change)<0.01)
+       break; 
+    end
+    
+    
+    
 %     designVarsMeso = designVarsMeso.CalculateSensitiviesMesoStructure( mesoSettings, matProp, masterloop,macroElemProps,U);
      % designVarsMeso = designVarsMeso.CalculateSensitiviesMesoStructure_Tile( mesoSettings, matProp, masterloop,macroElemProps,U);
 %      if(dcGiven~=1)
@@ -44,7 +55,7 @@ for mesoLoop = 1:10
 %         designVarsMeso.dc=-designVarsMeso.temp1;
 %          designVarsMeso.dc(isnan( designVarsMeso.dc))=0.1;
 %      end
-     designVarsMeso.dc = designVarsMeso.temp1;
+%      designVarsMeso.dc = designVarsMeso.temp1;
     % FILTERING OF SENSITIVITIES
     [designVarsMeso.dc]   = check(mesoSettings.nelx,mesoSettings.nely,mesoSettings.rmin,designVarsMeso.x,designVarsMeso.dc);
     
@@ -57,10 +68,12 @@ for mesoLoop = 1:10
         p.PlotArrayGeneric(designVarsMeso.x,'meso design -> topology var'); % plot the results.
           subplot(2,2,4)
         p.PlotArrayGeneric(designVarsMeso.dc,'meso design -> sensitivity'); % plot the results.
-        
+        drawnow
 %         figure(3)
     end
 end
+
+disp['Meso Design 
 
 % --------------------------------------------
 %    CALCULATE Effective constitutive matrix of the meso structure. This is
@@ -72,5 +85,6 @@ end
 % designVarsMeso = designVarsMeso.CalcElementNodeMapmatrixWithPeriodicXandY(mesoSettings);
 % designVarsMeso =  designVarsMeso.CalcNodeLocationMeso(mesoSettings);
 
-macroElemProps = designVarsMeso.GetHomogenizedProperties(mesoSettings,mesoSettings, matProp, masterloop,macroElemProps);
-D_homog =  macroElemProps.D_homog;
+% macroElemProps = designVarsMeso.GetHomogenizedProperties(mesoSettings,mesoSettings, matProp, masterloop,macroElemProps);
+ macroElemProps.D_homog=D_h;
+ D_homog=D_h;

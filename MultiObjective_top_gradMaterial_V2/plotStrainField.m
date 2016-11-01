@@ -15,7 +15,7 @@ for e = 1:ne
     %   arrayCoordNumber(j) = coordNodeNumber;
     % get the global X,Y position of each node and put in array
     coord(j,:) = designVars.globalPosition(coordNodeNumber,:);
-    coord = coord+0.5; % because each node is a 1 by 1, so to make it line up with the fgm and top plot
+%     coord = coord+0.5; % because each node is a 1 by 1, so to make it line up with the fgm and top plot
     %  end
     arrayCoordNumber = coordNodeNumber;
 

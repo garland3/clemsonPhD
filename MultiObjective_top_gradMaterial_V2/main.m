@@ -33,9 +33,9 @@ totalvolume = gridrows*gridcolumns;
 
 % normalize the volumes
 %mtemp = max(designVars.storeOptimizationVar(1:loopNumb,4));
-designVars.storeOptimizationVar(1:loopNumb,4) = designVars.storeOptimizationVar(1:loopNumb,4)/totalvolume;
-%mtemp2 = max(designVars.storeOptimizationVar(1:loopNumb,5));
-designVars.storeOptimizationVar(1:loopNumb,5) = designVars.storeOptimizationVar(1:loopNumb,5)/totalvolume;
+% designVars.storeOptimizationVar(1:loopNumb,4) = designVars.storeOptimizationVar(1:loopNumb,4)/totalvolume;
+% %mtemp2 = max(designVars.storeOptimizationVar(1:loopNumb,5));
+% designVars.storeOptimizationVar(1:loopNumb,5) = designVars.storeOptimizationVar(1:loopNumb,5)/totalvolume;
 
 
 

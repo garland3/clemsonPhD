@@ -58,7 +58,7 @@ else
     designVars.x(1:meso_settings.nely,1:meso_settings.nelx) = randi([0, meso_settings.totalVolume*100],meso_settings.nely,meso_settings.nelx)/100; % artificial density of the elements, can not be unifrom or else sensitivity will be 0 everywhere. 
 end
 designVars.w(1:meso_settings.nely,1:meso_settings.nelx)  = 1; % actual volume fraction composition of each element
-fractionCurrent_V1Local =1;
+% fractionCurrent_V1Local =1;
 
 designVars.temp1(1:meso_settings.nely,1:meso_settings.nelx) = 0;
 % designVars.temp2(1:meso_settings.nely,1:meso_settings.nelx) = 0;

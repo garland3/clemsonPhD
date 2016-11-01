@@ -38,4 +38,3 @@ while (l2-l1 > 1e-4)
         l2 = lmid;
     end
 end
-t=1
