@@ -10,7 +10,7 @@ close all
 folderNum = 0;
 all = [];
 iterationDiff = [];
-for i = 1:numloops
+for i =1:numloops
     macro_meso_iteration = i;
     outname = sprintf('./out%i/storeOptimizationVarMacroLoop%i.csv',folderNum,macro_meso_iteration);
     storeOptimizationVar=  csvread(outname);

@@ -9,7 +9,8 @@ function [D_homog,designVarsMeso,macroElemProps]=MesoStructureDesignV2(matProp,m
 % 		1. Do this 3 times, (no need to rerun the applystrain method).             % 
 % 	6. Get homogenous properties
 
-doPlot = 0; % For debugging allow plotting of some information. 
+doPlot =0; % For debugging allow plotting of some information. 
+recvid = 0; % make a video?
 
 % Calcualte the strain, epsilon = B*d
 % get the B matrix. 
@@ -20,6 +21,15 @@ if(doPlot ==1)
     p = plotResults;
     figure(1)
     subplot(2,2,3);
+end
+
+if recvid==1
+    videoOut = './resultsOuts.avi';
+    vidObj = VideoWriter(videoOut);    %Prepare the new file for video
+    vidObj.FrameRate = 5;
+    vidObj.Quality = 100;
+    open(vidObj);
+    vid=1;
 end
 
 % give periodic boundary condition. 
@@ -35,14 +45,16 @@ designVarsMeso =  designVarsMeso.CalcNodeLocationMeso(mesoSettings);
 %    UPDATE THE DESGIN OF THE UNIT CELL
 % --------------------------------------------
 % Loop Calculatint the sensitivity and changing the design var X
-objectiveold = 0;
-for mesoLoop = 1:50
+objectiveold = 100;
+mesoSettings.penal = 2.2;
+for mesoLoop = 1:60
    
-   [ designVarsMeso ,D_h, objective] = anthonyHomgenization(designVarsMeso, mesoSettings, matProp, macroElemProps,mesoLoop);
+   [ designVarsMeso ,D_h, objective] = Homgenization(designVarsMeso, mesoSettings, matProp, macroElemProps,mesoLoop);
     change=objectiveold-objective;
     objectiveold=objective;
+    relativeChange = change/objective;
     
-    if(abs(change)<0.01)
+    if(abs(relativeChange)<  mesoSettings.terminationCriteria)
        break; 
     end
     
@@ -72,6 +84,17 @@ for mesoLoop = 1:50
         drawnow
 %         figure(3)
     end
+    
+     if recvid==1
+        drawnow
+        F(vid) = getframe(figure(1)); % %Get frame of the topology in each iteration
+        writeVideo(vidObj,F(vid)); %Save the topology in the video
+        vid=vid+1;
+     end  
+end
+
+if recvid==1
+    close(vidObj);  %close video
 end
 
 disp(['Meso Design #: ' sprintf('%4i',macroElemProps.elementNumber ) ' after '  sprintf('%4i',mesoLoop ) ' meso iterations']);

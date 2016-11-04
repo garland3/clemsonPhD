@@ -12,7 +12,7 @@ close all
 % --------------------------------------------
 settings = Configuration;
 settings.macro_meso_iteration = macro_meso_iteration;
-settings.mode =10;
+settings.mode =6;
 % 1 = topology only,
 % 2 = material optimization only.
 % 3 = both mateiral vol fraction and topology
@@ -38,7 +38,7 @@ settings.doUseMultiElePerDV = 0;
 settings.averageMultiElementStrain = 0;
 settings.singleMesoDesign = 0;
 settings.mesoplotfrequency = 1;
-settings.parallel = 1;
+settings.parallel = 0;
 
 % if using input args, then override some configurations.
 % if using input args, then running on the cluster, so use high resolution,
@@ -49,6 +49,9 @@ if(str2num(useInputArgs) ==1)
     settings.iterationNum = str2num(iterationNum);
     settings.nelx = 80;
     settings.nely = 40;
+     settings.nelxMeso = 80 %35;
+    settings.nelyMeso =80 %35;
+    settings.numWorkerProcess = 8 % set to the number of nodes requested. 
     settings.doPlotVolFractionDesignVar = 0;
     settings.doPlotTopologyDesignVar = 0;
     settings.doPlotHeat = 0;
@@ -65,14 +68,14 @@ else
     settings.numXElmPerDV=1;
     settings.numYElmPerDV=1;
     
-    settings.nelxMeso = 35;
-    settings.nelyMeso =35;
+    settings.nelxMeso = 10 %35;
+    settings.nelyMeso =10 %35;
     settings.w1 = 1; % do not set to zero, instead set to 0.0001. Else we will get NA for temp2
     settings.iterationNum = 0;
     settings.doSaveDesignVarsToCSVFile = 0;
     settings.doPlotFinal = 1;
     %  settings.terminationCriteria =0.1; % 10%
-    settings.terminationCriteria =0.01; % 3%
+    settings.terminationCriteria =0.001; % 3%
     
 end
 
@@ -262,7 +265,7 @@ if ( settings.mode ==2 || settings.mode ==3 || settings.mode == 10 || settings.m
         for loadcaseIndex = 1:t2
             %             loadcase = settings.loadingCase(loadcaseIndex);
             p.plotTopAndFraction(designVars, settings, matProp,FEACalls ); % plot the results.
-            plotStrainField(settings,designVars,folderNum,loadcaseIndex)
+             plotStrainField(settings,designVars,folderNum,loadcaseIndex)
             nameGraph = sprintf('./gradTopOptimization%fwithmesh%i_load%i.png', settings.w1,settings.macro_meso_iteration,loadcaseIndex);
             print(nameGraph,'-dpng');
             hi=  figure(1);
@@ -322,7 +325,7 @@ if(settings.mode ==6 ||settings.mode ==8 || settings.mode ==10)
     if(settings.parallel==1)
         % Set up parallel computing.
         myCluster = parcluster('local');
-        myCluster.NumWorkers = 4;
+        myCluster.NumWorkers = settings.numWorkerProcess;
         saveProfile(myCluster);
         myCluster        
         
@@ -339,10 +342,14 @@ if(settings.mode ==6 ||settings.mode ==8 || settings.mode ==10)
         % loop over the macro elements and design a meso structure,
         %  parallel using parfor
         % --------------------------------------------------
+        parfor_progress(ne);
         parfor  e = 1:ne
             settingscopy = settings; % need for parfor loop.
             MesoDesignWrapper(settingscopy,e, ne,matProp);
+             parfor_progress;
+           
         end
+          parfor_progress(0);
         
     else      
         % --------------------------------------------------
@@ -405,35 +412,23 @@ if(settings.mode ==7||settings.mode ==8  || settings.mode ==10 )
         end
     end
     count = 1;
-    for e = 1:ne
-        
-        macroElementProps = GetMacroElementPropertiesFromCSV(settings,e);
-        
+    
+    
+    for e = 1:ne     
+        fprintf('element %i of %i\n',e,ne);
+        macroElementProps = GetMacroElementPropertiesFromCSV(settings,e);        
         % Check if void
         if(macroElementProps.density>settings.voidMaterialDensityCutOff)
             if(settings.singleMesoDesign ~=1 ||settings.macro_meso_iteration==1 )
-                x=GetMesoUnitCellDesignFromCSV(settings,e);
-                % x = fliplr(flip(x));
-                % x = flip(x);
+                x=GetMesoUnitCellDesignFromCSV(settings,e);                
             else
                 x = savedX;
-            end
-            %xaverage = xaverage+x;
-            
+            end                    
             yShift = (macroElementProps.yPosition-1)*mesoSettings.nely*numTilesY+1;
             xShift = (macroElementProps.xPosition-1)*mesoSettings.nelx*numTilesX+1;
-            %[e macroElementProps.xPosition]
-            
             designVarsMeso.x = x;
-            %             subplot(2,2,1);
-            %              p.PlotArrayGeneric( x, 'local X structure')
-            
             designVarsMeso=TileMesoStructure(mesoSettings, designVarsMeso);
-            %              subplot(2,2,2);
-            %              p.PlotArrayGeneric( designVarsMeso.xTile, 'local X structure tile')
-            
-            completeStruct(yShift:(yShift+mesoSettings.nely*numTilesY-1),xShift:(xShift+mesoSettings.nelx*numTilesX-1))=designVarsMeso.xTile;
-            
+            completeStruct(yShift:(yShift+mesoSettings.nely*numTilesY-1),xShift:(xShift+mesoSettings.nelx*numTilesX-1))=designVarsMeso.xTile;            
             if(settings.singleMesoDesign)
                 % save the sensitivity field
                 elementNumber=e;folderNum = settings.iterationNum;
@@ -446,8 +441,26 @@ if(settings.mode ==7||settings.mode ==8  || settings.mode ==10 )
     
     %           subplot(2,2,3);
     p.PlotArrayGeneric( completeStruct, 'complete structure')
+    rgbSteps = 100;  caxis([0,1]);
+    map = colormap; % current colormap   
+    middPoint = floor(rgbSteps/4);
+    map(1:middPoint,:) = [ones(middPoint,1),ones(middPoint,1),ones(middPoint,1)];
+    for zz =    middPoint:rgbSteps
+        map(zz,:) = [0,               1- zz/rgbSteps, 0.5];
+    end
+    colormap(map)
+%     colorbar
+    freezeColors
     nameGraph = sprintf('./completeStucture%f_macroIteration_%i.png', settings.w1,settings.macro_meso_iteration);
-    print(nameGraph,'-dpng')
+    print(nameGraph,'-dpng', '-r800')
+    
+     % Write ascii STL from gridded data
+%     [X,Y] = deal(1:40);             % Create grid reference
+%     X = 1:totalX;
+%     Y = 1:totalY;
+%     Z = completeStruct*100;                  % Create grid height
+%     nameGraph = sprintf('./stl%f_macroIteration_%i.stl', settings.w1,settings.macro_meso_iteration);
+%     stlwrite(nameGraph,X,Y,Z,'mode','binary')
     
     if(settings.singleMesoDesign)
         temp1average=temp1average/count;

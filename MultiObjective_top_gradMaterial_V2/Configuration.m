@@ -50,11 +50,12 @@ classdef Configuration
         iterationNum=0; %  used for parallel computing.
         maxFEACalls = 50;
         maxMasterLoops = 15;
-        terminationAverageCount = 4; % the average change over this number of iterations must be below the termination criteria
-        terminationCriteria = 0.01; % if the normalized average change over  terminationAverageCount of iterations is below this value then termainted. ie. 1% change
+        terminationAverageCount = 5; % the average change over this number of iterations must be below the termination criteria
+        terminationCriteria = 0.001; % if the normalized average change over  terminationAverageCount of iterations is below this value then termainted. ie. 1% change
         % not much faster.
         useGPU = 0; % set to 1 to try to solve matrix using gpu
          parallel =0; % set to 1 to use parfor while preforming the meso design
+         numWorkerProcess = 4;
         % -----------------
         % Use different mixture rules for effective elastic properteis
         % 1. Simple linear interpolation, Vigot rule of miztures E = w(E1)*(1-w)*E2
@@ -73,20 +74,20 @@ classdef Configuration
         heatMaterialInterpMethod = 1;
         
         
-%          loadingCase = [111 112 113]; % left clamped
+          loadingCase = [111 112 113]; % left clamped
 %            loadingCase = [111 112 ]; % left clamped
-         loadingCase = [111 120 121]; % up, down, right in top right corrner, left clamp. 
+%          loadingCase = [111 120 121]; % up, down, right in top right corrner, left clamp. 
 %         loadingCase = [111 120]; % up, down, right in top right corrner, left clamp. 
-%              loadingCase = [111];
+%              loadingCase = [1];
             
-%                  loadingCase = [444]; % bridge
+
         
         
         % --------------
         % Meso tiling info
         %--------------
-        numTilesX = 3;
-        numTilesY = 3;
+        numTilesX = 2;
+        numTilesY = 2;
 %         sensitivityTile = 5; % use this tile to calcualte the sensitivity
         plotSensitivityWhilerunning = 0;
         

@@ -35,6 +35,10 @@ elseif loadingCase ==4
 elseif loadingCase ==444
     FappliedLoad = 500;
     fixedElementsCase = 'bridge'; % 'bottomCorners'
+    
+elseif loadingCase ==1
+     FappliedLoad = 500;
+    fixedElementsCase = 'leftClampedmiddleLoadRight'; % '
 end
 
 
@@ -80,6 +84,14 @@ elseif(strcmp(fixedElementsCase,'middleDown'))
     forceNodes = [ 2+(ceil(column/2)*row*2):2:2+row*2+(ceil(column/2)*row*2)];
     F(forceNodes)=  FappliedLoad; % middle row, downward force
     
+elseif(strcmp(fixedElementsCase,'leftClampedmiddleLoadRight'))  
+    tt=   1:2*row :2*row*(column); % ... % left side
+    t2=tt+1;    
+    Essential=[tt t2];
+    Essential = unique(Essential);        
+    % Down in the top right corner
+    fnodes = row*floor(column/2)*2;
+    F(fnodes) = FappliedLoad;    
 elseif(strcmp(fixedElementsCase,'leftClamped'))    
     tt=   1:2*row :2*row*(column); % ... % left side
     t2=tt+1;

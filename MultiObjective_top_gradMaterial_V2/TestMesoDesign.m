@@ -19,7 +19,7 @@ settings.doPlotAppliedStrain = 1;  plottingMesoDesign = 1;  plotting = 1; % this
 if(settings.doUseMultiElePerDV==0)
     if(plotting ==1)
         figure(1)
-        macroElemProps.disp = [0         0   0   0   .1   0        0.2        0] ; % make these up for now
+        macroElemProps.disp = [0 0   0 0      0.2  0.2      0  0 ] ; % make these up for now
     
         [~, t2] = size(settings.loadingCase);
         for loadcaseIndex = 1:t2
@@ -103,7 +103,8 @@ mesoSettings.doPlotAppliedStrain = 1;
  mesoSettings.v2
 mesoSettings.totalVolume
 
- [D_homog,designVarsMeso,macroElementPropsParFor] = MesoStructureDesignV2(matProp,mesoSettings,designVars,masterloop,FEACalls,macroElemProps,dcGiven);
+ [D_homog,designVarsMeso,macroElementPropsParFor] = MesoStructureDesignV2(matProp,mesoSettings,designVars,macroElemProps,dcGiven);
+
  
  D_homog
 

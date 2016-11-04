@@ -12,7 +12,7 @@ close all
 % --------------------------------------------
 settings = Configuration;
 settings.macro_meso_iteration = macro_meso_iteration;
-settings.mode =6;
+settings.mode =7;
 % 1 = topology only,
 % 2 = material optimization only.
 % 3 = both mateiral vol fraction and topology
@@ -38,6 +38,7 @@ settings.doUseMultiElePerDV = 0;
 settings.averageMultiElementStrain = 0;
 settings.singleMesoDesign = 0;
 settings.mesoplotfrequency = 1;
+settings.parallel = 1;
 
 % if using input args, then override some configurations.
 % if using input args, then running on the cluster, so use high resolution,
@@ -48,6 +49,9 @@ if(str2num(useInputArgs) ==1)
     settings.iterationNum = str2num(iterationNum);
     settings.nelx = 80;
     settings.nely = 40;
+     settings.nelxMeso = 80 %35;
+    settings.nelyMeso =80 %35;
+    settings.numWorkerProcess = 8 % set to the number of nodes requested. 
     settings.doPlotVolFractionDesignVar = 0;
     settings.doPlotTopologyDesignVar = 0;
     settings.doPlotHeat = 0;
@@ -59,19 +63,19 @@ if(str2num(useInputArgs) ==1)
     settings.maxMasterLoops = 500; % make it so, the fea maxes out first.
 else
     
-    settings.nelx = 10;
-    settings.nely = 10;
+    settings.nelx = 40;
+    settings.nely = 20;
     settings.numXElmPerDV=1;
     settings.numYElmPerDV=1;
     
-    settings.nelxMeso = 25;
-    settings.nelyMeso =25;
+    settings.nelxMeso = 10 %35;
+    settings.nelyMeso =10 %35;
     settings.w1 = 1; % do not set to zero, instead set to 0.0001. Else we will get NA for temp2
     settings.iterationNum = 0;
     settings.doSaveDesignVarsToCSVFile = 0;
     settings.doPlotFinal = 1;
     %  settings.terminationCriteria =0.1; % 10%
-    settings.terminationCriteria =0.01; % 3%
+    settings.terminationCriteria =0.001; % 3%
     
 end
 
@@ -261,7 +265,7 @@ if ( settings.mode ==2 || settings.mode ==3 || settings.mode == 10 || settings.m
         for loadcaseIndex = 1:t2
             %             loadcase = settings.loadingCase(loadcaseIndex);
             p.plotTopAndFraction(designVars, settings, matProp,FEACalls ); % plot the results.
-            plotStrainField(settings,designVars,folderNum,loadcaseIndex)
+%             plotStrainField(settings,designVars,folderNum,loadcaseIndex)
             nameGraph = sprintf('./gradTopOptimization%fwithmesh%i_load%i.png', settings.w1,settings.macro_meso_iteration,loadcaseIndex);
             print(nameGraph,'-dpng');
             hi=  figure(1);
@@ -282,7 +286,7 @@ end
 % ---------------------------------------------
 % For testing only
 if(settings.mode ==4) % meso-structure design
-    TestMesoDesign(designVars,settings,matProp);    
+    TestMesoDesign(designVars,settings,matProp);
 end
 
 % ---------------------------------------------
@@ -293,7 +297,7 @@ end
 %
 % ---------------------------------------------
 
-if(settings.mode ==5  || settings.mode ==10)    
+if(settings.mode ==5  || settings.mode ==10)
     % write the displacement field to a .csv
     SaveMacroProblemStateToCSV(settings,designVars,matProp);
 end
@@ -314,20 +318,16 @@ if(settings.mode ==6 ||settings.mode ==8 || settings.mode ==10)
         ne =  settings.numVarsX*settings.numVarsY;
     else
         ne = settings.nelx*settings.nely; % number of elements
-        %SavedDmatrix = zeros(ne,9);        
-    end
+        %SavedDmatrix = zeros(ne,9);
+    end   
     
-    coord(:,1) = [0 1 1 0];
-    coord(:,2)  = [0 0 1 1];
-    
-    parallel =0;
-    if(parallel==1)
+   
+    if(settings.parallel==1)
         % Set up parallel computing.
         myCluster = parcluster('local');
-        myCluster.NumWorkers = 4;
+        myCluster.NumWorkers = settings.numWorkerProcess;
         saveProfile(myCluster);
-        myCluster
-        
+        myCluster        
         
         poolobj = gcp('nocreate'); % If no pool,create new one.
         if isempty(poolobj)
@@ -336,206 +336,215 @@ if(settings.mode ==6 ||settings.mode ==8 || settings.mode ==10)
         else
             poolsize = poolobj.NumWorkers;
         end
-        poolsize
-      
+        poolsize        
         
+        % --------------------------------------------------
         % loop over the macro elements and design a meso structure,
         %  parallel using parfor
+        % --------------------------------------------------
+        parfor_progress(ne);
         parfor  e = 1:ne
             settingscopy = settings; % need for parfor loop.
-            MesoDesignWrapper(settingscopy,e);
+            MesoDesignWrapper(settingscopy,e, ne,matProp);
+             parfor_progress;
+           
         end
+          parfor_progress(0);
         
-    else
-        
+    else      
+        % --------------------------------------------------
         % loop over the macro elements and design a meso structure,
         % no parallel
+        % --------------------------------------------------
         for  e = 1:ne
             settingscopy = settings; % need for parfor loop.
-            MesoDesignWrapper(settingscopy,e);
+            MesoDesignWrapper(settingscopy,e, ne,matProp);
         end
         
-        
-        
-        
-    end
-    
+    end % end parallel     
     clear designVarsMeso
+end
+
+% -------------------------------------
+% Generate macro-meso complete structure.
+% 7 is for testing the recombining of the meso structures.
+%
+% Loop over the elements and get the design fields, and make one
+% huge array showing the actual shape of the structure, tile the
+% -------------------------------------
+if(settings.mode ==7||settings.mode ==8  || settings.mode ==10 )
+    close all
+    p = plotResults;
     
-    % -------------------------------------
-    % Generate macro-meso complete structure.
-    % 7 is for testing the recombining of the meso structures.
+    
+    [designVarsMeso, mesoSettings] = GenerateDesignVarsForMesoProblem(settings,1);
+    mesoSettings.doUseMultiElePerDV =settings.doUseMultiElePerDV;
+    numTilesX=settings.numTilesX;
+    numTilesY = settings.numTilesY;
+    
+    
+    if(settings.doUseMultiElePerDV==1) % if elements per design var.
+        settings = settings.CalculateDesignVarsPerFEAelement();
+        ne =  settings.numVarsX*settings.numVarsY;
+        totalX=settings.numVarsX*mesoSettings.nelx*numTilesX;
+        totalY=settings.numVarsY*mesoSettings.nely*numTilesY;
+        completeStruct = zeros(totalY,totalX);
+    else
+        % Generate huge area
+        
+        totalX=settings.nelx*mesoSettings.nelx*numTilesX;
+        totalY=settings.nely*mesoSettings.nely*numTilesY;
+        
+        completeStruct = zeros(totalY,totalX);
+        ne = settings.nelx*settings.nely; % number of elements
+    end
+    
+    %     xaverage = zeros(mesoSettings.nely,mesoSettings.nelx);% [];
+    if(settings.singleMesoDesign)
+        temp1average = zeros(mesoSettings.nely,mesoSettings.nelx);% [];
+        if(settings.macro_meso_iteration>1)
+            %              outname = sprintf('./out%i/singleMesoD_mesoMacro%i.csv',folderNum,macro_meso_iteration);
+            %            csvwrite(outname, D_homog);
+            folderNum=settings.iterationNum;
+            outname = sprintf('./out%i/singleXmesoDesign%i.csv',folderNum,settings.macro_meso_iteration-1);
+            savedX=csvread(outname);
+            
+        end
+    end
+    count = 1;
+    
+    
+    for e = 1:ne     
+        fprintf('element %i of %i\n',e,ne);
+        macroElementProps = GetMacroElementPropertiesFromCSV(settings,e);        
+        % Check if void
+        if(macroElementProps.density>settings.voidMaterialDensityCutOff)
+            if(settings.singleMesoDesign ~=1 ||settings.macro_meso_iteration==1 )
+                x=GetMesoUnitCellDesignFromCSV(settings,e);                
+            else
+                x = savedX;
+            end                    
+            yShift = (macroElementProps.yPosition-1)*mesoSettings.nely*numTilesY+1;
+            xShift = (macroElementProps.xPosition-1)*mesoSettings.nelx*numTilesX+1;
+            designVarsMeso.x = x;
+            designVarsMeso=TileMesoStructure(mesoSettings, designVarsMeso);
+            completeStruct(yShift:(yShift+mesoSettings.nely*numTilesY-1),xShift:(xShift+mesoSettings.nelx*numTilesX-1))=designVarsMeso.xTile;            
+            if(settings.singleMesoDesign)
+                % save the sensitivity field
+                elementNumber=e;folderNum = settings.iterationNum;
+                outname = sprintf('./out%i/sensitivity%iforElement%i.csv',folderNum,settings.macro_meso_iteration,elementNumber);
+                temp1 = csvread(outname);
+                temp1average = temp1average+temp1;count=count+1;
+            end
+        end
+    end
+    
+    %           subplot(2,2,3);
+    p.PlotArrayGeneric( completeStruct, 'complete structure')
+    rgbSteps = 100;  caxis([0,1]);
+    map = colormap; % current colormap   
+    middPoint = floor(rgbSteps/4);
+    map(1:middPoint,:) = [ones(middPoint,1),ones(middPoint,1),ones(middPoint,1)];
+    for zz =    middPoint:rgbSteps
+        map(zz,:) = [0,               1- zz/rgbSteps, 0.5];
+    end
+    colormap(map)
+    colorbar
+    freezeColors
+    nameGraph = sprintf('./completeStucture%f_macroIteration_%i.png', settings.w1,settings.macro_meso_iteration);
+    print(nameGraph,'-dpng')
+    
+     % Write ascii STL from gridded data
+%     [X,Y] = deal(1:40);             % Create grid reference
+X = 1:totalX
+Y = 1:totalY
+    Z = completeStruct;                  % Create grid height
+   
+    stlwrite('test.stl',X,Y,Z,'mode','ascii')
+    
+    if(settings.singleMesoDesign)
+        temp1average=temp1average/count;
+        %         p.PlotArrayGeneric( temp1average, 'average meso')
+        doPlot= 1;
+        designVarsMeso.x =  zeros(mesoSettings.nely,mesoSettings.nelx);% [];
+        mesoSettings.totalVolume = 0.5;
+        designVarsMeso.dc = temp1average;
+        for i = 1:10
+            [designVarsMeso.x] = OC_meso(mesoSettings.nelx,mesoSettings.nely,designVarsMeso.x,mesoSettings.totalVolume,designVarsMeso.dc, designVarsMeso, mesoSettings);
+            if(doPlot ==1)
+                figure(2)
+                p.PlotArrayGeneric(designVarsMeso.x,'meso design -> topology var'); % plot the results.
+            end
+        end
+        % find out the constiutive matrix for this design.
+        designVarsMeso = designVarsMeso.CalcElementNodeMapmatrixWithPeriodicXandY(mesoSettings);
+        designVarsMeso =  designVarsMeso.CalcNodeLocationMeso(mesoSettings);
+        macroElementProps = designVarsMeso.GetHomogenizedProperties(mesoSettings,mesoSettings, matProp, masterloop,macroElementProps);
+        D_homog =  macroElementProps.D_homog
+        % save it.
+        outname = sprintf('./out%i/singleMesoD_mesoMacro%i.csv',folderNum,settings.macro_meso_iteration);
+        csvwrite(outname, D_homog);
+        outname = sprintf('./out%i/singleXmesoDesign%i.csv',folderNum,settings.macro_meso_iteration);
+        csvwrite(outname, designVarsMeso.x);
+    end
+    
     %
-    % Loop over the elements and get the design fields, and make one
-    % huge array showing the actual shape of the structure, tile the
-    % -------------------------------------
-    if(settings.mode ==7||settings.mode ==8  || settings.mode ==10 )
-        close all
-        p = plotResults;
-        
-        
-        [designVarsMeso, mesoSettings] = GenerateDesignVarsForMesoProblem(settings,1);
-        mesoSettings.doUseMultiElePerDV =settings.doUseMultiElePerDV;
-        numTilesX=settings.numTilesX;
-        numTilesY = settings.numTilesY;
-        
-        
-        if(settings.doUseMultiElePerDV==1) % if elements per design var.
-            settings = settings.CalculateDesignVarsPerFEAelement();
-            ne =  settings.numVarsX*settings.numVarsY;
-            totalX=settings.numVarsX*mesoSettings.nelx*numTilesX;
-            totalY=settings.numVarsY*mesoSettings.nely*numTilesY;
-            completeStruct = zeros(totalY,totalX);
-        else
-            % Generate huge area
-            
-            totalX=settings.nelx*mesoSettings.nelx*numTilesX;
-            totalY=settings.nely*mesoSettings.nely*numTilesY;
-            
-            completeStruct = zeros(totalY,totalX);
-            ne = settings.nelx*settings.nely; % number of elements
-        end
-        
-        %     xaverage = zeros(mesoSettings.nely,mesoSettings.nelx);% [];
-        if(settings.singleMesoDesign)
-            temp1average = zeros(mesoSettings.nely,mesoSettings.nelx);% [];
-            if(settings.macro_meso_iteration>1)
-                %              outname = sprintf('./out%i/singleMesoD_mesoMacro%i.csv',folderNum,macro_meso_iteration);
-                %            csvwrite(outname, D_homog);
-                folderNum=settings.iterationNum;
-                outname = sprintf('./out%i/singleXmesoDesign%i.csv',folderNum,settings.macro_meso_iteration-1);
-                savedX=csvread(outname);
-                
-            end
-        end
-        count = 1;
-        for e = 1:ne
-            
-            macroElementProps = GetMacroElementPropertiesFromCSV(settings,e);
-            
-            % Check if void
-            if(macroElementProps.density>settings.voidMaterialDensityCutOff)
-                if(settings.singleMesoDesign ~=1 ||settings.macro_meso_iteration==1 )
-                    x=GetMesoUnitCellDesignFromCSV(settings,e);
-                    % x = fliplr(flip(x));
-                    % x = flip(x);
-                else
-                    x = savedX;
-                end
-                %xaverage = xaverage+x;
-                
-                yShift = (macroElementProps.yPosition-1)*mesoSettings.nely*numTilesY+1;
-                xShift = (macroElementProps.xPosition-1)*mesoSettings.nelx*numTilesX+1;
-                %[e macroElementProps.xPosition]
-                
-                designVarsMeso.x = x;
-                %             subplot(2,2,1);
-                %              p.PlotArrayGeneric( x, 'local X structure')
-                
-                designVarsMeso=TileMesoStructure(mesoSettings, designVarsMeso);
-                %              subplot(2,2,2);
-                %              p.PlotArrayGeneric( designVarsMeso.xTile, 'local X structure tile')
-                
-                completeStruct(yShift:(yShift+mesoSettings.nely*numTilesY-1),xShift:(xShift+mesoSettings.nelx*numTilesX-1))=designVarsMeso.xTile;
-                
-                if(settings.singleMesoDesign)
-                    % save the sensitivity field
-                    elementNumber=e;folderNum = settings.iterationNum;
-                    outname = sprintf('./out%i/sensitivity%iforElement%i.csv',folderNum,settings.macro_meso_iteration,elementNumber);
-                    temp1 = csvread(outname);
-                    temp1average = temp1average+temp1;count=count+1;
-                end
-            end
-        end
-        
-        %           subplot(2,2,3);
-        p.PlotArrayGeneric( completeStruct, 'complete structure')
-        nameGraph = sprintf('./completeStucture%f_macroIteration_%i.png', settings.w1,settings.macro_meso_iteration);
-        print(nameGraph,'-dpng')
-        
-        if(settings.singleMesoDesign)
-            temp1average=temp1average/count;
-            %         p.PlotArrayGeneric( temp1average, 'average meso')
-            doPlot= 1;
-            designVarsMeso.x =  zeros(mesoSettings.nely,mesoSettings.nelx);% [];
-            mesoSettings.totalVolume = 0.5;
-            designVarsMeso.dc = temp1average;
-            for i = 1:10
-                [designVarsMeso.x] = OC_meso(mesoSettings.nelx,mesoSettings.nely,designVarsMeso.x,mesoSettings.totalVolume,designVarsMeso.dc, designVarsMeso, mesoSettings);
-                if(doPlot ==1)
-                    figure(2)
-                    p.PlotArrayGeneric(designVarsMeso.x,'meso design -> topology var'); % plot the results.
-                end
-            end
-            % find out the constiutive matrix for this design.
-            designVarsMeso = designVarsMeso.CalcElementNodeMapmatrixWithPeriodicXandY(mesoSettings);
-            designVarsMeso =  designVarsMeso.CalcNodeLocationMeso(mesoSettings);
-            macroElementProps = designVarsMeso.GetHomogenizedProperties(mesoSettings,mesoSettings, matProp, masterloop,macroElementProps);
-            D_homog =  macroElementProps.D_homog
-            % save it.
-            outname = sprintf('./out%i/singleMesoD_mesoMacro%i.csv',folderNum,settings.macro_meso_iteration);
-            csvwrite(outname, D_homog);
-            outname = sprintf('./out%i/singleXmesoDesign%i.csv',folderNum,settings.macro_meso_iteration);
-            csvwrite(outname, designVarsMeso.x);
-        end
-        
-        %
-        %     xaverage = xaverage/count;
-        %     p.PlotArrayGeneric( xaverage, 'average meso')
-        
-        
-    end
+    %     xaverage = xaverage/count;
+    %     p.PlotArrayGeneric( xaverage, 'average meso')
     
     
-    
-    
-    % test for termaination of the function.
-    % normalize the objectives, compare to a moving average. If moving average
-    % below target, then return 1
-    % if not terminated, then return 0
-    function status = TestForTermaination(designVars, settings)
-    status = 0;
-    y2 = designVars.storeOptimizationVar(:,2); % Elastic Compliance
-    
-    t = settings.terminationAverageCount;
-    if(size(y2)<(t+3))
-        return;
-    end
-    
-    
-    y3 = designVars.storeOptimizationVar(:,3); % Heat Compliance
-    y4 = designVars.storeOptimizationVar(:,4); % material 1
-    y5 = designVars.storeOptimizationVar(:,5); % material 2
-    
-    avg_y2 = FindAvergeChangeOfLastValue(y2,settings); % elastic objective
-    avg_y3 = FindAvergeChangeOfLastValue(y3,settings); % heat objective
-    avg_y4 = FindAvergeChangeOfLastValue(y4,settings); % material 1
-    avg_y5 = FindAvergeChangeOfLastValue(y5,settings); % material 2
-    
-    
-    
-    
-    tt = settings.terminationCriteria;
-    if(        avg_y2<tt ...
-            && avg_y3<tt ...
-            && avg_y4<tt ...
-            && avg_y5<tt)
-        status=1;
-        % print the vars to screen
-        [avg_y2 avg_y3 avg_y4 avg_y5 ]
-    end
-    
-    
-        function [averageDiffOfLastValues] = FindAvergeChangeOfLastValue(arrayOfValues, settings)
-            y2 = arrayOfValues;
-            t = settings.terminationAverageCount;
-            diff2 = y2-circshift(y2,1); % subtract the current one from the pervious on
-            diff2 = diff2(2:end-1);
-            
-            % normalize and take ABS
-            % we want to normalize by max(abs) over all differences, so
-            diff2 = abs(diff2)/(max(abs(diff2)));
-            
-            diff2 = diff2(end-t:end);
-            averagey2diff = sum(diff2)/t;
-            averageDiffOfLastValues = averagey2diff;
+end
+
+
+
+
+% test for termaination of the function.
+% normalize the objectives, compare to a moving average. If moving average
+% below target, then return 1
+% if not terminated, then return 0
+function status = TestForTermaination(designVars, settings)
+status = 0;
+y2 = designVars.storeOptimizationVar(:,2); % Elastic Compliance
+
+t = settings.terminationAverageCount;
+if(size(y2)<(t+3))
+    return;
+end
+
+
+y3 = designVars.storeOptimizationVar(:,3); % Heat Compliance
+y4 = designVars.storeOptimizationVar(:,4); % material 1
+y5 = designVars.storeOptimizationVar(:,5); % material 2
+
+avg_y2 = FindAvergeChangeOfLastValue(y2,settings); % elastic objective
+avg_y3 = FindAvergeChangeOfLastValue(y3,settings); % heat objective
+avg_y4 = FindAvergeChangeOfLastValue(y4,settings); % material 1
+avg_y5 = FindAvergeChangeOfLastValue(y5,settings); % material 2
+
+
+
+
+tt = settings.terminationCriteria;
+if(        avg_y2<tt ...
+        && avg_y3<tt ...
+        && avg_y4<tt ...
+        && avg_y5<tt)
+    status=1;
+    % print the vars to screen
+    [avg_y2 avg_y3 avg_y4 avg_y5 ]
+end
+
+
+function [averageDiffOfLastValues] = FindAvergeChangeOfLastValue(arrayOfValues, settings)
+y2 = arrayOfValues;
+t = settings.terminationAverageCount;
+diff2 = y2-circshift(y2,1); % subtract the current one from the pervious on
+diff2 = diff2(2:end-1);
+
+% normalize and take ABS
+% we want to normalize by max(abs) over all differences, so
+diff2 = abs(diff2)/(max(abs(diff2)));
+
+diff2 = diff2(end-t:end);
+averagey2diff = sum(diff2)/t;
+averageDiffOfLastValues = averagey2diff;

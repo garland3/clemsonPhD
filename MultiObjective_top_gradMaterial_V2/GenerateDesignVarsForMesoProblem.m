@@ -26,7 +26,7 @@ meso_settings.w1 = 1; % do not set to zero, instead set to 0.0001. Else we will 
 meso_settings.iterationNum = 0;
 meso_settings.doSaveDesignVarsToCSVFile = 0;
 meso_settings.doPlotFinal = 0;
-meso_settings.terminationCriteria =0.1; % 10%
+meso_settings.terminationCriteria =settings.terminationCriteria; % 10%
 
 % if meso structure designing, then make a smaller initial mesh
 
@@ -55,7 +55,30 @@ if(settings.macro_meso_iteration>1)
     
 else
     %designVars.x(1:meso_settings.nely,1:meso_settings.nelx) = meso_settings.totalVolume; % artificial density of the elements
+    
+    % method 1, randome values. Does not seem to be working well. 
     designVars.x(1:meso_settings.nely,1:meso_settings.nelx) = randi([0, meso_settings.totalVolume*100],meso_settings.nely,meso_settings.nelx)/100; % artificial density of the elements, can not be unifrom or else sensitivity will be 0 everywhere. 
+   
+   % method 2, box of empty in the middle. 
+%     designVars.x(1:meso_settings.nely,1:meso_settings.nelx) = ones(meso_settings.nely,meso_settings.nelx);
+%     midY = floor(meso_settings.nely/2); midX = floor(meso_settings.nelx/2);
+%     ratio = meso_settings.nelx/meso_settings.nely;
+%     vEmpty = meso_settings.nelx*meso_settings.nely-meso_settings.totalVolume*meso_settings.nelx*meso_settings.nely;
+%     dimY = floor(sqrt(vEmpty/ratio));
+%     yStart = midY-floor(dimY/2);
+%     dimX =  floor(ratio*dimY);
+%     xStart = midX-floor(dimX/2);
+%      designVars.x(yStart:yStart+dimY-1,xStart:xStart+dimX-1)= zeros(dimY,dimX);
+
+    % method 3
+%     for i = 1:meso_settings.nelx
+%         for j = 1:meso_settings.nely
+%             if sqrt((i-meso_settings.nelx/2-0.5)^2+(j-meso_settings.nely/2-0.5)*2) < min(meso_settings.nelx,meso_settings.nely)/3
+%                 designVars.x(j,i) = meso_settings.totalVolume/2;
+%             end
+%         end
+%     end
+    
 end
 designVars.w(1:meso_settings.nely,1:meso_settings.nelx)  = 1; % actual volume fraction composition of each element
 % fractionCurrent_V1Local =1;
