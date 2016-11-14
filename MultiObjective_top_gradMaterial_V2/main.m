@@ -2,8 +2,8 @@ function main()
 clear
 
 numloops = 5;
-for i = 1:numloops
-    combinedTopologyOptimization('no', 'not used', 1,i)
+for i =1:numloops
+    combinedTopologyOptimization('1', 'not used', 1,i)
 end
 close all
 

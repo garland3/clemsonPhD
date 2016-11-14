@@ -1,17 +1,19 @@
 function  MesoDesignWrapper(settingscopy,e,ne,matProp)
 
-disp(['Meso Design #: ' sprintf('%4i',e ) ' of ' sprintf('%4i',ne )]);
-macroElementPropsParFor = GetMacroElementPropertiesFromCSV(settingscopy,e);
+
+macroElementProperties = GetMacroElementPropertiesFromCSV(settingscopy,e);
+disp(['Meso Design #: ' sprintf('%4i',e ) ' of ' sprintf('%4i',ne ) ...
+    ' position X = '  sprintf('%4i',macroElementProperties.xPosition) ' Y = ' sprintf('%4i',macroElementProperties.yPosition)]);
 scalePlot = 1;
 coord(:,1) = [0 1 1 0];
 coord(:,2)  = [0 0 1 1];
 
 % Check if void
 %         if(macroElementPropsParFor.density>settingscopy.voidMaterialDensityCutOff)
-if(macroElementPropsParFor.density>0.05)
+if(macroElementProperties.density>settingscopy.noNewMesoDesignDensityCutOff)
     
     % Only plot a few
-    settingscopy.mesoplotfrequency = 200;
+    %settingscopy.mesoplotfrequency = 50;
     if(mod(e,settingscopy.mesoplotfrequency) ==0)
         settingscopy.doPlotAppliedStrain = 1;  plottingMesoDesign = 1;  plotting = 1; % this was for debugging % this was for debugging
     else
@@ -27,7 +29,7 @@ if(macroElementPropsParFor.density>0.05)
             [~, t2] = size(settingscopy.loadingCase);
             for loadcaseIndex = 1:t2
                 % utemp = U(loadcaseIndex,:);
-                U2 = macroElementPropsParFor.disp(loadcaseIndex,:)*scalePlot;
+                U2 = macroElementProperties.disp(loadcaseIndex,:)*scalePlot;
                 coordD = zeros(5,2);
                 for temp = 1:4
                     coordD(temp,1) =  coord(temp,1)+ U2(2*temp-1); % X value
@@ -49,18 +51,18 @@ if(macroElementPropsParFor.density>0.05)
         % ------------------------------------------------------
         
         if(e==-1)
-            macroElementPropsParFor.xDisplacements = [ 0 0 0 0 0 0  1 1 1]*0.1;
-            macroElementPropsParFor.yDisplacements = [ 0 0 0 0 0 0  1 1 1]*0.1;
+            macroElementProperties.xDisplacements = [ 0 0 0 0 0 0  1 1 1]*0.1;
+            macroElementProperties.yDisplacements = [ 0 0 0 0 0 0  1 1 1]*0.1;
         end
         
         if(plotting ==1)
             figure(1)
             [~, t2] = size(settingscopy.loadingCase);
             for loadcaseIndex = 1:t2
-                dx = macroElementPropsParFor.xDisplacements(loadcaseIndex,:)*scalePlot;
-                dy = macroElementPropsParFor.yDisplacements(loadcaseIndex,:)*scalePlot;
-                Xlocs = macroElementPropsParFor.mesoXnodelocations;
-                Ylocs = macroElementPropsParFor.mesoYnodelocations;
+                dx = macroElementProperties.xDisplacements(loadcaseIndex,:)*scalePlot;
+                dy = macroElementProperties.yDisplacements(loadcaseIndex,:)*scalePlot;
+                Xlocs = macroElementProperties.mesoXnodelocations;
+                Ylocs = macroElementProperties.mesoYnodelocations;
                 Xlocs = reshape(Xlocs',[],1);
                 Ylocs = reshape(Ylocs',[],1);
                 displacedX= Xlocs +dx';
@@ -74,13 +76,13 @@ if(macroElementPropsParFor.density>0.05)
         end
     end
     
-    [designVarsMeso, mesoSettings] = GenerateDesignVarsForMesoProblem(settingscopy,e);
+    [designVarsMeso, mesoSettings] = GenerateDesignVarsForMesoProblem(settingscopy,e,macroElementProperties);
     
     
     % Set the target infill for the meso as the vol fraction of
     %             mesoSettings.v1=0.5+(macroElementPropsParFor.material1Fraction*macroElementPropsParFor.density^settings.penal)/2;
-    w = macroElementPropsParFor.material1Fraction;
-    x = macroElementPropsParFor.density;
+    w = macroElementProperties.material1Fraction;
+    x = macroElementProperties.density;
     mesoSettings.v1=matProp.CalculateDensityTargetforMeso(w,x,settingscopy);
     mesoSettings.v2=0;
     mesoSettings.totalVolume= mesoSettings.v1+0;
@@ -88,7 +90,8 @@ if(macroElementPropsParFor.density>0.05)
     
     mesoSettings.averageMultiElementStrain= settingscopy.averageMultiElementStrain;
     mesoSettings.doPlotAppliedStrain=settingscopy.doPlotAppliedStrain;
-    [D_homog,designVarsMeso,macroElementPropsParFor]= MesoStructureDesignV2(matProp,mesoSettings,designVarsMeso,macroElementPropsParFor,[]);
+     mesoSettings.terminationCriteria = 0.00001;
+    [D_homog,designVarsMeso,macroElementProperties]= MesoStructureDesignV2(matProp,mesoSettings,designVarsMeso,macroElementProperties,[]);
     D_homog
     
     newDesign = 1;
@@ -113,7 +116,7 @@ else
     designVarsMeso=[];
 end
 
-SaveMesoUnitCellDesignToCSV(designVarsMeso,macroElementPropsParFor,settingscopy.iterationNum,settingscopy.macro_meso_iteration,e,newDesign);
+SaveMesoUnitCellDesignToCSV(designVarsMeso,macroElementProperties,settingscopy.iterationNum,settingscopy.macro_meso_iteration,e,newDesign);
 
 % SavedDmatrix(e,:) = D_homog_flat;
 

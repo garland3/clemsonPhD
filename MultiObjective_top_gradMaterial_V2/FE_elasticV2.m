@@ -1,54 +1,9 @@
 function [T, maxF,maxT]=FE_elasticV2(designVars, settings, matProp, loadingCase)
 
-% loading condition
-if loadingCase == 111
-    FappliedLoad = 500;
-    fixedElementsCase = 'leftClamped'; % 'sidesMiddle'
-    
-elseif loadingCase ==112
-    FappliedLoad = -500;
-    fixedElementsCase = 'leftClamped2'; % 'sidesMiddle'
-    
-elseif loadingCase ==113
-    FappliedLoad = 500;
-    fixedElementsCase = 'leftClamped3'; % 'sidesMiddle'
-    
-elseif loadingCase ==120
-    % Testing K_xx
-    FappliedLoad = -500; % same as 111, but reverse direction of load
-    fixedElementsCase = 'leftClamped'; % 'sidesMiddle'
-    
-elseif loadingCase ==121
-    % Testing K_xx
-    FappliedLoad = 500;
-    fixedElementsCase = 'leftClamped6'; % 'sidesMiddle'
-elseif loadingCase ==2
-    % Testing K_yy
-    FappliedLoad = -1000;
-    fixedElementsCase = 'right'; % 'sidesMiddle'
-elseif loadingCase ==3
-    FappliedLoad = -1000;
-    fixedElementsCase = 'bottom'; % 'sidesMiddle'
-elseif loadingCase ==4
-    FappliedLoad = -1000;
-    fixedElementsCase = 'bottomCorners'; % 'bottomCorners'
-elseif loadingCase ==444
-    FappliedLoad = 500;
-    fixedElementsCase = 'bridge'; % 'bottomCorners'
-    
-elseif loadingCase ==1
-     FappliedLoad = 500;
-    fixedElementsCase = 'leftClampedmiddleLoadRight'; % '
-end
-
-
-
 u0 =0; % value at essentail boundaries
 nn = (settings.nelx+1)*(settings.nely+1); % number of nodes
 ne = settings.nelx*settings.nely; % number of elements
 ndof = nn*2; % Number of degrees of freedome. 2 per node.
-
-
 
 % Specifiy the constrained nodes where there are essential boundary
 % conditions
@@ -57,115 +12,127 @@ K = zeros(ndof,ndof);
 row = settings.nelx+1;
 column= settings.nely+1;
 
-
-
-if(strcmp(fixedElementsCase,'bottomCorners'))
+bottomFixed=0;
+% loading condition
+if loadingCase == 111
+    FappliedLoad = 500;
+    tt=   1:2*row :2*row*(column); % ... % left side
+    t2=tt+1;      
+    t3 = [];
+    t4 = [];
+    u3 = 0;
+    Essential=[tt t2 t3 t4];
+    Essential = unique(Essential);
+    % Down in the top right corner
+    F(ndof-1) = FappliedLoad;
+    
+elseif loadingCase ==112
+    FappliedLoad = -500;
+    tt=   1:2*row :2*row*(column); % ... % left side
+    t2=tt+1;
+    Essential=[tt t2];
+    Essential = unique(Essential);    
+    % down on bottom right
+    F(row*2-1) = FappliedLoad;
+    
+elseif loadingCase ==113
+    FappliedLoad = 500;
+    tt=   1:2*row :2*row*(column); % ... % left side
+    t2=tt+1;
+    Essential=[tt t2];
+    Essential = unique(Essential);    
+    F( (row*2)*floor(column/2)-1) = FappliedLoad; % middle to the right  
+    
+elseif loadingCase ==121
+    % Testing K_xx
+    FappliedLoad = 500;
+    tt=   1:2*row :2*row*(column); % ... % left side
+    t2=tt+1;
+    Essential=[tt t2];
+    Essential = unique(Essential);
+    % Down in the top right corner
+    F(ndof-1) = FappliedLoad;
+    
+elseif loadingCase ==4
+    FappliedLoad = -1000;
     Essential = [1 2]; % bottom left corner is fixed
     Essential = [Essential row*2 row*2-1]; % bottom right corner is fixed
     Essential = unique(Essential);
     F( (floor(row/2)+1)*2) = FappliedLoad; % force down in the bottom middle
     
-elseif(strcmp(fixedElementsCase,'sidesMiddle'))
-    
-    Essential = []; %
-    Essential=[Essential row*2+(ceil(column/2)*row*2) 1+row*2+(ceil(column/2)*row*2)] ; % fixed at the heat source in the middle right
-    Essential=[Essential 1+(ceil(column/2)*row*2) 2+(ceil(column/2)*row*2)] ; % fixed at the heat source in the middle left
-    Essential = unique(Essential);
-    F( (floor(row/2)+1)*2) = FappliedLoad; % force down in the bottom middle
-    
-elseif(strcmp(fixedElementsCase,'middleDown'))
-    Essential = []; %
-    
-    Essential=[Essential row*2+(ceil(column/2)*row*2) 1+row*2+(ceil(column/2)*row*2)] ; % fixed at the heat source in the middle right
-    Essential=[Essential 1+(ceil(column/2)*row*2) 2+(ceil(column/2)*row*2)] ; % fixed at the heat source in the middle left
-    Essential = unique(Essential);
-    
-    % even DOF should be y directions
-    forceNodes = [ 2+(ceil(column/2)*row*2):2:2+row*2+(ceil(column/2)*row*2)];
-    F(forceNodes)=  FappliedLoad; % middle row, downward force
-    
-elseif(strcmp(fixedElementsCase,'leftClampedmiddleLoadRight'))  
+elseif loadingCase ==1
+    FappliedLoad = 500;
     tt=   1:2*row :2*row*(column); % ... % left side
-    t2=tt+1;    
+    t2=tt+1;
     Essential=[tt t2];
-    Essential = unique(Essential);        
+    Essential = unique(Essential);
     % Down in the top right corner
     fnodes = row*floor(column/2)*2;
     F(fnodes) = FappliedLoad;    
-elseif(strcmp(fixedElementsCase,'leftClamped'))    
-    tt=   1:2*row :2*row*(column); % ... % left side
-    t2=tt+1;
     
-%    t3 = [1 2 3 4 row*2-1 row*2 row*2+1 row*2+2];
-%      t3 = [ 1     2         row+1    row+2  ]*2;
-%      t4 = t3-1;
-t3 = [];
-t4 = [];
-    u3 = 0;
-    Essential=[tt t2 t3 t4];
-    Essential = unique(Essential);        
-    % Down in the top right corner
-    F(ndof) = FappliedLoad;    
-    
-  
-elseif(strcmp(fixedElementsCase,'leftClamped2'))    
-    tt=   1:2*row :2*row*(column); % ... % left side
-    t2=tt+1;
-    Essential=[tt t2];
-    Essential = unique(Essential);        
-  
-    % down on bottom right
-    F(row*2) = FappliedLoad;
-elseif(strcmp(fixedElementsCase,'leftClamped3'))    
-    tt=   1:2*row :2*row*(column); % ... % left side
-    t2=tt+1;
-    Essential=[tt t2];
-    Essential = unique(Essential);        
-  
-     F( (row*2)*floor(column/2)-1) = FappliedLoad; % middle to the right
-%     F(ndof) = FappliedLoad/2;
-elseif(strcmp(fixedElementsCase,'leftClamped6'))    
-    tt=   1:2*row :2*row*(column); % ... % left side
-    t2=tt+1;
-    Essential=[tt t2];
-    Essential = unique(Essential);        
-    % Down in the top right corner
-    F(ndof-1) = FappliedLoad;  
-elseif(strcmp(fixedElementsCase,'bridge'))    
-%     tt=   1:2*row :2*row*(column); % ... % left side
-%     t2=tt+1;
-    
-%     left, middle, right on bottom
-%     load down on middle row. 
-%     left = [1 2];
-% %      middle = [floor(row/2)*2 floor(row/2)*2+1];
-% middle = [];
-%     right = [row*2 row*2+1];
-    
-  
-    
-    nodeLeft =  floor(column/2)*row+1;
-     nodeRight =  (floor(column/2)+1)*row;
-     
-    left =  nodeLeft*2;
-    right = nodeRight*2;
-% %     tt = leftynode:2:rightynode;
-%     right = ndof;
-%     left = ndof-row*2;
-    tt = left:2:right;
-    [~, scale] = size(tt);
-   % scale = scale(
-   
-      Essential=[left (left -1)  right (right-1)];
-    Essential = unique(Essential);
-    
-%     shiftupLeft = floor(column/2)*row*2+3;
-%      shiftupRight = (floor(column/2)+1)*row*2+1;
-%      tt = shiftupLeft:2:shiftupRight;
-   
-    F(tt) = -FappliedLoad/scale;  
-
+% bridge 1
+elseif loadingCase ==400
+    FappliedLoad = 500;   
+    fnodes = row*(column-1)*2;
+    F(fnodes) = FappliedLoad;  
+    bottomFixed = 1;
 end
+
+if(bottomFixed==1)
+    Essential = 1:row*2;
+end
+
+
+
+% if(strcmp(fixedElementsCase,'bottomCorners'))
+%
+% elseif(strcmp(fixedElementsCase,'sidesMiddle'))%
+%     Essential = []; %
+%     Essential=[Essential row*2+(ceil(column/2)*row*2) 1+row*2+(ceil(column/2)*row*2)] ; % fixed at the heat source in the middle right
+%     Essential=[Essential 1+(ceil(column/2)*row*2) 2+(ceil(column/2)*row*2)] ; % fixed at the heat source in the middle left
+%     Essential = unique(Essential);
+%     F( (floor(row/2)+1)*2) = FappliedLoad; % force down in the bottom middle
+%
+% elseif(strcmp(fixedElementsCase,'middleDown'))
+%     Essential = []; %
+%
+%     Essential=[Essential row*2+(ceil(column/2)*row*2) 1+row*2+(ceil(column/2)*row*2)] ; % fixed at the heat source in the middle right
+%     Essential=[Essential 1+(ceil(column/2)*row*2) 2+(ceil(column/2)*row*2)] ; % fixed at the heat source in the middle left
+%     Essential = unique(Essential);
+%
+%     % even DOF should be y directions
+%     forceNodes = [ 2+(ceil(column/2)*row*2):2:2+row*2+(ceil(column/2)*row*2)];
+%     F(forceNodes)=  FappliedLoad; % middle row, downward force
+%
+% elseif(strcmp(fixedElementsCase,'leftClampedmiddleLoadRight'))
+%
+
+% elseif(strcmp(fixedElementsCase,'bridge'))
+% %     tt=   1:2*row :2*row*(column); % ... % left side
+% %     t2=tt+1;
+% %     left, middle, right on bottom
+% %     load down on middle row.
+% %     left = [1 2];
+% % %      middle = [floor(row/2)*2 floor(row/2)*2+1];
+% % middle = [];
+% %     right = [row*2 row*2+1];
+%     nodeLeft =  floor(column/2)*row+1;
+%      nodeRight =  (floor(column/2)+1)*row;
+%     left =  nodeLeft*2;
+%     right = nodeRight*2;
+% % %     tt = leftynode:2:rightynode;
+% %     right = ndof;
+% %     left = ndof-row*2;
+%     tt = left:2:right;
+%     [~, scale] = size(tt);
+%    % scale = scale(
+%       Essential=[left (left -1)  right (right-1)];
+%     Essential = unique(Essential);
+% %     shiftupLeft = floor(column/2)*row*2+3;
+% %      shiftupRight = (floor(column/2)+1)*row*2+1;
+% %      tt = shiftupLeft:2:shiftupRight;
+%     F(tt) = -FappliedLoad/scale;
+% end
 
 
 

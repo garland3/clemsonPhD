@@ -35,5 +35,9 @@ classdef macroElementProp
         xDisplacements;
         yDisplacements;
         
+        
+        % Other
+        % Macroscopic X
+        
     end
 end

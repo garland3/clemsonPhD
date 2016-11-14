@@ -34,6 +34,9 @@ classdef Configuration
         w1 = 0; % weight elastic for multi-objective
         w2;
         voidMaterialDensityCutOff = 0.3; % everything below this density is considered void.
+        
+        noNewMesoDesignDensityCutOff = 0.15; % any densities below this will not be redesigned. Having a different value than voidMaterialDensityCutOft helps stabalize the algorithm on the structure edges. 
+        
         % Plotting information
         doPlotVolFractionDesignVar = 0;
         doPlotTopologyDesignVar = 0;
@@ -55,7 +58,7 @@ classdef Configuration
         % not much faster.
         useGPU = 0; % set to 1 to try to solve matrix using gpu
          parallel =0; % set to 1 to use parfor while preforming the meso design
-         numWorkerProcess = 4;
+         numWorkerProcess = 8;
         % -----------------
         % Use different mixture rules for effective elastic properteis
         % 1. Simple linear interpolation, Vigot rule of miztures E = w(E1)*(1-w)*E2
@@ -73,7 +76,7 @@ classdef Configuration
         % ---------------------
         heatMaterialInterpMethod = 1;
         
-        
+%          loadingCase = [113]; % left clamped
           loadingCase = [111 112 113]; % left clamped
 %            loadingCase = [111 112 ]; % left clamped
 %          loadingCase = [111 120 121]; % up, down, right in top right corrner, left clamp. 
@@ -93,6 +96,9 @@ classdef Configuration
         
         
         macro_meso_iteration = 0; % master loop of the whole macro meso system
+        
+        mesoAddAdjcentCellBoundaries = 0; % global property
+        useAjacentLocal = 0; % local property that maybe be turned on or off
        
         
     end

@@ -26,6 +26,7 @@ classdef DesignVars
         %complianceSensitivity; %
         totalStress;
         dc; % Derivative of c (hence dc). C is the objective.
+        dcSum; % derivitive of meso element sensitivies when designing a single meso structure for the whole macro structure. 
         g1elastic; % Derivative of c with respect to a material change for the elastic
         g1heat; %  Derivative of cHeat with respect to a material change for the heat
         IEN; % element to node map. Save this matrix, so it does not need to be recalculated every time.
@@ -54,6 +55,8 @@ classdef DesignVars
         globalPositionTile;
         NodeToXYArrayMapTile;
         UTile;
+        
+        mesoAddAdjcentCellDataObject;
         
         
         % When multiple elements are controlled by a single design var,

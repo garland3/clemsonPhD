@@ -1,19 +1,22 @@
 function [D_homog,designVarsMeso,macroElemProps]=MesoStructureDesignV2(matProp,mesoSettings,designVarsMeso,macroElemProps,dcGiven)
 
 % 	------------------ nope 1. Tile the meso design domain
-% 	2. Apply the strain 
-% 	3. Calcualute sensitive of every locaiton. 
-% 	4. Then, sum the tiled sensitives together. 
-% 		1. Cut out the top and right edge tiles, they dont' seen to acurately reflect the design at all.             % 
-% 	5. Update the X var of the meso unit cell. 
-% 		1. Do this 3 times, (no need to rerun the applystrain method).             % 
+% 	2. Apply the strain
+% 	3. Calcualute sensitive of every locaiton.
+% 	4. Then, sum the tiled sensitives together.
+% 		1. Cut out the top and right edge tiles, they dont' seen to acurately reflect the design at all.             %
+% 	5. Update the X var of the meso unit cell.
+% 		1. Do this 3 times, (no need to rerun the applystrain method).             %
 % 	6. Get homogenous properties
 
-doPlot =0; % For debugging allow plotting of some information. 
+doPlot =0; % For debugging allow plotting of some information.
+ if(mod(macroElemProps.elementNumber,mesoSettings.mesoplotfrequency) ==0)
+     doPlot =1;
+ end
 recvid = 0; % make a video?
 
 % Calcualte the strain, epsilon = B*d
-% get the B matrix. 
+% get the B matrix.
 [macroElemProps.K ,~,macroElemProps.B] = matProp.effectiveElasticKEmatrix( macroElemProps.material1Fraction, mesoSettings,[]);
 macroElemProps.strain = macroElemProps.B* transpose(macroElemProps.disp); % transpose the disp to be vertical
 
@@ -32,7 +35,7 @@ if recvid==1
     vid=1;
 end
 
-% give periodic boundary condition. 
+% give periodic boundary condition.
 
 designVarsMeso = designVarsMeso.CalcElementNodeMapmatrixWithPeriodicXandY(mesoSettings);
 designVarsMeso =  designVarsMeso.CalcNodeLocationMeso(mesoSettings);
@@ -41,36 +44,40 @@ designVarsMeso =  designVarsMeso.CalcNodeLocationMeso(mesoSettings);
 
 % --------------------------------------------
 %    CALCULATE SENSITIVITY
-% 
+%
 %    UPDATE THE DESGIN OF THE UNIT CELL
 % --------------------------------------------
 % Loop Calculatint the sensitivity and changing the design var X
-objectiveold = 100;
+objectiveArray = 100;
 mesoSettings.penal = 2.2;
+% if(settings.singleMesoDesign~=1)
 for mesoLoop = 1:60
-   
-   [ designVarsMeso ,D_h, objective] = Homgenization(designVarsMeso, mesoSettings, matProp, macroElemProps,mesoLoop);
-    change=objectiveold-objective;
-    objectiveold=objective;
-    relativeChange = change/objective;
     
-    if(abs(relativeChange)<  mesoSettings.terminationCriteria)
-       break; 
+    [ designVarsMeso ,D_h, objective] = Homgenization(designVarsMeso, mesoSettings, matProp, macroElemProps,mesoLoop);
+    %         change=objectiveold-objective;
+    %         objectiveold=objective;
+    %         relativeChange = change/objective;
+    
+    objectiveArray = [objectiveArray objective];
+    
+    t = mesoSettings.terminationAverageCount;
+    if(size(objectiveArray,2)>(t+2))    
+        [averageDiffOfLastValues] = FindAvergeChangeOfLastValue(objectiveArray, mesoSettings);
+        if(abs(averageDiffOfLastValues)<  mesoSettings.terminationCriteria)
+            break;
+        end
     end
     
     
     
-%     designVarsMeso = designVarsMeso.CalculateSensitiviesMesoStructure( mesoSettings, matProp, masterloop,macroElemProps,U);
-     % designVarsMeso = designVarsMeso.CalculateSensitiviesMesoStructure_Tile( mesoSettings, matProp, masterloop,macroElemProps,U);
-%      if(dcGiven~=1)
-% %         designVarsMeso = designVarsMeso.CalculateSensitiviesMesoStructureNoPeriodic( mesoSettings, matProp, masterloop,macroElemProps,U);
-%     
-%         designVarsMeso.dc=-designVarsMeso.temp1;
-%          designVarsMeso.dc(isnan( designVarsMeso.dc))=0.1;
-%      end
-%      designVarsMeso.dc = designVarsMeso.temp1;
+    
+    
     % FILTERING OF SENSITIVITIES
     [designVarsMeso.dc]   = check(mesoSettings.nelx,mesoSettings.nely,mesoSettings.rmin,designVarsMeso.x,designVarsMeso.dc);
+    
+    if(designVarsMeso.mesoAddAdjcentCellDataObject.useAdjacent ==1)
+       designVarsMeso= designVarsMeso.mesoAddAdjcentCellDataObject.AddAdjacentSensitivity(mesoSettings, macroElemProps, designVarsMeso);
+    end
     
     % DESIGN UPDATE BY THE OPTIMALITY CRITERIA METHOD
     [designVarsMeso.x] = OC(mesoSettings.nelx,mesoSettings.nely,designVarsMeso.x,mesoSettings.totalVolume,designVarsMeso.dc, designVarsMeso, mesoSettings);
@@ -79,19 +86,38 @@ for mesoLoop = 1:60
         figure(1)
         subplot(2,2,3)
         p.PlotArrayGeneric(designVarsMeso.x,'meso design -> topology var'); % plot the results.
-          subplot(2,2,4)
+        subplot(2,2,4)
         p.PlotArrayGeneric(designVarsMeso.dc,'meso design -> sensitivity'); % plot the results.
         drawnow
-%         figure(3)
     end
     
-     if recvid==1
+    
+    if recvid==1
         drawnow
         F(vid) = getframe(figure(1)); % %Get frame of the topology in each iteration
         writeVideo(vidObj,F(vid)); %Save the topology in the video
         vid=vid+1;
-     end  
+    end
 end
+% else % settings.singleMesoDesign==1
+%     % --------------------------------
+%     % Single meso structure method
+%     % --------------------------------
+%     designVarsMeso.dcSum = zeros(settings.nelyMeso,settings.nelxMeso);
+%     designVarsMeso.dc
+%
+%     for mesoLoop = 1:60
+%         [ designVarsMeso ,D_h, objective] = Homgenization(designVarsMeso, mesoSettings, matProp, macroElemProps,mesoLoop);
+%         change=objectiveold-objective;
+%         objectiveold=objective;
+%         relativeChange = change/objective;
+%
+%         if(abs(relativeChange)<  mesoSettings.terminationCriteria)
+%             break;
+%         end
+%     end
+%
+% end
 
 if recvid==1
     close(vidObj);  %close video
@@ -104,11 +130,11 @@ disp(['Meso Design #: ' sprintf('%4i',macroElemProps.elementNumber ) ' after '  
 %    need for the macro optimization
 % --------------------------------------------
 
-% give periodic boundary condition. 
+% give periodic boundary condition.
 
 % designVarsMeso = designVarsMeso.CalcElementNodeMapmatrixWithPeriodicXandY(mesoSettings);
 % designVarsMeso =  designVarsMeso.CalcNodeLocationMeso(mesoSettings);
 
 % macroElemProps = designVarsMeso.GetHomogenizedProperties(mesoSettings,mesoSettings, matProp, masterloop,macroElemProps);
- macroElemProps.D_homog=D_h;
- D_homog=D_h;
+macroElemProps.D_homog=D_h;
+D_homog=D_h;

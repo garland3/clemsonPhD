@@ -4,10 +4,13 @@ macro_meso_iteration = settings.macro_meso_iteration;
 macroElementProps = macroElementProp;
 macroElementProps.elementNumber = e;
 
+
+
 folderNum = settings.iterationNum;
 
 % GEt element->node mapping
-outname = sprintf('./out%i/elementNodeMap%i.csv',folderNum,macro_meso_iteration);IEN = csvread(outname);
+outname = sprintf('./out%i/elementNodeMap%i.csv',folderNum,macro_meso_iteration);
+IEN = csvread(outname);
 
 % % Get displacement field
 outname = sprintf('./out%i/displacement%i.csv',folderNum,macro_meso_iteration);
@@ -15,37 +18,13 @@ outname = sprintf('./out%i/displacement%i.csv',folderNum,macro_meso_iteration);
 U =  csvread(outname);
 
 
-
-
 % -----------------------------------
 %
 % 1 element per design var case on macro level
 %
 % -----------------------------------
-if(settings.doUseMultiElePerDV~=1) % if elements per design var.
+if(settings.doUseMultiElePerDV~=1) % if elements per design var.    
     
-    nodes1=  IEN(e,:);
-    macroElementProps.elementNodes=nodes1;
-    xNodes = nodes1*2-1;
-    yNodes = nodes1*2;
-    dofNumbers = [xNodes(1) yNodes(1) xNodes(2) yNodes(2) xNodes(3) yNodes(3) xNodes(4) yNodes(4)];
-    
-    % plan for multi-loading cases. 
-    [~, t2] = size(settings.loadingCase);        
-    for loadcaseIndex = 1:t2
-        utemp = U(loadcaseIndex,:);    
-        u_local =   utemp(dofNumbers);
-   
-        %         offsetX = mean(u_local([1 3 5 7]));
-        %         offsetY = mean(u_local([2 4 6 8]));
-        offsetX = u_local(7);
-        offsetY = u_local(8);
-        u_local([1 3 5 7]) = u_local([1 3 5 7])-offsetX;
-        u_local([2 4 6 8]) = u_local([2 4 6 8])-offsetY;
-        macroElementProps.disp(loadcaseIndex,:)  = u_local;
-    end
-    
-%     macroElementProps.elementNumber
     % Save element to XY position map (needed for x and w vars retrival)
     outname = sprintf('./out%i/elementXYposition%i.csv',folderNum,macro_meso_iteration);
     elementXYposition=csvread(outname);
@@ -58,16 +37,44 @@ if(settings.doUseMultiElePerDV~=1) % if elements per design var.
     x = csvread(outname);
     macroElementProps.density = x(macroElementProps.yPosition,macroElementProps.xPosition );
     
-    % % Get the volume fraction field
-    outname = sprintf('./out%i/volfractionfield%i.csv',folderNum,macro_meso_iteration);
-    w = csvread(outname);
-    macroElementProps.material1Fraction = w(macroElementProps.yPosition,macroElementProps.xPosition );
-    
-    % if(macro_meso_iteration>1)
     outname = sprintf('./out%i/Dgiven_%i_forElement_%i.csv',folderNum,macro_meso_iteration,e);
     D = csvread(outname);
     macroElementProps.D_given =D;
-    % end
+    
+    if(macroElementProps.density>settings.noNewMesoDesignDensityCutOff)
+        
+        nodes1=  IEN(e,:);
+        macroElementProps.elementNodes=nodes1;
+        xNodes = nodes1*2-1;
+        yNodes = nodes1*2;
+        dofNumbers = [xNodes(1) yNodes(1) xNodes(2) yNodes(2) xNodes(3) yNodes(3) xNodes(4) yNodes(4)];
+        
+        % plan for multi-loading cases.
+        [~, t2] = size(settings.loadingCase);
+        for loadcaseIndex = 1:t2
+            utemp = U(loadcaseIndex,:);
+            u_local =   utemp(dofNumbers);
+            
+            %         offsetX = mean(u_local([1 3 5 7]));
+            %         offsetY = mean(u_local([2 4 6 8]));
+            offsetX = u_local(7);
+            offsetY = u_local(8);
+            u_local([1 3 5 7]) = u_local([1 3 5 7])-offsetX;
+            u_local([2 4 6 8]) = u_local([2 4 6 8])-offsetY;
+            macroElementProps.disp(loadcaseIndex,:)  = u_local;
+        end
+        
+        %     macroElementProps.elementNumber
+        
+        
+        % % Get the volume fraction field
+        outname = sprintf('./out%i/volfractionfield%i.csv',folderNum,macro_meso_iteration);
+        w = csvread(outname);
+        macroElementProps.material1Fraction = w(macroElementProps.yPosition,macroElementProps.xPosition );
+        
+        
+        
+    end
     
 else
     
@@ -91,16 +98,15 @@ else
     %     num Xnodes = settings.numXElmPerDV
     %      [X,Y] = ndgrid(0:settings.numXElmPerDV,0:settings.numYElmPerDV);
     [Y,X] = ndgrid(0:settings.numYElmPerDV,0:settings.numXElmPerDV);
-%     [t1, t2] = size(X);
-%     displacementsX = zeros(t1,t2);
-%     displacementsY = displacementsX;
+    %     [t1, t2] = size(X);
+    %     displacementsX = zeros(t1,t2);
+    %     displacementsY = displacementsX;
     
     macroElementProps.mesoXnodelocations=X;
-    macroElementProps.mesoYnodelocations=Y;
+    macroElementProps.mesoYnodelocations=Y;    
     
-   
     numVarsinRow =settings.numVarsX;
-%     numVarsinColumn =settings.numVarsY;
+    %     numVarsinColumn =settings.numVarsY;
     ydesignVar =   floor( (e-1)/numVarsinRow)+1;
     xdesignVar = mod(e-1,numVarsinRow)+1;
     
@@ -109,10 +115,9 @@ else
     elementsInRow = settings.nelx;
     shiftNodesY = (ydesignVar-1)*settings.numYElmPerDV*elementsInRow;
     
-%     count1 = 1;
-%     count2 = 1;
-%     isfirstrow = 1;
-    
+    %     count1 = 1;
+    %     count2 = 1;
+    %     isfirstrow = 1;    
     
     nodelist=[];
     for i  =1: settings.numYElmPerDV
@@ -128,29 +133,27 @@ else
     nodelist = unique(sort(nodelist));
     
     % nodes1=  IEN(e,:);
-    macroElementProps.elementNodes=nodelist;
-%     [t1,t2]= size(nodelist);
+    macroElementProps.elementNodes=nodelist;    
     
-    
-    % multiloading cases. 
-     [~, t2] = size(settings.loadingCase);        
+    % multiloading cases.
+    [~, t2] = size(settings.loadingCase);
     for loadcaseIndex = 1:t2
-         utemp = U(loadcaseIndex,:);   
+        utemp = U(loadcaseIndex,:);
         
         displacementsX = utemp(nodelist*2-1);
         displacementsY = utemp(nodelist*2);
-
+        
         macroElementProps.xDisplacements(loadcaseIndex,:)=displacementsX;
         macroElementProps.yDisplacements(loadcaseIndex,:)=displacementsY;
     end
-
+    
     macroElementProps.elementNumber = e;
     % Save element to XY position map (needed for x and w vars retrival)
     %         outname = sprintf('./out%i/elementXYposition%i.csv',folderNum,macro_meso_iteration);
     %         elementXYposition=csvread(outname);
     %         results = elementXYposition(macroElementProps.elementNumber,:);
-     macroElementProps.yPosition = ydesignVar;
-     macroElementProps.xPosition = xdesignVar;
+    macroElementProps.yPosition = ydesignVar;
+    macroElementProps.xPosition = xdesignVar;
     
     % Get the density field
     outname = sprintf('./out%i/densityfield%i.csv',folderNum,macro_meso_iteration);

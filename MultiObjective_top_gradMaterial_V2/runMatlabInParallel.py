@@ -12,7 +12,12 @@ import subprocess
 # qsub -I
 #
 # ^^^^^^^^ Compile code ^^^^^^^^^^^^^^^^
-#  cd /scratch1/apg/combinedtopgrad; dos2unix *.*; rm jobP*; rm jobweight*; rm -R out*; module add matlab/2015a; mcc -R -nodisplay  -m  combinedTopologyOptimization.m Configuration.m DesignVars.m  elementK_heat.m elK_elastic.m FE_elasticV2.m  MaterialProperties.m plotResults.m temperatureFEA_V3.m 
+#  cd /scratch2/apg/multiObjective; dos2unix *.*; rm jobP*; rm jobweight*; rm -R out*; module add matlab/2015a; mcc -R -nodisplay  -m  main.m CalculateCheckedElements.m check.m combinedTopologyOptimization.m Configuration.m DesignVars.m elementK_heat.m elK_elastic.m FE_elasticV2.m FindAvergeChangeOfLastValue.m freezeColors.m GenerateDesignVarsForMesoProblem.m GetMacroElementPropertiesFromCSV.m GetMesoUnitCellDesignFromCSV.m Homgenization.m HomgenizationV2.m macroElementProp.m MaterialProperties.m mesoAddAdjcentCellDataObject.m  MesoDesignWrapper.m MesoStructureDesignV2.m OC.m parfor_progress.m plotResults.m  plotSingleMatCompare.m plotStrainField.m plotStructGradFromCSVfile.m ReadXMacroFromCSV.m SaveMacroProblemStateToCSV.m SaveMesoUnitCellDesignToCSV.m SingleMesoStuctureWrappe.m stlwrite.m temperatureFEA_V3.m TestMesoDesign.m TileMesoStructure.m unfreezeColors.m
+#
+# <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+#
+# If running just the main code, with no weights
+# cd /scratch2/apg/multiObjective; qsub job.matlabMacroMeso.pbs
 #
 # ^^^^^^^^ Exit interactive job ^^^^^^^^^^^^^^^^ 
 # exit

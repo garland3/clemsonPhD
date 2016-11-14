@@ -40,7 +40,7 @@ matvolFraction = 1;
 [~, ~, B_total, ~] = matProp.effectiveElasticKEmatrix_meso(matvolFraction, settings,'');
 
 loadcaseIndex=1;
-straintest = macroElemProps.strain(:,loadcaseIndex)';
+% straintest = macroElemProps.strain(:,loadcaseIndex)';
 %B_total = [];
 % % loop over the elements
 for e = 1:ne
@@ -56,7 +56,7 @@ for e = 1:ne
     [x,y]= designVars.GivenNodeNumberGetXY(e);
     
     [ke, KexpansionBar, B_total, ~] = matProp.effectiveElasticKEmatrix_meso(designVars.w(y,x), settings,strain1);
-      [~, ~, ~, F_mesotest] = matProp.effectiveElasticKEmatrix_meso(designVars.w(y,x), settings,straintest);
+%       [~, ~, ~, F_mesotest] = matProp.effectiveElasticKEmatrix_meso(designVars.w(y,x), settings,straintest);
     [~, ~, ~, F_meso1] = matProp.effectiveElasticKEmatrix_meso(designVars.w(y,x), settings,strain1);
     [~, ~, ~, F_meso2] = matProp.effectiveElasticKEmatrix_meso(designVars.w(y,x), settings,strain2);
     [~, ~, ~, F_meso3] = matProp.effectiveElasticKEmatrix_meso(designVars.w(y,x), settings,strain3);
@@ -146,32 +146,27 @@ designVars.dc = zeros(settings.nely,settings.nelx);
 
 [~, t2] = size(settings.loadingCase);
 objective = 0;
-for loadcaseIndex = 1:t2
-    for e = 1:ne
-        
+
+
+    for e = 1:ne        
         [x,y]= designVars.GivenNodeNumberGetXY(e);
         nodes1=  designVars.IEN(e,:);
         xNodes = nodes1*2-1;
         yNodes = nodes1*2;
-        dofNumbers = [xNodes(1) yNodes(1) xNodes(2) yNodes(2) xNodes(3) yNodes(3) xNodes(4) yNodes(4)];
-        
+        dofNumbers = [xNodes(1) yNodes(1) xNodes(2) yNodes(2) xNodes(3) yNodes(3) xNodes(4) yNodes(4)];        
         Ulocal1 = T1(dofNumbers);
         Ulocal2 = T2(dofNumbers);
-        Ulocal3 = T3(dofNumbers);
-        
+        Ulocal3 = T3(dofNumbers);        
 %         material1Fraction = designVars.w(y,x); % 100% of material 1 right now.
-         material1Fraction=1;
-        
+         material1Fraction=1;        
         E_base =    matProp.effectiveElasticProperties( material1Fraction, settings);
-        %     E = E_base;
-        
+        %     E = E_base;        
         E = E_base*designVars.x(y,x)^settings.penal;
-        v = 0.3; % Piossons ratio
-        
+        v = 0.3; % Piossons ratio        
         % D is called C* in some journal papers.
         D = [ 1 v 0;
             v 1 0;
-            0 0 1/2*(1-v)]*E/(1-v^2);    
+            0 0 1/2*(1-v)]*E/(1-v^2);   
        
         Ulocal1 = full(Ulocal1);Ulocal2 = full(Ulocal2);Ulocal3 = full(Ulocal3);
         temp1_X = [transpose(Ulocal1) transpose(Ulocal2) transpose(Ulocal3)];      
@@ -195,12 +190,13 @@ for loadcaseIndex = 1:t2
         % designVars.dc(y,x) = -dH(2,2);
         
         % two scale optimization
-        designVars.dc(y,x)  = -macroElemProps.strain(:,loadcaseIndex)'*dH*macroElemProps.strain(:,loadcaseIndex)+ designVars.dc(y,x)  ;
-        
-        
+        for loadcaseIndex = 1:t2
+          designVars.dc(y,x)  = -macroElemProps.strain(:,loadcaseIndex)'*dH*macroElemProps.strain(:,loadcaseIndex)+ designVars.dc(y,x)  ;
+        end
     end
     
-end
+
+    
 
 D_h = D_h/ne;
 
