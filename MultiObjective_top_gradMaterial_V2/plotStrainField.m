@@ -2,7 +2,7 @@ function  []= plotStrainField(settings,designVars,folderNum,loadcaseIndex)
 
 ne = settings.nelx*settings.nely; % number of elements
 U2 = (designVars.U(loadcaseIndex,:));
- maxU = max(max(designVars.U));
+ maxU = max(max(abs(designVars.U)));
 multiplierScale=1/maxU;
 
 for e = 1:ne

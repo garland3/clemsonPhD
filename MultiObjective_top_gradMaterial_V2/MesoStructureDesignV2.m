@@ -49,21 +49,24 @@ designVarsMeso =  designVarsMeso.CalcNodeLocationMeso(mesoSettings);
 % --------------------------------------------
 % Loop Calculatint the sensitivity and changing the design var X
 objectiveArray = 100;
-mesoSettings.penal = 2.2;
+densityArray = 100;
+mesoSettings.penal = 3;
+terminationMulti = 0.01;
+
 % if(settings.singleMesoDesign~=1)
-for mesoLoop = 1:60
+for mesoLoop = 1:100
     
-    [ designVarsMeso ,D_h, objective] = Homgenization(designVarsMeso, mesoSettings, matProp, macroElemProps,mesoLoop);
-    %         change=objectiveold-objective;
-    %         objectiveold=objective;
-    %         relativeChange = change/objective;
+    [ designVarsMeso ,D_h, objective] = Homgenization(designVarsMeso, mesoSettings, matProp, macroElemProps,mesoLoop);   
     
     objectiveArray = [objectiveArray objective];
+    densityArray = [densityArray sum(sum(designVarsMeso.x))];
     
     t = mesoSettings.terminationAverageCount;
     if(size(objectiveArray,2)>(t+2))    
-        [averageDiffOfLastValues] = FindAvergeChangeOfLastValue(objectiveArray, mesoSettings);
-        if(abs(averageDiffOfLastValues)<  mesoSettings.terminationCriteria)
+        [avgObj] = FindAvergeChangeOfLastValue(objectiveArray, mesoSettings);
+         [avgDensity] = FindAvergeChangeOfLastValue(densityArray, mesoSettings);
+        if(abs(avgObj)<  mesoSettings.terminationCriteria*terminationMulti && avgDensity<  mesoSettings.terminationCriteria*terminationMulti )
+            [avgObj avgDensity]
             break;
         end
     end

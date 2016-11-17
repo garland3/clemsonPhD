@@ -81,7 +81,7 @@ end
 designVars.w(1:meso_settings.nely,1:meso_settings.nelx)  = 1; % actual volume fraction composition of each element
 % fractionCurrent_V1Local =1;
 
-designVars.temp1(1:meso_settings.nely,1:meso_settings.nelx) = 0;
+% designVars.temp1(1:meso_settings.nely,1:meso_settings.nelx) = 0;
 % designVars.temp2(1:meso_settings.nely,1:meso_settings.nelx) = 0;
 % designVars.complianceSensitivity(1:meso_settings.nely,1:meso_settings.nelx) = 0;
 % designVars.totalStress(1:meso_settings.nely,1:meso_settings.nelx) = 0;
@@ -89,8 +89,8 @@ designVars.temp1(1:meso_settings.nely,1:meso_settings.nelx) = 0;
 % designVars.g1elastic(1:meso_settings.nely,1:meso_settings.nelx) = 0;
 % designVars.g1heat(1:meso_settings.nely,1:meso_settings.nelx) = 0;
 
-designVars = designVars.CalcIENmatrix(meso_settings);
-designVars =  designVars.CalcElementLocation(meso_settings);
+% designVars = designVars.CalcIENmatrix(meso_settings);
+% designVars =  designVars.CalcNodeLocation(meso_settings);
 designVars = designVars.PreCalculateXYmapToNodeNumber(meso_settings);
 macro_meso_iteration=settings.macro_meso_iteration;
 

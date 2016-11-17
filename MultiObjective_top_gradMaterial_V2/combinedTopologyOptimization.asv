@@ -1,17 +1,16 @@
-function combinedTopologyOptimization(useInputArgs, w1text, iterationNum,macro_meso_iteration)
-% input args, useInputArgs = 1 if to use the input args
+function combinedTopologyOptimization(useInputArgs, w1text, macro_meso_iteration,mode, singleMeso_elementNumber)
+% input args, useInputArgs = 1 if to use the input args. This expects that
+% we are having a external program call the matlab code
+%
 % w1 weight1 for weighted objective.
 % iterationNum, used to know where to output files.
 close all
-% h = figure(1);hh = figure(2);
-% set(h,'visible','off');
-% set(hh,'visible','off');
 
 % --------------------------------------
 % %% Settings
 % --------------------------------------------
 settings = Configuration;
-settings.macro_meso_iteration = macro_meso_iteration;
+
 settings.mode =10;
 % 1 = topology only,
 % 2 = material optimization only.
@@ -22,108 +21,109 @@ settings.mode =10;
 % 7= testing recombinging the meso structure designs.
 % 8= modes 6 and 7 combined
 % 10 = everything working!!!
-
-
-
-settings.elasticMaterialInterpMethod = 2; % Hashin–Shtrikam law (average of upper and lower boundary)
-settings.heatMaterialInterpMethod = 5; % Hashin–Shtrikam law (average of upper and lower boundary)
+% 11 = single meso design, where "singleMeso_elementNumber" and
+% "macro_meso_iteration" specify which one
 
 % target volumes of material 1 and 2
 settings.v1 = 0.1;
-settings.v2 = 0.3;
+settings.v2 = 0.4;
 
 
-
-% This is as the new way, but try to make compatible with old
-% Each design var controls several elements. 1= true, 0= false
-settings.doUseMultiElePerDV = 0;
+settings.doUseMultiElePerDV = 0; % Each design var controls several elements. 1= true, 0= false
 settings.averageMultiElementStrain = 0;
 settings.singleMesoDesign = 0;
-settings.mesoplotfrequency = 1;
+settings.mesoplotfrequency = 100;
 settings.parallel = 1;
-settings.mesoAddAdjcentCellBoundaries =1;
+settings.mesoAddAdjcentCellBoundaries =0;
 
 if(settings.singleMesoDesign ==1)
     settings.v1 = 0.4;
     settings.v2 = 0;
 end
 
-% if using input args, then override some configurations.
-% if using input args, then running on the cluster, so use high resolution,
-% otherwise use low resolution
-if(str2num(useInputArgs) ==1)
-      settings.nelx = 50;
-    settings.nely = 50;
+settings.w1 = 1; % do not set to zero, instead set to 0.0001. Else we will get NA for temp2
+
+RunPalmetto = 0;
+if(RunPalmetto==0)
+    % ------------
+    % Normal running case
+    % -------------------
+    settings.macro_meso_iteration = macro_meso_iteration;
+    settings.nelx = 30;
+    settings.nely = 10;
     settings.numXElmPerDV=1;
     settings.numYElmPerDV=1;
     
-    settings.nelxMeso = 20 %35;
-    settings.nelyMeso =20 %35;
-    settings.w1 = 1; % do not set to zero, instead set to 0.0001. Else we will get NA for temp2
-    settings.iterationNum = 0;
-    settings.doSaveDesignVarsToCSVFile = 0;
-    settings.doPlotFinal = 0;
-    %  settings.terminationCriteria =0.1; % 10%
-    settings.terminationCriteria =0.001; % 3%
-    
-    
-    settings.parallel = 1;
-    settings.numWorkerProcess = 8 % set to the number of nodes requested.
-    settings.doPlotVolFractionDesignVar = 0;
-    settings.doPlotTopologyDesignVar = 0;
-    settings.doPlotHeat = 0;
-    settings.doPlotHeatSensitivityTopology = 0;
-    settings.doPlotStress = 0;
-    settings.doPlotFinal = 0;
-    settings.doSaveDesignVarsToCSVFile = 1; % set to 1 to write to csv file instead
-    settings.maxFEACalls = 350;
-    settings.maxMasterLoops = 500; % make it so, the fea maxes out first.
-else
-    
-    settings.nelx = 50;
-    settings.nely = 50;
-    settings.numXElmPerDV=1;
-    settings.numYElmPerDV=1;
-    
-    settings.nelxMeso = 20 %35;
-    settings.nelyMeso =20 %35;
+    settings.nelxMeso = 25; %35;
+    settings.nelyMeso =25; %35;
     settings.w1 = 1; % do not set to zero, instead set to 0.0001. Else we will get NA for temp2
     settings.iterationNum = 0;
     settings.doSaveDesignVarsToCSVFile = 0;
     settings.doPlotFinal = 1;
     %  settings.terminationCriteria =0.1; % 10%
     settings.terminationCriteria =0.001; % 3%
-    
+    settings.numWorkerProcess = 3;
+else
+    % ------------
+    % Palmetto running case
+    % -------------------
+    settings.nelx = 120;
+    settings.nely = 8;
+    settings.nelxMeso = 35; %35;
+    settings.nelyMeso =35; %35;
 end
+
+if(str2num(useInputArgs) ==1)
+     % parse potential input arguments. 
+    settings.macro_meso_iteration=str2num(macro_meso_iteration);
+    settings.mode=str2num(mode);
+     settings.mode=str2num(mode);
+    settings.w1 =str2num(w1text);  singleMeso_elementNumber 
+    
+    % -------------------------
+% Single meso design
+% -------------------------
+if ( settings.mode == 11)
+      ne = settings.nelx*settings.nely; % number of elements
+      elocal = 
+      MesoDesignWrapper(settings,elocal, ne,matProp);
+end
+end
+
+   
 
 settings= settings.UpdateVolTargetsAndObjectiveWeights();
 settings
-onlyTopChangeOnFirstIteration = 1; % 1 = true, 0 = false;
+onlyTopChangeOnFirstIteration = 0; % 1 = true, 0 = false;
 % material properties Object
 matProp = MaterialProperties;
+
+
+
 
 % ---------------------------------
 % Initialization of varriables
 % ---------------------------------
 designVars = DesignVars(settings);
 fractionCurrent_V1Local =0;
-if(settings.doUseMultiElePerDV ==1)
-    % ------------------------------
-    % Multiple design vars per element.
-    % ------------------------------
-    settings = settings.CalculateDesignVarsPerFEAelement();
-    designVars.x(1:settings.numVarsY,1:settings.numVarsX) = settings.totalVolume; % artificial density of the elements
-    designVars.w(1:settings.numVarsY,1:settings.numVarsX)  = 1; % actual volume fraction composition of each element
-    designVars.temp1(1:settings.numVarsY,1:settings.numVarsX) = 0;
-    designVars.temp2(1:settings.numVarsY,1:settings.numVarsX) = 0;
-    %designVars.complianceSensitivity(1:settings.nely,1:settings.nelx) = 0;
-    if (settings.doPlotStress == 1)
-        designVars.totalStress(1:settings.numVarsY,1:settings.numVarsX) = 0;
-    end
-    designVars.g1elastic(1:settings.numVarsY,1:settings.numVarsX) = 0;
-    designVars.g1heat(1:settings.numVarsY,1:settings.numVarsX) = 0;
-    
-else
+% if(settings.doUseMultiElePerDV ==1)
+%     % ------------------------------
+%     % Multiple design vars per element.
+%     % ------------------------------
+%     settings = settings.CalculateDesignVarsPerFEAelement();
+%     designVars.x(1:settings.numVarsY,1:settings.numVarsX) = settings.totalVolume; % artificial density of the elements
+%     designVars.w(1:settings.numVarsY,1:settings.numVarsX)  = 1; % actual volume fraction composition of each element
+%     designVars.temp1(1:settings.numVarsY,1:settings.numVarsX) = 0;
+%     designVars.temp2(1:settings.numVarsY,1:settings.numVarsX) = 0;
+%     %designVars.complianceSensitivity(1:settings.nely,1:settings.nelx) = 0;
+%     if (settings.doPlotStress == 1)
+%         designVars.totalStress(1:settings.numVarsY,1:settings.numVarsX) = 0;
+%     end
+%     designVars.g1elastic(1:settings.numVarsY,1:settings.numVarsX) = 0;
+%     designVars.g1heat(1:settings.numVarsY,1:settings.numVarsX) = 0;
+%     
+% else
+if ( settings.mode == 1 || settings.mode == 2 || settings.mode == 3 || settings.mode == 10 || settings.mode ==5)
     % ------------------------------
     % Normal case, 1 design var per element
     % ------------------------------
@@ -137,16 +137,18 @@ else
     end
     designVars.g1elastic(1:settings.nely,1:settings.nelx) = 0;
     designVars.g1heat(1:settings.nely,1:settings.nelx) = 0;
+    % end
+
+    designVars = designVars.CalcIENmatrix(settings);
+    designVars =  designVars.CalcNodeLocation(settings);
+    designVars = designVars.PreCalculateXYmapToNodeNumber(settings);
+    designVars = designVars.CalcElementXYposition(settings);
+
 end
-
-designVars = designVars.CalcIENmatrix(settings);
-designVars =  designVars.CalcElementLocation(settings);
-designVars = designVars.PreCalculateXYmapToNodeNumber(settings);
-designVars = designVars.CalcElementXYposition(settings);
-
 masterloop = 0;
 FEACalls = 0;
 status=0;
+
 
 % macro_meso_iteration = 1;
 
@@ -166,6 +168,10 @@ if(settings.doUseMultiElePerDV) % if elements per design var.
     yy = settings.numVarsY;
 end
 
+
+%% ---------------------------------------------------
+% Macro Design
+% ---------------------------------------------------
 % START ITERATION
 while status == 0  && masterloop<=settings.maxMasterLoops && FEACalls<=settings.maxFEACalls
     masterloop = masterloop + 1;
@@ -280,7 +286,7 @@ if ( settings.mode ==2 || settings.mode ==3 || settings.mode == 10 || settings.m
         [~, t2] = size(settings.loadingCase);
         
         for loadcaseIndex = 1:t2
-            %             loadcase = settings.loadingCase(loadcaseIndex);
+            %   loadcase = settings.loadingCase(loadcaseIndex);
             p.plotTopAndFraction(designVars, settings, matProp,FEACalls ); % plot the results.
             plotStrainField(settings,designVars,folderNum,loadcaseIndex)
             nameGraph = sprintf('./gradTopOptimization%fwithmesh%i_load%i.png', settings.w1,settings.macro_meso_iteration,loadcaseIndex);
@@ -320,7 +326,8 @@ if(settings.mode ==5  || settings.mode ==10)
 end
 
 
-% ---------------------------------------------
+%% ---------------------------------------------
+%         Meso Design
 %
 %         LOOP OVER MACRO ELEMENTS AND DESIGN MESO STRUCTURE = MODE 6
 %
@@ -331,12 +338,12 @@ if(settings.mode ==6 ||settings.mode ==8 || settings.mode ==10)
     clear designVars
     
     
-    if(settings.doUseMultiElePerDV==1) % if elements per design var.
-        ne =  settings.numVarsX*settings.numVarsY;
-    else
+%     if(settings.doUseMultiElePerDV==1) % if elements per design var.
+%         ne =  settings.numVarsX*settings.numVarsY;
+%     else
         ne = settings.nelx*settings.nely; % number of elements
         %SavedDmatrix = zeros(ne,9);
-    end
+%     end
     
     checkedElements = CalculateCheckedElements(ne, settings);
     allelements = 1:ne;
@@ -351,8 +358,8 @@ if(settings.mode ==6 ||settings.mode ==8 || settings.mode ==10)
         
         poolobj = gcp('nocreate'); % If no pool,create new one.
         if isempty(poolobj)
-            parpool('local',4)
-            poolsize = 4;
+            parpool('local', settings.numWorkerProcess)
+            poolsize = settings.numWorkerProcess;
         else
             poolsize = poolobj.NumWorkers;
         end

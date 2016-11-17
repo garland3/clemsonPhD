@@ -6,19 +6,19 @@ classdef Configuration
         % --------------------------------------------
         
         % each design var will control the density and volume fraction
-        % material of several clustered elements. 
-        doUseMultiElePerDV; % 1= true, 0 = false do use multiple elements per (1) design varriable. 
+        % material of several clustered elements.
+        doUseMultiElePerDV; % 1= true, 0 = false do use multiple elements per (1) design varriable.
         averageMultiElementStrain; % 1= true, 0 = false instead of making 1 large strain field, make sevral and average the sensitivies
-        singleMesoDesign; % 1 = yes, 0 = true. 
-        numXElmPerDV= 2; % Number of elements in the X direction for 1 (per) design varriable. 
-        numYElmPerDV =2; % Number of elements in the X direction for 1 (per) design varriable. 
+        singleMesoDesign; % 1 = yes, 0 = true.
+        numXElmPerDV= 2; % Number of elements in the X direction for 1 (per) design varriable.
+        numYElmPerDV =2; % Number of elements in the X direction for 1 (per) design varriable.
         numVarsX;
         numVarsY;
         
-        mesoplotfrequency; % how often to plot the meso level design. 
+        mesoplotfrequency; % how often to plot the meso level design.
         
         nelxMeso = 5;
-          nelyMeso = 5;
+        nelyMeso = 5;
         
         nelx = 40; % 40 # of elements in the x direcction, must be a multiple of numXElmPerDV
         nely = 20; % 18 number of elements in the y direction, must be a multiple of numYElmPerDV
@@ -35,7 +35,7 @@ classdef Configuration
         w2;
         voidMaterialDensityCutOff = 0.3; % everything below this density is considered void.
         
-        noNewMesoDesignDensityCutOff = 0.15; % any densities below this will not be redesigned. Having a different value than voidMaterialDensityCutOft helps stabalize the algorithm on the structure edges. 
+        noNewMesoDesignDensityCutOff = 0.15; % any densities below this will not be redesigned. Having a different value than voidMaterialDensityCutOft helps stabalize the algorithm on the structure edges.
         
         % Plotting information
         doPlotVolFractionDesignVar = 0;
@@ -46,19 +46,25 @@ classdef Configuration
         doPlotFinal = 0;
         doPlotMetrics = 0;
         doSaveDesignVarsToCSVFile = 0; % set to 1 to write plotFinal csv file instead
-        doPlotAppliedStrain = 0; % For debugging only 
+        doPlotAppliedStrain = 0; % For debugging only
         v1 = 0.10; % amount of material 1 to use. default to 20%
         v2 = 0.10; % amount of material 2 to use. default to 20%, reduced so there is less meso structures to compute
         totalVolume; % = v1+v2;
+        
+        % ----------------
+        % Computational settings
+        % ------------------
         iterationNum=0; %  used for parallel computing.
         maxFEACalls = 50;
-        maxMasterLoops = 15;
+        maxMasterLoops = 30;
         terminationAverageCount = 5; % the average change over this number of iterations must be below the termination criteria
         terminationCriteria = 0.001; % if the normalized average change over  terminationAverageCount of iterations is below this value then termainted. ie. 1% change
         % not much faster.
         useGPU = 0; % set to 1 to try to solve matrix using gpu
-         parallel =0; % set to 1 to use parfor while preforming the meso design
-         numWorkerProcess = 8;
+        parallel =0; % set to 1 to use parfor while preforming the meso design
+        numWorkerProcess = 8;
+        useCommandLineArgs = 0;
+        
         % -----------------
         % Use different mixture rules for effective elastic properteis
         % 1. Simple linear interpolation, Vigot rule of miztures E = w(E1)*(1-w)*E2
@@ -66,7 +72,7 @@ classdef Configuration
         % 3. Reuss -rule, 1/E = w/E1+(1-w)/E2 (not implemented yet)
         % 4. Mori and Tanaka, metal ceramic composite
         % ---------------------
-        elasticMaterialInterpMethod = 1;
+        elasticMaterialInterpMethod =2;
         % -----------------
         % Use different mixture rules for effective Heat properteis
         % 1. Simple linear interpolation, Vigot rule of miztures E = w(E1)*(1-w)*E2
@@ -74,36 +80,35 @@ classdef Configuration
         % 4. Kingery's, metal ceramic composite
         % 5. Hashin–Shtrikam law (average of upper and lower boundary)
         % ---------------------
-        heatMaterialInterpMethod = 1;
+        heatMaterialInterpMethod = 5;
         
-%          loadingCase = [113]; % left clamped
-          loadingCase = [111 112 113]; % left clamped
-%            loadingCase = [111 112 ]; % left clamped
-%          loadingCase = [111 120 121]; % up, down, right in top right corrner, left clamp. 
-%         loadingCase = [111 120]; % up, down, right in top right corrner, left clamp. 
-%              loadingCase = [1];
-            
-
+        %          loadingCase = [113]; % left clamped
+        %           loadingCase = [111 112 113]; % left clamped
+        %            loadingCase = [111 112 ]; % left clamped
+        %          loadingCase = [111 120 121]; % up, down, right in top right corrner, left clamp.
+        %         loadingCase = [111 120]; % up, down, right in top right corrner, left clamp.
+        %              loadingCase = [1];
         
+        loadingCase = [300 301 302 303 304 305]; % shoe
+        %    loadingCase = [302 305]; % shoe
         
         % --------------
         % Meso tiling info
         %--------------
         numTilesX = 2;
         numTilesY = 2;
-%         sensitivityTile = 5; % use this tile to calcualte the sensitivity
+        %         sensitivityTile = 5; % use this tile to calcualte the sensitivity
         plotSensitivityWhilerunning = 0;
-        
         
         macro_meso_iteration = 0; % master loop of the whole macro meso system
         
         mesoAddAdjcentCellBoundaries = 0; % global property
         useAjacentLocal = 0; % local property that maybe be turned on or off
-       
+        
         
     end
     
-    methods        
+    methods
         function obj = Configuration()
             % Constructor.
         end
@@ -124,52 +129,52 @@ classdef Configuration
                     disp('nely and numYElmPerDV or nelx and numXElmPerDV not compatible Exiting MATLAB')
                     exit
                 end
-                  
+                
                 obj.numVarsX = obj.nelx/obj.numXElmPerDV;
                 obj.numVarsY = obj.nely/obj.numYElmPerDV;
                 
             end
         end
         
-         % -----------------------------
-       % Given design var position, get list of elements X,Y that are
-       % controlled by the design var. Since there are multiple elements
-       % the x and y returned values are an array. 
-       %
-       % Only applicable when multiple elements per design var is true. 
-       %
-       % -----------------------------
-       function [eleXnums, eleYnums,xNodeNums,yNodeNums, macroXdesignVarindex,macroYdesignVarindex] = GetElementsForDesignVar(obj,designvarNumber)
-           % 1. Get the x,y position of the design var. 
-           % 2. multiply by elements per design var to get positions. 
-         
-           numVarsinRow =obj.numVarsX;
-           numVarsinColumn =obj.numVarsY;
-           ydesignVar =   floor( designvarNumber/numVarsinRow)+1;
-           xdesignVar = mod(designvarNumber/numVarsinColumn);   
-           
-           macroXdesignVarindex = xdesignVar;
-           macroYdesignVarindex = ydesignVar;
-           
-           xStart = xdesignVar*obj.numXElmPerDV-(obj.numXElmPerDV);
-           yStart = ydesignVar*obj.numYElmPerDV-(obj.numYElmPerDV);
-           
-           numElementsPerDV = obj.numXElmPerDV*obj.numYElmPerDV;
-           eleXnums = zeros(numElementsPerDV,1);
-           eleYnums = zeros(numElementsPerDV,1);
-           
-           count = 1;
+        % -----------------------------
+        % Given design var position, get list of elements X,Y that are
+        % controlled by the design var. Since there are multiple elements
+        % the x and y returned values are an array.
+        %
+        % Only applicable when multiple elements per design var is true.
+        %
+        % -----------------------------
+        function [eleXnums, eleYnums,xNodeNums,yNodeNums, macroXdesignVarindex,macroYdesignVarindex] = GetElementsForDesignVar(obj,designvarNumber)
+            % 1. Get the x,y position of the design var.
+            % 2. multiply by elements per design var to get positions.
+            
+            numVarsinRow =obj.numVarsX;
+            numVarsinColumn =obj.numVarsY;
+            ydesignVar =   floor( designvarNumber/numVarsinRow)+1;
+            xdesignVar = mod(designvarNumber/numVarsinColumn);
+            
+            macroXdesignVarindex = xdesignVar;
+            macroYdesignVarindex = ydesignVar;
+            
+            xStart = xdesignVar*obj.numXElmPerDV-(obj.numXElmPerDV);
+            yStart = ydesignVar*obj.numYElmPerDV-(obj.numYElmPerDV);
+            
+            numElementsPerDV = obj.numXElmPerDV*obj.numYElmPerDV;
+            eleXnums = zeros(numElementsPerDV,1);
+            eleYnums = zeros(numElementsPerDV,1);
+            
+            count = 1;
             for j = 1:obj.numYElmPerDV
-                 for i = 1:obj.numXElmPerDV             
-                       eleXnums(count) = xStart+i;
-                       eleYnums(count) = yStart+j;
-
-                      count =count+1;
-                 end
-           end
-           
-          
-           
-       end
+                for i = 1:obj.numXElmPerDV
+                    eleXnums(count) = xStart+i;
+                    eleYnums(count) = yStart+j;
+                    
+                    count =count+1;
+                end
+            end
+            
+            
+            
+        end
     end
 end

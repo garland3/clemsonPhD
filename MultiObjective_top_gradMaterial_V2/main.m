@@ -3,7 +3,9 @@ clear
 
 numloops = 5;
 for i =1:numloops
-    combinedTopologyOptimization('1', 'not used', 1,i)
+%     combinedTopologyOptimization('1', 'not used', 1,i)
+%     combinedTopologyOptimization(useInputArgs, w1text, macro_meso_iteration,mode, singleMeso_elementNumber);
+     combinedTopologyOptimization('no', 'NA', i,'na', 'na');
 end
 close all
 

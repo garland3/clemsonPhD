@@ -118,12 +118,12 @@ classdef DesignVars
         
         
         
-        % Calcualte the Center of each element and put the information
+        % Calcualte the node locations and put the information
         % into an array. Needed for the FEA
         % Calculate it here, so it only need to be calculated once.
         %
         % Think these are actually node locations
-        function obj = CalcElementLocation(obj,settings)
+        function obj = CalcNodeLocation(obj,settings)
             nn = (settings.nelx+1)*(settings.nely+1); % number of nodes
             
             numNodesInRow = settings.nelx + 1;

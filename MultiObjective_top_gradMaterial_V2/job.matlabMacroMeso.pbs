@@ -1,6 +1,6 @@
 #!/bin/bash
 #PBS -N macroMeso1
-#PBS -l select=1:ncpus=9:mem=10gb,walltime=4:00:00
+#PBS -l select=1:ncpus=9:mem=12gb,walltime=10:00:00
 #PBS -j oe
 
 source /etc/profile.d/modules.sh
@@ -9,6 +9,12 @@ module add matlab/2015a
 # module add python/2.7.6 
 
 cd $PBS_O_WORKDIR
+
+dos2unix *.*
+rm jobP*
+rm jobweight*
+module add matlab/2015a
+mcc -R -nodisplay  -m  main.m CalculateCheckedElements.m check.m combinedTopologyOptimization.m Configuration.m DesignVars.m elementK_heat.m elK_elastic.m FE_elasticV2.m FindAvergeChangeOfLastValue.m freezeColors.m GenerateDesignVarsForMesoProblem.m GetMacroElementPropertiesFromCSV.m GetMesoUnitCellDesignFromCSV.m Homgenization.m HomgenizationV2.m macroElementProp.m MaterialProperties.m mesoAddAdjcentCellDataObject.m  MesoDesignWrapper.m MesoStructureDesignV2.m OC.m parfor_progress.m plotResults.m  plotSingleMatCompare.m plotStrainField.m plotStructGradFromCSVfile.m ReadXMacroFromCSV.m SaveMacroProblemStateToCSV.m SaveMesoUnitCellDesignToCSV.m SingleMesoStuctureWrappe.m stlwrite.m temperatureFEA_V3.m TestMesoDesign.m TileMesoStructure.m unfreezeColors.m
 
 ./main
 

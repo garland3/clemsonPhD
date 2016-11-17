@@ -1,0 +1,3312 @@
+dos2unix: converting file CalculateCheckedElements.m to UNIX format ...
+dos2unix: converting file check.m to UNIX format ...
+dos2unix: converting file combinedTopologyOptimization.m to UNIX format ...
+dos2unix: converting file Configuration.m to UNIX format ...
+dos2unix: converting file DesignVars.m to UNIX format ...
+dos2unix: converting file elementK_heat.m to UNIX format ...
+dos2unix: converting file elK_elastic.m to UNIX format ...
+dos2unix: converting file FE_elasticV2.m to UNIX format ...
+dos2unix: converting file FindAvergeChangeOfLastValue.m to UNIX format ...
+dos2unix: converting file freezeColors.m to UNIX format ...
+dos2unix: converting file GenerateDesignVarsForMesoProblem.m to UNIX format ...
+dos2unix: converting file GetMacroElementPropertiesFromCSV.m to UNIX format ...
+dos2unix: converting file GetMesoUnitCellDesignFromCSV.m to UNIX format ...
+dos2unix: converting file gradTopOptimization1.000000withmesh1_load1.png to UNIX format ...
+dos2unix: converting file gradTopOptimization1.000000withmesh1_load2.png to UNIX format ...
+dos2unix: converting file gradTopOptimization1.000000withmesh1_load3.png to UNIX format ...
+dos2unix: converting file gradTopOptimization1.000000withmesh1_load4.png to UNIX format ...
+dos2unix: converting file gradTopOptimization1.000000withmesh1_load5.png to UNIX format ...
+dos2unix: converting file gradTopOptimization1.000000withmesh1_load6.png to UNIX format ...
+dos2unix: converting file Homgenization.m to UNIX format ...
+dos2unix: converting file HomgenizationV2.m to UNIX format ...
+dos2unix: converting file job.matlabMacroMeso.pbs to UNIX format ...
+dos2unix: converting file job.matlab.pbs to UNIX format ...
+dos2unix: converting file macroElementProp.m to UNIX format ...
+dos2unix: converting file macroMeso1.o7149921 to UNIX format ...
+dos2unix: converting file main.m to UNIX format ...
+dos2unix: converting file MaterialProperties.m to UNIX format ...
+dos2unix: converting file mccExcludedFiles.log to UNIX format ...
+dos2unix: converting file mesoAddAdjcentCellDataObject.m to UNIX format ...
+dos2unix: converting file MesoDesignWrapper.m to UNIX format ...
+dos2unix: converting file MesoStructureDesignV2.m to UNIX format ...
+dos2unix: converting file OC.m to UNIX format ...
+dos2unix: converting file parfor_progress.m to UNIX format ...
+dos2unix: converting file parfor_progress.txt to UNIX format ...
+dos2unix: converting file plotResults.m to UNIX format ...
+dos2unix: converting file plotSingleMatCompare.m to UNIX format ...
+dos2unix: converting file plotStrainField.m to UNIX format ...
+dos2unix: converting file plotStructGradFromCSVfile.m to UNIX format ...
+dos2unix: converting file readme.txt to UNIX format ...
+dos2unix: converting file ReadXMacroFromCSV.m to UNIX format ...
+dos2unix: converting file requiredMCRProducts.txt to UNIX format ...
+dos2unix: converting file run_main.sh to UNIX format ...
+dos2unix: converting file SaveMacroProblemStateToCSV.m to UNIX format ...
+dos2unix: converting file SaveMesoUnitCellDesignToCSV.m to UNIX format ...
+dos2unix: converting file setupJobs.pbs to UNIX format ...
+dos2unix: converting file SingleMesoStuctureWrappe.m to UNIX format ...
+dos2unix: converting file stlwrite.m to UNIX format ...
+dos2unix: converting file temperatureFEA_V3.m to UNIX format ...
+dos2unix: converting file TestMesoDesign.m to UNIX format ...
+dos2unix: converting file TileMesoStructure.m to UNIX format ...
+dos2unix: converting file unfreezeColors.m to UNIX format ...
+rm: cannot remove `jobP*': No such file or directory
+rm: cannot remove `jobweight*': No such file or directory
+
+settings = 
+
+  Configuration with properties:
+
+               doUseMultiElePerDV: 0
+        averageMultiElementStrain: 0
+                 singleMesoDesign: 0
+                     numXElmPerDV: 1
+                     numYElmPerDV: 1
+                         numVarsX: []
+                         numVarsY: []
+                mesoplotfrequency: 10
+                         nelxMeso: 40
+                         nelyMeso: 240
+                             nelx: 120
+                             nely: 10
+                            penal: 3
+                             rmin: 2
+                             mode: 10
+             referenceTemperature: 0
+              addThermalExpansion: 0
+                         timestep: 0.1000
+               volFractionDamping: 0.1000
+                iterationsPerPlot: 5
+                               w1: 1
+                               w2: 0
+        voidMaterialDensityCutOff: 0.3000
+     noNewMesoDesignDensityCutOff: 0.1500
+       doPlotVolFractionDesignVar: 0
+          doPlotTopologyDesignVar: 0
+                       doPlotHeat: 0
+    doPlotHeatSensitivityTopology: 0
+                     doPlotStress: 0
+                      doPlotFinal: 0
+                    doPlotMetrics: 0
+        doSaveDesignVarsToCSVFile: 0
+              doPlotAppliedStrain: 0
+                               v1: 0.2000
+                               v2: 0.4000
+                      totalVolume: 0.6000
+                     iterationNum: 0
+                      maxFEACalls: 80
+                   maxMasterLoops: 80
+          terminationAverageCount: 5
+              terminationCriteria: 1.0000e-03
+                           useGPU: 0
+                         parallel: 1
+                 numWorkerProcess: 8
+      elasticMaterialInterpMethod: 2
+         heatMaterialInterpMethod: 5
+                      loadingCase: [300 301 302 303 304 305]
+                        numTilesX: 2
+                        numTilesY: 2
+      plotSensitivityWhilerunning: 0
+             macro_meso_iteration: 1
+     mesoAddAdjcentCellBoundaries: 0
+                  useAjacentLocal: 0
+
+ FEA calls.:    1 Obj.:     0.0000 Vol. 1:  1.000 Vol. 2:  0.000 Lambda.:  0.000
+ FEA calls.:    2 Obj.:     0.0000 Vol. 1:  1.000 Vol. 2:  0.000 Lambda.:  0.067
+ FEA calls.:    3 Obj.:     0.0000 Vol. 1:  0.986 Vol. 2:  0.014 Lambda.:  0.067
+ FEA calls.:    4 Obj.:     0.0000 Vol. 1:  0.754 Vol. 2:  0.014 Lambda.:  0.132
+ FEA calls.:    5 Obj.:     0.0000 Vol. 1:  0.723 Vol. 2:  0.044 Lambda.:  0.132
+ FEA calls.:    6 Obj.:     0.0000 Vol. 1:  0.713 Vol. 2:  0.044 Lambda.:  0.192
+ FEA calls.:    7 Obj.:     0.0000 Vol. 1:  0.675 Vol. 2:  0.082 Lambda.:  0.192
+ FEA calls.:    8 Obj.:     0.0000 Vol. 1:  0.841 Vol. 2:  0.081 Lambda.:  0.250
+ FEA calls.:    9 Obj.:     0.0000 Vol. 1:  0.801 Vol. 2:  0.121 Lambda.:  0.250
+ FEA calls.:   10 Obj.:     0.0000 Vol. 1:  0.814 Vol. 2:  0.119 Lambda.:  0.304
+ FEA calls.:   11 Obj.:     0.0000 Vol. 1:  0.775 Vol. 2:  0.158 Lambda.:  0.304
+ FEA calls.:   12 Obj.:     0.0000 Vol. 1:  0.777 Vol. 2:  0.157 Lambda.:  0.354
+ FEA calls.:   13 Obj.:     0.0000 Vol. 1:  0.740 Vol. 2:  0.194 Lambda.:  0.354
+ FEA calls.:   14 Obj.:     0.0000 Vol. 1:  0.739 Vol. 2:  0.193 Lambda.:  0.400
+ FEA calls.:   15 Obj.:     0.0000 Vol. 1:  0.708 Vol. 2:  0.225 Lambda.:  0.400
+ FEA calls.:   16 Obj.:     0.0000 Vol. 1:  0.702 Vol. 2:  0.223 Lambda.:  0.442
+ FEA calls.:   17 Obj.:     0.0000 Vol. 1:  0.673 Vol. 2:  0.252 Lambda.:  0.442
+ FEA calls.:   18 Obj.:     0.0000 Vol. 1:  0.669 Vol. 2:  0.251 Lambda.:  0.482
+ FEA calls.:   19 Obj.:     0.0000 Vol. 1:  0.632 Vol. 2:  0.288 Lambda.:  0.482
+ FEA calls.:   20 Obj.:     0.0000 Vol. 1:  0.625 Vol. 2:  0.286 Lambda.:  0.517
+ FEA calls.:   21 Obj.:     0.0000 Vol. 1:  0.587 Vol. 2:  0.323 Lambda.:  0.517
+ FEA calls.:   22 Obj.:     0.0000 Vol. 1:  0.580 Vol. 2:  0.320 Lambda.:  0.548
+ FEA calls.:   23 Obj.:     0.0000 Vol. 1:  0.545 Vol. 2:  0.355 Lambda.:  0.548
+ FEA calls.:   24 Obj.:     0.0000 Vol. 1:  0.536 Vol. 2:  0.350 Lambda.:  0.575
+ FEA calls.:   25 Obj.:     0.0000 Vol. 1:  0.508 Vol. 2:  0.378 Lambda.:  0.575
+ FEA calls.:   26 Obj.:     0.0000 Vol. 1:  0.492 Vol. 2:  0.368 Lambda.:  0.599
+ FEA calls.:   27 Obj.:     0.0000 Vol. 1:  0.472 Vol. 2:  0.388 Lambda.:  0.599
+ FEA calls.:   28 Obj.:     0.0000 Vol. 1:  0.449 Vol. 2:  0.371 Lambda.:  0.621
+ FEA calls.:   29 Obj.:     0.0000 Vol. 1:  0.420 Vol. 2:  0.400 Lambda.:  0.621
+ FEA calls.:   30 Obj.:     0.0000 Vol. 1:  0.408 Vol. 2:  0.390 Lambda.:  0.638
+ FEA calls.:   31 Obj.:     0.0000 Vol. 1:  0.371 Vol. 2:  0.427 Lambda.:  0.638
+ FEA calls.:   32 Obj.:     0.0000 Vol. 1:  0.366 Vol. 2:  0.419 Lambda.:  0.652
+ FEA calls.:   33 Obj.:     0.0000 Vol. 1:  0.328 Vol. 2:  0.458 Lambda.:  0.652
+ FEA calls.:   34 Obj.:     0.0000 Vol. 1:  0.323 Vol. 2:  0.447 Lambda.:  0.660
+ FEA calls.:   35 Obj.:     0.0000 Vol. 1:  0.287 Vol. 2:  0.483 Lambda.:  0.660
+ FEA calls.:   36 Obj.:     0.0000 Vol. 1:  0.281 Vol. 2:  0.466 Lambda.:  0.665
+ FEA calls.:   37 Obj.:     0.0000 Vol. 1:  0.251 Vol. 2:  0.496 Lambda.:  0.665
+ FEA calls.:   38 Obj.:     0.0000 Vol. 1:  0.249 Vol. 2:  0.485 Lambda.:  0.665
+ FEA calls.:   39 Obj.:     0.0000 Vol. 1:  0.227 Vol. 2:  0.507 Lambda.:  0.665
+ FEA calls.:   40 Obj.:     0.0000 Vol. 1:  0.226 Vol. 2:  0.499 Lambda.:  0.663
+ FEA calls.:   41 Obj.:     0.0000 Vol. 1:  0.213 Vol. 2:  0.512 Lambda.:  0.663
+ FEA calls.:   42 Obj.:     0.0000 Vol. 1:  0.213 Vol. 2:  0.506 Lambda.:  0.659
+ FEA calls.:   43 Obj.:     0.0000 Vol. 1:  0.203 Vol. 2:  0.515 Lambda.:  0.659
+ FEA calls.:   44 Obj.:     0.0000 Vol. 1:  0.203 Vol. 2:  0.510 Lambda.:  0.654
+ FEA calls.:   45 Obj.:     0.0000 Vol. 1:  0.196 Vol. 2:  0.517 Lambda.:  0.654
+ FEA calls.:   46 Obj.:     0.0000 Vol. 1:  0.195 Vol. 2:  0.515 Lambda.:  0.649
+ FEA calls.:   47 Obj.:     0.0000 Vol. 1:  0.190 Vol. 2:  0.520 Lambda.:  0.649
+ FEA calls.:   48 Obj.:     0.0000 Vol. 1:  0.190 Vol. 2:  0.516 Lambda.:  0.642
+ FEA calls.:   49 Obj.:     0.0000 Vol. 1:  0.187 Vol. 2:  0.519 Lambda.:  0.642
+ FEA calls.:   50 Obj.:     0.0000 Vol. 1:  0.187 Vol. 2:  0.517 Lambda.:  0.635
+ FEA calls.:   51 Obj.:     0.0000 Vol. 1:  0.185 Vol. 2:  0.519 Lambda.:  0.635
+ FEA calls.:   52 Obj.:     0.0000 Vol. 1:  0.185 Vol. 2:  0.521 Lambda.:  0.628
+ FEA calls.:   53 Obj.:     0.0000 Vol. 1:  0.184 Vol. 2:  0.521 Lambda.:  0.628
+ FEA calls.:   54 Obj.:     0.0000 Vol. 1:  0.184 Vol. 2:  0.523 Lambda.:  0.621
+ FEA calls.:   55 Obj.:     0.0000 Vol. 1:  0.185 Vol. 2:  0.523 Lambda.:  0.621
+ FEA calls.:   56 Obj.:     0.0000 Vol. 1:  0.185 Vol. 2:  0.522 Lambda.:  0.614
+ FEA calls.:   57 Obj.:     0.0000 Vol. 1:  0.184 Vol. 2:  0.523 Lambda.:  0.614
+ FEA calls.:   58 Obj.:     0.0000 Vol. 1:  0.184 Vol. 2:  0.524 Lambda.:  0.606
+ FEA calls.:   59 Obj.:     0.0000 Vol. 1:  0.182 Vol. 2:  0.526 Lambda.:  0.606
+ FEA calls.:   60 Obj.:     0.0000 Vol. 1:  0.182 Vol. 2:  0.528 Lambda.:  0.599
+ FEA calls.:   61 Obj.:     0.0000 Vol. 1:  0.180 Vol. 2:  0.530 Lambda.:  0.599
+ FEA calls.:   62 Obj.:     0.0000 Vol. 1:  0.180 Vol. 2:  0.529 Lambda.:  0.591
+ FEA calls.:   63 Obj.:     0.0000 Vol. 1:  0.179 Vol. 2:  0.530 Lambda.:  0.591
+ FEA calls.:   64 Obj.:     0.0000 Vol. 1:  0.179 Vol. 2:  0.531 Lambda.:  0.583
+ FEA calls.:   65 Obj.:     0.0000 Vol. 1:  0.179 Vol. 2:  0.531 Lambda.:  0.583
+ FEA calls.:   66 Obj.:     0.0000 Vol. 1:  0.179 Vol. 2:  0.531 Lambda.:  0.574
+ FEA calls.:   67 Obj.:     0.0000 Vol. 1:  0.179 Vol. 2:  0.531 Lambda.:  0.574
+ FEA calls.:   68 Obj.:     0.0000 Vol. 1:  0.179 Vol. 2:  0.531 Lambda.:  0.566
+ FEA calls.:   69 Obj.:     0.0000 Vol. 1:  0.179 Vol. 2:  0.531 Lambda.:  0.566
+ FEA calls.:   70 Obj.:     0.0000 Vol. 1:  0.179 Vol. 2:  0.530 Lambda.:  0.558
+ FEA calls.:   71 Obj.:     0.0000 Vol. 1:  0.179 Vol. 2:  0.529 Lambda.:  0.558
+ FEA calls.:   72 Obj.:     0.0000 Vol. 1:  0.179 Vol. 2:  0.530 Lambda.:  0.550
+ FEA calls.:   73 Obj.:     0.0000 Vol. 1:  0.179 Vol. 2:  0.529 Lambda.:  0.550
+ FEA calls.:   74 Obj.:     0.0000 Vol. 1:  0.179 Vol. 2:  0.529 Lambda.:  0.542
+ FEA calls.:   75 Obj.:     0.0000 Vol. 1:  0.181 Vol. 2:  0.528 Lambda.:  0.542
+ FEA calls.:   76 Obj.:     0.0000 Vol. 1:  0.180 Vol. 2:  0.526 Lambda.:  0.534
+ FEA calls.:   77 Obj.:     0.0000 Vol. 1:  0.182 Vol. 2:  0.525 Lambda.:  0.534
+ FEA calls.:   78 Obj.:     0.0000 Vol. 1:  0.182 Vol. 2:  0.524 Lambda.:  0.527
+ FEA calls.:   79 Obj.:     0.0000 Vol. 1:  0.184 Vol. 2:  0.522 Lambda.:  0.527
+ FEA calls.:   80 Obj.:     0.0000 Vol. 1:  0.183 Vol. 2:  0.522 Lambda.:  0.519
+ FEA calls.:   81 Obj.:     0.0000 Vol. 1:  0.186 Vol. 2:  0.519 Lambda.:  0.519
+ FEA calls.:   82 Obj.:     0.0000 Vol. 1:  0.186 Vol. 2:  0.519 Lambda.:  0.512
+
+status =
+
+     0
+
+
+myCluster = 
+
+ Local Cluster
+
+    Properties: 
+
+                          Profile: local
+                         Modified: false
+                             Host: node1578
+                       NumWorkers: 8
+
+               JobStorageLocation: /local_scratch/pbs.7150482.pbs02/.mcrCache8.5/main_20/local_cluster_jobs/R2015a
+ RequiresMathWorksHostedLicensing: false
+
+    Associated Jobs: 
+
+                   Number Pending: 0
+                    Number Queued: 0
+                   Number Running: 0
+                  Number Finished: 0
+
+Starting parallel pool (parpool) using the 'local' profile ... Warning: Could not launch SMPD process manager. Using fallback parallel mechanism.
+[> In parallel.internal.apishared.SmpdGateway.canUseSmpd (line 80)
+  In parallel.cluster.Local/hSubmitCommunicatingJob (line 22)
+  In parallel.job.CJSCommunicatingJob/submitOneJob (line 81)
+  In parallel.Job/submit (line 306)
+  In parallel.internal.pool.InteractiveClient/start (line 330)
+  In parallel.Pool>iStartClient (line 547)
+  In parallel.Pool.hBuildPool (line 439)
+  In parallel.internal.pool.doParpool (line 15)
+  In parpool (line 89)
+  In combinedTopologyOptimization (line 342)
+  In main (line 6)] 
+connected to 8 workers.
+
+ans = 
+
+ Pool with properties: 
+
+            Connected: true
+           NumWorkers: 8
+              Cluster: local
+        AttachedFiles: {}
+          IdleTimeout: 30 minute(s) (30 minutes remaining)
+          SpmdEnabled: true
+
+
+poolsize =
+
+     8
+
+  0%[>                                                  ]
+Meso Design #:  399 of 1200 position X =   39 Y =    4
+
+ans =
+
+   1.0e-07 *
+
+    0.8536    0.0118
+
+Meso Design #:   99 of 1200 position X =   99 Y =    1
+
+  0%[>                                                  ]
+Meso Design #:   97 of 1200 position X =   97 Y =    1
+
+ans =
+
+   1.0e-07 *
+
+    0.8683    0.0031
+
+Meso Design #:  666 of 1200 position X =   66 Y =    6
+
+ans =
+
+   1.0e-07 *
+
+    0.9733    0.0057
+
+Meso Design #:  199 of 1200 position X =   79 Y =    2
+
+ans =
+
+   1.0e-07 *
+
+    0.6968    0.0080
+
+Meso Design #:  733 of 1200 position X =   13 Y =    7
+
+ans =
+
+   1.0e-07 *
+
+    0.7453    0.0110
+
+Meso Design #:  499 of 1200 position X =   19 Y =    5
+
+  0%[>                                                  ]
+Meso Design #:  497 of 1200 position X =   17 Y =    5
+
+ans =
+
+   1.0e-07 *
+
+    0.9032    0.0074
+
+Meso Design #:  666 after   19 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    1.0777    0.3384    0.0047
+    0.3384    1.4567    0.0497
+    0.0047    0.0497    0.3894
+
+
+  1%[>                                                  ]
+Meso Design #:  664 of 1200 position X =   64 Y =    6
+
+ans =
+
+   1.0e-07 *
+
+    0.8946    0.0087
+
+Meso Design #:  399 after   16 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    2.2538    0.6950   -0.0115
+    0.6950    2.3932   -0.0390
+   -0.0115   -0.0390    0.8070
+
+
+  0%[>                                                  ]
+Meso Design #:  397 of 1200 position X =   37 Y =    4
+
+ans =
+
+   1.0e-07 *
+
+    0.8373    0.0069
+
+Meso Design #:   97 after   18 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    1.2782    0.3892   -0.0016
+    0.3892    1.3970   -0.0077
+   -0.0016   -0.0077    0.4528
+
+
+  1%[>                                                  ]
+Meso Design #:   95 of 1200 position X =   95 Y =    1
+
+ans =
+
+   1.0e-07 *
+
+    0.9839    0.0110
+
+Meso Design #:  299 of 1200 position X =   59 Y =    3
+
+  0%[>                                                  ]
+Meso Design #:  297 of 1200 position X =   57 Y =    3
+
+  0%[>                                                  ]
+Meso Design #:  295 of 1200 position X =   55 Y =    3
+
+  0%[>                                                  ]
+Meso Design #:  293 of 1200 position X =   53 Y =    3
+
+ans =
+
+   1.0e-07 *
+
+    0.8446    0.0043
+
+Meso Design #:  293 after   37 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    4.6951    1.5165    0.0470
+    1.5165    7.7181    0.1909
+    0.0470    0.1909    1.8075
+
+
+  2%[=>                                                 ]
+Meso Design #:  291 of 1200 position X =   51 Y =    3
+Warning: Matrix is singular to working precision.
+[> In Homgenization (line 129)
+  In MesoStructureDesignV2 (line 59)
+  In MesoDesignWrapper (line 94)
+  In combinedTopologyOptimization>makeF%1/F% (line 361)
+  In parallel_function>make_general_channel/channel_general (line 929)
+  In remoteParallelFunction (line 38)] 
+Warning: Matrix is singular to working precision.
+[> In Homgenization (line 130)
+  In MesoStructureDesignV2 (line 59)
+  In MesoDesignWrapper (line 94)
+  In combinedTopologyOptimization>makeF%1/F% (line 361)
+  In parallel_function>make_general_channel/channel_general (line 929)
+  In remoteParallelFunction (line 38)] 
+Warning: Matrix is singular to working precision.
+[> In Homgenization (line 131)
+  In MesoStructureDesignV2 (line 59)
+  In MesoDesignWrapper (line 94)
+  In combinedTopologyOptimization>makeF%1/F% (line 361)
+  In parallel_function>make_general_channel/channel_general (line 929)
+  In remoteParallelFunction (line 38)] 
+Meso Design #:  497 after   26 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    3.3406    1.1647    0.1152
+    1.1647    6.1336    0.5834
+    0.1152    0.5834    1.3935
+
+
+  1%[>                                                  ]
+Meso Design #:  495 of 1200 position X =   15 Y =    5
+
+ans =
+
+   1.0e-07 *
+
+    0.9764    0.0139
+
+Meso Design #:  199 after   20 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    3.0310    1.0126   -0.0516
+    1.0126    4.3746   -0.2658
+   -0.0516   -0.2658    1.1605
+
+
+  1%[>                                                  ]
+Meso Design #:  197 of 1200 position X =   77 Y =    2
+
+ans =
+
+   1.0e-07 *
+
+    0.9295    0.0089
+
+Meso Design #:  733 after   24 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    1.9141    0.6732   -0.0462
+    0.6732    3.5835   -0.2839
+   -0.0462   -0.2839    0.7636
+
+
+  1%[>                                                  ]
+Meso Design #:  731 of 1200 position X =   11 Y =    7
+
+ans =
+
+   1.0e-07 *
+
+    0.9853    0.0066
+
+Meso Design #:  197 after   19 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    1.2844    0.3935   -0.0043
+    0.3935    1.3869   -0.0214
+   -0.0043   -0.0214    0.4578
+
+
+  2%[=>                                                 ]
+Meso Design #:  195 of 1200 position X =   75 Y =    2
+
+  2%[=>                                                 ]
+Meso Design #:  193 of 1200 position X =   73 Y =    2
+
+  2%[=>                                                 ]
+Meso Design #:  191 of 1200 position X =   71 Y =    2
+
+  2%[=>                                                 ]
+Meso Design #:  190 of 1200 position X =   70 Y =    2
+
+  2%[=>                                                 ]
+Meso Design #:  188 of 1200 position X =   68 Y =    2
+
+ans =
+
+   1.0e-07 *
+
+    0.9756    0.0062
+
+Meso Design #:  731 after   20 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    0.8846    0.3695   -0.0886
+    0.3695    1.2631   -0.2152
+   -0.0886   -0.2152    0.4165
+
+
+  2%[=>                                                 ]
+Meso Design #:  730 of 1200 position X =   10 Y =    7
+
+  2%[=>                                                 ]
+Meso Design #:  728 of 1200 position X =    8 Y =    7
+
+ans =
+
+   1.0e-07 *
+
+    0.8582    0.0040
+
+Meso Design #:   95 after   20 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    1.6363    0.5293   -0.0007
+    0.5293    2.4929    0.0338
+   -0.0007    0.0338    0.6072
+
+
+  2%[=>                                                 ]
+Meso Design #:   93 of 1200 position X =   93 Y =    1
+
+ans =
+
+   1.0e-07 *
+
+    0.8189    0.0076
+
+Meso Design #:  495 after   16 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    2.0821    0.6361    0.0023
+    0.6361    2.2844    0.0143
+    0.0023    0.0143    0.7404
+
+
+  2%[=>                                                 ]
+Meso Design #:  493 of 1200 position X =   13 Y =    5
+
+ans =
+
+   1.0e-07 *
+
+    0.9511    0.0090
+
+Meso Design #:  728 after   18 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    1.3034    0.4023    0.0083
+    0.4023    1.3680    0.0246
+    0.0083    0.0246    0.4673
+
+
+  2%[=>                                                 ]
+Meso Design #:  726 of 1200 position X =    6 Y =    7
+
+ans =
+
+   1.0e-07 *
+
+    0.8914    0.0066
+
+Meso Design #:   93 after   26 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    2.7347    0.8894    0.0128
+    0.8894    5.6471    0.1364
+    0.0128    0.1364    1.0313
+
+
+  2%[=>                                                 ]
+Meso Design #:   91 of 1200 position X =   91 Y =    1
+
+ans =
+
+   1.0e-07 *
+
+    0.8780    0.0070
+
+Meso Design #:  188 after   18 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    1.2577    0.3926    0.0088
+    0.3926    1.3758    0.0359
+    0.0088    0.0359    0.4547
+
+
+  2%[=>                                                 ]
+Meso Design #:  186 of 1200 position X =   66 Y =    2
+
+ans =
+
+   1.0e-07 *
+
+    0.8609    0.0064
+
+Meso Design #:  726 after   18 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    1.5658    0.4790    0.0040
+    0.4790    1.6891    0.0202
+    0.0040    0.0202    0.5567
+
+
+  3%[=>                                                 ]
+Meso Design #:  724 of 1200 position X =    4 Y =    7
+
+ans =
+
+   1.0e-07 *
+
+    0.9148    0.0097
+
+Meso Design #:  588 of 1200 position X =  108 Y =    5
+Meso Design #:  588 after  100 meso iterations
+Meso Design #:  493 after   33 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    5.7577    1.7910   -0.0660
+    1.7910    8.3021   -0.3931
+   -0.0660   -0.3931    2.0640
+
+
+  3%[=>                                                 ]
+Meso Design #:  491 of 1200 position X =   11 Y =    5
+
+ans =
+
+   1.0e-07 *
+
+    0.9602    0.0093
+
+Meso Design #:   91 after   18 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    1.2870    0.3935    0.0029
+    0.3935    1.3875    0.0149
+    0.0029    0.0149    0.4576
+
+
+  3%[=>                                                 ]
+Meso Design #:   90 of 1200 position X =   90 Y =    1
+
+  3%[=>                                                 ]
+Meso Design #:   88 of 1200 position X =   88 Y =    1
+
+  3%[=>                                                 ]
+Meso Design #:   86 of 1200 position X =   86 Y =    1
+
+  3%[==>                                                ]
+Meso Design #:   84 of 1200 position X =   84 Y =    1
+
+  3%[==>                                                ]
+Meso Design #:   82 of 1200 position X =   82 Y =    1
+
+ans =
+
+   1.0e-07 *
+
+    0.9562    0.0102
+
+Meso Design #:  724 after   18 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    1.2879    0.3913    0.0009
+    0.3913    1.3962    0.0066
+    0.0009    0.0066    0.4555
+
+
+  3%[==>                                                ]
+Meso Design #:  722 of 1200 position X =    2 Y =    7
+
+ans =
+
+   1.0e-07 *
+
+    0.9813    0.0054
+
+
+D_homog =
+
+   1.0e+04 *
+
+    1.9319    0.8022    0.1213
+    0.8022    6.7327    0.9190
+    0.1213    0.9190    0.8185
+
+
+  3%[==>                                                ]
+Meso Design #:  586 of 1200 position X =  106 Y =    5
+
+ans =
+
+   1.0e-07 *
+
+    0.9472    0.0101
+
+Meso Design #:  186 after   31 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    2.8671    1.0530    0.1177
+    1.0530    5.0163    0.4728
+    0.1177    0.4728    1.2314
+
+
+  3%[==>                                                ]
+Meso Design #:  184 of 1200 position X =   64 Y =    2
+
+ans =
+
+   1.0e-07 *
+
+    0.8396    0.0114
+
+Meso Design #:  491 after   33 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    1.0230    0.3864   -0.0728
+    0.3864    1.2845   -0.1629
+   -0.0728   -0.1629    0.4317
+
+
+  3%[==>                                                ]
+Meso Design #:  490 of 1200 position X =   10 Y =    5
+
+  4%[==>                                                ]
+Meso Design #:  488 of 1200 position X =    8 Y =    5
+
+ans =
+
+   1.0e-07 *
+
+    0.9388    0.0044
+
+Meso Design #:   82 after   24 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    3.1414    1.0300    0.0115
+    1.0300    6.1655   -0.0007
+    0.0115   -0.0007    1.1987
+
+
+  4%[==>                                                ]
+Meso Design #:   79 of 1200 position X =   79 Y =    1
+
+ans =
+
+   1.0e-07 *
+
+    0.8314    0.0143
+
+Meso Design #:  722 after   16 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    1.3063    0.3967    0.0005
+    0.3967    1.4098    0.0023
+    0.0005    0.0023    0.4617
+
+
+  4%[==>                                                ]
+Meso Design #:  719 of 1200 position X =  119 Y =    6
+
+ans =
+
+   1.0e-07 *
+
+    0.8232    0.0084
+
+Meso Design #:  586 after   17 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    2.0931    0.6352    0.0009
+    0.6352    2.2475    0.0042
+    0.0009    0.0042    0.7401
+
+
+  4%[==>                                                ]
+Meso Design #:  584 of 1200 position X =  104 Y =    5
+
+ans =
+
+   1.0e-07 *
+
+    0.8239    0.0093
+
+Meso Design #:  664 after   16 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    1.8814    0.5718   -0.0025
+    0.5718    2.0142   -0.0118
+   -0.0025   -0.0118    0.6660
+
+
+  1%[=>                                                 ]
+Meso Design #:  662 of 1200 position X =   62 Y =    6
+Meso Design #:  662 after  100 meso iterations
+Meso Design #:  291 after  100 meso iterations
+Meso Design #:  184 after   25 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    5.0401    1.5810   -0.0194
+    1.5810    7.3662   -0.1389
+   -0.0194   -0.1389    1.8712
+
+
+  4%[==>                                                ]
+Meso Design #:  182 of 1200 position X =   62 Y =    2
+
+  4%[==>                                                ]
+Meso Design #:  179 of 1200 position X =   59 Y =    2
+
+  4%[==>                                                ]
+Meso Design #:  177 of 1200 position X =   57 Y =    2
+
+  4%[==>                                                ]
+Meso Design #:  175 of 1200 position X =   55 Y =    2
+
+  4%[==>                                                ]
+Meso Design #:  173 of 1200 position X =   53 Y =    2
+
+ans =
+
+   1.0e-07 *
+
+    0.8018    0.0047
+
+Meso Design #:  397 after   19 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    1.2884    0.4040   -0.0141
+    0.4040    1.3565   -0.0347
+   -0.0141   -0.0347    0.4676
+
+
+  1%[=>                                                 ]
+Meso Design #:  395 of 1200 position X =   35 Y =    4
+
+  1%[=>                                                 ]
+Meso Design #:  393 of 1200 position X =   33 Y =    4
+
+  1%[=>                                                 ]
+Meso Design #:  391 of 1200 position X =   31 Y =    4
+
+  1%[=>                                                 ]
+Meso Design #:  390 of 1200 position X =   30 Y =    4
+
+  1%[=>                                                 ]
+Meso Design #:  388 of 1200 position X =   28 Y =    4
+Meso Design #:  388 after  100 meso iterations
+Meso Design #:  719 after   17 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    1.3055    0.3962    0.0000
+    0.3962    1.4022   -0.0001
+    0.0000   -0.0001    0.4614
+
+
+  4%[==>                                                ]
+Meso Design #:  717 of 1200 position X =  117 Y =    6
+
+ans =
+
+   1.0e-07 *
+
+    0.8852    0.0102
+
+Meso Design #:   79 after   19 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    3.5064    1.1047   -0.0175
+    1.1047    4.7013   -0.0901
+   -0.0175   -0.0901    1.2798
+
+
+  4%[==>                                                ]
+Meso Design #:   77 of 1200 position X =   77 Y =    1
+
+ans =
+
+   1.0e-07 *
+
+    0.6106    0.0142
+
+Meso Design #:  584 after   17 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    2.4283    0.7399   -0.0042
+    0.7399    2.6223   -0.0157
+   -0.0042   -0.0157    0.8611
+
+
+  4%[==>                                                ]
+Meso Design #:  582 of 1200 position X =  102 Y =    5
+
+ans =
+
+   1.0e-07 *
+
+    0.8358    0.0058
+
+Meso Design #:  488 after   19 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    0.9242    0.3657    0.0847
+    0.3657    1.2892    0.2065
+    0.0847    0.2065    0.4145
+
+
+  4%[==>                                                ]
+Meso Design #:  486 of 1200 position X =    6 Y =    5
+
+ans =
+
+   1.0e-07 *
+
+    0.7822    0.0048
+
+
+D_homog =
+
+   1.0e+04 *
+
+    1.5467    0.5609    0.0281
+    0.5609    7.2800    0.5495
+    0.0281    0.5495    0.4923
+
+
+  5%[===>                                               ]
+Meso Design #:  386 of 1200 position X =   26 Y =    4
+
+ans =
+
+   1.0e-07 *
+
+    0.9128    0.0072
+
+Meso Design #:  173 after   21 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    6.9825    2.1376    0.0095
+    2.1376    8.5924    0.0485
+    0.0095    0.0485    2.5023
+
+
+  5%[==>                                                ]
+Meso Design #:  171 of 1200 position X =   51 Y =    2
+
+ans =
+
+   1.0e-07 *
+
+    0.9774    0.0105
+
+Meso Design #:  717 after   17 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    1.3042    0.3964   -0.0012
+    0.3964    1.3875   -0.0085
+   -0.0012   -0.0085    0.4614
+
+
+  5%[===>                                               ]
+Meso Design #:  715 of 1200 position X =  115 Y =    6
+
+ans =
+
+   1.0e-07 *
+
+    0.8521    0.0133
+
+
+D_homog =
+
+   1.0e+04 *
+
+    0.3943    0.6029   -0.2668
+    0.6029    2.3556   -1.0467
+   -0.2668   -1.0467    0.6113
+
+
+  5%[==>                                                ]
+Meso Design #:  659 of 1200 position X =   59 Y =    6
+
+  5%[==>                                                ]
+Meso Design #:  657 of 1200 position X =   57 Y =    6
+
+  5%[==>                                                ]
+Meso Design #:  655 of 1200 position X =   55 Y =    6
+
+ans =
+
+   1.0e-07 *
+
+    0.7577    0.0084
+
+
+D_homog =
+
+   1.0e+04 *
+
+    1.1635    0.4353   -0.0328
+    0.4353    4.2725   -0.3973
+   -0.0328   -0.3973    0.4473
+
+
+  5%[==>                                                ]
+Meso Design #:  290 of 1200 position X =   50 Y =    3
+
+ans =
+
+   1.0e-07 *
+
+    0.7992    0.0127
+
+Meso Design #:  290 after   25 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    0.8487    0.3417   -0.0539
+    0.3417    1.3821   -0.2127
+   -0.0539   -0.2127    0.3788
+
+
+  6%[===>                                               ]
+Meso Design #:  582 after   18 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    1.2814    0.3923   -0.0048
+    0.3923    1.3853   -0.0174
+   -0.0048   -0.0174    0.4567
+
+
+  6%[===>                                               ]
+Meso Design #:  579 of 1200 position X =   99 Y =    5
+
+  6%[===>                                               ]
+Meso Design #:  577 of 1200 position X =   97 Y =    5
+
+ans =
+
+   1.0e-07 *
+
+    0.7186    0.0069
+
+Meso Design #:   77 after   24 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    0.7696    0.2494   -0.0005
+    0.2494    1.6013    0.0219
+   -0.0005    0.0219    0.2876
+
+
+  5%[===>                                               ]
+Meso Design #:   75 of 1200 position X =   75 Y =    1
+
+  5%[===>                                               ]
+Meso Design #:   73 of 1200 position X =   73 Y =    1
+
+  5%[===>                                               ]
+Meso Design #:   71 of 1200 position X =   71 Y =    1
+
+  5%[===>                                               ]
+Meso Design #:   70 of 1200 position X =   70 Y =    1
+
+  6%[===>                                               ]
+Meso Design #:   68 of 1200 position X =   68 Y =    1
+
+ans =
+
+   1.0e-07 *
+
+    0.9827    0.0093
+
+Meso Design #:  486 after   29 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    2.2906    0.8345    0.1095
+    0.8345    5.9309    0.4652
+    0.1095    0.4652    1.0314
+
+
+  6%[===>                                               ]
+Meso Design #:  484 of 1200 position X =    4 Y =    5
+
+ans =
+
+   1.0e-07 *
+
+    0.7827    0.0059
+
+Meso Design #:  386 after   16 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    1.6329    0.4978   -0.0020
+    0.4978    1.7686   -0.0131
+   -0.0020   -0.0131    0.5793
+
+
+  6%[===>                                               ]
+Meso Design #:  384 of 1200 position X =   24 Y =    4
+
+ans =
+
+   1.0e-07 *
+
+    0.8087    0.0201
+
+Meso Design #:  715 after   17 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    1.5888    0.4852   -0.0036
+    0.4852    1.7436   -0.0114
+   -0.0036   -0.0114    0.5653
+
+
+  6%[===>                                               ]
+Meso Design #:  713 of 1200 position X =  113 Y =    6
+
+ans =
+
+   1.0e-07 *
+
+    0.8484    0.0060
+
+Meso Design #:  171 after   17 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    1.2555    0.4237   -0.0121
+    0.4237    2.7779   -0.0850
+   -0.0121   -0.0850    0.4768
+
+
+  6%[===>                                               ]
+Meso Design #:  170 of 1200 position X =   50 Y =    2
+
+ans =
+
+   1.0e-07 *
+
+    0.3265    0.0223
+
+Meso Design #:  170 after   24 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    0.8222    0.3071   -0.0314
+    0.3071    1.5117   -0.1693
+   -0.0314   -0.1693    0.3439
+
+
+  7%[====>                                              ]
+Meso Design #:  577 after   16 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    2.4523    0.7597    0.0083
+    0.7597    2.7862    0.0638
+    0.0083    0.0638    0.8815
+
+
+  6%[===>                                               ]
+Meso Design #:  575 of 1200 position X =   95 Y =    5
+
+ans =
+
+   1.0e-07 *
+
+    0.8164    0.0096
+
+Meso Design #:  655 after   25 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    1.2110    0.5121    0.1364
+    0.5121    1.6324    0.3065
+    0.1364    0.3065    0.5651
+
+
+  6%[===>                                               ]
+Meso Design #:  653 of 1200 position X =   53 Y =    6
+
+ans =
+
+   1.0e-07 *
+
+    0.9056    0.0114
+
+Meso Design #:  484 after   17 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    1.2843    0.3919    0.0020
+    0.3919    1.3925    0.0137
+    0.0020    0.0137    0.4560
+
+
+  7%[===>                                               ]
+Meso Design #:  482 of 1200 position X =    2 Y =    5
+
+ans =
+
+   1.0e-07 *
+
+    0.9428    0.0067
+
+Meso Design #:  384 after   16 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    2.8474    0.8797   -0.0098
+    0.8797    3.3097   -0.0645
+   -0.0098   -0.0645    1.0205
+
+
+  7%[===>                                               ]
+Meso Design #:  382 of 1200 position X =   22 Y =    4
+
+ans =
+
+   1.0e-07 *
+
+    0.9215    0.0121
+
+Meso Design #:   68 after   17 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    1.2706    0.3880    0.0012
+    0.3880    1.3966    0.0050
+    0.0012    0.0050    0.4516
+
+
+  7%[===>                                               ]
+Meso Design #:   66 of 1200 position X =   66 Y =    1
+
+ans =
+
+   1.0e-07 *
+
+    0.9769    0.0067
+
+Meso Design #:  575 after   16 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    1.2797    0.3918    0.0026
+    0.3918    1.3900    0.0145
+    0.0026    0.0145    0.4557
+
+
+  7%[====>                                              ]
+Meso Design #:  573 of 1200 position X =   93 Y =    5
+
+ans =
+
+   1.0e-07 *
+
+    0.8284    0.0070
+
+Meso Design #:  482 after   18 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    1.3027    0.3952   -0.0007
+    0.3952    1.3884   -0.0036
+   -0.0007   -0.0036    0.4604
+
+
+  8%[====>                                              ]
+Meso Design #:  479 of 1200 position X =  119 Y =    4
+
+ans =
+
+   1.0e-07 *
+
+    0.8631    0.0107
+
+Meso Design #:  713 after   17 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    1.2999    0.3971   -0.0038
+    0.3971    1.3833   -0.0140
+   -0.0038   -0.0140    0.4620
+
+
+  7%[===>                                               ]
+Meso Design #:  711 of 1200 position X =  111 Y =    6
+
+  7%[===>                                               ]
+Meso Design #:  710 of 1200 position X =  110 Y =    6
+
+ans =
+
+   1.0e-07 *
+
+    0.9316    0.0106
+
+Meso Design #:  710 after   23 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    0.9559    0.4055    0.1179
+    0.4055    1.2099    0.2238
+    0.1179    0.2238    0.4504
+
+
+  8%[====>                                              ]
+Meso Design #:  479 after   12 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    1.2592    0.3850   -0.0002
+    0.3850    1.3986   -0.0014
+   -0.0002   -0.0014    0.4482
+
+
+  8%[====>                                              ]
+Meso Design #:  477 of 1200 position X =  117 Y =    4
+
+ans =
+
+   1.0e-07 *
+
+    0.8176    0.0098
+
+Meso Design #:  573 after   16 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    1.7348    0.5282   -0.0016
+    0.5282    1.8736   -0.0084
+   -0.0016   -0.0084    0.6143
+
+
+  8%[====>                                              ]
+Meso Design #:  571 of 1200 position X =   91 Y =    5
+
+ans =
+
+   1.0e-07 *
+
+    0.9646    0.0084
+
+Meso Design #:   66 after   28 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    2.5704    0.9135    0.0688
+    0.9135    5.2309    0.4307
+    0.0688    0.4307    1.0308
+
+
+  8%[====>                                              ]
+Meso Design #:   64 of 1200 position X =   64 Y =    1
+
+ans =
+
+   1.0e-07 *
+
+    0.8933    0.0051
+
+Meso Design #:  168 of 1200 position X =   48 Y =    2
+
+  7%[====>                                              ]
+Meso Design #:  166 of 1200 position X =   46 Y =    2
+
+  7%[====>                                              ]
+Meso Design #:  164 of 1200 position X =   44 Y =    2
+
+  7%[====>                                              ]
+Meso Design #:  162 of 1200 position X =   42 Y =    2
+
+  7%[====>                                              ]
+Meso Design #:  159 of 1200 position X =   39 Y =    2
+
+ans =
+
+   1.0e-07 *
+
+    0.9860    0.0035
+
+Meso Design #:  708 of 1200 position X =  108 Y =    6
+
+ans =
+
+   1.0e-07 *
+
+    0.8228    0.0046
+
+Meso Design #:  477 after   12 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    1.3582    0.4088   -0.0005
+    0.4088    1.3747   -0.0020
+   -0.0005   -0.0020    0.4766
+
+
+  8%[====>                                              ]
+Meso Design #:  475 of 1200 position X =  115 Y =    4
+
+ans =
+
+   1.0e-07 *
+
+    0.7945    0.0111
+
+Meso Design #:  708 after   27 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    4.5194    1.4724    0.0863
+    1.4724    7.0463    0.3656
+    0.0863    0.3656    1.7395
+
+
+  9%[====>                                              ]
+Meso Design #:  706 of 1200 position X =  106 Y =    6
+
+ans =
+
+   1.0e-07 *
+
+    0.7361    0.0051
+
+Meso Design #:  159 after   38 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    8.2534    2.5158   -0.0032
+    2.5158    9.6651   -0.0534
+   -0.0032   -0.0534    2.9571
+
+
+  9%[====>                                              ]
+Meso Design #:  157 of 1200 position X =   37 Y =    2
+
+ans =
+
+   1.0e-07 *
+
+    0.9434    0.0075
+
+Meso Design #:   64 after   22 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    7.8202    2.3709    0.0252
+    2.3709    9.4636    0.1144
+    0.0252    0.1144    2.7670
+
+
+  8%[====>                                              ]
+Meso Design #:   62 of 1200 position X =   62 Y =    1
+
+  8%[====>                                              ]
+Meso Design #:   59 of 1200 position X =   59 Y =    1
+
+  8%[====>                                              ]
+Meso Design #:   57 of 1200 position X =   57 Y =    1
+
+  9%[====>                                              ]
+Meso Design #:   55 of 1200 position X =   55 Y =    1
+
+  9%[====>                                              ]
+Meso Design #:   53 of 1200 position X =   53 Y =    1
+
+ans =
+
+   1.0e-07 *
+
+    0.8528    0.0054
+
+Meso Design #:  475 after   22 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    1.8745    0.6617   -0.0383
+    0.6617    3.5238   -0.2768
+   -0.0383   -0.2768    0.7510
+
+
+  9%[====>                                              ]
+Meso Design #:  473 of 1200 position X =  113 Y =    4
+
+ans =
+
+   1.0e-07 *
+
+    0.8785    0.0073
+
+Meso Design #:  706 after   12 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    1.3575    0.4086    0.0001
+    0.4086    1.3749    0.0003
+    0.0001    0.0003    0.4764
+
+
+  9%[=====>                                             ]
+Meso Design #:  704 of 1200 position X =  104 Y =    6
+
+ans =
+
+   1.0e-07 *
+
+    0.8502    0.0097
+
+Meso Design #:   53 after   24 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    7.5650    2.3171   -0.0360
+    2.3171    9.2776   -0.0866
+   -0.0360   -0.0866    2.7441
+
+
+ 10%[=====>                                             ]
+Meso Design #:   51 of 1200 position X =   51 Y =    1
+
+ans =
+
+   1.0e-07 *
+
+    0.9811    0.0065
+
+Meso Design #:  288 of 1200 position X =   48 Y =    3
+
+  6%[===>                                               ]
+Meso Design #:  286 of 1200 position X =   46 Y =    3
+
+  6%[===>                                               ]
+Meso Design #:  284 of 1200 position X =   44 Y =    3
+
+  6%[===>                                               ]
+Meso Design #:  282 of 1200 position X =   42 Y =    3
+Meso Design #:  282 after  100 meso iterations
+Meso Design #:  704 after   17 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    1.6902    0.5161   -0.0032
+    0.5161    1.8209   -0.0155
+   -0.0032   -0.0155    0.6004
+
+
+ 10%[=====>                                             ]
+Meso Design #:  702 of 1200 position X =  102 Y =    6
+
+ans =
+
+   1.0e-07 *
+
+    0.9480    0.0100
+
+Meso Design #:  653 after   23 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    1.2978    0.4901    0.0680
+    0.4901    1.8964    0.2198
+    0.0680    0.2198    0.5519
+
+
+  8%[====>                                              ]
+Meso Design #:  651 of 1200 position X =   51 Y =    6
+Meso Design #:  651 after  100 meso iterations
+Meso Design #:   51 after   24 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    1.5590    0.5265    0.0108
+    0.5265    2.7659    0.0789
+    0.0108    0.0789    0.5929
+
+
+ 10%[=====>                                             ]
+Meso Design #:   50 of 1200 position X =   50 Y =    1
+
+ans =
+
+   1.0e-07 *
+
+    0.9507    0.0081
+
+Meso Design #:   50 after   18 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    1.2717    0.3890    0.0013
+    0.3890    1.3934    0.0042
+    0.0013    0.0042    0.4526
+
+
+ 10%[=====>                                             ]
+Meso Design #:  382 after   19 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    1.3065    0.4048   -0.0110
+    0.4048    1.3597   -0.0251
+   -0.0110   -0.0251    0.4697
+
+
+  8%[====>                                              ]
+Meso Design #:  379 of 1200 position X =   19 Y =    4
+
+  8%[====>                                              ]
+Meso Design #:  377 of 1200 position X =   17 Y =    4
+Meso Design #:  377 after  100 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    0.3232    0.6525    0.4212
+    0.6525    1.4884    0.9502
+    0.4212    0.9502    0.6373
+
+
+ 10%[=====>                                             ]
+Meso Design #:  279 of 1200 position X =   39 Y =    3
+
+ans =
+
+   1.0e-07 *
+
+    0.9078    0.0024
+
+
+D_homog =
+
+   1.0e+04 *
+
+    1.4180    0.8336   -0.2207
+    0.8336    4.5401   -1.1630
+   -0.2207   -1.1630    0.8436
+
+
+ 10%[=====>                                             ]
+Meso Design #:  650 of 1200 position X =   50 Y =    6
+
+ans =
+
+   1.0e-07 *
+
+    0.9802    0.0035
+
+Meso Design #:  650 after   21 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    6.9422    2.2120   -0.2530
+    2.2120    9.1487   -0.6552
+   -0.2530   -0.6552    2.7111
+
+
+ 11%[=====>                                             ]
+
+D_homog =
+
+   1.0e+04 *
+
+    1.4611    0.5834    0.0728
+    0.5834    5.5163    0.6800
+    0.0728    0.6800    0.6436
+
+
+ 11%[=====>                                             ]
+Meso Design #:  375 of 1200 position X =   15 Y =    4
+
+ans =
+
+   1.0e-07 *
+
+    0.7487    0.0132
+
+Meso Design #:   48 of 1200 position X =   48 Y =    1
+
+ 10%[=====>                                             ]
+Meso Design #:   46 of 1200 position X =   46 Y =    1
+
+ 10%[=====>                                             ]
+Meso Design #:   44 of 1200 position X =   44 Y =    1
+
+ 11%[=====>                                             ]
+Meso Design #:   42 of 1200 position X =   42 Y =    1
+
+ 11%[=====>                                             ]
+Meso Design #:   39 of 1200 position X =   39 Y =    1
+
+ans =
+
+   1.0e-07 *
+
+    0.7142    0.0053
+
+Meso Design #:  571 after   18 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    1.5216    0.4667   -0.0046
+    0.4667    1.6344   -0.0224
+   -0.0046   -0.0224    0.5423
+
+
+  8%[====>                                              ]
+Meso Design #:  570 of 1200 position X =   90 Y =    5
+Meso Design #:  570 after  100 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    0.2960    0.4967   -0.2237
+    0.4967    1.9541   -0.8895
+   -0.2237   -0.8895    0.5083
+
+
+ 11%[======>                                            ]
+Meso Design #:  279 after   31 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    3.8222    1.2933   -0.0584
+    1.2933    6.4083   -0.3280
+   -0.0584   -0.3280    1.5196
+
+
+ 11%[=====>                                             ]
+Meso Design #:  277 of 1200 position X =   37 Y =    3
+
+ans =
+
+   1.0e-07 *
+
+    0.9994    0.0079
+
+Meso Design #:  375 after   23 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    2.7103    0.8568    0.0060
+    0.8568    4.0230   -0.0023
+    0.0060   -0.0023    0.9908
+
+
+ 11%[======>                                            ]
+Meso Design #:  373 of 1200 position X =   13 Y =    4
+
+ans =
+
+   1.0e-07 *
+
+    0.8649    0.0052
+
+Meso Design #:  568 of 1200 position X =   88 Y =    5
+
+ 12%[======>                                            ]
+Meso Design #:  566 of 1200 position X =   86 Y =    5
+
+ 12%[======>                                            ]
+Meso Design #:  564 of 1200 position X =   84 Y =    5
+
+ans =
+
+   1.0e-07 *
+
+    0.9667    0.0080
+
+Meso Design #:   39 after   29 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    6.4725    1.9863    0.0101
+    1.9863    8.6535   -0.0536
+    0.0101   -0.0536    2.3062
+
+
+ 11%[======>                                            ]
+Meso Design #:   37 of 1200 position X =   37 Y =    1
+
+ans =
+
+   1.0e-07 *
+
+    0.8801    0.0111
+
+Meso Design #:  277 after   23 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    0.7676    0.3467   -0.0806
+    0.3467    1.3465   -0.2752
+   -0.0806   -0.2752    0.3859
+
+
+ 12%[======>                                            ]
+Meso Design #:  275 of 1200 position X =   35 Y =    3
+
+ 12%[======>                                            ]
+Meso Design #:  273 of 1200 position X =   33 Y =    3
+
+ 12%[======>                                            ]
+Meso Design #:  271 of 1200 position X =   31 Y =    3
+
+ 12%[======>                                            ]
+Meso Design #:  270 of 1200 position X =   30 Y =    3
+
+ 12%[======>                                            ]
+Meso Design #:  268 of 1200 position X =   28 Y =    3
+
+ans =
+
+   1.0e-07 *
+
+    0.8949    0.0142
+
+Meso Design #:  157 after   21 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    1.2760    0.3936   -0.0059
+    0.3936    1.3806   -0.0269
+   -0.0059   -0.0269    0.4568
+
+
+  9%[=====>                                             ]
+Meso Design #:  155 of 1200 position X =   35 Y =    2
+
+  9%[=====>                                             ]
+Meso Design #:  153 of 1200 position X =   33 Y =    2
+
+  9%[=====>                                             ]
+Meso Design #:  151 of 1200 position X =   31 Y =    2
+
+  9%[=====>                                             ]
+Meso Design #:  150 of 1200 position X =   30 Y =    2
+
+  9%[=====>                                             ]
+Meso Design #:  148 of 1200 position X =   28 Y =    2
+Meso Design #:  148 after  100 meso iterations
+Meso Design #:  473 after   19 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    1.2747    0.3926   -0.0054
+    0.3926    1.3881   -0.0250
+   -0.0054   -0.0250    0.4564
+
+
+ 10%[=====>                                             ]
+Meso Design #:  471 of 1200 position X =  111 Y =    4
+
+ 10%[=====>                                             ]
+Meso Design #:  470 of 1200 position X =  110 Y =    4
+
+ 10%[=====>                                             ]
+Meso Design #:  468 of 1200 position X =  108 Y =    4
+Meso Design #:  468 after  100 meso iterations
+Meso Design #:  373 after   22 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    6.8659    2.1421   -0.0394
+    2.1421    8.6203   -0.1838
+   -0.0394   -0.1838    2.5380
+
+
+ 12%[======>                                            ]
+Meso Design #:  371 of 1200 position X =   11 Y =    4
+
+ 12%[======>                                            ]
+Meso Design #:  370 of 1200 position X =   10 Y =    4
+
+ 12%[======>                                            ]
+Meso Design #:  368 of 1200 position X =    8 Y =    4
+
+ans =
+
+   1.0e-07 *
+
+    0.8866    0.0054
+
+Meso Design #:  564 after   16 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    1.3000    0.4051    0.0150
+    0.4051    1.3510    0.0299
+    0.0150    0.0299    0.4692
+
+
+ 13%[======>                                            ]
+Meso Design #:  562 of 1200 position X =   82 Y =    5
+
+ans =
+
+   1.0e-07 *
+
+    0.9228    0.0051
+
+Meso Design #:   37 after   21 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    0.8616    0.2822    0.0056
+    0.2822    1.5768    0.0547
+    0.0056    0.0547    0.3221
+
+
+ 12%[======>                                            ]
+Meso Design #:   35 of 1200 position X =   35 Y =    1
+
+ 12%[======>                                            ]
+Meso Design #:   33 of 1200 position X =   33 Y =    1
+
+ 12%[======>                                            ]
+Meso Design #:   31 of 1200 position X =   31 Y =    1
+
+ 13%[======>                                            ]
+Meso Design #:   30 of 1200 position X =   30 Y =    1
+
+ 13%[======>                                            ]
+Meso Design #:   28 of 1200 position X =   28 Y =    1
+
+ans =
+
+   1.0e-07 *
+
+    0.8325    0.0096
+
+
+D_homog =
+
+   1.0e+04 *
+
+    1.2431    0.4808   -0.0042
+    0.4808    5.6880    0.0561
+   -0.0042    0.0561    0.5066
+
+
+ 13%[======>                                            ]
+Meso Design #:  146 of 1200 position X =   26 Y =    2
+
+ans =
+
+   1.0e-07 *
+
+    0.7774    0.0088
+
+Meso Design #:  268 after   20 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    3.6686    1.1729    0.0183
+    1.1729    5.3221    0.1336
+    0.0183    0.1336    1.3655
+
+
+ 13%[======>                                            ]
+Meso Design #:  266 of 1200 position X =   26 Y =    3
+
+ans =
+
+   1.0e-07 *
+
+    0.8074    0.0156
+
+Meso Design #:  702 after   18 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    1.7127    0.5258   -0.0062
+    0.5258    1.8336   -0.0279
+   -0.0062   -0.0279    0.6111
+
+
+ 10%[=====>                                             ]
+Meso Design #:  699 of 1200 position X =   99 Y =    6
+
+ 10%[=====>                                             ]
+Meso Design #:  697 of 1200 position X =   97 Y =    6
+Meso Design #:  697 after  100 meso iterations
+Meso Design #:  562 after   20 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    5.7544    1.8688    0.0882
+    1.8688    7.5761    0.4422
+    0.0882    0.4422    2.1815
+
+
+ 13%[=======>                                           ]
+Meso Design #:  559 of 1200 position X =   79 Y =    5
+
+ans =
+
+   1.0e-07 *
+
+    0.8583    0.0031
+
+
+D_homog =
+
+   1.0e+04 *
+
+    1.1136    0.4017    0.0298
+    0.4017    5.9162    0.4162
+    0.0298    0.4162    0.4089
+
+
+ 13%[=======>                                           ]
+Meso Design #:  466 of 1200 position X =  106 Y =    4
+
+ans =
+
+   1.0e-07 *
+
+    0.8766    0.0075
+
+Meso Design #:   28 after   26 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    3.9259    1.2980   -0.0822
+    1.2980    6.9866   -0.2713
+   -0.0822   -0.2713    1.5184
+
+
+ 13%[=======>                                           ]
+Meso Design #:   26 of 1200 position X =   26 Y =    1
+
+ans =
+
+   1.0e-07 *
+
+    0.9862    0.0084
+
+Meso Design #:  368 after   20 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    1.2954    0.4062    0.0158
+    0.4062    1.3503    0.0333
+    0.0158    0.0333    0.4705
+
+
+ 13%[=======>                                           ]
+Meso Design #:  366 of 1200 position X =    6 Y =    4
+
+ans =
+
+   1.0e-07 *
+
+    0.7442    0.0069
+
+Meso Design #:  146 after   20 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    2.0643    0.6731   -0.0086
+    0.6731    3.3982   -0.0656
+   -0.0086   -0.0656    0.7665
+
+
+ 13%[=======>                                           ]
+Meso Design #:  144 of 1200 position X =   24 Y =    2
+
+ans =
+
+   1.0e-07 *
+
+    0.7975    0.0073
+
+
+D_homog =
+
+   1.0e+04 *
+
+    1.2146    0.5083    0.0488
+    0.5083    4.9550    0.4684
+    0.0488    0.4684    0.5171
+
+
+ 14%[=======>                                           ]
+Meso Design #:  695 of 1200 position X =   95 Y =    6
+
+ans =
+
+   1.0e-07 *
+
+    0.8789    0.0121
+
+Meso Design #:  266 after   25 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    1.8398    0.5974   -0.0078
+    0.5974    2.9609   -0.0992
+   -0.0078   -0.0992    0.6890
+
+
+ 13%[=======>                                           ]
+Meso Design #:  264 of 1200 position X =   24 Y =    3
+
+ans =
+
+   1.0e-07 *
+
+    0.9984    0.0065
+
+Meso Design #:  559 after   17 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    1.3743    0.4213   -0.0055
+    0.4213    1.4625   -0.0191
+   -0.0055   -0.0191    0.4900
+
+
+ 14%[=======>                                           ]
+Meso Design #:  557 of 1200 position X =   77 Y =    5
+
+ans =
+
+   1.0e-07 *
+
+    0.9701    0.0115
+
+Meso Design #:  466 after   25 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    2.2938    0.7334    0.0074
+    0.7334    3.7740    0.0635
+    0.0074    0.0635    0.8457
+
+
+ 14%[=======>                                           ]
+Meso Design #:  464 of 1200 position X =  104 Y =    4
+
+ans =
+
+   1.0e-07 *
+
+    0.8031    0.0120
+
+Meso Design #:  366 after   29 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    4.9996    1.5795    0.0597
+    1.5795    7.1131    0.3119
+    0.0597    0.3119    1.8089
+
+
+ 14%[=======>                                           ]
+Meso Design #:  364 of 1200 position X =    4 Y =    4
+
+ans =
+
+   1.0e-07 *
+
+    0.9739    0.0048
+
+Meso Design #:  648 of 1200 position X =   48 Y =    6
+
+ 11%[======>                                            ]
+Meso Design #:  646 of 1200 position X =   46 Y =    6
+
+ 11%[======>                                            ]
+Meso Design #:  644 of 1200 position X =   44 Y =    6
+
+ 11%[======>                                            ]
+Meso Design #:  642 of 1200 position X =   42 Y =    6
+Meso Design #:  642 after  100 meso iterations
+Meso Design #:  695 after   15 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    1.3002    0.3959    0.0022
+    0.3959    1.3865    0.0092
+    0.0022    0.0092    0.4607
+
+
+ 14%[=======>                                           ]
+Meso Design #:  693 of 1200 position X =   93 Y =    6
+
+ans =
+
+   1.0e-07 *
+
+    0.3677    0.0140
+
+Meso Design #:  264 after   20 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    3.0031    0.9842   -0.0295
+    0.9842    4.3890   -0.1725
+   -0.0295   -0.1725    1.1374
+
+
+ 14%[=======>                                           ]
+Meso Design #:  262 of 1200 position X =   22 Y =    3
+
+ans =
+
+   1.0e-07 *
+
+    0.9743    0.0098
+
+Meso Design #:  144 after   21 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    3.1489    1.0025   -0.0171
+    1.0025    4.5142   -0.0988
+   -0.0171   -0.0988    1.1542
+
+
+ 14%[=======>                                           ]
+Meso Design #:  142 of 1200 position X =   22 Y =    2
+
+ 14%[=======>                                           ]
+Meso Design #:  139 of 1200 position X =   19 Y =    2
+
+ 14%[=======>                                           ]
+Meso Design #:  137 of 1200 position X =   17 Y =    2
+
+ans =
+
+   1.0e-07 *
+
+    0.7670    0.0055
+
+Meso Design #:  557 after   20 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    2.6772    0.8919   -0.0429
+    0.8919    3.9577   -0.2577
+   -0.0429   -0.2577    1.0308
+
+
+ 14%[=======>                                           ]
+Meso Design #:  555 of 1200 position X =   75 Y =    5
+
+ 14%[=======>                                           ]
+Meso Design #:  553 of 1200 position X =   73 Y =    5
+
+ 14%[=======>                                           ]
+Meso Design #:  551 of 1200 position X =   71 Y =    5
+
+ 15%[=======>                                           ]
+Meso Design #:  550 of 1200 position X =   70 Y =    5
+
+ 15%[=======>                                           ]
+Meso Design #:  548 of 1200 position X =   68 Y =    5
+
+ans =
+
+   1.0e-07 *
+
+    0.9983    0.0085
+
+
+D_homog =
+
+   1.0e+04 *
+
+    2.1636    1.3088    0.5695
+    1.3088    4.4187    1.5756
+    0.5695    1.5756    1.4527
+
+
+ 15%[=======>                                           ]
+Meso Design #:  639 of 1200 position X =   39 Y =    6
+
+ans =
+
+   1.0e-07 *
+
+    0.8902    0.0071
+
+Meso Design #:  364 after   16 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    1.2893    0.3932    0.0023
+    0.3932    1.3905    0.0134
+    0.0023    0.0134    0.4575
+
+
+ 15%[=======>                                           ]
+Meso Design #:  362 of 1200 position X =    2 Y =    4
+
+ans =
+
+   1.0e-07 *
+
+    0.8343    0.0110
+
+Meso Design #:  464 after   20 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    2.5485    0.8288   -0.0238
+    0.8288    3.8197   -0.1752
+   -0.0238   -0.1752    0.9578
+
+
+ 15%[=======>                                           ]
+Meso Design #:  462 of 1200 position X =  102 Y =    4
+
+ans =
+
+   1.0e-07 *
+
+    0.9548    0.0102
+
+Meso Design #:  548 after   23 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    5.9945    1.9984    0.1532
+    1.9984    7.6413    0.5444
+    0.1532    0.5444    2.3380
+
+
+ 15%[========>                                          ]
+Meso Design #:  546 of 1200 position X =   66 Y =    5
+
+ans =
+
+   1.0e-07 *
+
+    0.4842    0.0080
+
+Meso Design #:  362 after   17 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    1.3030    0.3954   -0.0003
+    0.3954    1.3890   -0.0052
+   -0.0003   -0.0052    0.4604
+
+
+ 16%[========>                                          ]
+Meso Design #:  359 of 1200 position X =  119 Y =    3
+
+ans =
+
+   1.0e-07 *
+
+    0.8422    0.0059
+
+Meso Design #:  137 after   25 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    2.0706    0.6813    0.0032
+    0.6813    3.6220   -0.0636
+    0.0032   -0.0636    0.7680
+
+
+ 15%[========>                                          ]
+Meso Design #:  135 of 1200 position X =   15 Y =    2
+
+ans =
+
+   1.0e-07 *
+
+    0.8920    0.0130
+
+Meso Design #:  462 after   18 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    1.2838    0.3933   -0.0040
+    0.3933    1.3878   -0.0192
+   -0.0040   -0.0192    0.4573
+
+
+ 16%[========>                                          ]
+Meso Design #:  459 of 1200 position X =   99 Y =    4
+
+ 16%[========>                                          ]
+Meso Design #:  457 of 1200 position X =   97 Y =    4
+
+ans =
+
+   1.0e-07 *
+
+    0.9492    0.0046
+
+Meso Design #:  639 after   13 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    1.3135    0.3965   -0.0008
+    0.3965    1.3827   -0.0091
+   -0.0008   -0.0091    0.4618
+
+
+ 15%[========>                                          ]
+Meso Design #:  637 of 1200 position X =   37 Y =    6
+
+ans =
+
+   1.0e-07 *
+
+    0.7564    0.0105
+
+Meso Design #:  359 after   12 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    1.2554    0.3842   -0.0012
+    0.3842    1.3990   -0.0036
+   -0.0012   -0.0036    0.4472
+
+
+ 16%[========>                                          ]
+Meso Design #:  357 of 1200 position X =  117 Y =    3
+
+ans =
+
+   1.0e-07 *
+
+    0.7477    0.0058
+
+Meso Design #:  457 after   17 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    1.3636    0.4157    0.0026
+    0.4157    1.4527    0.0126
+    0.0026    0.0126    0.4839
+
+
+ 16%[========>                                          ]
+Meso Design #:  455 of 1200 position X =   95 Y =    4
+
+ans =
+
+   1.0e-07 *
+
+    0.8998    0.0083
+
+Meso Design #:  637 after   24 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    5.3685    1.7659   -0.1326
+    1.7659    7.0455   -0.4736
+   -0.1326   -0.4736    2.0675
+
+
+ 16%[========>                                          ]
+Meso Design #:  635 of 1200 position X =   35 Y =    6
+
+ 16%[========>                                          ]
+Meso Design #:  633 of 1200 position X =   33 Y =    6
+
+ 16%[========>                                          ]
+Meso Design #:  631 of 1200 position X =   31 Y =    6
+
+ 16%[========>                                          ]
+Meso Design #:  630 of 1200 position X =   30 Y =    6
+
+ans =
+
+   1.0e-07 *
+
+    0.8849    0.0088
+
+Meso Design #:  630 after   24 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    0.9745    0.4017    0.1166
+    0.4017    1.1972    0.2113
+    0.1166    0.2113    0.4488
+
+
+ 17%[========>                                          ]
+Meso Design #:  455 after   17 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    1.7839    0.5439    0.0033
+    0.5439    1.9025    0.0149
+    0.0033    0.0149    0.6328
+
+
+ 16%[========>                                          ]
+Meso Design #:  453 of 1200 position X =   93 Y =    4
+
+ans =
+
+   1.0e-07 *
+
+    0.9852    0.0069
+
+Meso Design #:   26 after   19 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    2.1341    0.6897   -0.0057
+    0.6897    3.1552    0.0057
+   -0.0057    0.0057    0.7983
+
+
+ 14%[=======>                                           ]
+Meso Design #:   24 of 1200 position X =   24 Y =    1
+Meso Design #:   24 after  100 meso iterations
+Meso Design #:  628 of 1200 position X =   28 Y =    6
+
+ans =
+
+   1.0e-07 *
+
+    0.7366    0.0101
+
+Meso Design #:  453 after   22 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    2.2150    0.7148   -0.0033
+    0.7148    3.7744   -0.0896
+   -0.0033   -0.0896    0.8275
+
+
+ 17%[========>                                          ]
+Meso Design #:  451 of 1200 position X =   91 Y =    4
+
+ans =
+
+   1.0e-07 *
+
+    0.7812    0.0097
+
+Meso Design #:  628 after   20 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    2.9297    0.9392    0.0249
+    0.9392    3.9337    0.1676
+    0.0249    0.1676    1.0839
+
+
+ 17%[=========>                                         ]
+Meso Design #:  626 of 1200 position X =   26 Y =    6
+
+ans =
+
+   1.0e-07 *
+
+    0.6265    0.0123
+
+Meso Design #:  693 after   18 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    1.3162    0.3991   -0.0003
+    0.3991    1.3849   -0.0039
+   -0.0003   -0.0039    0.4648
+
+
+ 15%[========>                                          ]
+Meso Design #:  691 of 1200 position X =   91 Y =    6
+Meso Design #:  691 after  100 meso iterations
+Meso Design #:  262 after   20 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    1.2735    0.3990   -0.0132
+    0.3990    1.3648   -0.0360
+   -0.0132   -0.0360    0.4625
+
+
+ 15%[========>                                          ]
+Meso Design #:  259 of 1200 position X =   19 Y =    3
+
+ 15%[========>                                          ]
+Meso Design #:  257 of 1200 position X =   17 Y =    3
+Meso Design #:  257 after  100 meso iterations
+Meso Design #:  451 after   18 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    1.2863    0.3911   -0.0018
+    0.3911    1.3939   -0.0109
+   -0.0018   -0.0109    0.4554
+
+
+ 17%[=========>                                         ]
+Meso Design #:  450 of 1200 position X =   90 Y =    4
+
+ans =
+
+   1.0e-07 *
+
+    0.9431    0.0066
+
+Meso Design #:  450 after   20 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    1.3061    0.4034   -0.0086
+    0.4034    1.3669   -0.0239
+   -0.0086   -0.0239    0.4682
+
+
+ 17%[=========>                                         ]
+Meso Design #:  626 after   12 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    1.3577    0.4086   -0.0001
+    0.4086    1.3746   -0.0003
+   -0.0001   -0.0003    0.4764
+
+
+ 17%[=========>                                         ]
+Meso Design #:  624 of 1200 position X =   24 Y =    6
+
+ans =
+
+   1.0e-07 *
+
+    0.9706    0.0063
+
+Meso Design #:  546 after   14 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    1.3220    0.4045    0.0048
+    0.4045    1.3691    0.0173
+    0.0048    0.0173    0.4702
+
+
+ 16%[========>                                          ]
+Meso Design #:  544 of 1200 position X =   64 Y =    5
+Meso Design #:  544 after  100 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    0.8655    0.3955    0.0143
+    0.3955    5.0237    0.4908
+    0.0143    0.4908    0.4235
+
+
+ 17%[=========>                                         ]
+Meso Design #:  255 of 1200 position X =   15 Y =    3
+
+ans =
+
+   1.0e-07 *
+
+    0.8003    0.0068
+
+Meso Design #:  448 of 1200 position X =   88 Y =    4
+
+ 18%[=========>                                         ]
+Meso Design #:  446 of 1200 position X =   86 Y =    4
+
+ 18%[=========>                                         ]
+Meso Design #:  444 of 1200 position X =   84 Y =    4
+
+ans =
+
+   1.0e-07 *
+
+    0.9904    0.0078
+
+Meso Design #:  135 after   20 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    4.4846    1.3884    0.0054
+    1.3884    5.8593    0.0214
+    0.0054    0.0214    1.6159
+
+
+ 16%[========>                                          ]
+Meso Design #:  133 of 1200 position X =   13 Y =    2
+Meso Design #:  133 after  100 meso iterations
+Meso Design #:  624 after   17 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    1.4942    0.4589   -0.0056
+    0.4589    1.6259   -0.0258
+   -0.0056   -0.0258    0.5335
+
+
+ 18%[=========>                                         ]
+Meso Design #:  622 of 1200 position X =   22 Y =    6
+
+ans =
+
+   1.0e-07 *
+
+    0.9305    0.0051
+
+
+D_homog =
+
+   1.0e+04 *
+
+    1.1626    0.5704   -0.1542
+    0.5704    4.8334   -0.8097
+   -0.1542   -0.8097    0.5863
+
+
+ 17%[=========>                                         ]
+Meso Design #:  690 of 1200 position X =   90 Y =    6
+
+ans =
+
+   1.0e-07 *
+
+    0.8448    0.0122
+
+Meso Design #:  690 after   31 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    0.9968    0.3642   -0.0397
+    0.3642    1.3745   -0.1522
+   -0.0397   -0.1522    0.4099
+
+
+ 18%[=========>                                         ]
+
+D_homog =
+
+   1.0e+04 *
+
+    1.3078    0.5139   -0.0299
+    0.5139    4.7325   -0.5603
+   -0.0299   -0.5603    0.5219
+
+
+ 18%[=========>                                         ]
+Meso Design #:  542 of 1200 position X =   62 Y =    5
+
+ans =
+
+   1.0e-07 *
+
+    0.9194    0.0069
+
+Meso Design #:  357 after   12 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    1.3594    0.4091   -0.0005
+    0.4091    1.3743   -0.0013
+   -0.0005   -0.0013    0.4770
+
+
+ 16%[========>                                          ]
+Meso Design #:  355 of 1200 position X =  115 Y =    3
+Meso Design #:  355 after  100 meso iterations
+Meso Design #:  255 after   21 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    4.2075    1.3014    0.0039
+    1.3014    5.5084    0.0526
+    0.0039    0.0526    1.5152
+
+
+ 18%[=========>                                         ]
+Meso Design #:  253 of 1200 position X =   13 Y =    3
+
+ans =
+
+   1.0e-07 *
+
+    0.9639    0.0070
+
+Meso Design #:  688 of 1200 position X =   88 Y =    6
+
+ 18%[=========>                                         ]
+Meso Design #:  686 of 1200 position X =   86 Y =    6
+
+ 19%[=========>                                         ]
+Meso Design #:  684 of 1200 position X =   84 Y =    6
+
+ans =
+
+   1.0e-07 *
+
+    0.9773    0.0105
+
+Meso Design #:  622 after   17 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    1.2713    0.3954   -0.0088
+    0.3954    1.3774   -0.0335
+   -0.0088   -0.0335    0.4582
+
+
+ 18%[=========>                                         ]
+Meso Design #:  619 of 1200 position X =   19 Y =    6
+
+ans =
+
+   1.0e-07 *
+
+    0.8803    0.0040
+
+Meso Design #:  444 after   17 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    1.2917    0.4062    0.0184
+    0.4062    1.3432    0.0354
+    0.0184    0.0354    0.4701
+
+
+ 18%[=========>                                         ]
+Meso Design #:  442 of 1200 position X =   82 Y =    4
+
+ans =
+
+   1.0e-07 *
+
+    0.9261    0.0027
+
+
+D_homog =
+
+   1.0e+04 *
+
+    0.8762    0.3023   -0.0172
+    0.3023    5.2386   -0.1351
+   -0.0172   -0.1351    0.2748
+
+
+ 19%[=========>                                         ]
+Meso Design #:  353 of 1200 position X =  113 Y =    3
+
+ans =
+
+   1.0e-07 *
+
+    0.8754    0.0078
+
+Meso Design #:  542 after   17 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    1.2924    0.4031   -0.0129
+    0.4031    1.3581   -0.0328
+   -0.0129   -0.0328    0.4673
+
+
+ 19%[=========>                                         ]
+Meso Design #:  539 of 1200 position X =   59 Y =    5
+
+ 19%[=========>                                         ]
+Meso Design #:  537 of 1200 position X =   57 Y =    5
+
+ 19%[=========>                                         ]
+Meso Design #:  535 of 1200 position X =   55 Y =    5
+
+ans =
+
+   1.0e-07 *
+
+    0.8381    0.0103
+
+Meso Design #:  442 after   29 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    8.3813    2.5919    0.0579
+    2.5919    9.8409    0.1850
+    0.0579    0.1850    3.0946
+
+
+ 20%[==========>                                        ]
+Meso Design #:  439 of 1200 position X =   79 Y =    4
+
+ans =
+
+   1.0e-07 *
+
+    0.9361    0.0146
+
+
+D_homog =
+
+   1.0e+04 *
+
+    1.2869    0.4598    0.0109
+    0.4598    4.9709    0.2466
+    0.0109    0.2466    0.4126
+
+
+ 17%[========>                                          ]
+Meso Design #:   22 of 1200 position X =   22 Y =    1
+
+ 17%[========>                                          ]
+Meso Design #:   19 of 1200 position X =   19 Y =    1
+
+ 17%[========>                                          ]
+Meso Design #:   17 of 1200 position X =   17 Y =    1
+Meso Design #:   17 after  100 meso iterations
+Meso Design #:  353 after   19 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    1.2653    0.3909   -0.0055
+    0.3909    1.3881   -0.0271
+   -0.0055   -0.0271    0.4534
+
+
+ 20%[==========>                                        ]
+Meso Design #:  351 of 1200 position X =  111 Y =    3
+
+ 20%[==========>                                        ]
+Meso Design #:  350 of 1200 position X =  110 Y =    3
+
+ 20%[==========>                                        ]
+Meso Design #:  348 of 1200 position X =  108 Y =    3
+
+ans =
+
+   1.0e-07 *
+
+    0.8697    0.0116
+
+Meso Design #:  439 after   16 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    1.7588    0.5421   -0.0080
+    0.5421    1.9308   -0.0334
+   -0.0080   -0.0334    0.6299
+
+
+ 20%[==========>                                        ]
+Meso Design #:  437 of 1200 position X =   77 Y =    4
+
+ans =
+
+   1.0e-07 *
+
+    0.9511    0.0072
+
+Meso Design #:  348 after   21 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    2.4931    0.7911    0.0092
+    0.7911    3.9305    0.0976
+    0.0092    0.0976    0.9154
+
+
+ 20%[==========>                                        ]
+Meso Design #:  346 of 1200 position X =  106 Y =    3
+
+ans =
+
+   1.0e-07 *
+
+    0.7710    0.0104
+
+
+D_homog =
+
+   1.0e+04 *
+
+    1.1372    0.4465   -0.0201
+    0.4465    4.8861   -0.5818
+   -0.0201   -0.5818    0.4927
+
+
+ 20%[==========>                                        ]
+Meso Design #:   15 of 1200 position X =   15 Y =    1
+
+ans =
+
+   1.0e-07 *
+
+    0.7718    0.0124
+
+Meso Design #:  346 after   21 meso iterations
+
+D_homog =
+
+   1.0e+04 *
+
+    3.1530    0.9954    0.0016
+    0.9954    4.7251    0.0300
+    0.0016    0.0300    1.1593
+
+
+ 21%[==========>                                        ]
+Meso Design #:  344 of 1200 position X =  104 Y =    3
+
+ans =
+
+   1.0e-07 *
+
+    0.8709    0.0064
+
+-bash: line 1: 15557 Terminated              /var/spool/PBS/mom_priv/jobs/7150482.pbs02.SC
+ 
+ 
++------------------------------------------+ 
+| PALMETTO CLUSTER PBS RESOURCES REQUESTED | 
++------------------------------------------+ 
+ 
+mem=27gb,ncpus=9,walltime=10:00:00
+ 
+ 
++-------------------------------------+ 
+| PALMETTO CLUSTER PBS RESOURCES USED | 
++-------------------------------------+ 
+ 
+cpupercent=804,cput=42:35:50,mem=26501612kb,ncpus=9,vmem=63323084kb,walltime=05:45:17
+ 
+ 

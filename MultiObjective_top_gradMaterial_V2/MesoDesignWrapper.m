@@ -3,7 +3,8 @@ function  MesoDesignWrapper(settingscopy,e,ne,matProp)
 
 macroElementProperties = GetMacroElementPropertiesFromCSV(settingscopy,e);
 disp(['Meso Design #: ' sprintf('%4i',e ) ' of ' sprintf('%4i',ne ) ...
-    ' position X = '  sprintf('%4i',macroElementProperties.xPosition) ' Y = ' sprintf('%4i',macroElementProperties.yPosition)]);
+    ' position X = '  sprintf('%4i',macroElementProperties.xPosition) ' Y = ' sprintf('%4i',macroElementProperties.yPosition) ...
+    ' MesoMacro Iteration =  ' sprintf('%4i', settingscopy.macro_meso_iteration) ]);
 scalePlot = 1;
 coord(:,1) = [0 1 1 0];
 coord(:,2)  = [0 0 1 1];

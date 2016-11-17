@@ -24,7 +24,7 @@ if loadingCase == 111
     Essential=[tt t2 t3 t4];
     Essential = unique(Essential);
     % Down in the top right corner
-    F(ndof-1) = FappliedLoad;
+    F(ndof) = FappliedLoad;
     
 elseif loadingCase ==112
     FappliedLoad = -500;
@@ -33,7 +33,7 @@ elseif loadingCase ==112
     Essential=[tt t2];
     Essential = unique(Essential);    
     % down on bottom right
-    F(row*2-1) = FappliedLoad;
+    F(row*2) = FappliedLoad;
     
 elseif loadingCase ==113
     FappliedLoad = 500;
@@ -41,45 +41,97 @@ elseif loadingCase ==113
     t2=tt+1;
     Essential=[tt t2];
     Essential = unique(Essential);    
-    F( (row*2)*floor(column/2)-1) = FappliedLoad; % middle to the right  
+    F( (row*2)*floor(column/2)) = FappliedLoad; % middle to the right  
     
-elseif loadingCase ==121
-    % Testing K_xx
-    FappliedLoad = 500;
-    tt=   1:2*row :2*row*(column); % ... % left side
-    t2=tt+1;
-    Essential=[tt t2];
-    Essential = unique(Essential);
-    % Down in the top right corner
-    F(ndof-1) = FappliedLoad;
+% elseif loadingCase ==121
+%     % Testing K_xx
+%     FappliedLoad = 500;
+%     tt=   1:2*row :2*row*(column); % ... % left side
+%     t2=tt+1;
+%     Essential=[tt t2];
+%     Essential = unique(Essential);
+%     % Down in the top right corner
+%     F(ndof-1) = FappliedLoad;
+%     
+% elseif loadingCase ==4
+%     FappliedLoad = -1000;
+%     Essential = [1 2]; % bottom left corner is fixed
+%     Essential = [Essential row*2 row*2-1]; % bottom right corner is fixed
+%     Essential = unique(Essential);
+%     F( (floor(row/2)+1)*2) = FappliedLoad; % force down in the bottom middle
+%     
+% elseif loadingCase ==1
+%     FappliedLoad = 500;
+%     tt=   1:2*row :2*row*(column); % ... % left side
+%     t2=tt+1;
+%     Essential=[tt t2];
+%     Essential = unique(Essential);
+%     % Down in the top right corner
+%     fnodes = row*floor(column/2)*2;
+%     F(fnodes) = FappliedLoad;    
+%     
+% % bridge 1
+% elseif loadingCase ==400
+%     FappliedLoad = 500;   
+%     fnodes = row*(column-1)*2;
+%     F(fnodes) = FappliedLoad;  
+%     bottomFixed = 1;
+%     
+    % -------------------------------------------------
+    %
+    % 300s are the shoe loading case. 
+    %
+    % -------------------------------------------------
+elseif loadingCase ==300
+      FappliedLoad = -500;   
+      bottomFixed = 1;
+     
+      fnodes =  (row*(column-1)+1)*2:2:(row*(column-1)+floor(row/4))*2; % top left quarter, y degrees of freedom, pointing down. 
+      count = size(fnodes,2);
+       F(fnodes) =FappliedLoad/count;
+      
+elseif loadingCase ==301
+        FappliedLoad = -500;   
+      bottomFixed = 1;
+     
+      fnodes =   (row*(column-1)+1)*2:2:(row*(column-1)+floor(row/2))*2; % top left half, y degrees of freedom, pointing down. 
+      count = size(fnodes,2);
+       F(fnodes) =FappliedLoad/count;
+elseif loadingCase ==302
+      FappliedLoad = -500;   
+      bottomFixed = 1;
+     
+     fnodes= (row*(column-1)+1)*2:2:ndof; % whole top, y degrees of freedom, pointing down. 
+      count = size(fnodes,2);
+       F(fnodes) =FappliedLoad/count;
+elseif loadingCase ==303
+         FappliedLoad = -500;   
+      bottomFixed = 1;
+     
+      fnodes =  (row*(column-1)+1+floor(row/2))*2:2:ndof; % top right half, y degrees of freedom, pointing down. 
+      count = size(fnodes,2);
+       F(fnodes) =FappliedLoad/count;
+elseif loadingCase ==304
+     FappliedLoad = -500;   
+      bottomFixed = 1;
+     
+      fnodes =  (row*(column-1)+1+floor(3*row/4))*2:2:ndof; % top right quarter, x and y degrees of freedom, pointing down and left. 
+      count = size(fnodes,2);
+       F(fnodes) =FappliedLoad/count;
+       
+elseif loadingCase ==305
+     FappliedLoad = -500;   
+      bottomFixed = 1;
+     
+      fnodes =  (row*(column-1)+floor(row/2))*2:2:ndof; % top right half, x  degree of freedome only, pushing off. 
+      count = size(fnodes,2);
+       F(fnodes) =FappliedLoad/count;
     
-elseif loadingCase ==4
-    FappliedLoad = -1000;
-    Essential = [1 2]; % bottom left corner is fixed
-    Essential = [Essential row*2 row*2-1]; % bottom right corner is fixed
-    Essential = unique(Essential);
-    F( (floor(row/2)+1)*2) = FappliedLoad; % force down in the bottom middle
-    
-elseif loadingCase ==1
-    FappliedLoad = 500;
-    tt=   1:2*row :2*row*(column); % ... % left side
-    t2=tt+1;
-    Essential=[tt t2];
-    Essential = unique(Essential);
-    % Down in the top right corner
-    fnodes = row*floor(column/2)*2;
-    F(fnodes) = FappliedLoad;    
-    
-% bridge 1
-elseif loadingCase ==400
-    FappliedLoad = 500;   
-    fnodes = row*(column-1)*2;
-    F(fnodes) = FappliedLoad;  
-    bottomFixed = 1;
 end
 
 if(bottomFixed==1)
     Essential = 1:row*2;
+       Essential = unique(Essential);  
 end
 
 
