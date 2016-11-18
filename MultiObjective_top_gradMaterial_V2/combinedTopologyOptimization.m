@@ -11,7 +11,7 @@ close all
 % --------------------------------------------
 settings = Configuration;
 
-settings.mode =10;
+settings.mode =5;
 % 1 = topology only,
 % 2 = material optimization only.
 % 3 = both mateiral vol fraction and topology
@@ -23,10 +23,11 @@ settings.mode =10;
 % 10 = everything working!!!
 % 11 = single meso design, where "singleMeso_elementNumber" and
 % "macro_meso_iteration" specify which one
+% 12 Run after meso macro iterations and combines the 
 
 % target volumes of material 1 and 2
 settings.v1 = 0.1;
-settings.v2 = 0.4;
+settings.v2 = 0.3;
 
 
 settings.doUseMultiElePerDV = 0; % Each design var controls several elements. 1= true, 0= false
@@ -46,14 +47,14 @@ matProp = MaterialProperties;
 
 settings.w1 = 1; % do not set to zero, instead set to 0.0001. Else we will get NA for temp2
 
-RunPalmetto = 0;
+RunPalmetto = 1;
 if(RunPalmetto==0)
     % ------------
     % Normal running case
     % -------------------
     settings.macro_meso_iteration = macro_meso_iteration;
-    settings.nelx = 30;
-    settings.nely = 10;
+    settings.nelx = 20;
+    settings.nely = 20;
     settings.numXElmPerDV=1;
     settings.numYElmPerDV=1;
     
@@ -70,10 +71,15 @@ else
     % ------------
     % Palmetto running case
     % -------------------
-    settings.nelx = 120;
-    settings.nely = 8;
-    settings.nelxMeso = 35; %35;
-    settings.nelyMeso =35; %35;
+    settings.nelx = 35;
+    settings.nely = 35;
+    settings.nelxMeso = 40; %35;
+    settings.nelyMeso =40; %35;
+    settings.terminationAverageCount = 10;
+    settings.terminationCriteria =0.0001; % 0.0%
+    settings.maxFEACalls = 150;
+    settings.maxMasterLoops = 150;
+     
 end
 
 if(str2num(useInputArgs) ==1)
@@ -82,10 +88,10 @@ if(str2num(useInputArgs) ==1)
     settings.mode=str2num(mode);
     settings.w1 =str2num(w1text);  
     settings= settings.UpdateVolTargetsAndObjectiveWeights();
-    settings
+    
     
     % -------------------------
-    % Single meso design
+    % Single meso design for MPI parallelization
     % -------------------------
     if ( settings.mode == 11)
         ne = settings.nelx*settings.nely; % number of elements
@@ -100,6 +106,12 @@ settings= settings.UpdateVolTargetsAndObjectiveWeights();
 settings
 onlyTopChangeOnFirstIteration = 0; % 1 = true, 0 = false;
 
+if(settings.mode ==12)
+     settings.macro_meso_iteration=5;
+    NumMacroMesoIteration= settings.macro_meso_iteration;
+    p=plotResults;
+    p.PlotEverythingTogether(NumMacroMesoIteration);
+end
 
 
 
@@ -130,8 +142,8 @@ if ( settings.mode == 1 || settings.mode == 2 || settings.mode == 3 || settings.
     % ------------------------------
     % Normal case, 1 design var per element
     % ------------------------------
-    designVars.x(1:settings.nely,1:settings.nelx) = settings.totalVolume; % artificial density of the elements
-    designVars.w(1:settings.nely,1:settings.nelx)  = 1; % actual volume fraction composition of each element
+    designVars.x(1:settings.nely,1:settings.nelx) =settings.v1+settings.v2; % artificial density of the elements
+    designVars.w(1:settings.nely,1:settings.nelx)  =settings.v1; % actual volume fraction composition of each element
     designVars.temp1(1:settings.nely,1:settings.nelx) = 0;
     designVars.temp2(1:settings.nely,1:settings.nelx) = 0;
     %designVars.complianceSensitivity(1:settings.nely,1:settings.nelx) = 0;
@@ -159,7 +171,7 @@ if ( settings.mode == 1 || settings.mode == 3 || settings.mode == 10 || settings
     matProp=  matProp.ReadConstitutiveMatrixesFromFiles(  settings);
 end
 
-if ( settings.mode == 10)
+if ( settings.mode == 10 ||settings.mode == 5)
     designVars= ReadXMacroFromCSV( settings,designVars);
 end
 
@@ -191,13 +203,16 @@ while status == 0  && masterloop<=settings.maxMasterLoops && FEACalls<=settings.
                 
                 FEACalls = FEACalls+1;
                 % normalize the sensitivies  by dividing by their max values.
-                temp1Max =-1* min(min(designVars.temp1));
-                designVars.temp1 = designVars.temp1/temp1Max;
-                temp2Max = -1* min(min(designVars.temp2));
-                designVars.temp2 = designVars.temp2/temp2Max;
-                
-                designVars.dc = settings.w1*designVars.temp1+settings.w2*designVars.temp2; % add the two sensitivies together using their weights
-                
+                if (settings.w1 ~= 1) % if we are using the heat objective
+                    temp1Max =-1* min(min(designVars.temp1));
+                    designVars.temp1 = designVars.temp1/temp1Max;
+                    temp2Max = -1* min(min(designVars.temp2));
+                    designVars.temp2 = designVars.temp2/temp2Max;
+
+                    designVars.dc = settings.w1*designVars.temp1+settings.w2*designVars.temp2; % add the two sensitivies together using their weights
+                else
+                     designVars.dc = settings.w1*designVars.temp1;
+                end
                 % FILTERING OF SENSITIVITIES
                 
                 [designVars.dc]   = check(xx,yy,settings.rmin,designVars.x,designVars.dc);
@@ -246,12 +261,19 @@ while status == 0  && masterloop<=settings.maxMasterLoops && FEACalls<=settings.
             targetFraction_v1 = settings.v1/(settings.v1+settings.v2);
             
             % Normalize the sensitives.
-            temp1Max = max(max(abs(designVars.g1elastic)));
-            designVars.g1elastic = designVars.g1elastic/temp1Max;
-            temp2Max = max(max(abs(designVars.g1heat)));
-            designVars.g1heat = designVars.g1heat/temp2Max;
-            
-            g1 = settings.w1*designVars.g1elastic+settings.w2*designVars.g1heat; % Calculate the weighted volume fraction change sensitivity.
+             if (settings.w1 ~= 1) % if we are using the heat objective
+                temp1Max = max(max(abs(designVars.g1elastic)));
+                designVars.g1elastic = designVars.g1elastic/temp1Max;
+                temp2Max = max(max(abs(designVars.g1heat)));
+                designVars.g1heat = designVars.g1heat/temp2Max;
+
+                g1 = settings.w1*designVars.g1elastic+settings.w2*designVars.g1heat; % Calculate the weighted volume fraction change sensitivity.
+             else
+                    g1 = settings.w1*designVars.g1elastic;
+             end
+             
+             % Filter the g1 sensitivies
+            [g1]   = check(xx,yy,settings.rmin,designVars.x,g1);
             G1 = g1 - designVars.lambda1 +1/(designVars.mu1)*( targetFraction_v1-fractionCurrent_V1Local); % add in the lagrangian
             designVars.w = designVars.w+settings.timestep*G1; % update the volume fraction.
             
@@ -291,11 +313,13 @@ if ( settings.mode ==2 || settings.mode ==3 || settings.mode == 10 || settings.m
         for loadcaseIndex = 1:t2
             %   loadcase = settings.loadingCase(loadcaseIndex);
             p.plotTopAndFraction(designVars, settings, matProp,FEACalls ); % plot the results.
-            plotStrainField(settings,designVars,folderNum,loadcaseIndex)
+            hold on
+           p.plotStrainField(settings,designVars,folderNum,loadcaseIndex)
             nameGraph = sprintf('./gradTopOptimization%fwithmesh%i_load%i.png', settings.w1,settings.macro_meso_iteration,loadcaseIndex);
             print(nameGraph,'-dpng');
             hi=  figure(1);
             cla(hi);
+            hold off
         end
     end
     

@@ -76,8 +76,8 @@ classdef plotResults
                 titleText = sprintf('Heat Top Sensit');
                 obj.PlotArrayGeneric(designVars.temp2,titleText)
             end
-                   
-            if(settings.doSaveDesignVarsToCSVFile ==1)                
+            
+            if(settings.doSaveDesignVarsToCSVFile ==1)
                 % -------------------------------
                 % Plot to CSV file
                 % ------------------------------
@@ -87,44 +87,44 @@ classdef plotResults
                 csvwrite(name,designVars.x);
                 
                 name = sprintf('./out%i/volFractionVar%i.csv',folderNum, loopNumb);
-                csvwrite(name,designVars.w);                
+                csvwrite(name,designVars.w);
             end
             
             %  ----------------------------
             % Plot Design Update Metrics
             %  ----------------------------
             if(settings.doPlotMetrics == 1)
-                 subplot(plotDim1,plotDim2,plotcount); plotcount = plotcount + 1;
+                subplot(plotDim1,plotDim2,plotcount); plotcount = plotcount + 1;
                 obj.PlotDesignMetrics(designVars, settings, matProp, loopNumb);
             end
             
-              drawnow
+            drawnow
         end
         
         function PlotDesignMetrics(obj, designVars, settings, matProp, loopNumb)
             %  designVars.c, designVars.cCompliance, designVars.cHeat,vol1Fraction,vol2Fraction,fractionCurrent_V1Local,densitySum];
             x = 1:loopNumb;
-           % y1 = designVars.storeOptimizationVar(1:loopNumb,1)';
+            % y1 = designVars.storeOptimizationVar(1:loopNumb,1)';
             y2 = designVars.storeOptimizationVar(1:loopNumb,2)'; % Elastic Compliance
-            y3 = designVars.storeOptimizationVar(1:loopNumb,3)'; % Heat Compliance         
+            y3 = designVars.storeOptimizationVar(1:loopNumb,3)'; % Heat Compliance
             y4 = designVars.storeOptimizationVar(1:loopNumb,4)'; % volume fraction material 1
             y5 = designVars.storeOptimizationVar(1:loopNumb,5)'; % volume fraction material 2
             
             y2 = y2/max(y2); % normalize to make plotting nice
             y3 = y3/max(y3); % normalize to make plotting nice
-            plot(x, y4,'y', x, y5, 'm', x, y2, 'c', x, y3, 'r')            
+            plot(x, y4,'y', x, y5, 'm', x, y2, 'c', x, y3, 'r')
             legend('vol1', 'vol2','Elast Obj','Heat Obj')
         end
         
         
         % Plots an array
         function PlotArrayGeneric(obj, array, titleText)
-                imagesc(array); axis equal; axis tight; axis off;
+            imagesc(array); axis equal; axis tight; axis off;
             % colormap winter
             set(gca,'YDir','normal');
             title(titleText);
             colorbar
-        end        
+        end
         
         % --------------------------------------------
         % Plots temperature countours
@@ -217,28 +217,28 @@ classdef plotResults
             % Generate the matrix used for ploitting.
             % ----------------------------------
             % structGradArrayElastic(1:settings.nely,1:settings.nelx)  = 0; % Initialize
-%             structGradDesignVarArray(1:settings.nely,1:settings.nelx)  = 0; % Initialize
+            %             structGradDesignVarArray(1:settings.nely,1:settings.nelx)  = 0; % Initialize
             %  structGradArrayHeat(1:settings.nely,1:settings.nelx)  = 0; % Initialize
             
             %smallerE = min( matProp.E_material2, matProp.E_material1);
             %largerE = max( matProp.E_material2, matProp.E_material1);
             %diffE = largerE-smallerE;
             
-%             endingx = settings.nelx;
-%             endingy = settings.nely;
-%             multiplier = 1;
+            %             endingx = settings.nelx;
+            %             endingy = settings.nely;
+            %             multiplier = 1;
             
             if(settings.doUseMultiElePerDV ==1)
                 endingx = settings.numVarsX;
                 endingy = settings.numVarsY;
-%                structGradDesignVarArray(1:endingy,1:endingx)  = 0; % Initialize
+                %                structGradDesignVarArray(1:endingy,1:endingx)  = 0; % Initialize
             else
-                 endingx = settings.nelx;
-                  endingy = settings.nely;
-%                  structGradDesignVarArray(1:settings.nely,1:settings.nelx)  = 0; % Initialize
+                endingx = settings.nelx;
+                endingy = settings.nely;
+                %                  structGradDesignVarArray(1:settings.nely,1:settings.nelx)  = 0; % Initialize
             end
             
-             structGradDesignVarArray(1:endingy,1:endingx)  = 0; % Initialize
+            structGradDesignVarArray(1:endingy,1:endingx)  = 0; % Initialize
             
             for i = 1:endingx
                 for j = 1:endingy
@@ -320,14 +320,14 @@ classdef plotResults
             status = 1;
             nameTopology = sprintf('./%s/topDensity%i.csv',folder, i);
             nameVolFractionGrad = sprintf('./%s/volFractionVar%i.csv',folder, i);
-
+            
             % if the file does not exist, then save the final graph, and break.
             if exist(nameTopology, 'file') == 0
                 %  nameGraph = sprintf('./%s/gradTopOptimization%i',folder, i);
                 nameGraph = sprintf('./gradTopOptimization%f.png', settings.w1);
                 print(nameGraph,'-dpng')
-               %  p = fig2plotly; needs more work, this looks horrible. 
-               status = -1;
+                %  p = fig2plotly; needs more work, this looks horrible.
+                status = -1;
                 return;
             end
             [nameTopology nameVolFractionGrad]
@@ -335,18 +335,137 @@ classdef plotResults
             % Read the actual files
             % ---------------------
             designVars.x = csvread(nameTopology);
-            designVars.w = csvread(nameVolFractionGrad);      
+            designVars.w = csvread(nameVolFractionGrad);
             [settings.nelx]   = size(  designVars.x,2);
-              [   settings.nely] = size(  designVars.x,1);
-
+            [   settings.nely] = size(  designVars.x,1);
+            
             FEACalls = i;
             obj.plotTopAndFraction(designVars,  settings, matProp, FEACalls); % plot the results.
-
+            
             
             
         end
         
         
-       
+        %------------------------------------------------------------------
+        % plot strain field after complete set of iterations.
+        %------------------------------------------------------------------
+        function  []= plotStrainField(obj,settings,designVars,folderNum,loadcaseIndex)
+            
+            ne = settings.nelx*settings.nely; % number of elements
+            U2 = (designVars.U(loadcaseIndex,:));
+            maxU = max(max(abs(designVars.U)));
+            multiplierScale=1/maxU;
+            
+            for e = 1:ne
+                %     if(designVars.x>settings.voidMaterialDensityCutOff
+                % loop over local node numbers to get their node global node numbers
+                % for
+                j = 1:4;
+                % Get the node number
+                coordNodeNumber = designVars.IEN(e,j);
+                %   arrayCoordNumber(j) = coordNodeNumber;
+                % get the global X,Y position of each node and put in array
+                coord(j,:) = designVars.globalPosition(coordNodeNumber,:);
+                %     coord = coord+0.5; % because each node is a 1 by 1, so to make it line up with the fgm and top plot
+                %  end
+                arrayCoordNumber = coordNodeNumber;
+                
+                
+                % plot the element outline
+                %     if(doplotDisplacement ==1)
+                hold on
+                coordD = zeros(5,1);
+                %           for
+                temp = 1:4;
+                %nodeNumber = IEN(e,j);
+                %arrayCoordNumber(j) = coordNodeNumber(temp;
+                coordD(temp,1) =  coord(temp,1) + transpose(multiplierScale*U2(2*arrayCoordNumber(temp)-1)); % X value
+                coordD(temp,2) =  coord(temp,2) + transpose(multiplierScale*U2(2*arrayCoordNumber(temp))); % Y value
+                %               coordD(temp,1) =  coord(temp,1)+ multiplierScale*U_displaced(arrayCoordNumber(temp),1); % X value
+                %              coordD(temp,2) =  coord(temp,2)+ multiplierScale*U_displaced(arrayCoordNumber(temp),2); % Y value
+                %           end
+                
+                
+                coord2 = coord;
+                coordD(5,:) = coordD(1,:) ;
+                coord2(5,:) = coord2(1,:);
+                
+                coordD = coordD+0.5;
+                coord2 = coord2+0.5;
+                
+                
+                if(settings.doUseMultiElePerDV ==1)
+                    coord2(:,1)=coord2(:,1)/settings.numXElmPerDV;
+                    coordD(:,1)=coordD(:,1)/settings.numXElmPerDV;
+                    
+                    coord2(:,2)=coord2(:,2)/settings.numYElmPerDV;
+                    coordD(:,2)=coordD(:,2)/settings.numYElmPerDV;
+                    
+                    
+                end
+                
+                plot(coord2(:,1),coord2(:,2),'-g');
+                plot(coordD(:,1),coordD(:,2), '-b');
+                %     end
+            end
+            hold off
+            nameGraph = sprintf('Iter: %i, meso-macro iter %i, load case %i',folderNum,settings.macro_meso_iteration,loadcaseIndex);
+            title(nameGraph);
+        end
+        
+        function  [] = PlotEverythingTogether(obj,maxiterations)
+            
+            close all
+            
+            numloops=maxiterations;
+            
+            folderNum = 0;
+            all = [];
+            iterationDiff = [];
+            for i =1:numloops
+                macro_meso_iteration = i;
+                outname = sprintf('./out%i/storeOptimizationVarMacroLoop%i.csv',folderNum,macro_meso_iteration);
+                storeOptimizationVar=  csvread(outname);
+                all=[all;storeOptimizationVar];
+                [rr,cc] = size (storeOptimizationVar);
+                iterationDiff= [iterationDiff zeros(1,rr-1)];
+                iterationDiff = [iterationDiff 1];
+            end
+            designVars = DesignVars;
+            designVars.storeOptimizationVar=all;
+            p = plotResults;
+            [r,c] = size (all);
+            loopNumb=r;
+            
+            % Get size of the grid
+            previousIterationNum=1;
+            outname = sprintf('./out%i/volfractionfield%i.csv',folderNum,previousIterationNum);
+            [gridrows, gridcolumns]=size(csvread(outname));
+            totalvolume = gridrows*gridcolumns;
+            
+            % normalize the volumes
+            %mtemp = max(designVars.storeOptimizationVar(1:loopNumb,4));
+            % designVars.storeOptimizationVar(1:loopNumb,4) = designVars.storeOptimizationVar(1:loopNumb,4)/totalvolume;
+            % %mtemp2 = max(designVars.storeOptimizationVar(1:loopNumb,5));
+            % designVars.storeOptimizationVar(1:loopNumb,5) = designVars.storeOptimizationVar(1:loopNumb,5)/totalvolume;
+            
+            
+            
+            settings = 0;
+            matProp = 0;
+            hold on
+            p.PlotDesignMetrics( designVars, settings, matProp, loopNumb)
+            xvalues = 1:loopNumb;
+            stairs(xvalues,iterationDiff);
+            hold off
+            
+            w1 = 0;
+            nameGraph = sprintf('./optiParaViaIterations%i.png', w1);
+            print(nameGraph,'-dpng');
+        end
+        
+        
+        
     end
 end

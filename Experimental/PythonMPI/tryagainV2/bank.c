@@ -27,7 +27,9 @@ int main ( int argc, char **argv )
 
       for (i = 0; i < COLS; i++) {
          b[i] = 1;
-         for (j = 0; j < ROWS; j++) a[i][j] = i;
+         for (j = 0; j < ROWS; j++){
+			 a[i][j] = i;
+		 }
       }
 
       MPI_Bcast(b, ROWS, MPI_INT, MASTER_RANK, MPI_COMM_WORLD);

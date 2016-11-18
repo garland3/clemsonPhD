@@ -43,7 +43,7 @@ classdef Configuration
         doPlotHeat = 0;
         doPlotHeatSensitivityTopology = 0;
         doPlotStress = 0;
-        doPlotFinal = 0;
+        doPlotFinal = 1;
         doPlotMetrics = 0;
         doSaveDesignVarsToCSVFile = 0; % set to 1 to write plotFinal csv file instead
         doPlotAppliedStrain = 0; % For debugging only
@@ -89,7 +89,9 @@ classdef Configuration
         %         loadingCase = [111 120]; % up, down, right in top right corrner, left clamp.
         %              loadingCase = [1];
         
-        loadingCase = [300 301 302 303 304 305]; % shoe
+      %  loadingCase = [300 301 302 303 304 305]; % shoe
+         loadingCase = [400 401 402 403 404 405]; % bridge
+%            loadingCase = [404]; % bridge
         %    loadingCase = [302 305]; % shoe
         
         % --------------

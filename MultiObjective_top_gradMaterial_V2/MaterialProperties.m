@@ -72,7 +72,7 @@ classdef MaterialProperties
             obj.SavedDmatrix = zeros(ne,9);
             
             % if not a single meso design
-            if(settings.singleMesoDesign ~=1)
+%             if(settings.singleMesoDesign ~=1)
                 for e = 1:ne
                     % Read the D_h
                     outname = sprintf('./out%i/Dmatrix_%i_forElement_%i.csv',folderNum,oldIteration,e);
@@ -102,27 +102,27 @@ classdef MaterialProperties
                     D_flat = reshape(D,1,9);
                     obj.SavedDmatrix(e,:)=D_flat;
                 end
-            else
-                % ---------------------------------------
-                % if  a single meso design
-                % Read the D_h, get the one and only
-                % ---------------------------------------
-                e = 1
-                outname = sprintf('./out%i/Dmatrix_%i_forElement_%i.csv',folderNum,oldIteration,e);
-                if exist(outname, 'file') == 2
-                    D_h= csvread(outname);
-                else
-                    material1Fraction=1;
-                    D_h = obj.calculateEffectiveConstitutiveEquation(material1Fraction, settings,[]);
-                end
-                
-                
-                for e = 1:ne
-                    D_flat = reshape(D_h,1,9);
-                    obj.SavedDmatrix(e,:)=D_flat;
-                end
-                
-            end
+%             else
+%                 % ---------------------------------------
+%                 % if  a single meso design
+%                 % Read the D_h, get the one and only
+%                 % ---------------------------------------
+%                 e = 1
+%                 outname = sprintf('./out%i/Dmatrix_%i_forElement_%i.csv',folderNum,oldIteration,e);
+%                 if exist(outname, 'file') == 2
+%                     D_h= csvread(outname);
+%                 else
+%                     material1Fraction=1;
+%                     D_h = obj.calculateEffectiveConstitutiveEquation(material1Fraction, settings,[]);
+%                 end
+%                 
+%                 
+%                 for e = 1:ne
+%                     D_flat = reshape(D_h,1,9);
+%                     obj.SavedDmatrix(e,:)=D_flat;
+%                 end
+%                 
+%             end
         end
         
         function [D] = GetSavedDMatrix(obj,e)

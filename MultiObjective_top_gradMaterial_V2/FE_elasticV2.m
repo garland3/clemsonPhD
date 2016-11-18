@@ -43,40 +43,7 @@ elseif loadingCase ==113
     Essential = unique(Essential);    
     F( (row*2)*floor(column/2)) = FappliedLoad; % middle to the right  
     
-% elseif loadingCase ==121
-%     % Testing K_xx
-%     FappliedLoad = 500;
-%     tt=   1:2*row :2*row*(column); % ... % left side
-%     t2=tt+1;
-%     Essential=[tt t2];
-%     Essential = unique(Essential);
-%     % Down in the top right corner
-%     F(ndof-1) = FappliedLoad;
-%     
-% elseif loadingCase ==4
-%     FappliedLoad = -1000;
-%     Essential = [1 2]; % bottom left corner is fixed
-%     Essential = [Essential row*2 row*2-1]; % bottom right corner is fixed
-%     Essential = unique(Essential);
-%     F( (floor(row/2)+1)*2) = FappliedLoad; % force down in the bottom middle
-%     
-% elseif loadingCase ==1
-%     FappliedLoad = 500;
-%     tt=   1:2*row :2*row*(column); % ... % left side
-%     t2=tt+1;
-%     Essential=[tt t2];
-%     Essential = unique(Essential);
-%     % Down in the top right corner
-%     fnodes = row*floor(column/2)*2;
-%     F(fnodes) = FappliedLoad;    
-%     
-% % bridge 1
-% elseif loadingCase ==400
-%     FappliedLoad = 500;   
-%     fnodes = row*(column-1)*2;
-%     F(fnodes) = FappliedLoad;  
-%     bottomFixed = 1;
-%     
+
     % -------------------------------------------------
     %
     % 300s are the shoe loading case. 
@@ -126,7 +93,96 @@ elseif loadingCase ==305
       fnodes =  (row*(column-1)+floor(row/2))*2:2:ndof; % top right half, x  degree of freedome only, pushing off. 
       count = size(fnodes,2);
        F(fnodes) =FappliedLoad/count;
+       
+    % -------------------------------------------------
+    %
+    % 400s are the BRIDGE
+    %
+    % -------------------------------------------------
+elseif loadingCase ==400
     
+   
+     FappliedLoad = -500;   
+      bottomFixed = 1;
+      
+        start = (row*(floor(column/2))+1)*2;
+        endnode=(row*(1+floor(column/2)))*2;
+        
+        startOffset = 0;
+        endOfset = -(floor(3*row/4))*2;
+        
+     fnodes= start+startOffset :2:endnode+endOfset ; % middle, 1/4 load down
+     count = size(fnodes,2);
+     F(fnodes) =FappliedLoad/count;
+
+elseif loadingCase ==401
+     
+     FappliedLoad = -500;   
+      bottomFixed = 1;
+      
+        start = (row*(floor(column/2))+1)*2;
+        endnode=(row*(1+floor(column/2)))*2;
+        
+        startOffset =(floor(1*row/4))*2;
+        endOfset = -(floor(2*row/4))*2;
+        
+     fnodes= start+startOffset :2:endnode+endOfset ; % middle, 1/4 load down
+     count = size(fnodes,2);
+     F(fnodes) =FappliedLoad/count;
+elseif loadingCase ==402
+      FappliedLoad = -500;   
+      bottomFixed = 1;
+      
+        start = (row*(floor(column/2))+1)*2;
+        endnode=(row*(1+floor(column/2)))*2;
+        
+        startOffset =(floor(2*row/4))*2;
+        endOfset = -(floor(1*row/4))*2;
+        
+     fnodes= start+startOffset :2:endnode+endOfset ; % middle, 1/4 load down
+     count = size(fnodes,2);
+     F(fnodes) =FappliedLoad/count;
+      
+elseif loadingCase ==403
+      FappliedLoad = -500;   
+      bottomFixed = 1;
+      
+        start = (row*(floor(column/2))+1)*2;
+        endnode=(row*(1+floor(column/2)))*2;
+        
+        startOffset =(floor(3*row/4))*2;
+        endOfset = 0;
+        
+     fnodes= start+startOffset :2:endnode+endOfset ; % middle, 1/4 load down
+     count = size(fnodes,2);
+     F(fnodes) =FappliedLoad/count;
+     
+ elseif loadingCase ==404
+      FappliedLoad = -500;   
+      bottomFixed = 1;
+      
+        start = (row*(floor(column/2))+1)*2;
+        endnode=(row*(1+floor(column/2)))*2;
+        
+        startOffset =-11;
+        endOfset = 0;
+        
+     fnodes= start+startOffset :2:endnode+endOfset ; % middle, 1/4 load down
+     count = size(fnodes,2);
+     F(fnodes) =FappliedLoad/count;
+  elseif loadingCase ==405
+      FappliedLoad = 500;   
+      bottomFixed = 1;
+      
+        start = (row*(floor(column/2))+1)*2;
+        endnode=(row*(1+floor(column/2)))*2;
+        
+        startOffset =-11;
+        endOfset = 0;
+        
+     fnodes= start+startOffset :2:endnode+endOfset ; % middle, 1/4 load down
+     count = size(fnodes,2);
+     F(fnodes) =FappliedLoad/count;
 end
 
 if(bottomFixed==1)
