@@ -23,7 +23,7 @@ settings.mode =5;
 % 10 = everything working!!!
 % 11 = single meso design, where "singleMeso_elementNumber" and
 % "macro_meso_iteration" specify which one
-% 12 Run after meso macro iterations and combines the 
+% 12 Run after meso macro iterations and combines the
 
 % target volumes of material 1 and 2
 settings.v1 = 0.1;
@@ -76,17 +76,17 @@ else
     settings.nelxMeso = 40; %35;
     settings.nelyMeso =40; %35;
     settings.terminationAverageCount = 10;
-    settings.terminationCriteria =0.0001; % 0.0%
+    settings.terminationCriteria =0.001; % 0.0%
     settings.maxFEACalls = 150;
     settings.maxMasterLoops = 150;
-     
+    
 end
 
 if(str2num(useInputArgs) ==1)
     % parse potential input arguments.
     settings.macro_meso_iteration=str2num(macro_meso_iteration);
     settings.mode=str2num(mode);
-    settings.w1 =str2num(w1text);  
+    settings.w1 =str2num(w1text);
     settings= settings.UpdateVolTargetsAndObjectiveWeights();
     
     
@@ -107,7 +107,7 @@ settings
 onlyTopChangeOnFirstIteration = 0; % 1 = true, 0 = false;
 
 if(settings.mode ==12)
-     settings.macro_meso_iteration=5;
+    settings.macro_meso_iteration=5;
     NumMacroMesoIteration= settings.macro_meso_iteration;
     p=plotResults;
     p.PlotEverythingTogether(NumMacroMesoIteration);
@@ -183,7 +183,7 @@ if(settings.doUseMultiElePerDV) % if elements per design var.
     yy = settings.numVarsY;
 end
 
-
+onlyplotfinal =0;
 %% ---------------------------------------------------
 % Macro Design
 % ---------------------------------------------------
@@ -208,10 +208,10 @@ while status == 0  && masterloop<=settings.maxMasterLoops && FEACalls<=settings.
                     designVars.temp1 = designVars.temp1/temp1Max;
                     temp2Max = -1* min(min(designVars.temp2));
                     designVars.temp2 = designVars.temp2/temp2Max;
-
+                    
                     designVars.dc = settings.w1*designVars.temp1+settings.w2*designVars.temp2; % add the two sensitivies together using their weights
                 else
-                     designVars.dc = settings.w1*designVars.temp1;
+                    designVars.dc = settings.w1*designVars.temp1;
                 end
                 % FILTERING OF SENSITIVITIES
                 
@@ -228,30 +228,32 @@ while status == 0  && masterloop<=settings.maxMasterLoops && FEACalls<=settings.
                 densitySum = sum(sum(designVars.x));
                 designVars.storeOptimizationVar = [designVars.storeOptimizationVar;designVars.c, designVars.cCompliance, designVars.cHeat,vol1Fraction,vol2Fraction,fractionCurrent_V1Local,densitySum];
                 
-                p = plotResults;
-                p.plotTopAndFraction(designVars,  settings, matProp, FEACalls); % plot the results.
+                if(onlyplotfinal~=1)
+                    p = plotResults;
+                    p.plotTopAndFraction(designVars,  settings, matProp, FEACalls); % plot the results.
+                end
                 status = TestForTermaination(designVars, settings);
                 if(status ==1)
                     m = 'break in topology'
                     break;
                 end
             end
-        end
-    end
-    
-    % exit the master loop if we termination criteria are true.
-    if(status ==1)
-        m = 'exiting master (break in topology)'
-        break;
-    end
-    
-    % --------------------------------
-    % Volume fraction optimization
-    % --------------------------------
-    if ( settings.mode ==2 || settings.mode ==3 || settings.mode == 10 || settings.mode ==5)
-        for loopVolFrac = 1:1
-            designVars = designVars.CalculateSensitivies( settings, matProp, masterloop);
-            FEACalls = FEACalls+1;
+            %         end
+            %     end
+            %
+            %     % exit the master loop if we termination criteria are true.
+            %     if(status ==1)
+            %         m = 'exiting master (break in topology)'
+            %         break;
+            %     end
+            %
+            %     % --------------------------------
+            %     % Volume fraction optimization
+            %     % --------------------------------
+            %     if ( settings.mode ==2 || settings.mode ==3 || settings.mode == 10 || settings.mode ==5)
+            %         for loopVolFrac = 1:1
+            %             designVars = designVars.CalculateSensitivies( settings, matProp, masterloop);
+            %             FEACalls = FEACalls+1;
             
             % for j = 1:5
             [vol1Fraction, vol2Fraction] =  designVars.CalculateVolumeFractions(settings);
@@ -261,18 +263,18 @@ while status == 0  && masterloop<=settings.maxMasterLoops && FEACalls<=settings.
             targetFraction_v1 = settings.v1/(settings.v1+settings.v2);
             
             % Normalize the sensitives.
-             if (settings.w1 ~= 1) % if we are using the heat objective
+            if (settings.w1 ~= 1) % if we are using the heat objective
                 temp1Max = max(max(abs(designVars.g1elastic)));
                 designVars.g1elastic = designVars.g1elastic/temp1Max;
                 temp2Max = max(max(abs(designVars.g1heat)));
                 designVars.g1heat = designVars.g1heat/temp2Max;
-
+                
                 g1 = settings.w1*designVars.g1elastic+settings.w2*designVars.g1heat; % Calculate the weighted volume fraction change sensitivity.
-             else
-                    g1 = settings.w1*designVars.g1elastic;
-             end
-             
-             % Filter the g1 sensitivies
+            else
+                g1 = settings.w1*designVars.g1elastic;
+            end
+            
+            % Filter the g1 sensitivies
             [g1]   = check(xx,yy,settings.rmin,designVars.x,g1);
             G1 = g1 - designVars.lambda1 +1/(designVars.mu1)*( targetFraction_v1-fractionCurrent_V1Local); % add in the lagrangian
             designVars.w = designVars.w+settings.timestep*G1; % update the volume fraction.
@@ -285,8 +287,11 @@ while status == 0  && masterloop<=settings.maxMasterLoops && FEACalls<=settings.
             %change = max(max(abs(designVars.x-designVars.xold)));
             densitySum = sum(sum(designVars.x));
             designVars.storeOptimizationVar = [designVars.storeOptimizationVar;designVars.c, designVars.cCompliance, designVars.cHeat,vol1Fraction,vol2Fraction,fractionCurrent_V1Local,densitySum];
-            p = plotResults;
-            p.plotTopAndFraction(designVars, settings, matProp,FEACalls ); % plot the results.
+            
+            if(onlyplotfinal~=1)
+                p = plotResults;
+                p.plotTopAndFraction(designVars, settings, matProp,FEACalls ); % plot the results.
+            end
             
             
             disp([' FEA calls.: ' sprintf('%4i',FEACalls) ' Obj.: ' sprintf('%10.4f',designVars.c) ...
@@ -312,9 +317,10 @@ if ( settings.mode ==2 || settings.mode ==3 || settings.mode == 10 || settings.m
         
         for loadcaseIndex = 1:t2
             %   loadcase = settings.loadingCase(loadcaseIndex);
+            p = plotResults;
             p.plotTopAndFraction(designVars, settings, matProp,FEACalls ); % plot the results.
             hold on
-           p.plotStrainField(settings,designVars,folderNum,loadcaseIndex)
+            p.plotStrainField(settings,designVars,folderNum,loadcaseIndex)
             nameGraph = sprintf('./gradTopOptimization%fwithmesh%i_load%i.png', settings.w1,settings.macro_meso_iteration,loadcaseIndex);
             print(nameGraph,'-dpng');
             hi=  figure(1);
@@ -455,99 +461,7 @@ end
 % huge array showing the actual shape of the structure, tile the
 % -------------------------------------
 if(settings.mode ==7||settings.mode ==8  || settings.mode ==10 )
-    close all
-    p = plotResults;
-    
-    %     mesoSettings = settings;
-    %     mesoSettings.nelx = settings.nelxMeso;
-    %     mesoSettings.nely = settings.nelyMeso;
-    temp= settings.mesoAddAdjcentCellBoundaries;
-    settings.mesoAddAdjcentCellBoundaries=0;
-    [designVarsMeso, mesoSettings] = GenerateDesignVarsForMesoProblem(settings,1);
-    settings.mesoAddAdjcentCellBoundaries=temp;
-    
-    mesoSettings.doUseMultiElePerDV =settings.doUseMultiElePerDV;
-    numTilesX=settings.numTilesX;
-    numTilesY = settings.numTilesY;
-    
-    
-    if(settings.doUseMultiElePerDV==1) % if elements per design var.
-        settings = settings.CalculateDesignVarsPerFEAelement();
-        ne =  settings.numVarsX*settings.numVarsY;
-        totalX=settings.numVarsX*mesoSettings.nelx*numTilesX;
-        totalY=settings.numVarsY*mesoSettings.nely*numTilesY;
-        completeStruct = zeros(totalY,totalX);
-    else
-        % Generate huge area
-        totalX=settings.nelx*mesoSettings.nelx*numTilesX;
-        totalY=settings.nely*mesoSettings.nely*numTilesY;
-        
-        completeStruct = zeros(totalY,totalX);
-        ne = settings.nelx*settings.nely; % number of elements
-    end
-    
-    %     xaverage = zeros(mesoSettings.nely,mesoSettings.nelx);% [];
-    if(settings.singleMesoDesign)
-        temp1average = zeros(mesoSettings.nely,mesoSettings.nelx);% [];
-        %         if(settings.macro_meso_iteration>1)
-        %              outname = sprintf('./out%i/singleMesoD_mesoMacro%i.csv',folderNum,macro_meso_iteration);
-        %            csvwrite(outname, D_homog);
-        folderNum=settings.iterationNum;
-        elementNumber=1
-        outname = sprintf('./out%i/densityfield%iforElement%i.csv',folderNum,settings.macro_meso_iteration,elementNumber);
-        savedX=csvread(outname);
-        
-        %         end
-    end
-    count = 1;
-    
-    
-    for e = 1:ne
-        fprintf('element %i of %i\n',e,ne);
-        macroElementProps = GetMacroElementPropertiesFromCSV(settings,e);
-        % Check if void
-        if(macroElementProps.density>settings.voidMaterialDensityCutOff)
-            if(settings.singleMesoDesign ~=1)
-                x=GetMesoUnitCellDesignFromCSV(settings,e);
-            else
-                x = savedX;
-            end
-            yShift = (macroElementProps.yPosition-1)*mesoSettings.nely*numTilesY+1;
-            xShift = (macroElementProps.xPosition-1)*mesoSettings.nelx*numTilesX+1;
-            designVarsMeso.x = x;
-            designVarsMeso=TileMesoStructure(mesoSettings, designVarsMeso);
-            completeStruct(yShift:(yShift+mesoSettings.nely*numTilesY-1),xShift:(xShift+mesoSettings.nelx*numTilesX-1))=designVarsMeso.xTile;
-            
-        end
-    end
-    
-    %           subplot(2,2,3);
-    plotname = sprintf('complete structure %i',settings.macro_meso_iteration);
-    p.PlotArrayGeneric( completeStruct, plotname)
-    rgbSteps = 100;  caxis([0,1]);
-    map = colormap; % current colormap
-    middPoint = floor(rgbSteps/4);
-    map(1:middPoint,:) = [ones(middPoint,1),ones(middPoint,1),ones(middPoint,1)];
-    for zz =    middPoint:rgbSteps
-        map(zz,:) = [0,               1- zz/rgbSteps, 0.5];
-    end
-    colormap(map)
-    %     colorbar
-    freezeColors
-    nameGraph = sprintf('./completeStucture%f_macroIteration_%i.png', settings.w1,settings.macro_meso_iteration);
-    print(nameGraph,'-dpng', '-r800')
-    outname = sprintf('./completeStucture%f_macroIteration_%i.csv', settings.w1,settings.macro_meso_iteration);
-    csvwrite(outname,completeStruct);
-    
-    % Write ascii STL from gridded data
-    %     [X,Y] = deal(1:40);             % Create grid reference
-    %     X = 1:totalX;
-    %     Y = 1:totalY;
-    %     Z = completeStruct*100;                  % Create grid height
-    %     nameGraph = sprintf('./stl%f_macroIteration_%i.stl', settings.w1,settings.macro_meso_iteration);
-    %     stlwrite(nameGraph,X,Y,Z,'mode','binary')
-    
-    
+    GenerateCompleteStructureV2Improved(settings)
 end
 
 
@@ -591,3 +505,259 @@ end
 
 
 
+% function []= GenerateCompleteStructureV1(settings)
+% 
+% postProcess = 1;
+% close all
+% p = plotResults;
+% 
+% %     mesoSettings = settings;
+% %     mesoSettings.nelx = settings.nelxMeso;
+% %     mesoSettings.nely = settings.nelyMeso;
+% temp= settings.mesoAddAdjcentCellBoundaries;
+% settings.mesoAddAdjcentCellBoundaries=0;
+% [designVarsMeso, mesoSettings] = GenerateDesignVarsForMesoProblem(settings,1);
+% settings.mesoAddAdjcentCellBoundaries=temp;
+% 
+% mesoSettings.doUseMultiElePerDV =settings.doUseMultiElePerDV;
+% numTilesX=settings.numTilesX;
+% numTilesY = settings.numTilesY;
+% 
+% 
+% % if(settings.doUseMultiElePerDV==1) % if elements per design var.
+% %     settings = settings.CalculateDesignVarsPerFEAelement();
+% %     ne =  settings.numVarsX*settings.numVarsY;
+% %     totalX=settings.numVarsX*mesoSettings.nelx*numTilesX;
+% %     totalY=settings.numVarsY*mesoSettings.nely*numTilesY;
+% %     completeStruct = zeros(totalY,totalX);
+% % else
+% % Generate huge area
+% totalX=settings.nelx*mesoSettings.nelx*numTilesX;
+% totalY=settings.nely*mesoSettings.nely*numTilesY;
+% 
+% completeStruct = zeros(totalY,totalX);
+% ne = settings.nelx*settings.nely; % number of elements
+% % end
+% 
+% %     xaverage = zeros(mesoSettings.nely,mesoSettings.nelx);% [];
+% % if(settings.singleMesoDesign)
+% %     temp1average = zeros(mesoSettings.nely,mesoSettings.nelx);% [];
+% %     %         if(settings.macro_meso_iteration>1)
+% %     %              outname = sprintf('./out%i/singleMesoD_mesoMacro%i.csv',folderNum,macro_meso_iteration);
+% %     %            csvwrite(outname, D_homog);
+% %     folderNum=settings.iterationNum;
+% %     elementNumber=1
+% %     outname = sprintf('./out%i/densityfield%iforElement%i.csv',folderNum,settings.macro_meso_iteration,elementNumber);
+% %     savedX=csvread(outname);
+% %
+% %     %         end
+% % end
+% % count = 1;
+% 
+% 
+% % -------------------------------------
+% % No, post processing
+% % -------------------------------------
+% if(postProcess~=1)
+%     
+%     for e = 1:ne
+%         fprintf('element %i of %i\n',e,ne);
+%         macroElementProps = GetMacroElementPropertiesFromCSV(settings,e);
+%         % Check if void
+%         if(macroElementProps.density>settings.voidMaterialDensityCutOff)
+%             if(settings.singleMesoDesign ~=1)
+%                 x=GetMesoUnitCellDesignFromCSV(settings,e);
+%             else
+%                 x = savedX;
+%             end
+%             yShift = (macroElementProps.yPosition-1)*mesoSettings.nely*numTilesY+1;
+%             xShift = (macroElementProps.xPosition-1)*mesoSettings.nelx*numTilesX+1;
+%             designVarsMeso.x = x;
+%             designVarsMeso=TileMesoStructure(mesoSettings, designVarsMeso);
+%             completeStruct(yShift:(yShift+mesoSettings.nely*numTilesY-1),xShift:(xShift+mesoSettings.nelx*numTilesX-1))=designVarsMeso.xTile;
+%             
+%         end
+%     end
+% else
+%     % -------------------------------------
+%     % Yes, With, post processing
+%     % -------------------------------------
+%     for e = 1:ne
+%         fprintf('element %i of %i\n',e,ne);
+%         macroElementProps = GetMacroElementPropertiesFromCSV(settings,e);
+%         % Check if void
+%         if(macroElementProps.density>settings.voidMaterialDensityCutOff)
+%             if(settings.singleMesoDesign ~=1)
+%                 x=GetMesoUnitCellDesignFromCSV(settings,e);
+%             else
+%                 x = savedX;
+%             end
+%             yShift = (macroElementProps.yPosition-1)*mesoSettings.nely*numTilesY+1;
+%             xShift = (macroElementProps.xPosition-1)*mesoSettings.nelx*numTilesX+1;
+%             designVarsMeso.x = x;
+%             designVarsMeso=TileMesoStructure(mesoSettings, designVarsMeso);
+%             completeStruct(yShift:(yShift+mesoSettings.nely*numTilesY-1),xShift:(xShift+mesoSettings.nelx*numTilesX-1))=designVarsMeso.xTile;
+%             
+%         end
+%     end
+% end
+% 
+% %           subplot(2,2,3);
+% plotname = sprintf('complete structure %i',settings.macro_meso_iteration);
+% p.PlotArrayGeneric( completeStruct, plotname)
+% rgbSteps = 100;  caxis([0,1]);
+% map = colormap; % current colormap
+% middPoint = floor(rgbSteps/4);
+% map(1:middPoint,:) = [ones(middPoint,1),ones(middPoint,1),ones(middPoint,1)];
+% for zz =    middPoint:rgbSteps
+%     map(zz,:) = [0,               1- zz/rgbSteps, 0.5];
+% end
+% colormap(map)
+% %     colorbar
+% freezeColors
+% nameGraph = sprintf('./completeStucture%f_macroIteration_%i.png', settings.w1,settings.macro_meso_iteration);
+% print(nameGraph,'-dpng', '-r800')
+% outname = sprintf('./completeStucture%f_macroIteration_%i.csv', settings.w1,settings.macro_meso_iteration);
+% csvwrite(outname,completeStruct);
+% 
+% % Write ascii STL from gridded data
+% %     [X,Y] = deal(1:40);             % Create grid reference
+% %     X = 1:totalX;
+% %     Y = 1:totalY;
+% %     Z = completeStruct*100;                  % Create grid height
+% %     nameGraph = sprintf('./stl%f_macroIteration_%i.stl', settings.w1,settings.macro_meso_iteration);
+% %     stlwrite(nameGraph,X,Y,Z,'mode','binary')
+
+
+function []= GenerateCompleteStructureV2Improved(settings)
+
+postProcess = 1;
+close all
+p = plotResults;
+
+
+temp= settings.mesoAddAdjcentCellBoundaries;
+settings.mesoAddAdjcentCellBoundaries=0;
+[designVarsMeso, mesoSettings] = GenerateDesignVarsForMesoProblem(settings,1);
+settings.mesoAddAdjcentCellBoundaries=temp;
+
+mesoSettings.doUseMultiElePerDV =settings.doUseMultiElePerDV;
+numTilesX=settings.numTilesX;
+numTilesY = settings.numTilesY;
+
+% Generate huge area
+totalX=settings.nelx*mesoSettings.nelx*numTilesX
+totalY=settings.nely*mesoSettings.nely*numTilesY
+
+completeStruct = zeros(totalY,totalX);
+ne = settings.nelx*settings.nely; % number of elements
+
+
+%--------------------------------------------
+% Get the density field
+%--------------------------------------------
+macro_meso_iteration = settings.macro_meso_iteration;
+macroElementProps = macroElementProp;
+% macroElementProps.elementNumber = e;
+folderNum = settings.iterationNum;
+% GET the saved element to XY position map (needed for x and w vars retrival)
+outname = sprintf('./out%i/elementXYposition%i.csv',folderNum,macro_meso_iteration);
+elementXYposition=csvread(outname);
+% Get the density field
+outname = sprintf('./out%i/densityfield%i.csv',folderNum,macro_meso_iteration);
+xx = csvread(outname);
+
+
+
+
+for e = 1:ne
+    fprintf('element %i of %i\n',e,ne);
+    macroElementProps.elementNumber=e;
+    results = elementXYposition(macroElementProps.elementNumber,:);
+    macroElementProps.yPosition = results(1);
+    macroElementProps.xPosition = results(2);
+    macroElementProps.density = xx(macroElementProps.yPosition,macroElementProps.xPosition );
+    
+    % Check if void
+    if(macroElementProps.density>settings.voidMaterialDensityCutOff)
+        x=GetMesoUnitCellDesignFromCSV(settings,e);
+        designVarsMeso.x = x;
+        % -------------------------------------
+        % No, post processing
+        % -------------------------------------
+        if(postProcess~=1)
+            yShift = (macroElementProps.yPosition-1)*mesoSettings.nely*numTilesY+1;
+            xShift = (macroElementProps.xPosition-1)*mesoSettings.nelx*numTilesX+1;
+            designVarsMeso=TileMesoStructure(mesoSettings, designVarsMeso);
+            completeStruct(yShift:(yShift+mesoSettings.nely*numTilesY-1),xShift:(xShift+mesoSettings.nelx*numTilesX-1))=designVarsMeso.xTile;
+        else
+            % -------------------------------------
+            % Yes, With, post processing
+            % -------------------------------------
+            step = 1;
+            completeStruct= TileMesoStructureV2(mesoSettings,settings, designVarsMeso,macroElementProps,xx,completeStruct,step);
+            
+        end
+        
+        
+    end
+end
+
+if(postProcess==1)
+    for e = 1:ne
+        fprintf('step 2element %i of %i\n',e,ne);
+        macroElementProps.elementNumber=e;
+        results = elementXYposition(macroElementProps.elementNumber,:);
+        macroElementProps.yPosition = results(1);
+        macroElementProps.xPosition = results(2);
+        macroElementProps.density = xx(macroElementProps.yPosition,macroElementProps.xPosition );
+        
+        % Check if void
+        %if(macroElementProps.density>settings.voidMaterialDensityCutOff)
+             step = 2;
+            completeStruct= TileMesoStructureV2(mesoSettings,settings, designVarsMeso,macroElementProps,xx,completeStruct,step);            
+        %end
+    end
+end
+
+% set the max value to be 1
+completeStruct( completeStruct>1)=1;
+
+ completeStruct(completeStruct>settings.voidMaterialDensityCutOff)=1;
+ completeStruct(completeStruct<settings.voidMaterialDensityCutOff)=0;
+
+
+plotname = sprintf('complete structure %i',settings.macro_meso_iteration);
+p.PlotArrayGeneric( completeStruct, plotname)
+rgbSteps = 100;  caxis([0,1]);
+map = colormap; % current colormap
+middPoint = floor(rgbSteps/4);
+map(1:middPoint,:) = [ones(middPoint,1),ones(middPoint,1),ones(middPoint,1)];
+for zz =    middPoint:rgbSteps
+    map(zz,:) = [0,               1- zz/rgbSteps, 0.5];
+end
+colormap(map)
+%     colorbar
+freezeColors
+nameGraph = sprintf('./completeStucture%f_macroIteration_%i.png', settings.w1,settings.macro_meso_iteration);
+print(nameGraph,'-dpng', '-r1200')
+outname = sprintf('./completeStucture%f_macroIteration_%i.csv', settings.w1,settings.macro_meso_iteration);
+csvwrite(outname,completeStruct);
+
+[xsize, ysize] = size(completeStruct)
+ratioLenghtToHieght=2/10;
+height = xsize*ratioLenghtToHieght;
+
+% Write ascii STL from gridded data
+generateSTL = 0
+if(generateSTL==1)
+%     [X,Y] = deal(1:40);             % Create grid reference
+%     X = 1:totalX;
+%     Y = 1:totalY;
+%     Z = completeStruct*height;                  % Create grid height
+%     nameGraph = sprintf('./stl%f_macroIteration_%i.stl', settings.w1,settings.macro_meso_iteration);
+%     stlwrite(nameGraph,X,Y,Z,'mode','binary')
+%   temp(flipud(tril(temp)==temp)) = 0;
+ completeStruct(completeStruct>settings.voidMaterialDensityCutOff)=1;
+ completeStruct(completeStruct<settings.voidMaterialDensityCutOff)=0;
+end

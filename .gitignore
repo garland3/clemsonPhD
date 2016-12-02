@@ -23,3 +23,5 @@ MultiObjective_top_gradMaterial_V2/out2/
 MultiObjective_top_gradMaterial_V2/out3/
 
 *.png
+*.stl
+*.csv

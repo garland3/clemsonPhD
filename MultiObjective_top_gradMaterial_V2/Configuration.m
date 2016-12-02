@@ -97,8 +97,8 @@ classdef Configuration
         % --------------
         % Meso tiling info
         %--------------
-        numTilesX = 2;
-        numTilesY = 2;
+        numTilesX = 3;
+        numTilesY = 3;
         %         sensitivityTile = 5; % use this tile to calcualte the sensitivity
         plotSensitivityWhilerunning = 0;
         
