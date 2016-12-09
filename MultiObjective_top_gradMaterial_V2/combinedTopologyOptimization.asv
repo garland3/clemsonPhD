@@ -8,7 +8,7 @@ function combinedTopologyOptimization(useInputArgs, w1text, macro_meso_iteration
 close all
 
 % --------------------------------------
-%  Settings
+% %% Settings
 % --------------------------------------------
 settings = Configuration;
 
@@ -41,7 +41,7 @@ if(RunPalmetto==0)
     % ------------
     % Normal running case
     % -------------------
-    settings.macro_meso_iteration = str2double(macro_meso_iteration);
+    settings.macro_meso_iteration = str2num(macro_meso_iteration);
     settings.nelx = 20;
     settings.nely = 20;
     settings.numXElmPerDV=1;
@@ -71,11 +71,11 @@ else
     
 end
 
-if(str2double(useInputArgs) ==1)
+if(str2num(useInputArgs) ==1)
     % parse potential input arguments.
-    settings.macro_meso_iteration=str2double(macro_meso_iteration);
-    settings.mode=str2double(mode);
-    settings.w1 =str2double(w1text);
+    settings.macro_meso_iteration=str2num(macro_meso_iteration);
+    settings.mode=str2num(mode);
+    settings.w1 =str2num(w1text);
     settings= settings.UpdateVolTargetsAndObjectiveWeights();    
     
     % -------------------------
@@ -83,7 +83,7 @@ if(str2double(useInputArgs) ==1)
     % -------------------------
     if ( settings.mode == 11)
         ne = settings.nelx*settings.nely; % number of elements
-        elocal =str2double(singleMeso_elementNumber);
+        elocal =str2num(singleMeso_elementNumber);
         MesoDesignWrapper(settings,elocal, ne,matProp);
         exit
     end
@@ -133,11 +133,13 @@ if ( macroDesignMode==1)
     
     matProp=  matProp.ReadConstitutiveMatrixesFromFiles(settings);
     
-    if (settings.mode == 10 ||settings.mode == 5)
+    if ( settings.mode == 10 ||settings.mode == 5)
         designVars= ReadXMacroFromCSV( settings,designVars);
     end    
 end
-masterloop = 0; FEACalls = 0; 
+masterloop = 0; FEACalls = 0; status=0;
+
+
 
 
 
@@ -178,7 +180,8 @@ if(macroDesignMode==1)
             [designVars.dc]   = check( settings.nelx, settings.nely,settings.rmin,designVars.x,designVars.dc);
             % DESIGN UPDATE BY THE OPTIMALITY CRITERIA METHOD
             [designVars.x]    = OC( settings.nelx, settings.nely,designVars.x,settings.totalVolume,designVars.dc, designVars, settings);
-            % PRINT RESULTS          
+            % PRINT RESULTS
+            %change = max(max(abs(designVars.x-designVars.xold)));
             disp([' FEA calls.: ' sprintf('%4i',FEACalls) ' Obj.: ' sprintf('%10.4f',designVars.c) ...
                 ' Vol. 1: ' sprintf('%6.3f', vol1Fraction) ...
                 ' Vol. 2: ' sprintf('%6.3f', vol2Fraction) ...
@@ -192,18 +195,19 @@ if(macroDesignMode==1)
                 p.plotTopAndFraction(designVars,  settings, matProp, FEACalls); % plot the results.
             end
            
-                % TEST FOR TERMINATION      
             if(TestForTermaination(designVars, settings) ==1)
                 disp('break in topology');
                 break;
             end
-        end % END TOPOLOGY OPTIMIZATION CODE
+        end
         
-       % --------------------------------
-       % Volume fraction optimization
-       % --------------------------------
+        %     % --------------------------------
+        %     % Volume fraction optimization
+        %     % --------------------------------
         if ( settings.mode ==2 || settings.mode ==3 || settings.mode == 10 || settings.mode ==5)
-           
+          
+            
+            % for j = 1:5
             [vol1Fraction, vol2Fraction] =  designVars.CalculateVolumeFractions(settings);
             
             totalVolLocal = vol1Fraction+ vol2Fraction;
@@ -225,11 +229,14 @@ if(macroDesignMode==1)
             % Filter the g1 sensitivies
             [g1]   = check( settings.nelx, settings.nely,settings.rmin,designVars.x,g1);
             G1 = g1 - designVars.lambda1 +1/(designVars.mu1)*( targetFraction_v1-fractionCurrent_V1Local); % add in the lagrangian
-            designVars.w = designVars.w+settings.timestep*G1; % update the volume fraction.            
+            designVars.w = designVars.w+settings.timestep*G1; % update the volume fraction.
+            
             designVars.w = max(min( designVars.w,1),0);    % Don't allow the    vol fraction to go above 1 or below 0
             designVars.lambda1 =  designVars.lambda1 -1/(designVars.mu1)*(targetFraction_v1-fractionCurrent_V1Local)*settings.volFractionDamping;
-                        
-            % PRINT RESULTS           
+            
+            
+            % PRINT RESULTS
+            %change = max(max(abs(designVars.x-designVars.xold)));
             densitySum = sum(sum(designVars.x));
             designVars.storeOptimizationVar = [designVars.storeOptimizationVar;designVars.c, designVars.cCompliance, designVars.cHeat,vol1Fraction,vol2Fraction,fractionCurrent_V1Local,densitySum];
             
@@ -237,32 +244,30 @@ if(macroDesignMode==1)
                 p = plotResults;
                 p.plotTopAndFraction(designVars, settings, matProp,FEACalls ); % plot the results.
             end
-                        
+            
+            
             disp([' FEA calls.: ' sprintf('%4i',FEACalls) ' Obj.: ' sprintf('%10.4f',designVars.c) ...
                 ' Vol. 1: ' sprintf('%6.3f', vol1Fraction) ...
                 ' Vol. 2: ' sprintf(    '%6.3f', vol2Fraction) ...
-                ' Lambda.: ' sprintf('%6.3f',designVars.lambda1  )])           
-           
-             % TEST FOR TERMINATION      
-            if( TestForTermaination(designVars, settings) ==1)
-               disp('break in vol fraction');
+                ' Lambda.: ' sprintf('%6.3f',designVars.lambda1  )])
+            % obj.storeOptimizationVar = [obj.storeOptimizationVar;obj.c,  obj.cCompliance, obj.cHeat ];
+            status = TestForTermaination(designVars, settings);
+            if(status ==1)
+                m = 'break in vol fraction'
                 break;
             end
-        end % END VOLUME FRACTION OPTIMIZATION CODE
+        end
         
         
     end
 end
 
-% -----------------------------------------------------------
-% PLOT THE FINAL MACRO DESIGN WITH THE STRAINED FEA GRID FOR EACH LOAD
-%
-% SAVE THE STORED OPTIMIZATION VARRIABLE DATA TO A CSV FILE
-% ----------------------------------------------------------
+
 if ( settings.mode ==2 || settings.mode ==3 || settings.mode == 10 || settings.mode ==5)
     folderNum = settings.iterationNum;
     if(1==1)
-        [~, t2] = size(settings.loadingCase);        
+        [~, t2] = size(settings.loadingCase);
+        
         for loadcaseIndex = 1:t2
             %   loadcase = settings.loadingCase(loadcaseIndex);
             p = plotResults;
@@ -275,10 +280,12 @@ if ( settings.mode ==2 || settings.mode ==3 || settings.mode == 10 || settings.m
             cla(hi);
             hold off
         end
-    end    
+    end
+    
     
     outname = sprintf('./out%i/storeOptimizationVarMacroLoop%i.csv',folderNum,settings.macro_meso_iteration);
-    csvwrite(outname,designVars.storeOptimizationVar);    
+    csvwrite(outname,designVars.storeOptimizationVar);
+    status
 end
 
 % ---------------------------------------------

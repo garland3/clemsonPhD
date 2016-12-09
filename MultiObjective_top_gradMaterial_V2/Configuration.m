@@ -15,7 +15,7 @@ classdef Configuration
         numVarsX;
         numVarsY;
         
-        mesoplotfrequency; % how often to plot the meso level design.
+        mesoplotfrequency=100; % how often to plot the meso level design.
         
         nelxMeso = 5;
         nelyMeso = 5;
@@ -31,8 +31,8 @@ classdef Configuration
         timestep = 0.1; % time step for the volume fraction update algorithm
         volFractionDamping = 0.1;
         iterationsPerPlot = 5;
-        w1 = 0; % weight elastic for multi-objective
-        w2;
+        w1 = 1; % weight elastic for multi-objective, % do not set to zero, instead set to 0.0001. 
+        w2=0;
         voidMaterialDensityCutOff = 0.3; % everything below this density is considered void.
         
         noNewMesoDesignDensityCutOff = 0.15; % any densities below this will not be redesigned. Having a different value than voidMaterialDensityCutOft helps stabalize the algorithm on the structure edges.
@@ -47,8 +47,8 @@ classdef Configuration
         doPlotMetrics = 0;
         doSaveDesignVarsToCSVFile = 0; % set to 1 to write plotFinal csv file instead
         doPlotAppliedStrain = 0; % For debugging only
-        v1 = 0.10; % amount of material 1 to use. default to 20%
-        v2 = 0.10; % amount of material 2 to use. default to 20%, reduced so there is less meso structures to compute
+        v1 = 0.1; % amount of material 1 to use. default to 10%
+        v2 = 0.3; % amount of material 2 to use. default to 30%, reduced so there is less meso structures to compute
         totalVolume; % = v1+v2;
         
         % ----------------
