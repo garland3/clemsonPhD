@@ -15,6 +15,7 @@ settings = Configuration;
 settings.mode =5;
 % 1 = topology only,
 % 2 = material optimization only.
+% 0 = 
 % 3 = both mateiral vol fraction and topology
 % 4 = meso testing only.
 % 5 = Run complete macro optimization, save results to .csv files.
@@ -116,14 +117,16 @@ if ( macroDesignMode==1)
     % ------------------------------
     designVars.x(1:settings.nely,1:settings.nelx) =settings.v1+settings.v2; % artificial density of the elements
     designVars.w(1:settings.nely,1:settings.nelx)  =settings.v1; % actual volume fraction composition of each element
-    designVars.temp1(1:settings.nely,1:settings.nelx) = 0;
-    designVars.temp2(1:settings.nely,1:settings.nelx) = 0;
+    
+    designVars.sensitivityElastic(1:settings.nely,1:settings.nelx) = 0;
+    designVars.sensitivityHeat(1:settings.nely,1:settings.nelx) = 0;
+    
     %designVars.complianceSensitivity(1:settings.nely,1:settings.nelx) = 0;
     if (settings.doPlotStress == 1)
         designVars.totalStress(1:settings.nely,1:settings.nelx) = 0;
     end
-    designVars.g1elastic(1:settings.nely,1:settings.nelx) = 0;
-    designVars.g1heat(1:settings.nely,1:settings.nelx) = 0;
+%     designVars.g1elastic(1:settings.nely,1:settings.nelx) = 0;
+%     designVars.g1heat(1:settings.nely,1:settings.nelx) = 0;
     % end
     
     designVars = designVars.CalcIENmatrix(settings);
@@ -147,13 +150,13 @@ onlyplotfinal =0;
 % ---------------------------------------------------
 % START ITERATION
 if(macroDesignMode==1)
-    while status == 0  && masterloop<=settings.maxMasterLoops && FEACalls<=settings.maxFEACalls
+    while  masterloop<=settings.maxMasterLoops && FEACalls<=settings.maxFEACalls
         masterloop = masterloop + 1;        
         
         % --------------------------------
         % Run FEA, calculate sensitivities
         % --------------------------------
-        designVars = designVars.CalculateSensitivies(settings, matProp, masterloop);
+        designVars = designVars.RunFEAs(settings, matProp, masterloop);
         [vol1Fraction, vol2Fraction] =  designVars.CalculateVolumeFractions(settings);
         
         FEACalls = FEACalls+1;
@@ -161,20 +164,20 @@ if(macroDesignMode==1)
         % --------------------------------
         % Topology Optimization
         % --------------------------------
-        if ( settings.mode == 1 || settings.mode == 3 || settings.mode == 10 || settings.mode ==5)            
+        if ( settings.mode == 1 || settings.mode == 3 || settings.mode == 10 || settings.mode ==5)      
+            designVars = designVars.CalculateTopologySensitivity(settings, matProp, masterloop);
             % normalize the sensitivies  by dividing by their max values.
             if (settings.w1 ~= 1) % if we are using the heat objective
-                temp1Max =-1* min(min(designVars.temp1));
-                designVars.temp1 = designVars.temp1/temp1Max;
-                temp2Max = -1* min(min(designVars.temp2));
-                designVars.temp2 = designVars.temp2/temp2Max;
+                temp1Max =-1* min(min(designVars.sensitivityElastic));
+                designVars.sensitivityElastic = designVars.sensitivityElastic/temp1Max;
+                temp2Max = -1* min(min(designVars.sensitivityHeat));
+                designVars.sensitivityHeat = designVars.sensitivityHeat/temp2Max;
                 
-                designVars.dc = settings.w1*designVars.temp1+settings.w2*designVars.temp2; % add the two sensitivies together using their weights
+                designVars.dc = settings.w1*designVars.sensitivityElastic+settings.w2*designVars.sensitivityHeat; % add the two sensitivies together using their weights
             else
-                designVars.dc = settings.w1*designVars.temp1;
+                designVars.dc = settings.w1*designVars.sensitivityElastic;
             end
-            % FILTERING OF SENSITIVITIES
-            
+            % FILTERING OF SENSITIVITIES            
             [designVars.dc]   = check( settings.nelx, settings.nely,settings.rmin,designVars.x,designVars.dc);
             % DESIGN UPDATE BY THE OPTIMALITY CRITERIA METHOD
             [designVars.x]    = OC( settings.nelx, settings.nely,designVars.x,settings.totalVolume,designVars.dc, designVars, settings);
@@ -203,7 +206,9 @@ if(macroDesignMode==1)
        % Volume fraction optimization
        % --------------------------------
         if ( settings.mode ==2 || settings.mode ==3 || settings.mode == 10 || settings.mode ==5)
-           
+            
+            designVars = designVars.CalculateMaterialGradientSensitivity(settings, matProp, masterloop);
+            
             [vol1Fraction, vol2Fraction] =  designVars.CalculateVolumeFractions(settings);
             
             totalVolLocal = vol1Fraction+ vol2Fraction;
@@ -212,14 +217,14 @@ if(macroDesignMode==1)
             
             % Normalize the sensitives.
             if (settings.w1 ~= 1) % if we are using the heat objective
-                temp1Max = max(max(abs(designVars.g1elastic)));
-                designVars.g1elastic = designVars.g1elastic/temp1Max;
-                temp2Max = max(max(abs(designVars.g1heat)));
-                designVars.g1heat = designVars.g1heat/temp2Max;
+                temp1Max = max(max(abs(designVars.sensitivityElastic)));
+                designVars.sensitivityElastic = designVars.sensitivityElastic/temp1Max;
+                temp2Max = max(max(abs(designVars.sensitivityHeat)));
+                designVars.sensitivityHeat = designVars.sensitivityHeat/temp2Max;
                 
-                g1 = settings.w1*designVars.g1elastic+settings.w2*designVars.g1heat; % Calculate the weighted volume fraction change sensitivity.
+                g1 = settings.w1*designVars.sensitivityElastic+settings.w2*designVars.sensitivityHeat; % Calculate the weighted volume fraction change sensitivity.
             else
-                g1 = settings.w1*designVars.g1elastic;
+                g1 = settings.w1*designVars.sensitivityElastic;
             end
             
             % Filter the g1 sensitivies

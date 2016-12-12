@@ -29,7 +29,7 @@ classdef Configuration
         referenceTemperature = 0; % for thermal expansion, assume that there is not strain when at this temperature.
         addThermalExpansion = 0; % Set to 1 to incorporate thermal expansion
         timestep = 0.1; % time step for the volume fraction update algorithm
-        volFractionDamping = 0.1;
+        volFractionDamping = 0.2;
         iterationsPerPlot = 5;
         w1 = 1; % weight elastic for multi-objective, % do not set to zero, instead set to 0.0001. 
         w2=0;

@@ -1,7 +1,7 @@
 function main()
 clear
 
- combinedTopologyOptimization('1', '1', '1','7', 'na');
+ combinedTopologyOptimization('1', '1', '1','5', 'na');
  
 
 % numloops = 5;
