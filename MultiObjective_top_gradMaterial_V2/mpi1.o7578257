@@ -1,0 +1,17 @@
+-bash: /var/spool/PBS/mom_priv/jobs/7578257.pbs02.SC: /bin/bash^M: bad interpreter: No such file or directory
+ 
+ 
++------------------------------------------+ 
+| PALMETTO CLUSTER PBS RESOURCES REQUESTED | 
++------------------------------------------+ 
+ 
+mem=512gb,ncpus=512,walltime=05:00:00
+ 
+ 
++-------------------------------------+ 
+| PALMETTO CLUSTER PBS RESOURCES USED | 
++-------------------------------------+ 
+ 
+cpupercent=0,cput=00:00:00,mem=640kb,ncpus=512,vmem=12612kb,walltime=00:00:00
+ 
+ 

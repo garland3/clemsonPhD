@@ -152,6 +152,19 @@ classdef MaterialProperties
             end
         end
         
+         %---------------
+        % Get D matrix (Effectie constitutive equation) for a particualar
+        % w1 and orthotropic Distribution value, d
+        % -----------------------------------------------
+        function D = calculateEffConsMatrixWithGradAndOrthDistrbution(obj, material1Fraction, settings,orthD)
+       
+            E = effectiveElasticProperties(obj, material1Fraction, settings);
+            D = [ 1.1 obj.v 0;
+                obj.v 1 0;
+                0 0 1/2*(1-obj.v)]*E/(1-obj.v^2);
+            
+        end
+        
         %------------------------------------
         % Calculate Elastic mod
         %------------------------------------
@@ -175,6 +188,8 @@ classdef MaterialProperties
             E = effectiveElasticProperties(obj, material1Fraction, settings);
             [ke, kexpansionBar, B, ~]=elK_elastic(E,obj.v, obj.G,[],Dgiven);
         end
+        
+        
         
         %------------------------------------
         % MESO

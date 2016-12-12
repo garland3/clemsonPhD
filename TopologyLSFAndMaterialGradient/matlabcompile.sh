@@ -1,1 +1,0 @@
-mcc -R -nodisplay -R -singleCompThread  -m topAndMaterial.m FEALevelSet_2D.m freezeColors.m tricontour.m

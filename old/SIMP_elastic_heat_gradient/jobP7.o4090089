@@ -1,0 +1,183 @@
+
+settings = 
+
+  Configuration with properties:
+
+                             nelx: 80
+                             nely: 40
+                            penal: 3
+                             rmin: 2
+                             mode: 3
+             referenceTemperature: 0
+              addThermalExpansion: 0
+                         timestep: 0.1000
+               volFractionDamping: 0.1000
+                iterationsPerPlot: 5
+                               w1: 0.7000
+                               w2: 0.3000
+        voidMaterialDensityCutOff: 0.3000
+       doPlotVolFractionDesignVar: 0
+          doPlotTopologyDesignVar: 0
+                       doPlotHeat: 0
+    doPlotHeatSensitivityTopology: 0
+                     doPlotStress: 0
+                      doPlotFinal: 0
+                    doPlotMetrics: 1
+        doSaveDesignVarsToCSVFile: 1
+                               v1: 0.2000
+                               v2: 0.2000
+                      totalVolume: 0.4000
+                     iterationNum: 7
+                      maxFEACalls: 350
+                   maxMasterLoops: 500
+          terminationAverageCount: 4
+              terminationCriteria: 0.0100
+                           useGPU: 0
+      elasticMaterialInterpMethod: 2
+         heatMaterialInterpMethod: 5
+
+ FEA calls.:    1 Obj.:     0.0000 Vol. 1:  1.000 Vol. 2:  0.000 Lambda.:  0.000
+ FEA calls.:    2 Obj.:     0.0000 Vol. 1:  0.673 Vol. 2:  0.000 Lambda.:  0.000
+ FEA calls.:    3 Obj.:     0.0000 Vol. 1:  0.665 Vol. 2:  0.000 Lambda.:  0.000
+ FEA calls.:    4 Obj.:     0.0000 Vol. 1:  0.547 Vol. 2:  0.000 Lambda.:  0.050
+ FEA calls.:    5 Obj.:     0.0000 Vol. 1:  0.522 Vol. 2:  0.024 Lambda.:  0.096
+ FEA calls.:    6 Obj.:     0.0000 Vol. 1:  0.497 Vol. 2:  0.049 Lambda.:  0.137
+ FEA calls.:    7 Obj.:     0.0000 Vol. 1:  0.473 Vol. 2:  0.074 Lambda.:  0.137
+ FEA calls.:    8 Obj.:     0.0000 Vol. 1:  0.436 Vol. 2:  0.067 Lambda.:  0.137
+ FEA calls.:    9 Obj.:     0.0000 Vol. 1:  0.408 Vol. 2:  0.062 Lambda.:  0.137
+ FEA calls.:   10 Obj.:     0.0000 Vol. 1:  0.383 Vol. 2:  0.058 Lambda.:  0.173
+ FEA calls.:   11 Obj.:     0.0000 Vol. 1:  0.362 Vol. 2:  0.079 Lambda.:  0.205
+ FEA calls.:   12 Obj.:     0.0000 Vol. 1:  0.342 Vol. 2:  0.100 Lambda.:  0.233
+ FEA calls.:   13 Obj.:     0.0000 Vol. 1:  0.322 Vol. 2:  0.120 Lambda.:  0.233
+ FEA calls.:   14 Obj.:     0.0000 Vol. 1:  0.309 Vol. 2:  0.115 Lambda.:  0.233
+ FEA calls.:   15 Obj.:     0.0000 Vol. 1:  0.300 Vol. 2:  0.111 Lambda.:  0.233
+ FEA calls.:   16 Obj.:     0.0000 Vol. 1:  0.297 Vol. 2:  0.111 Lambda.:  0.256
+ FEA calls.:   17 Obj.:     0.0000 Vol. 1:  0.279 Vol. 2:  0.128 Lambda.:  0.274
+ FEA calls.:   18 Obj.:     0.0000 Vol. 1:  0.262 Vol. 2:  0.145 Lambda.:  0.288
+ FEA calls.:   19 Obj.:     0.0000 Vol. 1:  0.246 Vol. 2:  0.161 Lambda.:  0.288
+ FEA calls.:   20 Obj.:     0.0000 Vol. 1:  0.242 Vol. 2:  0.159 Lambda.:  0.288
+ FEA calls.:   21 Obj.:     0.0000 Vol. 1:  0.242 Vol. 2:  0.159 Lambda.:  0.288
+ FEA calls.:   22 Obj.:     0.0000 Vol. 1:  0.245 Vol. 2:  0.163 Lambda.:  0.299
+ FEA calls.:   23 Obj.:     0.0000 Vol. 1:  0.231 Vol. 2:  0.178 Lambda.:  0.305
+ FEA calls.:   24 Obj.:     0.0000 Vol. 1:  0.217 Vol. 2:  0.191 Lambda.:  0.308
+ FEA calls.:   25 Obj.:     0.0000 Vol. 1:  0.205 Vol. 2:  0.204 Lambda.:  0.308
+ FEA calls.:   26 Obj.:     0.0000 Vol. 1:  0.203 Vol. 2:  0.201 Lambda.:  0.308
+ FEA calls.:   27 Obj.:     0.0000 Vol. 1:  0.204 Vol. 2:  0.204 Lambda.:  0.308
+ FEA calls.:   28 Obj.:     0.0000 Vol. 1:  0.205 Vol. 2:  0.203 Lambda.:  0.308
+ FEA calls.:   29 Obj.:     0.0000 Vol. 1:  0.193 Vol. 2:  0.215 Lambda.:  0.306
+ FEA calls.:   30 Obj.:     0.0000 Vol. 1:  0.183 Vol. 2:  0.225 Lambda.:  0.300
+ FEA calls.:   31 Obj.:     0.0000 Vol. 1:  0.173 Vol. 2:  0.235 Lambda.:  0.300
+ FEA calls.:   32 Obj.:     0.0000 Vol. 1:  0.174 Vol. 2:  0.236 Lambda.:  0.300
+ FEA calls.:   33 Obj.:     0.0000 Vol. 1:  0.174 Vol. 2:  0.235 Lambda.:  0.300
+ FEA calls.:   34 Obj.:     0.0000 Vol. 1:  0.173 Vol. 2:  0.235 Lambda.:  0.293
+ FEA calls.:   35 Obj.:     0.0000 Vol. 1:  0.165 Vol. 2:  0.243 Lambda.:  0.283
+ FEA calls.:   36 Obj.:     0.0000 Vol. 1:  0.158 Vol. 2:  0.250 Lambda.:  0.272
+ FEA calls.:   37 Obj.:     0.0000 Vol. 1:  0.152 Vol. 2:  0.256 Lambda.:  0.272
+ FEA calls.:   38 Obj.:     0.0000 Vol. 1:  0.152 Vol. 2:  0.256 Lambda.:  0.272
+ FEA calls.:   39 Obj.:     0.0000 Vol. 1:  0.152 Vol. 2:  0.256 Lambda.:  0.272
+ FEA calls.:   40 Obj.:     0.0000 Vol. 1:  0.151 Vol. 2:  0.255 Lambda.:  0.259
+ FEA calls.:   41 Obj.:     0.0000 Vol. 1:  0.147 Vol. 2:  0.259 Lambda.:  0.245
+ FEA calls.:   42 Obj.:     0.0000 Vol. 1:  0.143 Vol. 2:  0.263 Lambda.:  0.231
+ FEA calls.:   43 Obj.:     0.0000 Vol. 1:  0.140 Vol. 2:  0.266 Lambda.:  0.231
+ FEA calls.:   44 Obj.:     0.0000 Vol. 1:  0.140 Vol. 2:  0.267 Lambda.:  0.231
+ FEA calls.:   45 Obj.:     0.0000 Vol. 1:  0.139 Vol. 2:  0.266 Lambda.:  0.231
+ FEA calls.:   46 Obj.:     0.0000 Vol. 1:  0.139 Vol. 2:  0.266 Lambda.:  0.215
+ FEA calls.:   47 Obj.:     0.0000 Vol. 1:  0.137 Vol. 2:  0.268 Lambda.:  0.199
+ FEA calls.:   48 Obj.:     0.0000 Vol. 1:  0.136 Vol. 2:  0.270 Lambda.:  0.182
+ FEA calls.:   49 Obj.:     0.0000 Vol. 1:  0.136 Vol. 2:  0.270 Lambda.:  0.182
+ FEA calls.:   50 Obj.:     0.0000 Vol. 1:  0.135 Vol. 2:  0.269 Lambda.:  0.182
+ FEA calls.:   51 Obj.:     0.0000 Vol. 1:  0.135 Vol. 2:  0.268 Lambda.:  0.182
+ FEA calls.:   52 Obj.:     0.0000 Vol. 1:  0.134 Vol. 2:  0.268 Lambda.:  0.166
+ FEA calls.:   53 Obj.:     0.0000 Vol. 1:  0.135 Vol. 2:  0.267 Lambda.:  0.149
+ FEA calls.:   54 Obj.:     0.0000 Vol. 1:  0.136 Vol. 2:  0.267 Lambda.:  0.133
+ FEA calls.:   55 Obj.:     0.0000 Vol. 1:  0.137 Vol. 2:  0.265 Lambda.:  0.133
+ FEA calls.:   56 Obj.:     0.0000 Vol. 1:  0.137 Vol. 2:  0.265 Lambda.:  0.133
+ FEA calls.:   57 Obj.:     0.0000 Vol. 1:  0.137 Vol. 2:  0.265 Lambda.:  0.133
+ FEA calls.:   58 Obj.:     0.0000 Vol. 1:  0.136 Vol. 2:  0.263 Lambda.:  0.117
+ FEA calls.:   59 Obj.:     0.0000 Vol. 1:  0.138 Vol. 2:  0.261 Lambda.:  0.102
+ FEA calls.:   60 Obj.:     0.0000 Vol. 1:  0.141 Vol. 2:  0.259 Lambda.:  0.087
+ FEA calls.:   61 Obj.:     0.0000 Vol. 1:  0.144 Vol. 2:  0.256 Lambda.:  0.087
+ FEA calls.:   62 Obj.:     0.0000 Vol. 1:  0.144 Vol. 2:  0.257 Lambda.:  0.087
+ FEA calls.:   63 Obj.:     0.0000 Vol. 1:  0.144 Vol. 2:  0.257 Lambda.:  0.087
+ FEA calls.:   64 Obj.:     0.0000 Vol. 1:  0.143 Vol. 2:  0.256 Lambda.:  0.073
+ FEA calls.:   65 Obj.:     0.0000 Vol. 1:  0.147 Vol. 2:  0.253 Lambda.:  0.059
+ FEA calls.:   66 Obj.:     0.0000 Vol. 1:  0.150 Vol. 2:  0.250 Lambda.:  0.047
+ FEA calls.:   67 Obj.:     0.0000 Vol. 1:  0.154 Vol. 2:  0.246 Lambda.:  0.047
+ FEA calls.:   68 Obj.:     0.0000 Vol. 1:  0.153 Vol. 2:  0.246 Lambda.:  0.047
+ FEA calls.:   69 Obj.:     0.0000 Vol. 1:  0.153 Vol. 2:  0.245 Lambda.:  0.047
+ FEA calls.:   70 Obj.:     0.0000 Vol. 1:  0.153 Vol. 2:  0.246 Lambda.:  0.035
+ FEA calls.:   71 Obj.:     0.0000 Vol. 1:  0.157 Vol. 2:  0.242 Lambda.:  0.025
+ FEA calls.:   72 Obj.:     0.0000 Vol. 1:  0.161 Vol. 2:  0.239 Lambda.:  0.015
+ FEA calls.:   73 Obj.:     0.0000 Vol. 1:  0.165 Vol. 2:  0.235 Lambda.:  0.015
+ FEA calls.:   74 Obj.:     0.0000 Vol. 1:  0.165 Vol. 2:  0.235 Lambda.:  0.015
+ FEA calls.:   75 Obj.:     0.0000 Vol. 1:  0.165 Vol. 2:  0.235 Lambda.:  0.015
+ FEA calls.:   76 Obj.:     0.0000 Vol. 1:  0.166 Vol. 2:  0.236 Lambda.:  0.006
+ FEA calls.:   77 Obj.:     0.0000 Vol. 1:  0.170 Vol. 2:  0.232 Lambda.: -0.002
+ FEA calls.:   78 Obj.:     0.0000 Vol. 1:  0.173 Vol. 2:  0.229 Lambda.: -0.008
+ FEA calls.:   79 Obj.:     0.0000 Vol. 1:  0.177 Vol. 2:  0.225 Lambda.: -0.008
+ FEA calls.:   80 Obj.:     0.0000 Vol. 1:  0.177 Vol. 2:  0.226 Lambda.: -0.008
+ FEA calls.:   81 Obj.:     0.0000 Vol. 1:  0.178 Vol. 2:  0.226 Lambda.: -0.008
+ FEA calls.:   82 Obj.:     0.0000 Vol. 1:  0.178 Vol. 2:  0.226 Lambda.: -0.014
+ FEA calls.:   83 Obj.:     0.0000 Vol. 1:  0.181 Vol. 2:  0.222 Lambda.: -0.020
+ FEA calls.:   84 Obj.:     0.0000 Vol. 1:  0.185 Vol. 2:  0.219 Lambda.: -0.024
+ FEA calls.:   85 Obj.:     0.0000 Vol. 1:  0.188 Vol. 2:  0.215 Lambda.: -0.024
+ FEA calls.:   86 Obj.:     0.0000 Vol. 1:  0.188 Vol. 2:  0.215 Lambda.: -0.024
+ FEA calls.:   87 Obj.:     0.0000 Vol. 1:  0.188 Vol. 2:  0.215 Lambda.: -0.024
+ FEA calls.:   88 Obj.:     0.0000 Vol. 1:  0.188 Vol. 2:  0.215 Lambda.: -0.027
+ FEA calls.:   89 Obj.:     0.0000 Vol. 1:  0.191 Vol. 2:  0.212 Lambda.: -0.030
+ FEA calls.:   90 Obj.:     0.0000 Vol. 1:  0.194 Vol. 2:  0.209 Lambda.: -0.032
+ FEA calls.:   91 Obj.:     0.0000 Vol. 1:  0.197 Vol. 2:  0.206 Lambda.: -0.032
+ FEA calls.:   92 Obj.:     0.0000 Vol. 1:  0.197 Vol. 2:  0.207 Lambda.: -0.032
+ FEA calls.:   93 Obj.:     0.0000 Vol. 1:  0.197 Vol. 2:  0.207 Lambda.: -0.032
+ FEA calls.:   94 Obj.:     0.0000 Vol. 1:  0.197 Vol. 2:  0.207 Lambda.: -0.033
+ FEA calls.:   95 Obj.:     0.0000 Vol. 1:  0.200 Vol. 2:  0.204 Lambda.: -0.033
+ FEA calls.:   96 Obj.:     0.0000 Vol. 1:  0.202 Vol. 2:  0.202 Lambda.: -0.033
+ FEA calls.:   97 Obj.:     0.0000 Vol. 1:  0.205 Vol. 2:  0.200 Lambda.: -0.033
+ FEA calls.:   98 Obj.:     0.0000 Vol. 1:  0.204 Vol. 2:  0.199 Lambda.: -0.033
+ FEA calls.:   99 Obj.:     0.0000 Vol. 1:  0.205 Vol. 2:  0.200 Lambda.: -0.033
+ FEA calls.:  100 Obj.:     0.0000 Vol. 1:  0.205 Vol. 2:  0.200 Lambda.: -0.033
+ FEA calls.:  101 Obj.:     0.0000 Vol. 1:  0.207 Vol. 2:  0.198 Lambda.: -0.031
+ FEA calls.:  102 Obj.:     0.0000 Vol. 1:  0.209 Vol. 2:  0.196 Lambda.: -0.030
+ FEA calls.:  103 Obj.:     0.0000 Vol. 1:  0.210 Vol. 2:  0.194 Lambda.: -0.030
+ FEA calls.:  104 Obj.:     0.0000 Vol. 1:  0.210 Vol. 2:  0.195 Lambda.: -0.030
+ FEA calls.:  105 Obj.:     0.0000 Vol. 1:  0.210 Vol. 2:  0.195 Lambda.: -0.030
+ FEA calls.:  106 Obj.:     0.0000 Vol. 1:  0.211 Vol. 2:  0.195 Lambda.: -0.028
+ FEA calls.:  107 Obj.:     0.0000 Vol. 1:  0.212 Vol. 2:  0.194 Lambda.: -0.026
+ FEA calls.:  108 Obj.:     0.0000 Vol. 1:  0.213 Vol. 2:  0.193 Lambda.: -0.023
+ FEA calls.:  109 Obj.:     0.0000 Vol. 1:  0.214 Vol. 2:  0.192 Lambda.: -0.023
+ FEA calls.:  110 Obj.:     0.0000 Vol. 1:  0.214 Vol. 2:  0.192 Lambda.: -0.023
+ FEA calls.:  111 Obj.:     0.0000 Vol. 1:  0.214 Vol. 2:  0.192 Lambda.: -0.023
+ FEA calls.:  112 Obj.:     0.0000 Vol. 1:  0.214 Vol. 2:  0.192 Lambda.: -0.021
+ FEA calls.:  113 Obj.:     0.0000 Vol. 1:  0.215 Vol. 2:  0.191 Lambda.: -0.018
+ FEA calls.:  114 Obj.:     0.0000 Vol. 1:  0.216 Vol. 2:  0.191 Lambda.: -0.015
+ FEA calls.:  115 Obj.:     0.0000 Vol. 1:  0.216 Vol. 2:  0.190 Lambda.: -0.015
+ FEA calls.:  116 Obj.:     0.0000 Vol. 1:  0.216 Vol. 2:  0.190 Lambda.: -0.015
+ FEA calls.:  117 Obj.:     0.0000 Vol. 1:  0.216 Vol. 2:  0.191 Lambda.: -0.015
+ FEA calls.:  118 Obj.:     0.0000 Vol. 1:  0.216 Vol. 2:  0.190 Lambda.: -0.011
+ FEA calls.:  119 Obj.:     0.0000 Vol. 1:  0.216 Vol. 2:  0.190 Lambda.: -0.008
+ FEA calls.:  120 Obj.:     0.0000 Vol. 1:  0.216 Vol. 2:  0.190 Lambda.: -0.005
+ FEA calls.:  121 Obj.:     0.0000 Vol. 1:  0.216 Vol. 2:  0.190 Lambda.: -0.005
+ FEA calls.:  122 Obj.:     0.0000 Vol. 1:  0.216 Vol. 2:  0.190 Lambda.: -0.005
+ FEA calls.:  123 Obj.:     0.0000 Vol. 1:  0.216 Vol. 2:  0.190 Lambda.: -0.005
+ FEA calls.:  124 Obj.:     0.0000 Vol. 1:  0.216 Vol. 2:  0.190 Lambda.: -0.002
+
+ans =
+
+    0.0008    0.0002    0.0005    0.0072
+
+
+m =
+
+break in vol fraction
+
+
+status =
+
+     1
+
+RESOURCES REQUESTED
+mem=10gb,ncpus=10,walltime=02:00:00
+ 
+RESOURCES USED
+cpupercent=130,cput=00:24:39,mem=800432kb,ncpus=10,vmem=7288120kb,walltime=00:18:50
+ 

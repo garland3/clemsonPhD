@@ -7,6 +7,7 @@ classdef DesignVars
         % --------------------------------
         x; % the "density" at each element
         w; % the volume fraction at each element
+        d; % the distribution of the orthogonal material
         
         % Optimization vars
         lambda1 = 0;
@@ -539,6 +540,8 @@ classdef DesignVars
                         if(settings.macro_meso_iteration>1)                           
                             Dgiven =matProp.GetSavedDMatrix(count);
                         end
+                        
+                       
                         
                         KE = matProp.effectiveElasticKEmatrix(  obj.w(ely,elx),settings,Dgiven);
                         
