@@ -1,13 +1,6 @@
 function [D_homog,designVarsMeso,macroElemProps]=MesoStructureDesignV2(matProp,mesoSettings,designVarsMeso,macroElemProps,dcGiven)
 
-% 	------------------ nope 1. Tile the meso design domain
-% 	2. Apply the strain
-% 	3. Calcualute sensitive of every locaiton.
-% 	4. Then, sum the tiled sensitives together.
-% 		1. Cut out the top and right edge tiles, they dont' seen to acurately reflect the design at all.             %
-% 	5. Update the X var of the meso unit cell.
-% 		1. Do this 3 times, (no need to rerun the applystrain method).             %
-% 	6. Get homogenous properties
+
 
 doPlot =0; % For debugging allow plotting of some information.
  if(mod(macroElemProps.elementNumber,mesoSettings.mesoplotfrequency) ==0)
@@ -78,9 +71,9 @@ for mesoLoop = 1:100
     % FILTERING OF SENSITIVITIES
     [designVarsMeso.dc]   = check(mesoSettings.nelx,mesoSettings.nely,mesoSettings.rmin,designVarsMeso.x,designVarsMeso.dc);
     
-    if(designVarsMeso.mesoAddAdjcentCellDataObject.useAdjacent ==1)
-       designVarsMeso= designVarsMeso.mesoAddAdjcentCellDataObject.AddAdjacentSensitivity(mesoSettings, macroElemProps, designVarsMeso);
-    end
+%     if(designVarsMeso.mesoAddAdjcentCellDataObject.useAdjacent ==1)
+%        designVarsMeso= designVarsMeso.mesoAddAdjcentCellDataObject.AddAdjacentSensitivity(mesoSettings, macroElemProps, designVarsMeso);
+%     end
     
     % DESIGN UPDATE BY THE OPTIMALITY CRITERIA METHOD
     [designVarsMeso.x] = OC(mesoSettings.nelx,mesoSettings.nely,designVarsMeso.x,mesoSettings.totalVolume,designVarsMeso.dc, designVarsMeso, mesoSettings);

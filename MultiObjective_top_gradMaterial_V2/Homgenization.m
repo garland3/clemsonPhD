@@ -61,14 +61,7 @@ for e = 1:ne
     [~, ~, ~, F_meso2] = matProp.effectiveElasticKEmatrix_meso(designVars.w(y,x), settings,strain2);
     [~, ~, ~, F_meso3] = matProp.effectiveElasticKEmatrix_meso(designVars.w(y,x), settings,strain3);
     
-    %    [~, ~, ~, F_meso1] = matProp.effectiveElasticKEmatrix_meso(matvolFraction, settings,strain1);
-    %    [~, ~, ~, F_meso2] = matProp.effectiveElasticKEmatrix_meso(matvolFraction, settings,strain2);
-    %    [~, ~, ~, F_meso3] = matProp.effectiveElasticKEmatrix_meso(matvolFraction, settings,strain3);
-    
-    % [~, ~, ~, F_meso_all] = matProp.effectiveElasticKEmatrix_meso(matvolFraction, settings,eye(3));
-    
-    % F_all = zeros(ndof,1);
-    
+      
     
     % Insert the element stiffness matrix into the global.
     nodes1 = designVars.IEN(e,:);

@@ -5,39 +5,67 @@ classdef Configuration
         % %% Settings
         % --------------------------------------------
         
+        % Optimization Configurations
+        %
         % each design var will control the density and volume fraction
         % material of several clustered elements.
-        doUseMultiElePerDV; % 1= true, 0 = false do use multiple elements per (1) design varriable.
+         mode =4; % 1 = topology only, 2 = material optimization only. 3 = both,4 = meso only. 5 = meso-structure testing
+        doUseMultiElePerDV=0; % 1= true, 0 = false do use multiple elements per (1) design varriable.
         averageMultiElementStrain; % 1= true, 0 = false instead of making 1 large strain field, make sevral and average the sensitivies
         singleMesoDesign; % 1 = yes, 0 = true.
         numXElmPerDV= 2; % Number of elements in the X direction for 1 (per) design varriable.
         numYElmPerDV =2; % Number of elements in the X direction for 1 (per) design varriable.
+        macro_meso_iteration = 0; % master loop of the whole macro meso system
+        mesoAddAdjcentCellBoundaries = 0; % global property
+        useAjacentLocal = 0; % local property that maybe be turned on or off
         numVarsX;
         numVarsY;
+        w1 = 1; % weight elastic for multi-objective, % do not set to zero, instead set to 0.0001. 
+        w2 = 0;
+       
         
-        mesoplotfrequency=100; % how often to plot the meso level design.
+        % Modeling settings
+         referenceTemperature = 0; % for thermal expansion, assume that there is not strain when at this temperature.
+        addThermalExpansion = 0; % Set to 1 to incorporate thermal expansion
         
-        nelxMeso = 5;
-        nelyMeso = 5;
+        % orthogonal distribution
+        useOrthDistribution=1;
+        maxDorth= 0.9; % 0.5
+        minDorth = 0.1;       % 0.001
+        orthDistMoveLimit = 0.2;
         
+        % rotation
+        useRotation =1;
+        minRotation =-pi/2;
+        maxRotation = pi/2;
+        rotationMoveLimit = pi/18;
+        
+       
+        % number of elements
+        nelxMeso = 40;
+        nelyMeso = 40;        
         nelx = 40; % 40 # of elements in the x direcction, must be a multiple of numXElmPerDV
         nely = 20; % 18 number of elements in the y direction, must be a multiple of numYElmPerDV
+        
+        % SIMP settings
         penal = 3; % penality used for the SIMP method
         rmin = 2; % smoothing radius for sensitivity smoothing.
-        % Optimization mode and configurations
-        mode =4; % 1 = topology only, 2 = material optimization only. 3 = both,4 = meso only. 5 = meso-structure testing
-        referenceTemperature = 0; % for thermal expansion, assume that there is not strain when at this temperature.
-        addThermalExpansion = 0; % Set to 1 to incorporate thermal expansion
-        timestep = 0.1; % time step for the volume fraction update algorithm
-        volFractionDamping = 0.2;
-        iterationsPerPlot = 5;
-        w1 = 1; % weight elastic for multi-objective, % do not set to zero, instead set to 0.0001. 
-        w2=0;
         voidMaterialDensityCutOff = 0.3; % everything below this density is considered void.
-        
         noNewMesoDesignDensityCutOff = 0.15; % any densities below this will not be redesigned. Having a different value than voidMaterialDensityCutOft helps stabalize the algorithm on the structure edges.
         
+        
+        % VOLUME Fraction SEttings. 
+        timestep = 0.2; % time step for the volume fraction update algorithm
+        volFractionDamping = 0.2;        
+        v1 = 0.2; % amount of material 1 to use. default to 10%
+        v2 = 0.4; % amount of material 2 to use. default to 30%, reduced so there is less meso structures to compute
+        totalVolume; % = v1+v2;
+      
+        
         % Plotting information
+          plotSensitivityWhilerunning = 0;
+         mesoplotfrequency=100; % how often to plot the meso level design.
+          iterationsPerPlot = 5;
         doPlotVolFractionDesignVar = 0;
         doPlotTopologyDesignVar = 0;
         doPlotHeat = 0;
@@ -47,9 +75,11 @@ classdef Configuration
         doPlotMetrics = 0;
         doSaveDesignVarsToCSVFile = 0; % set to 1 to write plotFinal csv file instead
         doPlotAppliedStrain = 0; % For debugging only
-        v1 = 0.1; % amount of material 1 to use. default to 10%
-        v2 = 0.3; % amount of material 2 to use. default to 30%, reduced so there is less meso structures to compute
-        totalVolume; % = v1+v2;
+        doPlotOrthDistributionVar=1;
+        doPlotElasticSensitivity =1;
+         doPlotRotationValue =0;
+         doPlotCombinedDistrbutionAndRotation = 1;
+         recvid = 0; % record video
         
         % ----------------
         % Computational settings
@@ -82,6 +112,9 @@ classdef Configuration
         % ---------------------
         heatMaterialInterpMethod = 5;
         
+        % ---------------------------
+        % Loading cases
+        % ---------------------------
         %          loadingCase = [113]; % left clamped
         %           loadingCase = [111 112 113]; % left clamped
         %            loadingCase = [111 112 ]; % left clamped
@@ -90,23 +123,16 @@ classdef Configuration
         %              loadingCase = [1];
         
       %  loadingCase = [300 301 302 303 304 305]; % shoe
-         loadingCase = [400 401 402 403 404 405]; % bridge
+          loadingCase = [400 401 402 403 404 405]; % bridge
 %            loadingCase = [404]; % bridge
-        %    loadingCase = [302 305]; % shoe
+%             loadingCase = [113]; % cantilever
+%                 loadingCase = [111]; % top right, force in Y direction
         
         % --------------
         % Meso tiling info
         %--------------
         numTilesX = 3;
         numTilesY = 3;
-        %         sensitivityTile = 5; % use this tile to calcualte the sensitivity
-        plotSensitivityWhilerunning = 0;
-        
-        macro_meso_iteration = 0; % master loop of the whole macro meso system
-        
-        mesoAddAdjcentCellBoundaries = 0; % global property
-        useAjacentLocal = 0; % local property that maybe be turned on or off
-        
         
     end
     

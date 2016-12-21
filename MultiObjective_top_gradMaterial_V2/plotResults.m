@@ -17,7 +17,9 @@ classdef plotResults
             plotDim1=bestSquareSize;
             clf
             plotcount = 1;
-            figure(1)
+             figure(1)
+             set(gcf, 'Position', get(0, 'Screensize'));
+%             figure('Name', '1', 'units','normalized','outerposition',[0 0 1 1])
             if numberOfPlots == 2
                 plotDim2 =1;  plotDim1=2;
             end
@@ -60,11 +62,49 @@ classdef plotResults
             end
             
             %  ----------------------------
+            % Plot Orthogonal Distribution Var
+            %  ----------------------------
+            if(settings.doPlotOrthDistributionVar ==1)
+                subplot(plotDim1,plotDim2,plotcount); plotcount = plotcount + 1;
+                
+                obj.PlotOrthDistributionAsArrows(designVars, settings, loopNumb);
+            end
+            
+            
+            %  ----------------------------
+            % Plot Rotation Var Value
+            %  ----------------------------
+            if(settings.doPlotRotationValue ==1)
+                subplot(plotDim1,plotDim2,plotcount); plotcount = plotcount + 1;
+                obj.PlotRotationVarAsArrows(designVars, settings, loopNumb);
+            end
+            
+            %  ----------------------------
+            % PLOT COMBINED ROTATION AND ORTHOGONAL DIRECTION GRAPH
+            %  ----------------------------
+            if(settings.doPlotCombinedDistrbutionAndRotation ==1)
+                subplot(plotDim1,plotDim2,plotcount); plotcount = plotcount + 1;
+                obj.PlotOrthAndRotationTogether(designVars, settings, loopNumb);
+            end
+            
+            
+            
+            
+            %  ----------------------------
+            % Plot ElasticSensitivity
+            %  ----------------------------
+            if(settings.doPlotElasticSensitivity ==1)
+                subplot(plotDim1,plotDim2,plotcount); plotcount = plotcount + 1;
+                titleText = 'doPlotElasticSensitivity';
+                obj.PlotArrayGeneric(designVars.sensitivityElastic,titleText)
+            end
+            
+            %  ----------------------------
             % Plot Final
             %  ----------------------------
             if(settings.doPlotFinal == 1)
-                subplot(plotDim1,plotDim2,plotcount); plotcount = plotcount + 1;
-                obj.PlotStrucAndGrad(designVars, settings, matProp,loopNumb)
+                graphichandle = subplot(plotDim1,plotDim2,plotcount); plotcount = plotcount + 1;
+                obj.PlotStrucAndGrad(designVars, settings, matProp,loopNumb,graphichandle)
             end
             
             
@@ -202,7 +242,127 @@ classdef plotResults
                 numberOfPlots = numberOfPlots+1;
             end
             
+            if(settings.doPlotOrthDistributionVar ==1)
+                numberOfPlots = numberOfPlots+1;
+            end
+            
+            if(settings.doPlotElasticSensitivity ==1)
+                numberOfPlots = numberOfPlots+1;
+            end
+            
+            if(settings.doPlotRotationValue ==1)
+                numberOfPlots = numberOfPlots+1;
+            end
+            
+            if(settings.doPlotCombinedDistrbutionAndRotation ==1)
+                numberOfPlots = numberOfPlots+1;
+            end
+            
+            
+            
         end
+        
+        % -------------------------------------
+        % Plot the orth distribution Var as arrows
+        % -------------------------------------
+        function PlotOrthDistributionAsArrows(obj, designVars, settings, loopNumb)
+            titleText = 'Orth Distribution Var Values' ;
+            
+            [X,Y] = meshgrid(1:settings.nelx,1:settings.nely);
+            dx = designVars.d;
+            dy =  1-designVars.d;
+            quiver(X,Y,dx,dy);
+%             hold on
+%             imagesc(designVars.d); axis equal; axis tight; axis off;
+            title(titleText);
+        end
+        
+        % -------------------------------------
+        % Plot the ROTATION VAR AS ARROWS
+        % -------------------------------------
+        function PlotRotationVarAsArrows(obj, designVars, settings, loopNumb)
+            titleText = 'Rotation Var Values' ;
+            [X,Y] = meshgrid(1:settings.nelx,1:settings.nely);
+            dx = cos(designVars.t);
+            dy = sin(designVars.t);
+            quiver(X,Y,dx,dy);
+            title(titleText);
+        end
+        
+        
+        % -------------------------------------
+        % Plot the ROTATION VAR and the orthogona vars together AS ARROWS
+        % -------------------------------------
+        function PlotOrthAndRotationTogether(obj, designVars, settings, loopNumb)      
+            
+            % Big arrow
+            theta1(1:settings.nely,1:settings.nelx) = zeros(settings.nely,settings.nelx);
+            magnitude1(1:settings.nely,1:settings.nelx) = zeros(settings.nely,settings.nelx);
+            
+            % Little arrow
+            theta2(1:settings.nely,1:settings.nelx) = zeros(settings.nely,settings.nelx);
+            magnitude2(1:settings.nely,1:settings.nelx) = zeros(settings.nely,settings.nelx);
+            
+            for ely = 1:settings.nely
+                for elx = 1:settings.nelx
+                    d_local = designVars.d(ely,elx);
+                    %                          material1Fraction  = designVars.w(ely,elx);
+                    t_local =  designVars.t(ely,elx);
+                    x_local = designVars.x(ely,elx);
+                    
+                    if(x_local<settings.voidMaterialDensityCutOff)
+                        theta1(ely,elx)=0;
+                        magnitude1(ely,elx)=0;
+                        theta2(ely,elx)=0;
+                        magnitude2(ely,elx)=0;
+                    else
+                        
+                        theta1(ely,elx)=t_local;
+                        magnitude1(ely,elx)=d_local;%*material1Fraction*x_local;
+                        
+                        theta2(ely,elx)=t_local+pi/2;
+                        magnitude2(ely,elx)=(1- d_local);%;*material1Fraction*x_local;
+                        
+                    end
+                end
+            end
+            
+            titleText = 'Distribution and Rotation of Material, Red = E_xx,Green = E_yy' ;
+            [X,Y] = meshgrid(1:settings.nelx,1:settings.nely);
+            
+            % RED MAIN DIRECTION ARROW
+            % GREEN SECONDARY
+            % PLOT green first, so that red will be on top.
+            dx2 = cos(theta2).*magnitude2;
+            dy2 = sin(theta2).*magnitude2;
+            q = quiver(X,Y,dx2,dy2,'Autoscale','off');
+            q.Color = 'green';
+            
+            
+            %                 set(gca,'YDir','normal'); % http://www.mathworks.com/matlabcentral/an
+            hold on
+            
+            dx = cos(theta1).*magnitude1;
+            dy = sin(theta1).*magnitude1;
+            q = quiver(X,Y,dx,dy,'Autoscale','off');
+            q.Color = 'red';
+            
+            axis equal
+            %                set(gca,'YDir','normal'); % http://www.mathworks.com/matlabcentral/an
+            
+            
+            
+            title(titleText);
+            
+            
+            
+            
+            
+        end
+        
+        
+        
+        
         
         
         
@@ -211,7 +371,7 @@ classdef plotResults
         % Plot a graph showing the topology optimization results and the
         % gradient optimization results.
         % -------------------------------------
-        function PlotStrucAndGrad(obj, designVars, settings, matProp,loopNumb)
+        function PlotStrucAndGrad(obj, designVars, settings, matProp,loopNumb, graphicHandle)
             
             % ----------------------------------
             % Generate the matrix used for ploitting.
@@ -254,13 +414,13 @@ classdef plotResults
                     end
                 end
             end
-            ActualPlotStructGradArray(obj,structGradDesignVarArray, settings,matProp,designVars, loopNumb)
+            ActualPlotStructGradArray(obj,structGradDesignVarArray, settings,matProp,designVars, loopNumb, graphicHandle)
         end
         
         % -------------------------------------
         % ActualPlotStructGradArray
         % -------------------------------------
-        function ActualPlotStructGradArray(obj,structGradDesignVarArray,  settings,matProp,designVars, loopNum)
+        function ActualPlotStructGradArray(obj,structGradDesignVarArray,  settings,matProp,designVars, loopNum,graphicHandle)
             
             %             if(settings.doPlotFinalToCSVFile == 1)
             %                 % -------------------------------
@@ -304,7 +464,7 @@ classdef plotResults
             
             caxis([-0.02,1])
             
-            map = colormap; % current colormap
+            map = colormap(); % current colormap
             %map = [colormap(1,1):1/rgbSteps:colormap(1:-1)
             map(1,:) = [1,1,1];
             for zz =    2:rgbSteps

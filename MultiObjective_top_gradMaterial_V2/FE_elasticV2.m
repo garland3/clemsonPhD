@@ -13,6 +13,10 @@ row = settings.nelx+1;
 column= settings.nely+1;
 
 bottomFixed=0;
+
+bridgeStart = (row*(column-2)+1)*2; % (row*(floor(column/2))+1)*2;
+bridgeEnd=(row*(column-1))*2; % (row*(1+floor(column/2)))*2;
+
 % loading condition
 if loadingCase == 111
     FappliedLoad = 500;
@@ -100,18 +104,14 @@ elseif loadingCase ==305
     %
     % -------------------------------------------------
 elseif loadingCase ==400
-    
-   
+       
      FappliedLoad = -500;   
-      bottomFixed = 1;
-      
-        start = (row*(floor(column/2))+1)*2;
-        endnode=(row*(1+floor(column/2)))*2;
+     bottomFixed = 1;
         
-        startOffset = 0;
-        endOfset = -(floor(3*row/4))*2;
+     startOffset = 0;
+     endOfset = -(floor(3*row/4))*2;
         
-     fnodes= start+startOffset :2:endnode+endOfset ; % middle, 1/4 load down
+     fnodes= bridgeStart+startOffset :2:bridgeEnd+endOfset ; % middle, 1/4 load down
      count = size(fnodes,2);
      F(fnodes) =FappliedLoad/count;
 
@@ -120,26 +120,26 @@ elseif loadingCase ==401
      FappliedLoad = -500;   
       bottomFixed = 1;
       
-        start = (row*(floor(column/2))+1)*2;
-        endnode=(row*(1+floor(column/2)))*2;
+%         bridgeStart = (row*(floor(column/2))+1)*2;
+%         bridgeEnd=(row*(1+floor(column/2)))*2;
         
         startOffset =(floor(1*row/4))*2;
         endOfset = -(floor(2*row/4))*2;
         
-     fnodes= start+startOffset :2:endnode+endOfset ; % middle, 1/4 load down
+     fnodes= bridgeStart+startOffset :2:bridgeEnd+endOfset ; % middle, 1/4 load down
      count = size(fnodes,2);
      F(fnodes) =FappliedLoad/count;
 elseif loadingCase ==402
       FappliedLoad = -500;   
       bottomFixed = 1;
       
-        start = (row*(floor(column/2))+1)*2;
-        endnode=(row*(1+floor(column/2)))*2;
+%         bridgeStart = (row*(floor(column/2))+1)*2;
+%         bridgeEnd=(row*(1+floor(column/2)))*2;
         
         startOffset =(floor(2*row/4))*2;
         endOfset = -(floor(1*row/4))*2;
         
-     fnodes= start+startOffset :2:endnode+endOfset ; % middle, 1/4 load down
+     fnodes= bridgeStart+startOffset :2:bridgeEnd+endOfset ; % middle, 1/4 load down
      count = size(fnodes,2);
      F(fnodes) =FappliedLoad/count;
       
@@ -147,13 +147,13 @@ elseif loadingCase ==403
       FappliedLoad = -500;   
       bottomFixed = 1;
       
-        start = (row*(floor(column/2))+1)*2;
-        endnode=(row*(1+floor(column/2)))*2;
+%         bridgeStart = (row*(floor(column/2))+1)*2;
+%         bridgeEnd=(row*(1+floor(column/2)))*2;
         
         startOffset =(floor(3*row/4))*2;
         endOfset = 0;
         
-     fnodes= start+startOffset :2:endnode+endOfset ; % middle, 1/4 load down
+     fnodes= bridgeStart+startOffset :2:bridgeEnd+endOfset ; % middle, 1/4 load down
      count = size(fnodes,2);
      F(fnodes) =FappliedLoad/count;
      
@@ -161,26 +161,26 @@ elseif loadingCase ==403
       FappliedLoad = -500;   
       bottomFixed = 1;
       
-        start = (row*(floor(column/2))+1)*2;
-        endnode=(row*(1+floor(column/2)))*2;
+%         bridgeStart = (row*(floor(column/2))+1)*2;
+%         bridgeEnd=(row*(1+floor(column/2)))*2;
         
-        startOffset =-11;
+        startOffset =-1;
         endOfset = 0;
         
-     fnodes= start+startOffset :2:endnode+endOfset ; % middle, 1/4 load down
+     fnodes= bridgeStart+startOffset :2:bridgeEnd+endOfset ; % middle, 1/4 load down
      count = size(fnodes,2);
      F(fnodes) =FappliedLoad/count;
   elseif loadingCase ==405
       FappliedLoad = 500;   
       bottomFixed = 1;
       
-        start = (row*(floor(column/2))+1)*2;
-        endnode=(row*(1+floor(column/2)))*2;
+%         bridgeStart = (row*(floor(column/2))+1)*2;
+%         bridgeEnd=(row*(1+floor(column/2)))*2;
         
-        startOffset =-11;
+        startOffset =-1;
         endOfset = 0;
         
-     fnodes= start+startOffset :2:endnode+endOfset ; % middle, 1/4 load down
+     fnodes= bridgeStart+startOffset :2:bridgeEnd+endOfset ; % middle, 1/4 load down
      count = size(fnodes,2);
      F(fnodes) =FappliedLoad/count;
 end
@@ -275,24 +275,22 @@ for e = 1:ne
     end
     
     [x,y]= designVars.GivenNodeNumberGetXY(e);
-    if(settings.doUseMultiElePerDV) % if elements per design var.
-        [x,y] = designVars.GetDesignVarPositionGivenXYElement(settings,x,y);
-    end
+  
     
     % Get the element K matrix for this partiular element
-    if(settings.macro_meso_iteration>1)
-        %e = count;
-        Dgiven =matProp.GetSavedDMatrix(e);
-    else
-        Dgiven = [];
-    end
+%     if(settings.macro_meso_iteration>1)
+%         %e = count;
+%         Dgiven =matProp.GetSavedDMatrix(e);
+%     else
+%         Dgiven = [];
+%     end
+%     
+%      if(settings.useOrthAndRot==1)
+%         Dgiven= matProp.calculateEffConsMatrixWithGradAndOrthDistrbution( designVars.w(y,x), settings, designVars.d(y,x));
+%     end
     
-    [ke, KexpansionBar] = matProp.effectiveElasticKEmatrix(designVars.w(y,x), settings,Dgiven);
+%     [ke, KexpansionBar] = matProp.effectiveElasticKEmatrix(designVars.w(y,x), settings,Dgiven);
     % [ke] = matProp.effectiveElasticKEmatrix(  designVars.w(y,x), settings);
-    
-    
-    
-    
     
     % Insert the element stiffness matrix into the global.
     nodes1 = designVars.IEN(e,:);
@@ -309,16 +307,19 @@ for e = 1:ne
     % for the x location
     % The first number is the row - "y value"
     % The second number is the column "x value"
-    K(NodeNumbers,NodeNumbers) = K(NodeNumbers,NodeNumbers) + designVars.x(y,x)^settings.penal*ke;
+%     K(NodeNumbers,NodeNumbers) = K(NodeNumbers,NodeNumbers) + designVars.x(y,x)^settings.penal*ke;
+
+      KE = matProp.getKMatrixUseTopGradOrthoDistrRotVars(settings,designVars.x(y,x),designVars.w(y,x),designVars.d(y,x),designVars.t(y,x));
+      K(NodeNumbers,NodeNumbers) = K(NodeNumbers,NodeNumbers) + KE;
     
-    if(settings.addThermalExpansion ==1)
-        alpha = matProp.effectiveThermalExpansionCoefficient(designVars.w(y,x))*designVars.x(y,x)^settings.penal;
-        U_heat = designVars.U_heatColumn(nodes1,:);
-        averageElementTemp = mean2(U_heat); % calculate the average temperature of the 4 nodes
-        deltaTemp = averageElementTemp- settings.referenceTemperature;
-        f_temperature = alpha*deltaTemp*KexpansionBar;
-        F(NodeNumbers) = F(NodeNumbers) + f_temperature;
-    end
+%     if(settings.addThermalExpansion ==1)
+%         alpha = matProp.effectiveThermalExpansionCoefficient(designVars.w(y,x))*designVars.x(y,x)^settings.penal;
+%         U_heat = designVars.U_heatColumn(nodes1,:);
+%         averageElementTemp = mean2(U_heat); % calculate the average temperature of the 4 nodes
+%         deltaTemp = averageElementTemp- settings.referenceTemperature;
+%         f_temperature = alpha*deltaTemp*KexpansionBar;
+%         F(NodeNumbers) = F(NodeNumbers) + f_temperature;
+%     end
     
     %        xLoc = xLoc+1;
     %        if(xLoc>settings.nelx)

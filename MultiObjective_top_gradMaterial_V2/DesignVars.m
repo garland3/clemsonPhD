@@ -8,6 +8,7 @@ classdef DesignVars
         x; % the "density" at each element
         w; % the volume fraction at each element
         d; % the distribution of the orthogonal material
+        t; %theta, the rotation of the orthogonal material
         
         % Optimization vars
         lambda1 = 0;
@@ -482,8 +483,8 @@ classdef DesignVars
         %
         % --------------------------------
         function obj = RunFEAs(obj, settings, matProp, loop)
-              [~, t2] = size(settings.loadingCase);
-             for loadcaseIndex = 1:t2
+            [~, t2] = size(settings.loadingCase);
+            for loadcaseIndex = 1:t2
                 loadcase = settings.loadingCase(loadcaseIndex);
                 
                 % FE-ANALYSIS
@@ -491,37 +492,36 @@ classdef DesignVars
                     u_heat_loadcase  =temperatureFEA_V3(obj, settings, matProp,loop,loadcase);
                     obj.U_heatColumn(loadcaseIndex,:)=u_heat_loadcase;
                 end
-                [UloadCase, obj.maxF, obj.maxU]=FE_elasticV2(obj, settings, matProp,loadcase);                
+                [UloadCase, obj.maxF, obj.maxU]=FE_elasticV2(obj, settings, matProp,loadcase);
                 obj.U(loadcaseIndex,:)=UloadCase;
-             end
-             
-              obj.c = 0.; % c is the objective. Total strain energy
-              obj.cCompliance = 0;
-              obj.cHeat = 0;
+            end
+            
+            obj.c = 0.; % c is the objective. Total strain energy
+            obj.cCompliance = 0;
+            obj.cHeat = 0;
         end
         
         % -----------------------------------------
         %
         % Calculate Topology Sensitivity
         %
-        % -- FEA data sent to this function. 
+        % -- FEA data sent to this function.
         %
         % -----------------------------------------
-        function obj = CalculateTopologySensitivity(obj, settings, matProp, loop)
-            Dgiven = [];
-            elementsInRow = settings.nelx+1;
+        function obj = CalculateTopologySensitivity(obj, settings, matProp, loop)            
+            elementsInRow = settings.nelx+1;     
             
-               obj.sensitivityHeat(:,:)=0;
-              obj.sensitivityElastic(:,:)=0;
+            obj.sensitivityHeat(:,:)=0;
+            obj.sensitivityElastic(:,:)=0;
             
             % allow multiple loading cases.
             [~, t2] = size(settings.loadingCase);
             
-            for loadcaseIndex = 1:t2                
+            for loadcaseIndex = 1:t2
                 UloadCase= obj.U(loadcaseIndex,:);
                 
                 % OBJECTIVE FUNCTION AND SENSITIVITY ANALYSIS
-                count =1;                
+                count =1;
                 for ely = 1:settings.nely
                     rowMultiplier = ely-1;
                     for elx = 1:settings.nelx
@@ -534,21 +534,14 @@ classdef DesignVars
                         yNodes = nodes1*2;
                         NodeNumbers = [xNodes(1) yNodes(1) xNodes(2) yNodes(2) xNodes(3) yNodes(3) xNodes(4) yNodes(4)];
                         
-                        Ue = UloadCase(NodeNumbers)';                        
+                        Ue = UloadCase(NodeNumbers)';
                         
-                        % Get the element K matrix for this partiular element
-                        if(settings.macro_meso_iteration>1)                           
-                            Dgiven =matProp.GetSavedDMatrix(count);
-                        end
-                        
-                       
-                        
-                        KE = matProp.effectiveElasticKEmatrix(  obj.w(ely,elx),settings,Dgiven);
+ 
                         
                         % if heat objective!!!
                         if (settings.w1 ~= 1)
                             U_heat = obj.U_heatColumn(nodes1,:);
-%                             averageElementTemp = mean2(U_heat); % calculate the average temperature of the 4 nodes
+                            %                             averageElementTemp = mean2(U_heat); % calculate the average temperature of the 4 nodes
                             KEHeat = matProp.effectiveHeatKEmatrix(  obj.w(ely,elx), settings);
                             obj.cHeat =   obj.cHeat           + obj.x(ely,elx)^settings.penal*U_heat'*KEHeat*U_heat;
                             
@@ -557,41 +550,22 @@ classdef DesignVars
                             % obj.g1heat(ely,elx) = obj.x(ely,elx)^(settings.penal)*U_heat'*matProp.dKheat*U_heat + obj.g1heat(ely,elx) ;
                         end
                         
-%                         Dmaterial = matProp.calculateEffectiveConstitutiveEquation( obj.w(ely,elx), settings,Dgiven);
+                        % Calculate generic KE with 1 as the SIMP density
+                         KEgeneric = matProp.getKMatrixUseTopGradOrthoDistrRotVars(settings,1,obj.w(ely,elx),obj.d(ely,elx),obj.t(ely,elx));
                         
-                        % Find the elastic strain
-%                         elasticStrain = obj.B*Ue;
-%                         term1 = transpose(elasticStrain)*Dmaterial*elasticStrain*obj.x(ely,elx)^settings.penal;
+                        % Calculate the elastic sensitivity!
+                        KEsensitive = KEgeneric*settings.penal*obj.x(ely,elx)^(settings.penal-1);                       
+                        obj.sensitivityElastic(ely,elx) =-Ue'*KEsensitive*Ue+ obj.sensitivityElastic(ely,elx);
                         
-%                         % Find the thermal strain and add this in to the
-%                         if(settings.addThermalExpansion ==1)
-%                             alpha = matProp.effectiveThermalExpansionCoefficient(  obj.w(ely,elx));
-%                             deltaTemp = averageElementTemp- settings.referenceTemperature;
-%                             thermalStrain = alpha*deltaTemp*[1; 1; 0];
-%                             term2 = transpose(thermalStrain)*Dmaterial*thermalStrain*obj.x(ely,elx)^settings.penal;
-%                             term3 = -2*transpose(thermalStrain)*Dmaterial*elasticStrain*obj.x(ely,elx)^settings.penal;
-%                         else
-%                             term2=0;
-%                             term3=0;
-%                         end
-                        
-%                         total = (term1 + term2 + term3);
-%                         obj.sensitivityElastic(ely,elx) = -total+ obj.sensitivityElastic(ely,elx);
-                          obj.sensitivityElastic(ely,elx) =-settings.penal*obj.x(ely,elx)^(settings.penal-1)*Ue'*KE*Ue+ obj.sensitivityElastic(ely,elx);
-                        
-                        obj.cCompliance = obj.cCompliance + obj.x(ely,elx)^settings.penal*Ue'*KE*Ue;
-                        count=count+1;
+                        % Calculate the total elastic compliance
+                        KE = KEgeneric*obj.x(ely,elx)^(settings.penal);
+                        obj.cCompliance = obj.cCompliance + Ue'*KE*Ue;
+                       
+                        count=count+1;      
+                       
                     end % end, loop over x
                 end % end, for loop over nely
-                
             end % end for loop over load cases.
-            
-            % average the values.
-%             obj.temp1 =  obj.temp1/t2;
-%             obj.temp2 =  obj.temp2/t2;
-%             obj.g1elastic =  obj.g1elastic/t2;
-%             obj.g1heat =  obj.g1heat/t2;
-            
         end % End Function, CalculateSenstivities
         
         
@@ -599,21 +573,20 @@ classdef DesignVars
         %
         % CalculateTMaterialGradientSensitivity
         %
-        %  % -- FEA data sent to this function. 
+        %  % -- FEA data sent to this function.
         %
         % -----------------------------------------
-         function obj = CalculateMaterialGradientSensitivity(obj, settings, matProp, loop)
-            Dgiven = [];
+        function obj = CalculateMaterialGradientSensitivity(obj, settings, matProp, loop)         
             elementsInRow = settings.nelx+1;
             
             % allow multiple loading cases.
             [~, t2] = size(settings.loadingCase);
             
-               obj.sensitivityHeat(:,:)=0;
-              obj.sensitivityElastic(:,:)=0;
-             
+            obj.sensitivityHeat(:,:)=0;
+            obj.sensitivityElastic(:,:)=0;
             
-            for loadcaseIndex = 1:t2                
+            
+            for loadcaseIndex = 1:t2
                 UloadCase=obj.U(loadcaseIndex,:);
                 count =1;
                 
@@ -629,75 +602,109 @@ classdef DesignVars
                         yNodes = nodes1*2;
                         NodeNumbers = [xNodes(1) yNodes(1) xNodes(2) yNodes(2) xNodes(3) yNodes(3) xNodes(4) yNodes(4)];
                         
-                        Ue = UloadCase(NodeNumbers)';                        
+                        Ue = UloadCase(NodeNumbers)';
                         
-                        % Get the element K matrix for this partiular element
-                        if(settings.macro_meso_iteration>1)                          
-                            Dgiven =matProp.GetSavedDMatrix(count);
-                        end
-                                                
-%                         KE = matProp.effectiveElasticKEmatrix(  obj.w(ely,elx),settings,Dgiven);
+                         % Calculate the elastic sensitivity!
+                        KEsensitive = matProp.getKMatrixGradientMaterialSensitivity(settings,obj.x(ely,elx),obj.w(ely,elx),obj.d(ely,elx),obj.t(ely,elx));
+                        obj.sensitivityElastic(ely,elx) =Ue'*KEsensitive*Ue+ obj.sensitivityElastic(ely,elx);
+                 
                         
-                        % if no heat objective!!!
+                        % if heat objective!!!
                         if (settings.w1 ~= 1)
                             U_heat = obj.U_heatColumn(nodes1,:);
-%                             averageElementTemp = mean2(U_heat); % calculate the average temperature of the 4 nodes
+                            %                             averageElementTemp = mean2(U_heat); % calculate the average temperature of the 4 nodes
                             KEHeat = matProp.effectiveHeatKEmatrix(  obj.w(ely,elx), settings);
                             obj.cHeat =   obj.cHeat  + obj.x(ely,elx)^settings.penal*U_heat'*KEHeat*U_heat;
                             
                             % calculate the minim temp sensitivity
-%                             obj.temp2(ely,elx) = -settings.penal*obj.x(ely,elx)^(settings.penal-1)*U_heat'*KEHeat*U_heat + obj.temp2(ely,elx);
+                            %                             obj.temp2(ely,elx) = -settings.penal*obj.x(ely,elx)^(settings.penal-1)*U_heat'*KEHeat*U_heat + obj.temp2(ely,elx);
                             obj.sensitivityHeat(ely,elx) = obj.x(ely,elx)^(settings.penal)*U_heat'*matProp.dKheat*U_heat + obj.sensitivityHeat(ely,elx) ;
                         end
+                      
+                        count=count+1;
+                    end % end, loop over x
+                end % end, for loop over y
+                
+            end % end for loop over load cases.
+            
+            % average the values.
+            %             obj.temp1 =  obj.temp1/t2;
+            %             obj.temp2 =  obj.temp2/t2;
+            %             obj.g1elastic =  obj.g1elastic/t2;
+            %             obj.g1heat =  obj.g1heat/t2;\
+            
+        end % End Function, CalculateSenstivities
+        
+        
+        % -----------------------------------------
+        %
+        % CalculateOthogonalDistributionSensitivity
+        %
+        %  % -- FEA data sent to this function.
+        %
+        % -----------------------------------------
+        function obj = CalculateOthogonalDistributionSensitivity(obj, settings, matProp, loop)
+            elementsInRow = settings.nelx+1;
+            obj.sensitivityHeat(:,:)=0;
+            obj.sensitivityElastic(:,:)=0;
+            
+            % allow multiple loading cases.
+            [~, t2] = size(settings.loadingCase);
+            
+            for loadcaseIndex = 1:t2
+                UloadCase= obj.U(loadcaseIndex,:);
+                
+                % OBJECTIVE FUNCTION AND SENSITIVITY ANALYSIS
+                count =1;
+                for ely = 1:settings.nely
+                    rowMultiplier = ely-1;
+                    for elx = 1:settings.nelx
+                        nodes1=[rowMultiplier*elementsInRow+elx;
+                            rowMultiplier*elementsInRow+elx+1;
+                            (rowMultiplier +1)*elementsInRow+elx+1;
+                            (rowMultiplier +1)*elementsInRow+elx];
                         
-                        Dmaterial = matProp.calculateEffectiveConstitutiveEquation( obj.w(ely,elx), settings,Dgiven);
+                        xNodes = nodes1*2-1;
+                        yNodes = nodes1*2;
+                        NodeNumbers = [xNodes(1) yNodes(1) xNodes(2) yNodes(2) xNodes(3) yNodes(3) xNodes(4) yNodes(4)];
                         
-                        % Find the elastic strain
-                        elasticStrain = obj.B*Ue;                     
+                        Ue = UloadCase(NodeNumbers)';
                         
                         
-                        % Derivative of  D
-                        % (constitutive matrix) with respect to
-                        % a density change
-                        dD =  settings.penal*obj.x(ely,elx)^(settings.penal-1)*Dmaterial;
-                        dTerm1 = transpose(elasticStrain)*dD*elasticStrain;
+                        % Get the sensitivity D matrix
+                        Dgiven= matProp.calculateEffConsMatrixWithGradAndOrthDistrbution_sensitivity( obj.w(ely,elx), settings, obj.d(ely,elx));
+                        KE = matProp.effectiveElasticKEmatrix(  obj.w(ely,elx),settings,Dgiven);
+                        tempSensi =obj.x(ely,elx)^(settings.penal)*Ue'*KE*Ue;
                         
-%                         if(settings.addThermalExpansion ==1)
-%                             dTerm2 =transpose(thermalStrain)*dD*thermalStrain;
-%                             dTerm3 = -2*transpose(thermalStrain)*dD*elasticStrain;
-%                         else
-                            dTerm2=0;
-                            dTerm3=0;
+                        
+%                         if(isreal(tempSensi)==0)
+%                             disp('not real');
 %                         end
-%                         
-%                         if (settings.doPlotStress == 1)
-%                             totalStrain=thermalStrain+elasticStrain;
-%                             totalSressLocal=Dmaterial*totalStrain*obj.x(ely,elx)^settings.penal;
-%                             vonM = sqrt(totalSressLocal(1)^2  +   totalSressLocal(2)^2 -  totalSressLocal(1)*totalSressLocal(2)  +   3*(totalSressLocal(3))^2);
-%                             obj.totalStress(ely,elx)=vonM;
-%                         end                        
-                                             
+                        obj.sensitivityElastic(ely,elx) = tempSensi + obj.sensitivityElastic(ely,elx);
                         
-                        % Calculate the derivative with respect to a material
-                        % volume fraction composition change (not density change)
-                        totalMaterialD = dTerm1+dTerm2+dTerm3;
-                        obj.sensitivityElastic(ely,elx) =totalMaterialD +    obj.sensitivityElastic(ely,elx);
-                        %  obj.g1elastic(ely,elx) = obj.x(ely,elx)^(settings.penal)*Ue'*matProp.dKelastic*Ue;
+                        %                         % if heat objective!!!
+                        %                         if (settings.w1 ~= 1)
+                        %                             U_heat = obj.U_heatColumn(nodes1,:);
+                        % %                             averageElementTemp = mean2(U_heat); % calculate the average temperature of the 4 nodes
+                        %                             KEHeat = matProp.effectiveHeatKEmatrix(  obj.w(ely,elx), settings);
+                        %                             obj.cHeat =   obj.cHeat           + obj.x(ely,elx)^settings.penal*U_heat'*KEHeat*U_heat;
+                        %
+                        %                             % calculate the minim temp sensitivity
+                        %                             obj.sensitivityHeat(ely,elx) = -settings.penal*obj.x(ely,elx)^(settings.penal-1)*U_heat'*KEHeat*U_heat + obj.sensitivityHeat(ely,elx);
+                        %                             % obj.g1heat(ely,elx) = obj.x(ely,elx)^(settings.penal)*U_heat'*matProp.dKheat*U_heat + obj.g1heat(ely,elx) ;
+                        %                         end
+                        
+                        %                         Dmaterial = matProp.calculateEffectiveConstitutiveEquation( obj.w(ely,elx), settings,Dgiven);
+                        
+                        
                         
                         
                         count=count+1;
                     end % end, loop over x
                 end % end, for loop over nely
-                
             end % end for loop over load cases.
             
-            % average the values.
-%             obj.temp1 =  obj.temp1/t2;
-%             obj.temp2 =  obj.temp2/t2;
-%             obj.g1elastic =  obj.g1elastic/t2;
-%             obj.g1heat =  obj.g1heat/t2;
-            
-        end % End Function, CalculateSenstivities
+        end % End Function, CalculateOthogonalDistributionSensitivity
         
         % ------------------------------------------------------------
         %
@@ -805,9 +812,9 @@ classdef DesignVars
         % properties
         % ------------------------------------------------------------
         function macroElemProps = GetHomogenizedProperties(obj, settings,homgSettings, matProp, loop,macroElemProps)
-          
+            
             [macroElemProps.D_homog]=FE_elasticV2_homgonization(obj, settings, matProp);
-         
+            
         end % end CalculateSensitiviesMesoStructure
         
     end % End Methods

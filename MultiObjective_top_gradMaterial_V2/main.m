@@ -3,6 +3,8 @@ clear
 
  combinedTopologyOptimization('1', '1', '1','5', 'na');
  
+  combinedTopologyOptimization('1', '1', '1','12', 'na');
+ 
 
 % numloops = 5;
 % for i =1:numloops

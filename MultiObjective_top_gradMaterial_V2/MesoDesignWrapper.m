@@ -24,7 +24,7 @@ if(macroElementProperties.density>settingscopy.noNewMesoDesignDensityCutOff)
     % ------------------------------------------------------
     % Single element per design var.
     % ------------------------------------------------------
-    if(settingscopy.doUseMultiElePerDV==0)
+%     if(settingscopy.doUseMultiElePerDV==0)
         if(plotting ==1)
             figure(1)
             [~, t2] = size(settingscopy.loadingCase);
@@ -46,42 +46,42 @@ if(macroElementProperties.density>settingscopy.noNewMesoDesignDensityCutOff)
             end
         end
         
-    else
-        % ------------------------------------------------------
-        % Multiple element per design var.
-        % ------------------------------------------------------
-        
-        if(e==-1)
-            macroElementProperties.xDisplacements = [ 0 0 0 0 0 0  1 1 1]*0.1;
-            macroElementProperties.yDisplacements = [ 0 0 0 0 0 0  1 1 1]*0.1;
-        end
-        
-        if(plotting ==1)
-            figure(1)
-            [~, t2] = size(settingscopy.loadingCase);
-            for loadcaseIndex = 1:t2
-                dx = macroElementProperties.xDisplacements(loadcaseIndex,:)*scalePlot;
-                dy = macroElementProperties.yDisplacements(loadcaseIndex,:)*scalePlot;
-                Xlocs = macroElementProperties.mesoXnodelocations;
-                Ylocs = macroElementProperties.mesoYnodelocations;
-                Xlocs = reshape(Xlocs',[],1);
-                Ylocs = reshape(Ylocs',[],1);
-                displacedX= Xlocs +dx';
-                displacedY= Ylocs +dy';
-                subplot(2,2*t2,2*loadcaseIndex-1);
-                plot(Xlocs,Ylocs,'x');
-                hold on
-                plot(displacedX,displacedY,'o');
-                hold off
-            end
-        end
-    end
+%     else
+%         % ------------------------------------------------------
+%         % Multiple element per design var.
+%         % ------------------------------------------------------
+%         
+%         if(e==-1)
+%             macroElementProperties.xDisplacements = [ 0 0 0 0 0 0  1 1 1]*0.1;
+%             macroElementProperties.yDisplacements = [ 0 0 0 0 0 0  1 1 1]*0.1;
+%         end
+%         
+%         if(plotting ==1)
+%             figure(1)
+%             [~, t2] = size(settingscopy.loadingCase);
+%             for loadcaseIndex = 1:t2
+%                 dx = macroElementProperties.xDisplacements(loadcaseIndex,:)*scalePlot;
+%                 dy = macroElementProperties.yDisplacements(loadcaseIndex,:)*scalePlot;
+%                 Xlocs = macroElementProperties.mesoXnodelocations;
+%                 Ylocs = macroElementProperties.mesoYnodelocations;
+%                 Xlocs = reshape(Xlocs',[],1);
+%                 Ylocs = reshape(Ylocs',[],1);
+%                 displacedX= Xlocs +dx';
+%                 displacedY= Ylocs +dy';
+%                 subplot(2,2*t2,2*loadcaseIndex-1);
+%                 plot(Xlocs,Ylocs,'x');
+%                 hold on
+%                 plot(displacedX,displacedY,'o');
+%                 hold off
+%             end
+%         end
+%     end
     
     [designVarsMeso, mesoSettings] = GenerateDesignVarsForMesoProblem(settingscopy,e,macroElementProperties);
     
     
     % Set the target infill for the meso as the vol fraction of
-    %             mesoSettings.v1=0.5+(macroElementPropsParFor.material1Fraction*macroElementPropsParFor.density^settings.penal)/2;
+    %             mesoSettings.v1=0.5+(macroEleme   ntPropsParFor.material1Fraction*macroElementPropsParFor.density^settings.penal)/2;
     w = macroElementProperties.material1Fraction;
     x = macroElementProperties.density;
     mesoSettings.v1=matProp.CalculateDensityTargetforMeso(w,x,settingscopy);
@@ -92,7 +92,19 @@ if(macroElementProperties.density>settingscopy.noNewMesoDesignDensityCutOff)
     mesoSettings.averageMultiElementStrain= settingscopy.averageMultiElementStrain;
     mesoSettings.doPlotAppliedStrain=settingscopy.doPlotAppliedStrain;
      mesoSettings.terminationCriteria = 0.00001;
-    [D_homog,designVarsMeso,macroElementProperties]= MesoStructureDesignV2(matProp,mesoSettings,designVarsMeso,macroElementProperties,[]);
+     
+     % ----------------------------------
+     % New method for designing MESO structures
+     % ----------------------------------
+%      if(mesoSettings.useOrthDistribution==1 || settings.useRotation)
+%          
+%      else
+     % ----------------------------------
+     % Old method for designing MESO structures using the strain
+     % ----------------------------------
+        [D_homog,designVarsMeso,macroElementProperties]= MesoStructureDesignV2(matProp,mesoSettings,designVarsMeso,macroElementProperties,[]);
+    
+%      end
     D_homog
     
     newDesign = 1;
@@ -118,13 +130,3 @@ else
 end
 
 SaveMesoUnitCellDesignToCSV(designVarsMeso,macroElementProperties,settingscopy.iterationNum,settingscopy.macro_meso_iteration,e,newDesign);
-
-% SavedDmatrix(e,:) = D_homog_flat;
-
-% write the density, volume fraction and topology fields to .csv files
-% make a list of elemenents that have material (ie, we don't need to
-% design the void regions)
-% loop over the elements with material.
-% 1. read the displacment field and vol frac, calculate the E_given
-% 2. Run the MesoStructureDesign
-% 3. Save the results of the meso-structure to a .csv file.

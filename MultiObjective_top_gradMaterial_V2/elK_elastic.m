@@ -43,7 +43,7 @@ if(1==1)
      ke = zeros(8,8);
      F_meso = zeros(8,1);
      kExpansion_bar = 0;
-     ftemp = zeros(8,1);
+%      ftemp = zeros(8,1);
     %  btemp = zeros(2,4);
      B_total = zeros(3,8);
 
