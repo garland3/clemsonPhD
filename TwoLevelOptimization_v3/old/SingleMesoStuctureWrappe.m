@@ -84,24 +84,24 @@ settings.nely =settings.nelyMeso;
 
 
 e = 1;
-[DVMeso, ~] = GenerateDesignVarsForMesoProblem(settings,e);
+[designVarsMeso, ~] = GenerateDesignVarsForMesoProblem(settings,e);
 
 macroElementProps.elementNumber = e;
 
 % give periodic boundary condition.
 
-DVMeso = DVMeso.CalcElementNodeMapmatrixWithPeriodicXandY(settings);
-DVMeso =  DVMeso.CalcNodeLocationMeso(settings);
+designVarsMeso = designVarsMeso.CalcElementNodeMapmatrixWithPeriodicXandY(settings);
+designVarsMeso =  designVarsMeso.CalcNodeLocationMeso(settings);
 
 macroElementProps.material1Fraction=1;
 [macroElementProps.K ,~,macroElementProps.B] = matProp.effectiveElasticKEmatrix( macroElementProps.material1Fraction, settings,[]);
 macroElementProps.strain = macroElementProps.B* transpose(macroElementProps.disp); % transpose the disp to be vertical
 
 
- [D_homog,DVMeso,macroElementProps] = MesoStructureDesignV2(matProp,settings,DVMeso,macroElementProps,[]);
+ [D_homog,designVarsMeso,macroElementProps] = MesoStructureDesignV2(matProp,settings,designVarsMeso,macroElementProps,[]);
 
-SaveMesoUnitCellDesignToCSV(DVMeso,macroElementProps,settings.iterationNum,settings.macro_meso_iteration,e,1);
-% Homgenization(DVMeso, settings, matProp,macroElementProps,[]);
+SaveMesoUnitCellDesignToCSV(designVarsMeso,macroElementProps,settings.iterationNum,settings.macro_meso_iteration,e,1);
+% Homgenization(designVarsMeso, settings, matProp,macroElementProps,[]);
 % disp(['Single Meso Design #: ' sprintf('%4i',e ) ' of ' sprintf('%4i',ne )]);
 %  macroElementPropsParFor = GetMacroElementPropertiesFromCSV(settingscopy,e);
 % scalePlot = 1;
@@ -176,7 +176,7 @@ SaveMesoUnitCellDesignToCSV(DVMeso,macroElementProps,settings.iterationNum,setti
 %         end
 %     end
 %
-%     [DVMeso, mesoSettings] = GenerateDesignVarsForMesoProblem(settingscopy,e);
+%     [designVarsMeso, mesoSettings] = GenerateDesignVarsForMesoProblem(settingscopy,e);
 %
 %
 %     % Set the target infill for the meso as the vol fraction of
@@ -190,7 +190,7 @@ SaveMesoUnitCellDesignToCSV(DVMeso,macroElementProps,settings.iterationNum,setti
 %
 %     mesoSettings.averageMultiElementStrain= settingscopy.averageMultiElementStrain;
 %     mesoSettings.doPlotAppliedStrain=settingscopy.doPlotAppliedStrain;
-% [D_homog,DVMeso,macroElementPropsParFor]= MesoStructureDesignV2(matProp,mesoSettings,DVMeso,macroElementPropsParFor,[]);
+% [D_homog,designVarsMeso,macroElementPropsParFor]= MesoStructureDesignV2(matProp,mesoSettings,designVarsMeso,macroElementPropsParFor,[]);
 %     D_homog
 %
 %     newDesign = 1;
@@ -201,10 +201,10 @@ SaveMesoUnitCellDesignToCSV(DVMeso,macroElementProps,settings.iterationNum,setti
 %         figure(1)
 %         subplot(2,2,2);
 %         outname = sprintf('meso structure for macro element %i density %f',e, mesoSettings.v1);
-%         p.PlotArrayGeneric(DVMeso.x,outname);
+%         p.PlotArrayGeneric(designVarsMeso.x,outname);
 %         %                 subplot(2,2,3);
 %         %                 outname = sprintf('meso structure sensitivity %i density %f',e, mesoSettings.v1);
-%         %                 p.PlotArrayGeneric(DVMeso.temp1,outname);
+%         %                 p.PlotArrayGeneric(designVarsMeso.temp1,outname);
 %         drawnow
 %         nameGraph = sprintf('./out%i/elementpicture%i.png',settingscopy.iterationNum, e);
 %         print(nameGraph,'-dpng')
@@ -212,10 +212,10 @@ SaveMesoUnitCellDesignToCSV(DVMeso,macroElementProps,settings.iterationNum,setti
 % else
 %     %D_homog_flat = zeros(1,9);
 %     newDesign = 0; % false
-%     DVMeso=[];
+%     designVarsMeso=[];
 % end
 %
-% SaveMesoUnitCellDesignToCSV(DVMeso,macroElementPropsParFor,settingscopy.iterationNum,settingscopy.macro_meso_iteration,e,newDesign);
+% SaveMesoUnitCellDesignToCSV(designVarsMeso,macroElementPropsParFor,settingscopy.iterationNum,settingscopy.macro_meso_iteration,e,newDesign);
 %
 % % SavedDmatrix(e,:) = D_homog_flat;
 %

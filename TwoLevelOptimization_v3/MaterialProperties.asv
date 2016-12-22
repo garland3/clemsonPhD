@@ -127,9 +127,8 @@ classdef MaterialProperties
         %    USE TOPOLOGY VAR
         %    USE Exx and Eyy      
         %  HAVE SPECIAL CASES FOR OLD METHODS AS LEGACY CODE
-        %  The material gradient is for legacy. 
         % ---------------------------
-        function K = getKMatrixTopExxYyyRotVars(obj,settings,topDensity,Exx, Eyy,rotation,material1Fraction)
+        function K = getKMatrixTopExxYyyRotVars(obj,settings,topDensity,Exx, Eyy,rotation)
             % -------------
             % New method
             % -------------
@@ -192,7 +191,7 @@ classdef MaterialProperties
         % CALCULATE K MATRIX FOR GRADIENT MATERIAL SENSITIVITY
         %
         % ---------------------------
-        function K = getKMatrixGradientMaterialSensitivity(obj,settings,topDensity,Exx, Eyy,rotation)
+        function K = getKMatrixGradientMaterialSensitivity(obj,settings,topDensity,material1Fraction,orthD,rotation)
                      
             % -------------
             % New method

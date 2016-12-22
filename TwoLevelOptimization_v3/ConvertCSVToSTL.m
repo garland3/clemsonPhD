@@ -1,4 +1,4 @@
-function [] = ConvertCSVToSTL()
+function [] = ConvertCSVToSTL(filename)
 
 testing =0;
 

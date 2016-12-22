@@ -1,16 +1,16 @@
-function [T, maxF,maxT]=FE_elasticV2(designVars, settings, matProp, loadingCase)
+function [T, maxF,maxT]=FE_elasticV2(DV, config, matProp, loadingCase)
 
 u0 =0; % value at essentail boundaries
-nn = (settings.nelx+1)*(settings.nely+1); % number of nodes
-ne = settings.nelx*settings.nely; % number of elements
+nn = (config.nelx+1)*(config.nely+1); % number of nodes
+ne = config.nelx*config.nely; % number of elements
 ndof = nn*2; % Number of degrees of freedome. 2 per node.
 
 % Specifiy the constrained nodes where there are essential boundary
 % conditions
 F = zeros(ndof,1);
 K = zeros(ndof,ndof);
-row = settings.nelx+1;
-column= settings.nely+1;
+row = config.nelx+1;
+column= config.nely+1;
 
 bottomFixed=0;
 
@@ -190,110 +190,39 @@ if(bottomFixed==1)
        Essential = unique(Essential);  
 end
 
-
-
-% if(strcmp(fixedElementsCase,'bottomCorners'))
-%
-% elseif(strcmp(fixedElementsCase,'sidesMiddle'))%
-%     Essential = []; %
-%     Essential=[Essential row*2+(ceil(column/2)*row*2) 1+row*2+(ceil(column/2)*row*2)] ; % fixed at the heat source in the middle right
-%     Essential=[Essential 1+(ceil(column/2)*row*2) 2+(ceil(column/2)*row*2)] ; % fixed at the heat source in the middle left
-%     Essential = unique(Essential);
-%     F( (floor(row/2)+1)*2) = FappliedLoad; % force down in the bottom middle
-%
-% elseif(strcmp(fixedElementsCase,'middleDown'))
-%     Essential = []; %
-%
-%     Essential=[Essential row*2+(ceil(column/2)*row*2) 1+row*2+(ceil(column/2)*row*2)] ; % fixed at the heat source in the middle right
-%     Essential=[Essential 1+(ceil(column/2)*row*2) 2+(ceil(column/2)*row*2)] ; % fixed at the heat source in the middle left
-%     Essential = unique(Essential);
-%
-%     % even DOF should be y directions
-%     forceNodes = [ 2+(ceil(column/2)*row*2):2:2+row*2+(ceil(column/2)*row*2)];
-%     F(forceNodes)=  FappliedLoad; % middle row, downward force
-%
-% elseif(strcmp(fixedElementsCase,'leftClampedmiddleLoadRight'))
-%
-
-% elseif(strcmp(fixedElementsCase,'bridge'))
-% %     tt=   1:2*row :2*row*(column); % ... % left side
-% %     t2=tt+1;
-% %     left, middle, right on bottom
-% %     load down on middle row.
-% %     left = [1 2];
-% % %      middle = [floor(row/2)*2 floor(row/2)*2+1];
-% % middle = [];
-% %     right = [row*2 row*2+1];
-%     nodeLeft =  floor(column/2)*row+1;
-%      nodeRight =  (floor(column/2)+1)*row;
-%     left =  nodeLeft*2;
-%     right = nodeRight*2;
-% % %     tt = leftynode:2:rightynode;
-% %     right = ndof;
-% %     left = ndof-row*2;
-%     tt = left:2:right;
-%     [~, scale] = size(tt);
-%    % scale = scale(
-%       Essential=[left (left -1)  right (right-1)];
-%     Essential = unique(Essential);
-% %     shiftupLeft = floor(column/2)*row*2+3;
-% %      shiftupRight = (floor(column/2)+1)*row*2+1;
-% %      tt = shiftupLeft:2:shiftupRight;
-%     F(tt) = -FappliedLoad/scale;
-% end
-
-
-
 alldofs     = [1:ndof];
 Free    = setdiff(alldofs,Essential);
 
-% Add source node in the middle. Keep the temperature constant
-%xMiddle  = floor(2*numNodesInRow/2);
-%yMiddle = floor(2*numNodesInColumn/2);
-%nodeNumber = 2*(numNodesInRow)*floor( (numNodesInColumn)/2);
-% F(nodeNumber,1) = -1; % force at particular node
-
-% F(2*(numNodesInColumn-1)*numNodesInRow+2,1) = -10; % y direction, down
-
-%FappliedLoad = -200000;
-
-
-
-% ke = elK_elastic(matProp);
-
-% xLoc = 1;
-% yLoc = 1;
 % % loop over the elements
-for e = 1:ne
-    
+for e = 1:ne    
     % loop over local node numbers to get their node global node numbers
     for j = 1:4
         % Get the node number
-        coordNodeNumber = designVars.IEN(e,j);
+        coordNodeNumber = DV.IEN(e,j);
         % get the global X,Y position of each node and put in array
-        coord(j,:) = designVars.globalPosition(coordNodeNumber,:);
+        coord(j,:) = DV.globalPosition(coordNodeNumber,:);
     end
     
-    [x,y]= designVars.GivenNodeNumberGetXY(e);
+    [x,y]= DV.GivenNodeNumberGetXY(e);
   
     
     % Get the element K matrix for this partiular element
-%     if(settings.macro_meso_iteration>1)
+%     if(config.macro_meso_iteration>1)
 %         %e = count;
 %         Dgiven =matProp.GetSavedDMatrix(e);
 %     else
 %         Dgiven = [];
 %     end
 %     
-%      if(settings.useOrthAndRot==1)
-%         Dgiven= matProp.calculateEffConsMatrixWithGradAndOrthDistrbution( designVars.w(y,x), settings, designVars.d(y,x));
+%      if(config.useOrthAndRot==1)
+%         Dgiven= matProp.calculateEffConsMatrixWithGradAndOrthDistrbution( DV.w(y,x), config, DV.d(y,x));
 %     end
     
-%     [ke, KexpansionBar] = matProp.effectiveElasticKEmatrix(designVars.w(y,x), settings,Dgiven);
-    % [ke] = matProp.effectiveElasticKEmatrix(  designVars.w(y,x), settings);
+%     [ke, KexpansionBar] = matProp.effectiveElasticKEmatrix(DV.w(y,x), config,Dgiven);
+    % [ke] = matProp.effectiveElasticKEmatrix(  DV.w(y,x), config);
     
     % Insert the element stiffness matrix into the global.
-    nodes1 = designVars.IEN(e,:);
+    nodes1 = DV.IEN(e,:);
     xNodes = nodes1*2-1;
     yNodes = nodes1*2;
     
@@ -307,22 +236,23 @@ for e = 1:ne
     % for the x location
     % The first number is the row - "y value"
     % The second number is the column "x value"
-%     K(NodeNumbers,NodeNumbers) = K(NodeNumbers,NodeNumbers) + designVars.x(y,x)^settings.penal*ke;
+%     K(NodeNumbers,NodeNumbers) = K(NodeNumbers,NodeNumbers) + DV.x(y,x)^config.penal*ke;
 
-      KE = matProp.getKMatrixUseTopGradOrthoDistrRotVars(settings,designVars.x(y,x),designVars.w(y,x),designVars.d(y,x),designVars.t(y,x));
+      % KE = matProp.getKMatrixUseTopGradOrthoDistrRotVars(config,DV.x(y,x),DV.w(y,x),DV.d(y,x),DV.t(y,x));
+      KE = matProp.getKMatrixTopExxYyyRotVars(config,DV.x(y,x),DV.Exx(y,x), DV.Eyy(y,x),DV.t(y,x),DV.w(y,x));
       K(NodeNumbers,NodeNumbers) = K(NodeNumbers,NodeNumbers) + KE;
     
-%     if(settings.addThermalExpansion ==1)
-%         alpha = matProp.effectiveThermalExpansionCoefficient(designVars.w(y,x))*designVars.x(y,x)^settings.penal;
-%         U_heat = designVars.U_heatColumn(nodes1,:);
+%     if(config.addThermalExpansion ==1)
+%         alpha = matProp.effectiveThermalExpansionCoefficient(DV.w(y,x))*DV.x(y,x)^config.penal;
+%         U_heat = DV.U_heatColumn(nodes1,:);
 %         averageElementTemp = mean2(U_heat); % calculate the average temperature of the 4 nodes
-%         deltaTemp = averageElementTemp- settings.referenceTemperature;
+%         deltaTemp = averageElementTemp- config.referenceTemperature;
 %         f_temperature = alpha*deltaTemp*KexpansionBar;
 %         F(NodeNumbers) = F(NodeNumbers) + f_temperature;
 %     end
     
     %        xLoc = xLoc+1;
-    %        if(xLoc>settings.nelx)
+    %        if(xLoc>config.nelx)
     %            xLoc = 1;
     %            yLoc = yLoc+1;
     %        end
@@ -340,7 +270,7 @@ F_f = F(Free);
 % http://www.mathworks.com/help/distcomp/gpuarray.html
 % http://www.mathworks.com/matlabcentral/answers/63692-matlab-cuda-slow-in-solving-matrix-vector-equation-a-x-b
 
-if(settings.useGPU ==1)
+if(config.useGPU ==1)
     % GPU matrix solve.
     K_ff_gpu = gpuArray(K_ff);
     F_f_gpu = gpuArray(F_f);
@@ -361,7 +291,7 @@ maxT = full(max(T));
 % plotForces =1;
 % if(plotForces ==1)
 %     subplot(2,2,4);
-%     quiver(reshape(designVars.XLocations, ndof/2,1),reshape(designVars.YLocations, ndof/2,1),F(1:2:ndof),F(2:2:ndof));
+%     quiver(reshape(DV.XLocations, ndof/2,1),reshape(DV.YLocations, ndof/2,1),F(1:2:ndof),F(2:2:ndof));
 % end
 
 % disp('The temperature at each node is');
@@ -385,12 +315,12 @@ maxT = full(max(T));
 % % %     % loop over local node numbers to get their node global node numbers
 % %      for j = 1:4
 % %           % Get the node number
-% %           coordNodeNumber = designVars.IEN(e,j);
+% %           coordNodeNumber = DV.IEN(e,j);
 % %            % get the global X,Y position of each node and put in array
-% %            coord(j,:) = designVars.globalPosition(coordNodeNumber,:);
+% %            coord(j,:) = DV.globalPosition(coordNodeNumber,:);
 % %       end
 % %
-% %     %  [x,y]= designVars.GivenNodeNumberGetXY(e);
+% %     %  [x,y]= DV.GivenNodeNumberGetXY(e);
 % % %     elemcenterLocations(e,:) = [xsum/4 ysum/4];
 % %
 % %     % see version 3 of notes page 13 Also, see version 5 of the notes page

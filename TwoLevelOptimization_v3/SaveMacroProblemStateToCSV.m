@@ -33,26 +33,26 @@ outname = sprintf('./out%i/lambda%i.csv',folderNum,mm_iteration);
 csvwrite(outname,designVars.lambda1);
 
 % Write the D constituitive matrix to .csv files.
-ne = settings.nelx*settings.nely;
-for e = 1:ne
-    outname = sprintf('./out%i/Dgiven_%i_forElement_%i.csv',folderNum,mm_iteration,e);
-    %  D_flat =  matProp.SavedDmatrix(e,:);
-    
-    
-    results = designVars.elementXYposition(e,:);
-    yPosition = results(1);
-    xPosition = results(2);
-    
-    
-    topDensity=   designVars.x(yPosition,xPosition);
-    material1Fraction=   designVars.w(yPosition,xPosition);
-    orthD=   designVars.d(yPosition,xPosition);
-    rotation=   designVars.t(yPosition,xPosition);
-    
-   D_out= matProp.getDmatrixforElement(settings,topDensity,material1Fraction,orthD,rotation);
-    
-    
-    
-    
-    csvwrite(outname,D_out);
-end
+% ne = settings.nelx*settings.nely;
+% for e = 1:ne
+%     outname = sprintf('./out%i/Dgiven_%i_forElement_%i.csv',folderNum,mm_iteration,e);
+%     %  D_flat =  matProp.SavedDmatrix(e,:);
+%     
+%     
+%     results = designVars.elementXYposition(e,:);
+%     yPosition = results(1);
+%     xPosition = results(2);
+%     
+%     
+%     topDensity=   designVars.x(yPosition,xPosition);
+%     material1Fraction=   designVars.w(yPosition,xPosition);
+%     orthD=   designVars.d(yPosition,xPosition);
+%     rotation=   designVars.t(yPosition,xPosition);
+%     
+%    D_out= matProp.getDmatrixforElement(settings,topDensity,material1Fraction,orthD,rotation);
+%     
+%     
+%     
+%     
+%     csvwrite(outname,D_out);
+% end

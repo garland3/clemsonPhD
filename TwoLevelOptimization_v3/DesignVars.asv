@@ -406,7 +406,7 @@ classdef DesignVars
         end
         
         % Calculates the volume
-        function [volume1, volume2] = CalculateVolumeFractions(obj, config,matProp)
+        function [volume1, volume2] = CalculateVolumeFractions(obj, config)
           
             
 %             Xtemp = obj.x;
@@ -414,16 +414,9 @@ classdef DesignVars
 %             Xtemp(obj.x<=config.voidMaterialDensityCutOff)=0;
             
 %             ne = config.nelx*config.nely;
-            if(config.useExxEyy==1)
-               ne = config.nelx*config.nely;
-              averageElasticLocal = (sum(sum(obj.Exx.*obj.x))+sum(sum(obj.Eyy.*obj.x)))/ne;
-
-                volume1 = sum(sum(obj.x))/ne;
-                volume2 = averageElasticLocal/matProp.E_material1;
-            else
-                    volume1 =sum(sum( obj.x.*obj.w))/n2;
-                     volume2 =sum(sum( obj.x.*(1-obj.w)))/ne;
-            end
+            
+            volume1 = sum(sum(obj.x))/ne;
+            volume2 = sum(sum((1-obj.w).*Xtemp))/ne;
             
         end
         
@@ -537,7 +530,7 @@ classdef DesignVars
                     end
                     
                     % Calculate generic KE with 1 as the SIMP density
-                    KEgeneric = matProp.getKMatrixTopExxYyyRotVars(config,1,obj.Exx(ely,elx), obj.Eyy(ely,elx),obj.t(ely,elx),obj.w(ely,elx));                    
+                    KEgeneric = matProp.getKMatrixTopExxYyyRotVars(config,1,obj.Exx(ely,elx), obj.Eyy(ely,elx),obj.t(ely,elx));                    
                     % Calculate the elastic sensitivity!
                     KEsensitive = KEgeneric*config.penal*obj.x(ely,elx)^(config.penal-1);                    
                     % Calculate the actual KE
@@ -598,7 +591,7 @@ classdef DesignVars
                         Ue = UloadCase(NodeNumbers)';
                         
                         % Calculate the elastic sensitivity!
-                        KEsensitive = matProp.getKMatrixGradientMaterialSensitivity(config,1,obj.Exx(ely,elx), obj.Eyy(ely,elx),obj.t(ely,elx));          
+                        KEsensitive = matProp.getKMatrixGradientMaterialSensitivity(config,obj.x(ely,elx),obj.w(ely,elx),obj.d(ely,elx),obj.t(ely,elx));
                         obj.sensitivityElastic(ely,elx) =Ue'*KEsensitive*Ue+ obj.sensitivityElastic(ely,elx);
                         
                         

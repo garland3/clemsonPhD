@@ -6,13 +6,13 @@
 %   3. the density and material volume fraciton need to be updated
 %
 % ------------------------------------------------------------
-function completeStruct = TileMesoStructureV2(mesoSettings, macroSettings,designVarsMeso,macroElementProps,densityFieldMacro,completeStruct, step)
+function completeStruct = TileMesoStructureV2(mesoSettings, macroSettings,DVMeso,macroElementProps,densityFieldMacro,completeStruct, step)
 
 
 xx=densityFieldMacro;
 
-% designVarsMeso.nelxTile=nelxTile;
-% designVarsMeso.nelyTile=nelyTile;
+% DVMeso.nelxTile=nelxTile;
+% DVMeso.nelyTile=nelyTile;
 
 
 numTilesX=mesoSettings.numTilesX;
@@ -153,7 +153,7 @@ if(step ==1)
             
             microY = mod(i-1,mesoSettings.nely)+1;
             microX = mod(j-1,mesoSettings.nelx)+1;
-            tiledDensity(i,j) = designVarsMeso.x(microY,microX);
+            tiledDensity(i,j) = DVMeso.x(microY,microX);
         end
     end
     
