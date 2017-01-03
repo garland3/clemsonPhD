@@ -18,27 +18,32 @@ classdef Configuration
         macro_meso_iteration = 0; % master loop of the whole macro meso system
         mesoAddAdjcentCellBoundaries = 0; % global property
         useAjacentLocal = 0; % local property that maybe be turned on or off
+        testingVerGradMaterail = 0;
         numVarsX;
         numVarsY;
         w1 = 1; % weight elastic for multi-objective, % do not set to zero, instead set to 0.0001.
         w2 = 0;
         
+        % For ATC optimization
+        addConsistencyConstraints=1;
+        muSequence=[0.05 0.2 0.5 1 2 3 4 5 6 ]*0.0001; % As a 
+        muVector=[];
         
         % Modeling settings
         referenceTemperature = 0; % for thermal expansion, assume that there is not strain when at this temperature.
         addThermalExpansion = 0; % Set to 1 to incorporate thermal expansion
         
         % Exx and Eyy Distribution
-        useExxEyy=0;
+        useExxEyy=1;
         %maxDorth= 0.9; % 0.5
         %minDorth = 0.1;       % 0.001
         %moveLimitExxEyy = 0.2;
         
         % rotation
-        useRotation =0;
+        useRotation =1;
         minRotation =-pi/2;
         maxRotation = pi/2;
-        rotationMoveLimit = pi/18;
+        rotationMoveLimit = pi/36;
         
         
         % number of elements
@@ -64,10 +69,10 @@ classdef Configuration
         
         % Plotting information
         plotSensitivityWhilerunning = 0;
-        mesoplotfrequency=100; % how often to plot the meso level design.
+        mesoplotfrequency=1; % how often to plot the meso level design.
         iterationsPerPlot = 5;
-        doPlotVolFractionDesignVar = 1;
-        doPlotTopologyDesignVar = 1;
+        doPlotVolFractionDesignVar = 0;
+        doPlotTopologyDesignVar = 0;
         doPlotHeat = 0;
         doPlotHeatSensitivityTopology = 0;
         doPlotStress = 0;
@@ -76,13 +81,14 @@ classdef Configuration
         doSaveDesignVarsToCSVFile = 0; % set to 1 to write plotFinal csv file instead
         doPlotAppliedStrain = 0; % For debugging only
 %         doPlotOrthDistributionVar=0;
-        doPlotExx=0;
-        doPlotEyy =0;
-        doPlotEyyExxArrows = 0;
-        doPlotElasticSensitivity =0;
+        doPlotExx= 0  ;
+        doPlotEyy =  0 ;
+        doPlotEyyExxArrows =0;
+        doPlotElasticSensitivity =  0  ;
         doPlotRotationValue =0;
-        doPlotCombinedExxEyyAndRotation = 0;
-        recvid = 1; % record video
+        doPlotCombinedExxEyyAndRotation = 1;
+        recvid = 0; % record video
+        maximizePlots = 0;
         
         % ----------------
         % Computational settings
@@ -107,7 +113,7 @@ classdef Configuration
         % 3. Reuss -rule, 1/E = w/E1+(1-w)/E2 (not implemented yet)
         % 4. Mori and Tanaka, metal ceramic composite
         % ---------------------
-        elasticMaterialInterpMethod =2;
+        elasticMaterialInterpMethod =1;
         % -----------------
         % Use different mixture rules for effective Heat properteis
         % 1. Simple linear interpolation, Vigot rule of miztures E = w(E1)*(1-w)*E2
@@ -115,12 +121,12 @@ classdef Configuration
         % 4. Kingery's, metal ceramic composite
         % 5. Hashin–Shtrikam law (average of upper and lower boundary)
         % ---------------------
-        heatMaterialInterpMethod = 5;
+        heatMaterialInterpMethod = 1;
         
         % ---------------------------
         % Loading cases
         % ---------------------------
-        %          loadingCase = [113]; % left clamped
+%                   loadingCase = [113]; % left clamped, load, middle right
         %           loadingCase = [111 112 113]; % left clamped
         %            loadingCase = [111 112 ]; % left clamped
         %          loadingCase = [111 120 121]; % up, down, right in top right corrner, left clamp.
@@ -128,7 +134,7 @@ classdef Configuration
         %              loadingCase = [1];
         
         %  loadingCase = [300 301 302 303 304 305]; % shoe
-        loadingCase = [400 401 402 403 404 405]; % bridge
+         loadingCase = [400 401 402 403 404 405]; % bridge
         %            loadingCase = [404]; % bridge
         %             loadingCase = [113]; % cantilever
         %                 loadingCase = [111]; % top right, force in Y direction
@@ -188,8 +194,8 @@ classdef Configuration
                 obj.nelyMeso =40; %35;
                 obj.terminationAverageCount = 10;
                 obj.terminationCriteria =0.001; % 0.0%
-                obj.maxFEACalls = 150;
-                obj.maxMasterLoops = 150;
+                obj.maxFEACalls = 50;
+                obj.maxMasterLoops = 50;
                 
             end
             
@@ -215,6 +221,13 @@ classdef Configuration
             end
             obj.w2  = 1- obj.w1; % weight heat transfer
             obj.totalVolume = obj.v1+obj.v2;
+            
+           if(obj. addConsistencyConstraints==1)
+             %   muSequence=[0.05 0.2 0.5 1 2 3 4 5 6 ]; % As a 
+                muTarget =obj. muSequence(  obj.macro_meso_iteration);
+                middleValue = sqrt(muTarget/3);
+                obj.muVector=[middleValue middleValue middleValue];
+           end
         end
         
         

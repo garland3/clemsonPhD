@@ -1,11 +1,12 @@
 function main()
 clear
 
-  combinedTopologyOptimization('1', '1', '1','50', 'na');
-  combinedTopologyOptimization('1', '1', '1','200', 'na');
+%   combinedTopologyOptimization('1', '1', '1','60', 'na');
+%   combinedTopologyOptimization('1', '1', '1','200', 'na');
 
  
-  %combinedTopologyOptimization('1', '1', '1','12', 'na');
+% test meso design for element 1, macro iteration 1
+   combinedTopologyOptimization('1', '1', '1','100', '2');
  
 
 % numloops = 5;

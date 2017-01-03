@@ -12,7 +12,7 @@ classdef MaterialProperties
         %         alpha2 = 2.4e-5; % thermal expansion coefficient for material 2
         
         E_material1 = 100000; %4 N/mm^2 The elastic mod of material 1
-        E_material2 =  70000;%E_material1/2; %4 The elastic mod of material 2
+        E_material2 =  25000;%E_material1/2; %4 The elastic mod of material 2
         
         K_material1 = 0.02; %  W/ (mm*K)heat conduction of material 1
         K_material2 = 0.04; % heat conduction of material 2
@@ -48,12 +48,16 @@ classdef MaterialProperties
         % w is vol fraction of material 1, x is density, at this meso
         % element or design var.
         % -------------------------------------------------------
-        function [density]=CalculateDensityTargetforMeso(obj,w,x,settings)
-            %             density=0.5+(w*x^settings.penal)/2;            
-            %             density = home much greater than nothing material 2 is (scaled to 0 to 1) + (vol fraction * density^p)/how much is between v2 and 1
-            offset = obj.E_material2/obj.E_material1;
-            density = offset+(w)*(1-offset);
-            %   density=density-0.2;
+        function [density]=CalculateDensityTargetforMeso(obj,w,x,Exx,Eyy,config)
+            
+            % if using the new method, then use a different equation.
+            if(config.useExxEyy==1)
+                density=0.5*(Exx+Eyy)/obj.E_material1;
+            else
+                offset = obj.E_material2/obj.E_material1;
+                density = offset+(w)*(1-offset);
+                
+            end
         end
         
         %% ------------------------------------------------
@@ -62,12 +66,12 @@ classdef MaterialProperties
         %             FUTURE USE.
         %
         % ------------------------------------------------
-        function obj =  ReadConstitutiveMatrixesFromFiles(obj,  settings)
-            if(settings.macro_meso_iteration>1)
-                folderNum = settings.iterationNum;
-                oldIteration = settings.macro_meso_iteration-1; % minus 1, because we want to get the previous iterationdesign.
+        function obj =  ReadConstitutiveMatrixesFromFiles(obj,  config)
+            if(config.macro_meso_iteration>1)
+                folderNum = config.iterationNum;
+                oldIteration = config.macro_meso_iteration-1; % minus 1, because we want to get the previous iterationdesign.
                 
-                ne = settings.nelx*settings.nely;
+                ne = config.nelx*config.nely;
                 obj.SavedDmatrix = zeros(ne,9);
                 
                 
@@ -78,7 +82,7 @@ classdef MaterialProperties
                         D_h= csvread(outname);
                     else
                         material1Fraction=1;
-                        D_h = obj.calculateEffectiveConstitutiveEquation(material1Fraction, settings,[]);
+                        D_h = obj.calculateEffectiveConstitutiveEquation(material1Fraction, config,[]);
                     end
                     
                     
@@ -88,7 +92,7 @@ classdef MaterialProperties
                         D_old= csvread(outname);
                     else
                         material1Fraction=1;
-                        D_old = obj.calculateEffectiveConstitutiveEquation(material1Fraction, settings,[]);
+                        D_old = obj.calculateEffectiveConstitutiveEquation(material1Fraction, config,[]);
                     end
                     
                     % --------------------
@@ -125,66 +129,79 @@ classdef MaterialProperties
         %
         % CALCULATE K MATRIX
         %    USE TOPOLOGY VAR
-        %    USE Exx and Eyy      
+        %    USE Exx and Eyy
         %  HAVE SPECIAL CASES FOR OLD METHODS AS LEGACY CODE
-        %  The material gradient is for legacy. 
+        %  The material gradient is for legacy.
         % ---------------------------
-        function K = getKMatrixTopExxYyyRotVars(obj,settings,topDensity,Exx, Eyy,rotation,material1Fraction)
+        function K = getKMatrixTopExxYyyRotVars(obj,config,topDensity,Exx, Eyy,rotation,material1Fraction)
             % -------------
             % New method
             % -------------
-           
-            if(settings.useExxEyy==1 || settings.useRotation==1 )
-                D_out = obj.getDmatrixForExxEyy(Exx, Eyy); % Exx and Eyy DISTRIBUTION
-                D_out=D_out*topDensity^(settings.penal); % TOPOLOGY;
-                if(settings.useRotation==1)  % ROTATION
-                    D_out=obj.rotateDmatrix(settings,rotation, D_out)  ;
-                end
-                [K]=elK_elastic_v2(D_out);                
+            if(config.useExxEyy==1 || config.useRotation==1 )
+                D_out= obj.getDmatMatrixTopExxYyyRotVars(config,topDensity,Exx, Eyy,rotation,material1Fraction);
+                [K]=elK_elastic_v2(D_out);
             else % END NEW METHOD
-                
-                
                 % -------------
                 % Old Method method
                 % -------------
-                 E0 = effectiveElasticProperties(obj, material1Fraction, settings); % GRADIENT MATERIAL
-                  E0 = E0*topDensity^(settings.penal); % TOPOLOGY
-                if(settings.macro_meso_iteration>1)
-                    Dgiven =matProp.GetSavedDMatrix(count);
-                else
-                    Dgiven = [];
-                end
-                [K, ~, ~, ~]=elK_elastic(E0,obj.v, obj.G,[],Dgiven);
+                D_out= obj.getDmatMatrixTopExxYyyRotVars(config,topDensity,Exx, Eyy,rotation,material1Fraction);
+                [K, ~, ~, ~]=elK_elastic(E0,obj.v, obj.G,[],D_out);
             end% END OLD METHOD
         end
         
-        function D_out = getDmatrixforElement(obj,settings,topDensity,material1Fraction,orthD,rotation)
-            %  -------------
+        function D_out =  getDmatMatrixTopExxYyyRotVars(obj,config,topDensity,Exx, Eyy,rotation,material1Fraction)
+            % -------------
             % New method
             % -------------
-             E0 = effectiveElasticProperties(obj, material1Fraction, settings); % GRADIENT MATERIAL
-            E0 = E0*topDensity^(settings.penal);
-            if(settings.useOrthDistribution==1 || settings.useRotation==1 )
-                D_out = obj.getDmatrixForOrthDistrVar(orthD);
-                D_out=D_out*E0;
-                % Add rotation here!!!!!
-                if(settings.useRotation==1)
-                    D_out=obj.rotateDmatrix(settings,rotation, D_out)  ;
-                end           
-            else % END NEW METHOD                
+            
+            if(config.useExxEyy==1 || config.useRotation==1 )
+                D_out = obj.getDmatrixForExxEyy(Exx, Eyy); % Exx and Eyy DISTRIBUTION
+                D_out=D_out*topDensity^(config.penal); % TOPOLOGY;
+                if(config.useRotation==1)  % ROTATION
+                    D_out=obj.rotateDmatrix(config,rotation, D_out)  ;
+                end
+            else % END NEW METHOD
+                
                 % -------------
                 % Old Method method
                 % -------------
-                if(settings.macro_meso_iteration>1)
+                E0 = effectiveElasticProperties(obj, material1Fraction, config); % GRADIENT MATERIAL
+                E0 = E0*topDensity^(config.penal); % TOPOLOGY
+                if(config.macro_meso_iteration>1)
                     D_out =matProp.GetSavedDMatrix(count);
                 else
-                    
-                    D_out =   [ 1 obj.v 0;
-                                obj.v 1 0;
-                                0 0 1/2*(1-obj.v)]*E0/(1-obj.v^2);
-                end       
-            end% END OLD METHOD D = reshape(D_flat,3,3);
+                    D_out = [];
+                end
+            end% END OLD METHOD
         end
+        
+        %         function D_out = getDmatrixforElement(obj,config,topDensity,material1Fraction,orthD,rotation)
+        %             %  -------------
+        %             % New method
+        %             % -------------
+        %              E0 = effectiveElasticProperties(obj, material1Fraction, config); % GRADIENT MATERIAL
+        %             E0 = E0*topDensity^(config.penal);
+        %             if(config.useOrthDistribution==1 || config.useRotation==1 )
+        %                 D_out = obj.getDmatrixForOrthDistrVar(orthD);
+        %                 D_out=D_out*E0;
+        %                 % Add rotation here!!!!!
+        %                 if(config.useRotation==1)
+        %                     D_out=obj.rotateDmatrix(config,rotation, D_out)  ;
+        %                 end
+        %             else % END NEW METHOD
+        %                 % -------------
+        %                 % Old Method method
+        %                 % -------------
+        %                 if(config.macro_meso_iteration>1)
+        %                     D_out =matProp.GetSavedDMatrix(count);
+        %                 else
+        %
+        %                     D_out =   [ 1 obj.v 0;
+        %                                 obj.v 1 0;
+        %                                 0 0 1/2*(1-obj.v)]*E0/(1-obj.v^2);
+        %                 end
+        %             end% END OLD METHOD D = reshape(D_flat,3,3);
+        %         end
         
         
         % ---------------------------
@@ -192,35 +209,34 @@ classdef MaterialProperties
         % CALCULATE K MATRIX FOR GRADIENT MATERIAL SENSITIVITY
         %
         % ---------------------------
-        function K = getKMatrixGradientMaterialSensitivity(obj,settings,topDensity,Exx, Eyy,rotation)
-                     
+        function K = getKMatrixGradientMaterialSensitivity(obj,config,topDensity,Exx, Eyy,rotation)
+            
             % -------------
             % New method
             % -------------
-           
-            if(settings.useExxEyy==1 || settings.useRotation==1 )
-                D_out = obj.getDmatrixForExxEyy(Exx, Eyy); % Exx and Eyy DISTRIBUTION
-                D_out=D_out*topDensity^(settings.penal); % TOPOLOGY;
-                if(settings.useRotation==1)  % ROTATION
-                    D_out=obj.rotateDmatrix(settings,rotation, D_out)  ;
-                end
-                [K]=elK_elastic_v2(D_out);                
-            else % END NEW METHOD
-                
-                
-                % -------------
-                % Old Method method
-                % -------------
-                 %E0 = effectiveElasticProperties(obj, material1Fraction, settings); % GRADIENT MATERIAL
-                   E0 = obj.E_material1-obj.E_material2;
-                  E0 = E0*topDensity^(settings.penal); % TOPOLOGY
-                if(settings.macro_meso_iteration>1)
-                    Dgiven =matProp.GetSavedDMatrix(count);
-                else
-                    Dgiven = [];
-                end
-                [K, ~, ~, ~]=elK_elastic(E0,obj.v, obj.G,[],Dgiven);
-            end% END OLD METHOD
+            %             if(config.useExxEyy==1 || config.useRotation==1 )
+            %                 D_out = obj.getDmatrixForExxEyy(Exx, Eyy); % Exx and Eyy DISTRIBUTION
+            %                 D_out=D_out*topDensity^(config.penal); % TOPOLOGY;
+            %                 if(config.useRotation==1)  % ROTATION
+            %                     D_out=obj.rotateDmatrix(config,rotation, D_out)  ;
+            %                 end
+            %                 [K]=elK_elastic_v2(D_out);
+            %             else % END NEW METHOD
+            
+            
+            % -------------
+            % Old Method method
+            % -------------
+            %E0 = effectiveElasticProperties(obj, material1Fraction, config); % GRADIENT MATERIAL
+            E0 = obj.E_material1-obj.E_material2;
+            E0 = E0*topDensity^(config.penal); % TOPOLOGY
+            if(config.macro_meso_iteration>1)
+                Dgiven =matProp.GetSavedDMatrix(count);
+            else
+                Dgiven = [];
+            end
+            [K, ~, ~, ~]=elK_elastic(E0,obj.v, obj.G,[],Dgiven);
+            %             end% END OLD METHOD
         end
         
         %---------------
@@ -228,7 +244,7 @@ classdef MaterialProperties
         %
         %  USE RADIANS,
         %--------------
-        function Dout = rotateDmatrix(obj,settings,theta, D_in)
+        function Dout = rotateDmatrix(obj,config,theta, D_in)
             c = cos(theta);
             s = sin(theta);
             
@@ -243,69 +259,22 @@ classdef MaterialProperties
             Dout = T^-1*D_in*R*T*R^-1;
         end
         
-        % ---------------------------
-        %
-        % CALCULATE K MATRIX FOR TOPOLOGY SENSITIVITY
-        % ---------------------------
-        %         function K = getKMatrixTopologySensitivityUseTopGradOrthoDistrRotVars(obj,settings,topDensity,material1Fraction,orthD,rotation)
-        %             % -------------
-        %             % New method
-        %             % -------------
-        %
-        %             E0 = effectiveElasticProperties(obj, material1Fraction, settings); % GRADIENT MATERIAL
-        %             E0 = E0*settings.penal*topDensity^(settings.penal-1);
-        %             if(settings.useOrthDistribution==1)
-        %                 D_out = obj.getDmatrixForOrthDistrVar(orthD);
-        %                 D_out=D_out*E0;
-        %                 % Add rotation here!!!!!
-        %                 if(settings.useRotation==1)
-        %                     D_out=rotateDmatrix(settings,rotation, D_out)  ;
-        %                 end
-        %                   [K]=elK_elastic_v2(D_out);
-        % %                 [K, ~, ~, ~]=elK_elastic([],[], [],[],D_out);
-        %             else % END NEW METHOD
-        %
-        %                 % -------------
-        %                 % Old Method method
-        %                 % -------------
-        %                 if(settings.macro_meso_iteration>1)
-        %                     Dgiven =matProp.GetSavedDMatrix(count);
-        %                 else
-        %                     Dgiven = [];
-        %                 end
-        %                 [K, ~, ~, ~]=elK_elastic(E0,obj.v, obj.G,[],Dgiven);
-        %             end% END OLD METHOD
-        %         end
-        
-        %---------------
-        % Get D matrix (Effectie constitutive equation) for a particualar
-        % w1
-        % -----------------------------------------------
-        %         function D = calculateEffectiveConstitutiveEquation(obj, material1Fraction, settings,Dgiven)
-        %             if(isempty(Dgiven))
-        %                 E = effectiveElasticProperties(obj, material1Fraction, settings);
-        %                 D = [ 1 obj.v 0;
-        %                     obj.v 1 0;
-        %                     0 0 1/2*(1-obj.v)]*E/(1-obj.v^2);
-        %             else
-        %                 D = Dgiven;
-        %             end
-        %         end
         
         %---------------
         % Get D matrix for a particular Exx and Eyy
         % -----------------------------------------------
         function D_out = getDmatrixForExxEyy(obj,Exx, Eyy)
             
-%             E0 = 1;%effectiveElasticProperties(obj, material1Fraction, settings);
+            %             E0 = 1;%effectiveElasticProperties(obj, material1Fraction, config);
             vv = obj.v;
-%             d = orthD;
+            %             d = orthD;
             E12 = (Exx+Eyy)/2;
             
             Q12 = vv*E12/(1-vv^2);
+            Q66 =  0.5*(1-vv)*E12/(1-vv^2);
             D_out = [ Exx/(1-vv^2)        Q12                    0                   ;
-                        Q12                 Eyy/(1-vv^2)     0                   ;
-                        0                   0                      Q12  ] ;
+                Q12                 Eyy/(1-vv^2)           0                   ;
+                0                   0                      Q66  ] ;
             
         end
         
@@ -313,28 +282,28 @@ classdef MaterialProperties
         % Get D matrix sensitivity (Effectie constitutive equation) for a particualar
         % w1 and orthotropic Distribution value, d
         % -----------------------------------------------
-        function D_out = calculateEffConsMatrixWithGradAndOrthDistrbution_sensitivity(obj, material1Fraction, settings,orthD)
-            
-            E0 = effectiveElasticProperties(obj, material1Fraction, settings);
-            vv = obj.v;
-            d = orthD;
-            
-            D_out = [ E0/(1-vv^2)       vv*E0*0.5/(1-vv^2)      0                   ;
-                vv*E0*0.5/(1-vv^2)     E0*(-1)/(1-vv^2)     0                   ;
-                0                   0                     vv*E0*0.5/(1-vv^2)  ] ;
-            
-        end
+        %         function D_out = calculateEffConsMatrixWithGradAndOrthDistrbution_sensitivity(obj, material1Fraction, config,orthD)
+        %
+        %             E0 = effectiveElasticProperties(obj, material1Fraction, config);
+        %             vv = obj.v;
+        %             d = orthD;
+        %
+        %             D_out = [ E0/(1-vv^2)       vv*E0*0.5/(1-vv^2)      0                   ;
+        %                 vv*E0*0.5/(1-vv^2)     E0*(-1)/(1-vv^2)     0                   ;
+        %                 0                   0                     vv*E0*0.5/(1-vv^2)  ] ;
+        %
+        %         end
         
         %------------------------------------
         % Calculate Elastic mod
         %------------------------------------
-        function e =  effectiveElasticProperties(obj, material1Fraction, settings)
+        function e =  effectiveElasticProperties(obj, material1Fraction, config)
             
             % linear case
-            if(settings. elasticMaterialInterpMethod == 1)
+            if(config. elasticMaterialInterpMethod == 1)
                 e = material1Fraction*obj.E_material1+(1-material1Fraction)*obj.E_material2;
                 % HashinShtrikamAverage case
-            elseif(settings. elasticMaterialInterpMethod == 2)
+            elseif(config. elasticMaterialInterpMethod == 2)
                 e = HashinShtrikamAverage(obj,obj.E_material1,obj.E_material2,material1Fraction);
             end
         end
@@ -342,9 +311,9 @@ classdef MaterialProperties
         %------------------------------------
         % Calculate element stiffness matrix.
         %------------------------------------
-        function [ke, kexpansionBar,B] = effectiveElasticKEmatrix(obj, material1Fraction, settings,Dgiven)
+        function [ke, kexpansionBar,B] = effectiveElasticKEmatrix(obj, material1Fraction, config,Dgiven)
             % Calculate E, then calculate the K element matrix
-            E = effectiveElasticProperties(obj, material1Fraction, settings);
+            E = effectiveElasticProperties(obj, material1Fraction, config);
             [ke, kexpansionBar, B, ~]=elK_elastic(E,obj.v, obj.G,[],Dgiven);
         end
         
@@ -353,14 +322,15 @@ classdef MaterialProperties
         %------------------------------------
         % MESO
         %------------------------------------
-        function [ke, kexpansionBar,B_total, F_meso] = effectiveElasticKEmatrix_meso(obj, material1Fraction, settings,strain)
+        function [ke, kexpansionBar,B_total, F_meso] = effectiveElasticKEmatrix_meso(obj, material1Fraction, config,strain)
             % Calculate E, then calculate the K element matrix
-            E = effectiveElasticProperties(obj, material1Fraction, settings);
+            E = effectiveElasticProperties(obj, material1Fraction, config);
+          
             [ke, kexpansionBar,B_total,F_meso]=elK_elastic(E,obj.v, obj.G,strain,[]);
         end
         
         % Calculate thermal expansion coefficient
-        function e =  effectiveThermalExpansionCoefficient(obj,material1Fraction,settings)
+        function e =  effectiveThermalExpansionCoefficient(obj,material1Fraction,config)
             e = material1Fraction*obj.alpha1+(1-material1Fraction)*obj.alpha2;
         end
         
@@ -373,13 +343,13 @@ classdef MaterialProperties
         % ---------------------------------------
         % Calculate heat transfer coefficient
         % ---------------------------------------
-        function e =  effectiveHeatProperties(obj,material1Fraction,settings)
+        function e =  effectiveHeatProperties(obj,material1Fraction,config)
             % linear case
-            if(settings. heatMaterialInterpMethod == 1)
+            if(config. heatMaterialInterpMethod == 1)
                 e = material1Fraction*obj.K_material1+(1-material1Fraction)*obj.K_material2;
                 
                 % HashinShtrikamAverage case
-            elseif(settings. heatMaterialInterpMethod == 5)
+            elseif(config. heatMaterialInterpMethod == 5)
                 e = HashinShtrikamAverage(obj,obj.K_material1,obj.K_material2,material1Fraction);
             end
         end
@@ -387,8 +357,8 @@ classdef MaterialProperties
         % ---------------------------------------
         % Calculate the heat conduction matrix
         % ---------------------------------------
-        function  kheat = effectiveHeatKEmatrix(obj, material1Fraction, settings)
-            heatCoefficient = obj.effectiveHeatProperties(material1Fraction,settings);
+        function  kheat = effectiveHeatKEmatrix(obj, material1Fraction, config)
+            heatCoefficient = obj.effectiveHeatProperties(material1Fraction,config);
             [kheat]=elementK_heat(heatCoefficient);
         end
         

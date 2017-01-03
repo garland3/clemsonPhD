@@ -85,7 +85,7 @@ if(config.mode ==200)
     % config.macro_meso_iteration=5;
     NumMacroMesoIteration= config.macro_meso_iteration;
     p=plotResults;
-    p.PlotObjectiveFunctionAndConstraintsOverSevearlIterations(NumMacroMesoIteration);
+    p.PlotObjectiveFunctionAndConstraintsOverSevearlIterations(NumMacroMesoIteration,config);
     return
 end
 
@@ -133,7 +133,7 @@ if(macroDesignMode==1)
         % Run FEA, calculate sensitivities
         % --------------------------------
         DV = DV.RunFEAs(config, matProp, masterloop);
-        [DV.currentVol1Fraction, DV.currentVol2Fraction] =  DV.CalculateVolumeFractions(config,matProp);
+        DV =  DV.CalculateVolumeFractions(config,matProp);
         FEACalls = FEACalls+1;
         
         % --------------------------------
@@ -141,7 +141,7 @@ if(macroDesignMode==1)
         % --------------------------------
         if ( config.mode == 1 || (49 <config.mode  && config.mode < 100))
             DV= opt.OptimizeTopology(DV, config, matProp,masterloop);
-            DV.storeOptimizationVar = [DV.storeOptimizationVar;DV.c, DV.cCompliance, DV.cHeat,DV.currentVol1Fraction,DV.currentVol2Fraction,DV.currentVol1Fraction/DV.currentVol2Fraction,sum(sum(DV.x))];
+            DV.storeOptimizationVar = [DV.storeOptimizationVar;DV.c, DV.cCompliance, DV.cHeat,DV.currentVol1Fraction,DV.currentVol2Fraction,sum(sum(DV.x)), DV.targetAverageE, DV.actualAverageE];
             ShowOptimizerProgress(DV,1,' topology',FEACalls,config, matProp);  
             if(TestForTermaination(DV, config,masterloop) ==1)
                 disp('break in topology');
@@ -154,8 +154,8 @@ if(macroDesignMode==1)
         % --------------------------------
         if ( config.mode == 2 ||  config.mode == 50|| config.mode == 55)
             DV= opt.OptimizeVolumeFraction(DV, config, matProp,masterloop);
-             ShowOptimizerProgress(DV,0,' vol fraction',FEACalls,config, matProp);  
-             DV.storeOptimizationVar = [DV.storeOptimizationVar;DV.c, DV.cCompliance, DV.cHeat,DV.currentVol1Fraction,DV.currentVol2Fraction,DV.currentVol1Fraction/DV.currentVol2Fraction,sum(sum(DV.x))];
+             ShowOptimizerProgress(DV,1,' vol fraction',FEACalls,config, matProp);  
+              DV.storeOptimizationVar = [DV.storeOptimizationVar;DV.c, DV.cCompliance, DV.cHeat,DV.currentVol1Fraction,DV.currentVol2Fraction,sum(sum(DV.x)), DV.targetAverageE, DV.actualAverageE];
             if( TestForTermaination(DV, config,masterloop) ==1)
                 disp('break in vol fraction');
                 break;
@@ -188,9 +188,9 @@ if(macroDesignMode==1)
                 % --------------------------------
                 DV = DV.RunFEAs(config, matProp, masterloop);
                 FEACalls = FEACalls+1;
-                opt.OptimizeRotation(DV, config, matProp,masterloop)
-                DV.storeOptimizationVar = [DV.storeOptimizationVar;DV.c, DV.cCompliance, DV.cHeat,DV.currentVol1Fraction,DV.currentVol2Fraction,DV.currentVol1Fraction/DV.currentVol2Fraction,sum(sum(DV.x))];
-                ShowOptimizerProgress(DV,0,' rotation',FEACalls,config, matProp);  
+                DV = opt.OptimizeRotation(DV, config, matProp,masterloop);
+                DV.storeOptimizationVar = [DV.storeOptimizationVar;DV.c, DV.cCompliance, DV.cHeat,DV.currentVol1Fraction,DV.currentVol2Fraction,sum(sum(DV.x)), DV.targetAverageE, DV.actualAverageE];
+                ShowOptimizerProgress(DV,1,' rotation',FEACalls,config, matProp);  
             end %END ORTHOGONAL MATERIAL DISTRIBUTION OPTIMZATION
         end
         
@@ -204,18 +204,21 @@ if(macroDesignMode==1)
                 DV = DV.RunFEAs(config, matProp, masterloop);
                 FEACalls = FEACalls+1;
                 DV = opt.OptimizeExxEyy(DV, config, matProp,masterloop);
-                DV = DV.CalcVolFractionUsingExxEyy(config, matProp) ;           
-                DV.storeOptimizationVar = [DV.storeOptimizationVar;DV.c, DV.cCompliance, DV.cHeat,DV.currentVol1Fraction,DV.currentVol2Fraction,DV.currentVol1Fraction/DV.currentVol2Fraction,sum(sum(DV.x))];
+                DV = DV.CalculateVolumeFractions(config, matProp) ;
+                DV.storeOptimizationVar = [DV.storeOptimizationVar;DV.c, DV.cCompliance, DV.cHeat,DV.currentVol1Fraction,DV.currentVol2Fraction,sum(sum(DV.x)), DV.targetAverageE, DV.actualAverageE];
                 ShowOptimizerProgress(DV,1,' E_xx and E_yy ',FEACalls,config, matProp);  
+              
         end % E_xx and E_yy Optimization
                 
         
+     
+     
      
        [framedNumber, F]  = video.RecordFrame(config,framedNumber, F,vidObj);        
     end % MASTER LOOP FOR MACRO LEVEL
 end % ENDIF FOR MACRO DESIGN
 
-video.CloseVideo( config, F,vidObj)
+
 %% -----------------------------------------------------------
 % PLOT THE FINAL MACRO DESIGN WITH THE STRAINED FEA GRID FOR EACH LOAD
 %
@@ -234,15 +237,17 @@ if ( config.mode <100)
             nameGraph = sprintf('./gradTopOptimization%fwithmesh%i_load%i.png', config.w1,config.macro_meso_iteration,loadcaseIndex);
             print(nameGraph,'-dpng');
             hi=  figure(1);
+             [framedNumber, F]  = video.RecordFrame(config,framedNumber, F,vidObj);  
             cla(hi);
             hold off
+               
         end
     end
     
     outname = sprintf('./out%i/storeOptimizationVarMacroLoop%i.csv',folderNum,config.macro_meso_iteration);
     csvwrite(outname,DV.storeOptimizationVar);
 end
-
+video.CloseVideo( config, F,vidObj)
 
 %% ---------------------------------------------
 %
@@ -408,7 +413,7 @@ end
 function ShowOptimizerProgress(DV,doPlot,name,FEACalls,config, matProp)
 % PRINT RESULTS
 disp([' FEA calls.: ' sprintf('%4i',FEACalls) ' Obj.: ' sprintf('%10.4f',DV.c) ' Vol. 1: ' sprintf('%6.3f', DV.currentVol1Fraction)  ' Vol. 2: ' sprintf('%6.3f', DV.currentVol2Fraction) ...
-    ' Lambda.: ' sprintf('%6.3f',DV.lambda1  ) name])
+    ' Target E.: ' sprintf('%4i',DV.targetAverageE)    ' Current E.: ' sprintf('%4i',DV.actualAverageE) name])
 
 
 

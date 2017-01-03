@@ -33,7 +33,7 @@ classdef Optimizer
         function DV = OptimizeVolumeFraction(obj,DV,config, matProp, masterloop)
             DV = DV.CalculateMaterialGradientSensitivity(config, matProp, masterloop);
             
-            [DV.currentVol1Fraction,DV.currentVol2Fraction] =  DV.CalculateVolumeFractions(config, matProp);
+            DV =  DV.CalculateVolumeFractions(config,matProp);
             
             totalVolLocal = DV.currentVol1Fraction+ DV.currentVol2Fraction;
             fractionCurrent_V1Local = DV.currentVol1Fraction/totalVolLocal;
@@ -62,34 +62,34 @@ classdef Optimizer
         % ----------------------------------
         % ORTHO DISTRIBUTION OPTIMIZATION
         % ----------------------------------
-%         function [] = OptimizeOrthoDistribution(obj,DV,config, matProp, masterloop)
-%             DV = DV.CalculateOthogonalDistributionSensitivity(config, matProp, masterloop);
-%             DV.sensitivityElastic = check( config.nelx, config.nely,config.rmin,DV.x,DV.sensitivityElastic);
-%             % move= 0.1* 20/(20+masterloop);
-%             move = config.orthDistMoveLimit;
-%             config.orthDistMoveLimit= config.orthDistMoveLimit* 10/(10+masterloop);
-%             %-----------------------
-%             %
-%             % Update design var.
-%             %-----------------------
-%             for ely = 1:config.nely
-%                 for elx = 1:config.nelx
-%                     if(DV.sensitivityElastic(ely,elx)<0.05)
-%                         DV.d(ely,elx) =  max(  DV.d(ely,elx)-move,config.minDorth);
-%                     end
-%                     
-%                     if(DV.sensitivityElastic(ely,elx)>0.05)
-%                         DV.d(ely,elx) =  min(  DV.d(ely,elx)+ move,config.maxDorth);
-%                     end
-%                     
-%                 end
-%             end
-%         end
+        %         function [] = OptimizeOrthoDistribution(obj,DV,config, matProp, masterloop)
+        %             DV = DV.CalculateOthogonalDistributionSensitivity(config, matProp, masterloop);
+        %             DV.sensitivityElastic = check( config.nelx, config.nely,config.rmin,DV.x,DV.sensitivityElastic);
+        %             % move= 0.1* 20/(20+masterloop);
+        %             move = config.orthDistMoveLimit;
+        %             config.orthDistMoveLimit= config.orthDistMoveLimit* 10/(10+masterloop);
+        %             %-----------------------
+        %             %
+        %             % Update design var.
+        %             %-----------------------
+        %             for ely = 1:config.nely
+        %                 for elx = 1:config.nelx
+        %                     if(DV.sensitivityElastic(ely,elx)<0.05)
+        %                         DV.d(ely,elx) =  max(  DV.d(ely,elx)-move,config.minDorth);
+        %                     end
+        %
+        %                     if(DV.sensitivityElastic(ely,elx)>0.05)
+        %                         DV.d(ely,elx) =  min(  DV.d(ely,elx)+ move,config.maxDorth);
+        %                     end
+        %
+        %                 end
+        %             end
+        %         end
         
         % ----------------------------------
         % ROTATION OPTIMIZATION
         % ----------------------------------
-        function [] = OptimizeRotation(obj,DV,config, matProp, masterloop)
+        function DV = OptimizeRotation(obj,DV,config, matProp, masterloop)
             %                 move= 0.1* 20/(20+masterloop);
             
             
@@ -128,29 +128,36 @@ classdef Optimizer
                         x0 = config.minRotation; %lower_bracket;
                         x3 = config.maxRotation;% higher_bracket;
                         leng = x3-x0;
-                        grleng = leng*gr ; % golden ratio lenth
+                        grleng = leng*config.gr ; % golden ratio lenth
                         x1 = x3 - grleng;
                         x2 = x0 + grleng;
                         topDensity =  DV.x(ely,elx);
-                        material1Fraction  = DV.w(ely,elx);
-                        orthD = DV.d(ely,elx);
-                        fx1 = EvaluteARotation(U,topDensity, material1Fraction,orthD,x1,matProp, config);
-                        fx2 = EvaluteARotation(U,topDensity, material1Fraction,orthD,x2,matProp, config);
+                        material1Fraction  =[];% DV.w(ely,elx);
+                        Exx = DV.Exx(ely,elx);
+                        Eyy = DV.Eyy(ely,elx);
+%                         orthD = DV.d(ely,elx);
+                        fx1 = obj.EvaluteARotation(U,topDensity, material1Fraction,Exx,Eyy,x1,matProp, config);
+                        fx2 = obj.EvaluteARotation(U,topDensity, material1Fraction,Exx,Eyy,x2,matProp, config);
                         
                         
                         debug = 0;
-                        verbosity = 1;
+%                         if(0.499<topDensity && topDensity<0.501)
+%                             debug=1;
+%                         end
+%                         debug = topDensity;
+                        verbosity = 0;
                         
                         if(   debug == 1)
                             xtemp = x0:pi/180:x3;
                             ytemp = zeros(1, size(xtemp,2));
                             count = 1;
                             for thetaTemp = xtemp
-                                ytemp(count)=EvaluteARotation(U,topDensity, material1Fraction,orthD,thetaTemp,matProp, config);
+                                ytemp(count)= obj.EvaluteARotation(U,topDensity, material1Fraction,Exx,Eyy,thetaTemp,matProp, config);
                                 count = count+1;
                             end
                             figure(2)
                             plot(xtemp,ytemp);
+                            nothin = 1;
                         end
                         
                         
@@ -165,8 +172,8 @@ classdef Optimizer
                                 x2 = x1; % the old x1 is now x2
                                 fx2 = fx1;
                                 leng = x3 - x0; % find the length of the interval
-                                x1 = x3 - leng*gr; % find golden ratio of length, subtract it from the x3 value
-                                fx1 = EvaluteARotation(U,topDensity, material1Fraction,orthD,x1,matProp, config);; % calculate the fx
+                                x1 = x3 - leng*config.gr; % find golden ratio of length, subtract it from the x3 value
+                                 fx1 = obj.EvaluteARotation(U,topDensity, material1Fraction,Exx,Eyy,x1,matProp, config); % calculate the fx
                                 
                             elseif(fx1>fx2) % greater than
                                 x0 = x1; % the old x1 is now x0
@@ -175,8 +182,8 @@ classdef Optimizer
                                 % x3 = x3; % x3 stays the same.
                                 
                                 leng = (x3 - x0); % find the length of the interval
-                                x2 = x0 + leng*gr; % find golden ratio of length, subtract it from the x3 value
-                                fx2 = EvaluteARotation(U,topDensity, material1Fraction,orthD,x2,matProp, config); % calculate the fx
+                                x2 = x0 + leng*config.gr; % find golden ratio of length, subtract it from the x3 value
+                                fx2 = obj.EvaluteARotation(U,topDensity, material1Fraction,Exx,Eyy,x2,matProp, config);  % calculate the fx
                             end
                             
                             % check to see if we are as close as we want
@@ -207,17 +214,17 @@ classdef Optimizer
         
         % ---------------------------
         % EVALUTE THE OBJECTIVE FUNCTION FOR A ROTATION
-        %----------------------------
-        function objValue = EvaluteARotation(U,topDensity, material1Fraction,orthD,rotation,matProp, config)            
-            K = matProp.getKMatrixUseTopGradOrthoDistrRotVars(config,topDensity,material1Fraction,orthD,rotation);            
+        %----------------------------  
+        function objValue = EvaluteARotation(obj,U,topDensity, material1Fraction,Exx,Eyy,rotation,matProp, config)
+            K = matProp.getKMatrixTopExxYyyRotVars(config,topDensity,Exx, Eyy,rotation,material1Fraction);
             % LOOP OVER LOADING CASES.
             % U'S ROWS ARE UNIQUE LOADING CASES
-            % EACH ROW CONTAINS 8 VALUES FOR THE 8 DOF OF THE ELEMENT            
+            % EACH ROW CONTAINS 8 VALUES FOR THE 8 DOF OF THE ELEMENT
             % allow multiple loading cases.
-            [~, t2] = size(config.loadingCase);            
+            [~, t2] = size(config.loadingCase);
             objValue=0;
             for i = 1:t2
-                Ucase = U(i,:)';                
+                Ucase = U(i,:)';
                 objValue= objValue+Ucase'*K*Ucase;
             end
             objValue=-objValue;
@@ -232,98 +239,132 @@ classdef Optimizer
             DV.sensitivityElastic = DV.check( config.nelx, config.nely,config.rmin,DV.x,DV.sensitivityElastic);
             DV.sensitivityElasticPart2 = DV.check( config.nelx, config.nely,config.rmin,DV.x,DV.sensitivityElasticPart2);
             
+            
+            if(config.testingVerGradMaterail ==1)
+                avgSensitivy = 0.5*( DV.sensitivityElastic+  DV.sensitivityElasticPart2);
+                DV.sensitivityElastic =avgSensitivy;
+                DV.sensitivityElasticPart2 =avgSensitivy;
+            end
+            
             % move= 0.1* 20/(20+masterloop);
-            move = 0.1;
-%             config.orthDistMoveLimit= config.orthDistMoveLimit* 10/(10+masterloop);
+            %             move = 0.1;
+            %             config.orthDistMoveLimit= config.orthDistMoveLimit* 10/(10+masterloop);
             %-----------------------
             %
             % Update design var.
             %-----------------------
-             l1 = 0; l2 = 10000000;% move = 0.2;
-%             while (l2-l1 > 1e-4)
-%                 lmid = 0.5*(l2+l1);
-%                 xnew = max(0.01,max(x-move,min(1.,min(x+move,x.*sqrt(-dc./lmid)))));    
-% 
-%                 if sum(sum(xnew)) - volfrac*multiplier > 0;
-%                     l1 = lmid;
-%                 else
-%                     l2 = lmid;
-%                 end
-%             end
-              ne = config.nelx*config.nely;
-              E_avg = config.v1*matProp.E_material1+config.v2*matProp.E_material2;
-%               E_avg=E_avg; % we want the average multiplied by the number of elemeents, since the sum in the optimization is over all elements. 
-              move = matProp.E_material1*0.1;
-              minimum = matProp.E_material2;
-              
-              Xtemp = DV.x;
-%               Xtemp(DV.x>config.voidMaterialDensityCutOff)=1;
-%               Xtemp(DV.x<=config.voidMaterialDensityCutOff)=0;
-              
-              % Scale the sensitivies up to help the optimizer. 
-%               DV.sensitivityElastic = DV.sensitivityElastic*matProp.E_material1;
-%               DV.sensitivityElasticPart2 = DV.sensitivityElasticPart2*matProp.E_material1;
-               % ----------------
-              % Exx 
-              % ----------------
-              ExxNew = DV.Exx;
-              EyyNew = DV.Eyy;
-              
-              % Prevent negative sensitivies. 
-             min1= min(min(DV.sensitivityElastic));
-             if(min1<=0)
-                 DV.sensitivityElastic = DV.sensitivityElastic-min1+1;
-             end
-             
-              min1= min(min(DV.sensitivityElasticPart2));
-             if(min1<=0)
-                 DV.sensitivityElasticPart2 = DV.sensitivityElasticPart2-min1+1;
-             end
-             
-             
-              while (l2-l1 > 1e-4)
-                   lmid = 0.5*(l2+l1);
-                  % xnew = max(0.01,max(x-move,min(1.,min(x+move,x.*sqrt(-dc./lmid)))));   
+            l1 = 0; l2 = 1000000;% move = 0.2;
+            %             while (l2-l1 > 1e-4)
+            %                 lmid = 0.5*(l2+l1);
+            %                 xnew = max(0.01,max(x-move,min(1.,min(x+move,x.*sqrt(-dc./lmid)))));
+            %
+            %                 if sum(sum(xnew)) - volfrac*multiplier > 0;
+            %                     l1 = lmid;
+            %                 else
+            %                     l2 = lmid;
+            %                 end
+            %             end
+%             neSolid = config.nelx*config.nely*(config.v1+config.v2);
+            E_target =(config.v1*matProp.E_material1+config.v2*matProp.E_material2)/(config.v1+config.v2);
+            DV.targetAverageE = E_target;
+            %               E_target = E_target ;
+            %               E_avg=E_avg; % we want the average multiplied by the number of elemeents, since the sum in the optimization is over all elements.
+            move = matProp.E_material1*0.05;
+            minimum = matProp.E_material2;
+            
+%             Xtemp = DV.x;
+            %               Xtemp(DV.x>config.voidMaterialDensityCutOff)=1;
+            %               Xtemp(DV.x<=config.voidMaterialDensityCutOff)=0;
+            
+            % Scale the sensitivies up to help the optimizer.
+            %               DV.sensitivityElastic = DV.sensitivityElastic*matProp.E_material1;
+            %               DV.sensitivityElasticPart2 = DV.sensitivityElasticPart2*matProp.E_material1;
+            % ----------------
+            % Exx
+            % ----------------
+            ExxNew = DV.Exx;
+            EyyNew = DV.Eyy;
+            
+            
+            offsetup = 10000;
+            
+           % scale the sensitivies to make them easiler to work with if
+           % they are small. 
+            min1= min(min(abs(DV.sensitivityElastic)));
+            min2= min(min(abs(DV.sensitivityElasticPart2)));
+            if(min1<=1000 || min2<=1000)
+                DV.sensitivityElastic = DV.sensitivityElastic*offsetup;
+                DV.sensitivityElasticPart2 = DV.sensitivityElasticPart2*offsetup;
+            end
+            
+            
+            min1= min(min(min(DV.sensitivityElastic)),min(min(DV.sensitivityElasticPart2)));
+          
+              % Prevent negative sensitivies.
+            if(min1<=0 )
+                DV.sensitivityElastic = DV.sensitivityElastic-min1+1;
+                DV.sensitivityElasticPart2 = DV.sensitivityElasticPart2-min1+1;
+            end
+            
+          
+              totalMaterial = sum(sum(DV.x));
+            
+            
+            while (l2-l1 > 1e-4)
+                lmid = 0.5*(l2+l1);
+                % xnew = max(0.01,max(x-move,min(1.,min(x+move,x.*sqrt(-dc./lmid)))));
                 ExxNew = max( minimum - EyyNew,  max(DV.Exx-move ,  min(  min(DV.Exx.*sqrt(DV.sensitivityElastic     ./lmid),DV.Exx+move ),matProp.E_material1)));
                 EyyNew = max(minimum -  ExxNew,  max(DV.Eyy-move ,  min(  min(DV.Eyy.*sqrt(DV.sensitivityElasticPart2./lmid),DV.Eyy+move ),matProp.E_material1)));
                 
-                averageElasticLocal = (sum(sum(EyyNew.*Xtemp))+sum(sum(ExxNew.*Xtemp)))/ne;
-                    if E_avg- averageElasticLocal< 0;
-                          l1 = lmid;
-                    else
-                          l2 = lmid;
-                    end
-              end
-              
-%               DV.sensitivityElastic
-%                DV.Exx
-%               ExxNew
-              
-%               % ----------------
-%               % Eyy 
-%               % ----------------
-%                while (l2-l1 > 1e-4)
-%                   % xnew = max(0.01,max(x-move,min(1.,min(x+move,x.*sqrt(-dc./lmid)))));   
-%                
-%                 
-%                 if E_avg- sum(sum(EyyNew))> 0;
-%                     l1 = lmid;
-%                 else
-%                     l2 = lmid;
-%                 end
-%                end
-              
-               DV.Exx=ExxNew ;
-               DV.Eyy=EyyNew ;
-               
-               
-               % Debugging data
-                avg= 0.5*(DV.Exx+DV.Eyy);
+                
+                totalExx =DV.x.*ExxNew;
+                totalEyy = DV.x.* EyyNew;
+                avgE = (totalExx+totalEyy)/2;
+                averageElasticLocal= sum(sum(avgE))/totalMaterial;
+%               averageElasticLocal = (sum(sum(EyyNew.*Xtemp))+sum(sum(ExxNew.*Xtemp)))/neSolid;
+%               averageElasticLocal=averageElasticLocal/2; % Becuse Eyy and Exx are from one element, so to get the average divide by 2
+                if E_target- averageElasticLocal<0;
+                   l1 = lmid;
+                else
+                   l2 = lmid;
+                end
+            end
             
-                minE = matProp.E_material2/2;
-                temp = avg-minE;
-
-                w = temp/(matProp.E_material1-minE);
+            if(config.testingVerGradMaterail ==1)
+                averageNewE = 0.5*(ExxNew+EyyNew);
+                ExxNew=averageNewE;
+                EyyNew=averageNewE;
+            end
+            
+            %               DV.sensitivityElastic
+            %                DV.Exx
+            %               ExxNew
+            
+            %               % ----------------
+            %               % Eyy
+            %               % ----------------
+            %                while (l2-l1 > 1e-4)
+            %                   % xnew = max(0.01,max(x-move,min(1.,min(x+move,x.*sqrt(-dc./lmid)))));
+            %
+            %
+            %                 if E_avg- sum(sum(EyyNew))> 0;
+            %                     l1 = lmid;
+            %                 else
+            %                     l2 = lmid;
+            %                 end
+            %                end
+            
+            DV.Exx=ExxNew ;
+            DV.Eyy=EyyNew ;
+            
+            
+            % Debugging data
+            avg= 0.5*(DV.Exx+DV.Eyy);
+            
+            minE = matProp.E_material2/2;
+            temp = avg-minE;
+            
+            w = temp/(matProp.E_material1-minE);
         end
     end
     

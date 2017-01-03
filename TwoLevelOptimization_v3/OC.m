@@ -27,7 +27,7 @@ end
 multiplier=nelx*nely;
 % end
 
-l1 = 0; l2 = 100000000; move = 0.2;
+l1 = 0; l2 = 1000000; move = 0.2;
 while (l2-l1 > 1e-4)
     lmid = 0.5*(l2+l1);
     xnew = max(0.01,max(x-move,min(1.,min(x+move,x.*sqrt(-dc./lmid)))));    

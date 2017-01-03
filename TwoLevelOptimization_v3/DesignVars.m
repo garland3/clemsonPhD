@@ -28,6 +28,8 @@ classdef DesignVars
         sensitivityHeat; % Sensitivity 2, heat
         currentVol1Fraction;
         currentVol2Fraction;
+        targetAverageE =0;
+        actualAverageE=0;
         
         %complianceSensitivity; %
         totalStress;
@@ -112,6 +114,9 @@ classdef DesignVars
                 if (49<config.mode && config.mode <100  )
                     obj=obj.ReadXMacroFromCSV( config);
                 end
+                
+                
+                 
             end
             
         end
@@ -406,24 +411,54 @@ classdef DesignVars
         end
         
         % Calculates the volume
-        function [volume1, volume2] = CalculateVolumeFractions(obj, config,matProp)
-          
+        function [obj] = CalculateVolumeFractions(obj, config,matProp)
             
-%             Xtemp = obj.x;
-%             Xtemp(obj.x>config.voidMaterialDensityCutOff)=1;
-%             Xtemp(obj.x<=config.voidMaterialDensityCutOff)=0;
             
-%             ne = config.nelx*config.nely;
+            %             Xtemp = obj.x;
+            %             Xtemp(obj.x>config.voidMaterialDensityCutOff)=1;
+            %             Xtemp(obj.x<=config.voidMaterialDensityCutOff)=0;
+            %             ne = config.nelx*config.nely;
+            %                ne = config.nelx*config.nely;
+            %                 averageElasticLocal = (sum(sum(obj.Exx.*obj.x))+sum(sum(obj.Eyy.*obj.x)))/ne;
+            %                 volume1 = sum(sum(obj.x))/ne;
+            %                 volume2 = averageElasticLocal/matProp.E_material1;
+            %                   volume1 = (sum(sum(obj.Exx.*obj.x))+sum(sum(obj.Eyy.*obj.x)))/ne;
+            
+            ne = config.nelx*config.nely;
+%             neSolid = config.nelx*config.nely*(config.v1+config.v2);
+            totalMaterial = sum(sum(obj.x));
+            obj.targetAverageE=(config.v1*matProp.E_material1+config.v2*matProp.E_material2)/(config.v1+config.v2);
+            
             if(config.useExxEyy==1)
-               ne = config.nelx*config.nely;
-              averageElasticLocal = (sum(sum(obj.Exx.*obj.x))+sum(sum(obj.Eyy.*obj.x)))/ne;
-
-                volume1 = sum(sum(obj.x))/ne;
-                volume2 = averageElasticLocal/matProp.E_material1;
+                %                    avg= 0.5*(obj.Exx+obj.Eyy);
+                totalExx =obj.x.*obj.Exx;
+                totalEyy = obj.x.* obj.Eyy;
+                avgE = (totalExx+totalEyy)/2;
+                if(config.testingVerGradMaterail ==1)
+                    minE = matProp.E_material2;
+                else
+                    minE = matProp.E_material2/2;
+                end
+                obj.w = avgE/(matProp.E_material1-minE);
+                
+                
+                obj.actualAverageE= sum(sum(avgE))/totalMaterial;
+                
+                % volume fraction is over the domain, while target E 
+                obj.  currentVol1Fraction =sum(sum( obj.x.*obj.w))/ne;
+                obj.   currentVol2Fraction =sum(sum( obj.x.*(1-obj.w)))/ne;
             else
-                    volume1 =sum(sum( obj.x.*obj.w))/n2;
-                     volume2 =sum(sum( obj.x.*(1-obj.w)))/ne;
+                
+                
+                
+                totalMat1 =sum(sum( obj.x.*obj.w*matProp.E_material1));
+                totalMat2 =sum(sum( obj.x.*(1-obj.w)*matProp.E_material2));
+                % obj.actualAverageE= obj.currentVol1Fraction*matProp.E_material1+  obj. currentVol2Fraction*matProp.E_material2;
+                obj.actualAverageE= (totalMat1+totalMat2)/totalMaterial;
+                obj.  currentVol1Fraction =sum(sum( obj.x.*obj.w))/ne;
+                obj.   currentVol2Fraction =sum(sum( obj.x.*(1-obj.w)))/ne;
             end
+            
             
         end
         
@@ -432,16 +467,16 @@ classdef DesignVars
         % Combine the Exx and Eyy vars into the vol fraction (w) var.
         % This is just used so that we can plot more easily.
         %---------------------------
-        function [obj] = CalcVolFractionUsingExxEyy(obj, config, matProp)
-            avg= 0.5*(obj.Exx+obj.Eyy);
-            
-            minE = matProp.E_material2/2;
-            temp = avg-minE;
-            
-            w = temp/(matProp.E_material1-minE);
-            
-             obj.w = w;
-        end
+        %         function [obj] = CalcVolFractionUsingExxEyy(obj, config, matProp)
+        %             avg= 0.5*(obj.Exx+obj.Eyy);
+        %
+        %             minE = matProp.E_material1/2;
+        %             temp = avg-minE;
+        %
+        %             w = temp/(matProp.E_material1-minE);
+        %
+        %              obj.w = w;
+        %         end
         
         %%
         
@@ -485,9 +520,9 @@ classdef DesignVars
                 obj.U(loadcaseIndex,:)=UloadCase;
             end
             
-%             obj.c = 0.; % c is the objective. Total strain energy
-%             obj.cCompliance = 0;
-%             obj.cHeat = 0;
+            %             obj.c = 0.; % c is the objective. Total strain energy
+            %             obj.cCompliance = 0;
+            %             obj.cHeat = 0;
         end
         
         % -----------------------------------------
@@ -537,18 +572,18 @@ classdef DesignVars
                     end
                     
                     % Calculate generic KE with 1 as the SIMP density
-                    KEgeneric = matProp.getKMatrixTopExxYyyRotVars(config,1,obj.Exx(ely,elx), obj.Eyy(ely,elx),obj.t(ely,elx),obj.w(ely,elx));                    
+                    KEgeneric = matProp.getKMatrixTopExxYyyRotVars(config,1,obj.Exx(ely,elx), obj.Eyy(ely,elx),obj.t(ely,elx),obj.w(ely,elx));
                     % Calculate the elastic sensitivity!
-                    KEsensitive = KEgeneric*config.penal*obj.x(ely,elx)^(config.penal-1);                    
+                    KEsensitive = KEgeneric*config.penal*obj.x(ely,elx)^(config.penal-1);
                     % Calculate the actual KE
-                     KE = KEgeneric*obj.x(ely,elx)^(config.penal);
+                    KE = KEgeneric*obj.x(ely,elx)^(config.penal);
                     
                     % allow multiple loading cases.
                     Urows = obj.U(:,NodeNumbers);
                     for tt = 1:t2
-                        Ue = Urows(tt,:)'; 
+                        Ue = Urows(tt,:)';
                         obj.sensitivityElastic(ely,elx) =-Ue'*KEsensitive*Ue+ obj.sensitivityElastic(ely,elx);
-                        % Calculate the total elastic compliance                       
+                        % Calculate the total elastic compliance
                         obj.cCompliance = obj.cCompliance + Ue'*KE*Ue;
                     end
                     
@@ -579,9 +614,9 @@ classdef DesignVars
             obj.sensitivityElastic(:,:)=0;
             
             
-            for loadcaseIndex = 1:t2
-                UloadCase=obj.U(loadcaseIndex,:);
-                count =1;
+%             for loadcaseIndex = 1:t2
+%                 UloadCase=obj.U(loadcaseIndex,:);
+%                 count =1;
                 
                 for ely = 1:config.nely
                     rowMultiplier = ely-1;
@@ -595,11 +630,22 @@ classdef DesignVars
                         yNodes = nodes1*2;
                         NodeNumbers = [xNodes(1) yNodes(1) xNodes(2) yNodes(2) xNodes(3) yNodes(3) xNodes(4) yNodes(4)];
                         
-                        Ue = UloadCase(NodeNumbers)';
+                        %                         Ue = UloadCase(NodeNumbers)';
                         
                         % Calculate the elastic sensitivity!
-                        KEsensitive = matProp.getKMatrixGradientMaterialSensitivity(config,1,obj.Exx(ely,elx), obj.Eyy(ely,elx),obj.t(ely,elx));          
-                        obj.sensitivityElastic(ely,elx) =Ue'*KEsensitive*Ue+ obj.sensitivityElastic(ely,elx);
+                        KEsensitive = matProp.getKMatrixGradientMaterialSensitivity(config,obj.x(ely,elx),obj.Exx(ely,elx), obj.Eyy(ely,elx),obj.t(ely,elx));
+                        
+                        % allow multiple loading cases.
+                        Urows = obj.U(:,NodeNumbers);
+                        for tt = 1:t2
+                            Ue = Urows(tt,:)';
+                            obj.sensitivityElastic(ely,elx) =Ue'*KEsensitive*Ue+ obj.sensitivityElastic(ely,elx);
+                            % Calculate the total elastic compliance
+                            %                         obj.cCompliance = obj.cCompliance + Ue'*KE*Ue;
+                        end
+                        
+                        
+                        %                         obj.sensitivityElastic(ely,elx) =Ue'*KEsensitive*Ue+ obj.sensitivityElastic(ely,elx);
                         
                         
                         % if heat objective!!!
@@ -614,11 +660,11 @@ classdef DesignVars
                             obj.sensitivityHeat(ely,elx) = obj.x(ely,elx)^(config.penal)*U_heat'*matProp.dKheat*U_heat + obj.sensitivityHeat(ely,elx) ;
                         end
                         
-                        count=count+1;
+%                         count=count+1;
                     end % end, loop over x
                 end % end, for loop over y
                 
-            end % end for loop over load cases.
+%             end % end for loop over load cases.
         end % End Function, CalculateMaterialGradientSensitivity
         
         
@@ -659,11 +705,11 @@ classdef DesignVars
                     URows = obj.U(:,NodeNumbers);
                     
                     % Get the sensitivity K matrix
-                    % Set Exx = 1, to get sensitivity
-                    KExx = matProp.getKMatrixTopExxYyyRotVars(config,obj.x(y,xx),1, obj.Eyy(y,xx),obj.t(y,xx));
+                    % Set Exx = 1, Eyy = 0 to get sensitivity
+                    KExx = matProp.getKMatrixTopExxYyyRotVars(config,obj.x(y,xx),1, 0,obj.t(y,xx),[]);
                     
-                    % Set Eyy= 1, to get sensitivity
-                    KEyy = matProp.getKMatrixTopExxYyyRotVars(config,obj.x(y,xx),obj.Exx(y,xx), 1,obj.t(y,xx));
+                    % Set Eyy= 1,  Eyy = 0,to get sensitivity
+                    KEyy = matProp.getKMatrixTopExxYyyRotVars(config,obj.x(y,xx),0, 1,obj.t(y,xx),[]);
                     
                     
                     % allow multiple loading cases.

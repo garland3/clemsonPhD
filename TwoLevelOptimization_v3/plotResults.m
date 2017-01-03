@@ -18,7 +18,9 @@ classdef plotResults
             clf
             plotcount = 1;
             figure(1)
-            set(gcf, 'Position', get(0, 'Screensize'));
+            if(config.maximizePlots==1)
+                set(gcf, 'Position', get(0, 'Screensize'));
+            end
             %             figure('Name', '1', 'units','normalized','outerposition',[0 0 1 1])
             if numberOfPlots == 2
                 plotDim2 =1;  plotDim1=2;
@@ -78,7 +80,7 @@ classdef plotResults
                 obj.PlotExxEyyVarAsArrows(DV, config, loopNumb);
             end
             
-             
+            
             %  ----------------------------
             % Plot Rotation Var Value
             %  ----------------------------
@@ -92,7 +94,7 @@ classdef plotResults
             %  ----------------------------
             if(config.doPlotCombinedExxEyyAndRotation ==1)
                 subplot(plotDim1,plotDim2,plotcount); plotcount = plotcount + 1;
-                obj.PlotOrthAndRotationTogether(DV, config, loopNumb);
+                obj.doPlotCombinedExxEyyAndRotation(DV, config, loopNumb);
             end
             
             %  ----------------------------
@@ -172,14 +174,44 @@ classdef plotResults
             x = 1:loopNumb;
             % y1 = DV.storeOptimizationVar(1:loopNumb,1)';
             y2 = DV.storeOptimizationVar(1:loopNumb,2)'; % Elastic Compliance
-            y3 = DV.storeOptimizationVar(1:loopNumb,3)'; % Heat Compliance
-            y4 = DV.storeOptimizationVar(1:loopNumb,4)'; % volume fraction material 1
-            y5 = DV.storeOptimizationVar(1:loopNumb,5)'; % volume fraction material 2
+            
+            
             
             y2 = y2/max(y2); % normalize to make plotting nice
-            y3 = y3/max(y3); % normalize to make plotting nice
-            plot(x, y4,'y', x, y5, 'm', x, y2, 'c', x, y3, 'r')
-            legend('vol1', 'vol2','Elast Obj','Heat Obj')
+            
+            
+            if(config.useExxEyy==1)
+                
+                % ------------------------
+                % Top, Exx, Eyy, rotation optimzation
+                % ------------------------
+                y6 = DV.storeOptimizationVar(1:loopNumb,6)'; %   sum(sum(DV.x))
+                y6 = y6/(config.nelx*config.nely);
+                totalVolumeTarget= config.totalVolume*ones(loopNumb,1);
+                
+                y7 = DV.storeOptimizationVar(1:loopNumb,7)'; %   DV.targetAverageE
+                y8 = DV.storeOptimizationVar(1:loopNumb,8)'; % DV.actualAverageE
+                
+                
+                scaleForEvalues = 0.5/y7(1);
+                y7 = scaleForEvalues*y7; % Target E
+                y8 = scaleForEvalues*y8;
+                
+                plot( x, y2, 'ko-',x, y7, 'm+-', x, y8, 'c*-',x, totalVolumeTarget, 'r.-',x, y6, 'gx')
+                legend('Elast Obj','E target','E avg', 'Vol Target', 'Actual Vol')
+            else
+                
+                % ------------------------
+                % Top and mat gradient optimization
+                % ------------------------
+                y3 = DV.storeOptimizationVar(1:loopNumb,3)'; % Heat Compliance
+                y3 = y3/max(y3); % normalize to make plotting nice
+                
+                y4 = DV.storeOptimizationVar(1:loopNumb,4)'; % volume fraction material 1
+                y5 = DV.storeOptimizationVar(1:loopNumb,5)'; % volume fraction material 2
+                plot(x, y4,'y', x, y5, 'm', x, y2, 'c', x, y3, 'r');
+                legend('vol1', 'vol2','Elast Obj','Heat Obj');
+            end
         end
         
         
@@ -279,7 +311,7 @@ classdef plotResults
             title(titleText);
         end
         
-         % -------------------------------------
+        % -------------------------------------
         % Plot the Exx and Eyy as arrows
         % -------------------------------------
         function   PlotExxEyyVarAsArrows(obj, DV, config, loopNumb)
@@ -288,80 +320,43 @@ classdef plotResults
             dx = DV.Exx;
             dy = DV.Eyy;
             quiver(X,Y,dx,dy);
-             axis equal
+            axis equal
             title(titleText);
         end
-      
+        
         
         
         % -------------------------------------
-        % Plot the ROTATION VAR and the orthogona vars together AS ARROWS
+        % Plot the ROTATION VAR and the Exx and Eyy as two arrows
+        % representing the Exx and Eyy rotated.
         % -------------------------------------
-        function PlotOrthAndRotationTogether(obj, DV, config, loopNumb)
+        function doPlotCombinedExxEyyAndRotation(obj, DV, config, loopNumb)
             
-            % Big arrow
-            theta1(1:config.nely,1:config.nelx) = zeros(config.nely,config.nelx);
-            magnitude1(1:config.nely,1:config.nelx) = zeros(config.nely,config.nelx);
+            dx1=DV.Exx.*cos(DV.t);%-DV.Eyy.*sin(DV.t);
+            dy1=DV.Exx.*sin(DV.t);%+DV.Eyy.*cos(DV.t);
             
-            % Little arrow
-            theta2(1:config.nely,1:config.nelx) = zeros(config.nely,config.nelx);
-            magnitude2(1:config.nely,1:config.nelx) = zeros(config.nely,config.nelx);
+            dx2=DV.Eyy.*cos(DV.t+pi/2);%-DV.Eyy.*sin(DV.t);
+            dy2=DV.Eyy.*sin(DV.t+pi/2);%+DV.Eyy.*cos(DV.t);
             
-            for ely = 1:config.nely
-                for elx = 1:config.nelx
-                    d_local = DV.d(ely,elx);
-                    %                          material1Fraction  = DV.w(ely,elx);
-                    t_local =  DV.t(ely,elx);
-                    x_local = DV.x(ely,elx);
-                    
-                    if(x_local<config.voidMaterialDensityCutOff)
-                        theta1(ely,elx)=0;
-                        magnitude1(ely,elx)=0;
-                        theta2(ely,elx)=0;
-                        magnitude2(ely,elx)=0;
-                    else
-                        
-                        theta1(ely,elx)=t_local;
-                        magnitude1(ely,elx)=d_local;%*material1Fraction*x_local;
-                        
-                        theta2(ely,elx)=t_local+pi/2;
-                        magnitude2(ely,elx)=(1- d_local);%;*material1Fraction*x_local;
-                        
-                    end
-                end
-            end
-            
-            titleText = 'Distribution and Rotation of Material, Red = E_xx,Green = E_yy' ;
+            titleText = 'Exx and Eyy and Rotation of Material, Red = E_xx,Green = E_yy' ;
             [X,Y] = meshgrid(1:config.nelx,1:config.nely);
+            
             
             % RED MAIN DIRECTION ARROW
             % GREEN SECONDARY
             % PLOT green first, so that red will be on top.
-            dx2 = cos(theta2).*magnitude2;
-            dy2 = sin(theta2).*magnitude2;
-            q = quiver(X,Y,dx2,dy2,'Autoscale','off');
+            %            %             q = quiver(X,Y,dx2,dy2,'Autoscale','off');
+            q = quiver(X,Y,dx2,dy2);
             q.Color = 'green';
-            
-            
             %                 set(gca,'YDir','normal'); % http://www.mathworks.com/matlabcentral/an
             hold on
             
-            dx = cos(theta1).*magnitude1;
-            dy = sin(theta1).*magnitude1;
-            q = quiver(X,Y,dx,dy,'Autoscale','off');
+            q = quiver(X,Y,dx1,dy1);
             q.Color = 'red';
-            
             axis equal
+            axis([-2 config.nelx+2 -2 config.nely+2])
             %                set(gca,'YDir','normal'); % http://www.mathworks.com/matlabcentral/an
-            
-            
-            
             title(titleText);
-            
-            
-            
-            
-            
         end
         
         
@@ -377,28 +372,28 @@ classdef plotResults
         % -------------------------------------
         function PlotStrucAndGrad(obj, DV, config, matProp,loopNumb, graphicHandle)
             
-                   
+            
             structGradDesignVarArray(1:config.nely,1:config.nelx)  = 0; % Initialize
             
-             
-              structGradDesignVarArray(DV.x<config.voidMaterialDensityCutOff)=-0.5;
-                structGradDesignVarArray(DV.x>config.voidMaterialDensityCutOff)=DV.w(DV.x>config.voidMaterialDensityCutOff);
-             
             
-%             for i = 1:config.nelx
-%                 for j = 1:config.nely
-%                     x_local = DV.x(j,i);
-%                     if(x_local <= config.voidMaterialDensityCutOff) % if void region
-%                         % structGradArrayElastic(j,i) =0; % make the void region 10 less than the least strong material for plotting purposes
-%                         structGradDesignVarArray(j,i) =-0.5;
-%                     else % if a filled region
-%                         volFraclocal = DV.w(j,i);
-%                         % E_atElement=  matProp.effectiveElasticProperties(volFraclocal,config);  % simple mixture ratio
-%                         %structGradArrayElastic(j,i) = E_atElement;
-%                         structGradDesignVarArray(j,i) = volFraclocal;
-%                     end
-%                 end
-%             end
+            structGradDesignVarArray(DV.x<config.voidMaterialDensityCutOff)=-0.5;
+            structGradDesignVarArray(DV.x>config.voidMaterialDensityCutOff)=DV.w(DV.x>config.voidMaterialDensityCutOff);
+            
+            
+            %             for i = 1:config.nelx
+            %                 for j = 1:config.nely
+            %                     x_local = DV.x(j,i);
+            %                     if(x_local <= config.voidMaterialDensityCutOff) % if void region
+            %                         % structGradArrayElastic(j,i) =0; % make the void region 10 less than the least strong material for plotting purposes
+            %                         structGradDesignVarArray(j,i) =-0.5;
+            %                     else % if a filled region
+            %                         volFraclocal = DV.w(j,i);
+            %                         % E_atElement=  matProp.effectiveElasticProperties(volFraclocal,config);  % simple mixture ratio
+            %                         %structGradArrayElastic(j,i) = E_atElement;
+            %                         structGradDesignVarArray(j,i) = volFraclocal;
+            %                     end
+            %                 end
+            %             end
             ActualPlotStructGradArray(obj,structGradDesignVarArray, config,matProp,DV, loopNumb, graphicHandle)
         end
         
@@ -407,7 +402,7 @@ classdef plotResults
         % -------------------------------------
         function ActualPlotStructGradArray(obj,structGradDesignVarArray,  config,matProp,DV, loopNum,graphicHandle)
             
-           
+            
             
             imagesc(structGradDesignVarArray); axis equal; axis tight; axis off;
             set(gca,'YDir','normal'); % http://www.mathworks.com/matlabcentral/answers/94170-how-can-i-reverse-the-y-axis-when-i-use-the-image-or-imagesc-function-to-display-an-image-in-matlab
@@ -530,7 +525,7 @@ classdef plotResults
             title(nameGraph);
         end
         
-        function  [] = PlotObjectiveFunctionAndConstraintsOverSevearlIterations(obj,maxiterations)
+        function  [] = PlotObjectiveFunctionAndConstraintsOverSevearlIterations(obj,maxiterations,config)
             
             close all
             
@@ -548,7 +543,7 @@ classdef plotResults
                 iterationDiff= [iterationDiff zeros(1,rr-1)];
                 iterationDiff = [iterationDiff 1];
             end
-            config = Configuration;
+%             config = Configuration;
             DV = DesignVars(config);
             DV.storeOptimizationVar=all;
             p = plotResults;
@@ -556,10 +551,11 @@ classdef plotResults
             loopNumb=r;
             
             % Get size of the grid
-            previousIterationNum=1;
-            outname = sprintf('./out%i/volfractionfield%i.csv',folderNum,previousIterationNum);
-            [gridrows, gridcolumns]=size(csvread(outname));
-            totalvolume = gridrows*gridcolumns;
+            %             previousIterationNum=1;
+            %
+            %             outname = sprintf('./out%i/volfractionfield%i.csv',folderNum,previousIterationNum);
+            %             [gridrows, gridcolumns]=size(csvread(outname));
+            %             totalvolume = gridrows*gridcolumns;
             
             % normalize the volumes
             %mtemp = max(DV.storeOptimizationVar(1:loopNumb,4));
@@ -569,7 +565,7 @@ classdef plotResults
             
             
             
-            config = 0;
+%             config = 0;
             matProp = 0;
             hold on
             p.PlotDesignMetrics( DV, config, matProp, loopNumb)
