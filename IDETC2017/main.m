@@ -1,8 +1,8 @@
 function main()
 clear
 
-    combinedTopologyOptimization('1', '1', '1','60', 'na');
-    combinedTopologyOptimization('1', '1', '1','200', 'na');
+combinedTopologyOptimization('1', '1', '1','60', 'na');
+combinedTopologyOptimization('1', '1', '1','200', 'na');
 
     
 
