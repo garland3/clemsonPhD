@@ -24,7 +24,8 @@ classdef Optimizer
             % FILTERING OF SENSITIVITIES
             [DV.dc]   = DV.check( config.nelx, config.nely,config.rmin,DV.x,DV.dc);
             % DESIGN UPDATE BY THE OPTIMALITY CRITERIA METHOD
-            [DV.x]    = OC( config.nelx, config.nely,DV.x,config.totalVolume,DV.dc, DV, config);
+            moveLimit=0.1;
+            [DV.x]    = OC( config.nelx, config.nely,DV.x,config.totalVolume,DV.dc, DV, config,moveLimit);
         end
         
         % ----------------------------------
@@ -405,6 +406,65 @@ classdef Optimizer
             end
         end
         
+        %-----------------------------------
+        % Meso Optimization
+        %-----------------------------------
+        function [DVmeso] = MesoDensityOptimization(~,mesoConfig, DVmeso,old_muMatrix,penaltyValue,macroElemProps)
+            ne = mesoConfig.nelx*mesoConfig.nely; % number of elements
+%               dH_total=[DVmeso.d11;
+%                     DVmeso.d12;
+%                     DVmeso.d22;
+%                     DVmeso.d33];
+            Diff_Sys_Sub =  (macroElemProps.D_subSys- macroElemProps.D_sys);
+            localD = zeros(3,3);
+            for e = 1:ne
+               
+                [x,y]= DVmeso.GivenNodeNumberGetXY(e);
+                xx=DVmeso.x(y,x); % =min(optimalEta, designVars.x+move)
+%                  term1 = 10*xx^9;
+%                  power = 1/4;
+%                  term1 = power*xx^(power-1);
+                term1=2*xx;
+                
+                
+                
+                rowIndex = [1,1,2,3];
+                columnIndex = [1,2,2,3];
+              
+                dH = zeros(3,3);
+                dH(1,1) = DVmeso.d11(y,x);
+                dH(1,2) = DVmeso.d12(y,x);
+                dH(2,2) = DVmeso.d22(y,x);
+                dH(3,3) = DVmeso.d33(y,x);
+                
+                 localD(1,1) = DVmeso.De11(y,x);
+                localD(1,2) = DVmeso.De11(y,x);
+                localD(2,2) = DVmeso.De11(y,x);
+                localD(3,3) = DVmeso.De11(y,x);
+                
+                Diff_Sys_Sub =  (localD- macroElemProps.D_sys);
+                
+                constraintCount = 0;
+                term2=0;
+%                 term1=0;
+                for k = [1 2 3 ]
+%                     term1=  dH(1,1)+  dH(1,2)+  dH(2,2)+  dH(3,3);
+                    i = rowIndex(k);
+                    j = columnIndex(k);
+                    Ctemp = dH(i,j)*(-old_muMatrix(i,j)-penaltyValue*Diff_Sys_Sub(i,j));
+                    term2 =term2 +Ctemp;
+                    constraintCount=constraintCount+1;
+                end
+                
+                dL = term1+term2;
+                delta = 0.1;
+                optimalEta=xx+delta*dL;
+                move = 0.02;
+                DVmeso.x(y,x)=  max(0.01,max(xx-move,min(1.,min(xx+move,optimalEta))));
+                
+                  DVmeso.x([10:13],[10:13])=1;
+            end
+        end
     end
 end
     

@@ -31,11 +31,11 @@ add_bottom=0;
 add_left=0;
 add_right=0;
 
-xCurrent=macroElementProps.xPosition;
+xCurrent=macroElementProps.xPos;
 xRight=xCurrent+1;
 xLeft=xCurrent-1;
 
-yCurrent=macroElementProps.yPosition;
+yCurrent=macroElementProps.yPos;
 yUp=yCurrent+1;
 yDown=yCurrent-1;
 
@@ -129,10 +129,12 @@ end
 add_left=0;
 add_top=0;
 
+add_right=0;add_bottom=0;
+
 nelxTile = mesoSettings.nelx *(mesoSettings.numTilesX+add_left+add_right );
 nelyTile = mesoSettings.nely *(mesoSettings.numTilesY+add_top+add_bottom );
-yShift = (macroElementProps.yPosition-1)*mesoSettings.nely*numTilesY+1-(mesoSettings.nely*add_bottom);
-xShift = (macroElementProps.xPosition-1)*mesoSettings.nelx*numTilesX+1-(mesoSettings.nelx*add_left);
+yShift = (macroElementProps.yPos-1)*mesoSettings.nely*numTilesY+1-(mesoSettings.nely*add_bottom);
+xShift = (macroElementProps.xPos-1)*mesoSettings.nelx*numTilesX+1-(mesoSettings.nelx*add_left);
 
 
 ybounds = yShift:(yShift+nelyTile-1);
@@ -191,7 +193,7 @@ elseif(step==2)
             temp(flipud(tril(temp)==temp)) = 0;
         end
         
-        if(macroElementProps.density<macroSettings.voidMaterialDensityCutOff)
+        if(macroElementProps.densitySIMP<macroSettings.voidMaterialDensityCutOff)
             temp=zeros(size(temp));
         end
         

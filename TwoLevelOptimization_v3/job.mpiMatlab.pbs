@@ -20,10 +20,10 @@ rm *.stl
 rm *.png
 
 # compile the c code
-mpicc /scratch2/apg/multiObjective/MPI_C_program/bankElementJobs.c -o /scratch2/apg/multiObjective/bank
+mpicc /scratch2/apg/version3/MPI_C_program/bankElementJobs.c -o /scratch2/apg/version3/bank
 
 # compile the matlab code
-mcc -R -nodisplay -C  -m  combinedTopologyOptimization.m CalculateCheckedElements.m check.m  Configuration.m DesignVars.m elementK_heat.m elK_elastic.m FE_elasticV2.m FindAvergeChangeOfLastValue.m freezeColors.m GenerateDesignVarsForMesoProblem.m GetMacroElementPropertiesFromCSV.m GetMesoUnitCellDesignFromCSV.m Homgenization.m HomgenizationV2.m macroElementProp.m MaterialProperties.m mesoAddAdjcentCellDataObject.m  MesoDesignWrapper.m MesoStructureDesignV2.m OC.m parfor_progress.m plotResults.m   ReadXMacroFromCSV.m SaveMacroProblemStateToCSV.m SaveMesoUnitCellDesignToCSV.m SingleMesoStuctureWrappe.m stlwrite.m temperatureFEA_V3.m TestMesoDesign.m TileMesoStructure.m unfreezeColors.m 
+mcc -R -nodisplay -C  -m  combinedTopologyOptimization.m    Configuration.m DesignVars.m elementK_heat.m elK_elastic.m FE_elasticV2.m FindAvergeChangeOfLastValue.m freezeColors.m GenerateDesignVarsForMesoProblem.m GetMacroElementPropertiesFromCSV.m GetMesoUnitCellDesignFromCSV.m Homgenization.m macroElementProp.m MaterialProperties.m mesoAddAdjcentCellDataObject.m  MesoDesignWrapper.m MesoStructureDesignV2.m OC.m Optimizer.m parfor_progress.m plotResults.m  SaveMacroProblemStateToCSV.m SaveMesoUnitCellDesignToCSV.m SingleMesoStuctureWrappe.m  temperatureFEA_V3.m TestMesoDesign.m TileMesoStructure.m unfreezeColors.m  VideoManager.m
 
 # weird that sometimes this folder causes problems
 rm -R combinedTopologyOptimization_mcr

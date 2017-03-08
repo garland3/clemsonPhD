@@ -63,6 +63,14 @@ classdef DesignVars
         globalPositionTile;
         NodeToXYArrayMapTile;
         UTile;
+        d11;
+        d12;
+        d22;
+        d33;
+          De11
+          De12
+          De22
+          De33;
         
         mesoAddAdjcentCellDataObject;
         
@@ -956,5 +964,137 @@ classdef DesignVars
                 end
             end
         end
+        
+        
+         
+        % -----------------------------
+        % GenerateStartingMesoDesign
+        %
+        % Geneate the x (density) values for the Meso design problem.
+        % Several methods exist. 
+        % -----------------------------
+        function [obj]= GenerateStartingMesoDesign(obj,mesoConfig,macroElementProperties)
+            method =2;
+           
+            if(method ==1)
+                obj.x(1:mesoConfig.nely,1:mesoConfig.nelx) = mesoConfig.totalVolume; % artificial density of the elements
+                % method 1, randome values. Does not seem to be working well.
+                obj.x(1:mesoConfig.nely,1:mesoConfig.nelx) = randi([0, round(mesoConfig.totalVolume*100)],mesoConfig.nely,mesoConfig.nelx)/100; % artificial density of the elements, can not be unifrom or else sensitivity will be 0 everywhere.
+            elseif(method ==2)
+                % method 2, box of empty in the middle.
+                obj.x(1:mesoConfig.nely,1:mesoConfig.nelx) = ones(mesoConfig.nely,mesoConfig.nelx);
+                midY = round(mesoConfig.nely/2);
+                midX = round(mesoConfig.nelx/2);
+                ratio = mesoConfig.nelx/mesoConfig.nely;
+                vEmpty = mesoConfig.nelx*mesoConfig.nely-mesoConfig.totalVolume*mesoConfig.nelx*mesoConfig.nely;
+                dimY = floor(sqrt(vEmpty/ratio));
+                yStart = midY-floor(dimY/2);
+                dimX =  floor(ratio*dimY);
+                xStart = midX-floor(dimX/2);
+                obj.x(yStart:yStart+dimY-1,xStart:xStart+dimX-1)= ones(dimY,dimX)*0.01;
+
+
+            elseif(method ==3)
+                % method 3, circle in the moddle
+                 obj.x(1:mesoConfig.nely,1:mesoConfig.nelx) = ones(mesoConfig.nely,mesoConfig.nelx);
+        %            obj.x(1:mesoConfig.nely,1:mesoConfig.nelx) = randi([1, round(mesoConfig.totalVolume*100)],mesoConfig.nely,mesoConfig.nelx)/100; % artificial density of the elements, can not be unifrom or else sensitivity will be 0 everywhere.
+
+                  midY = round(mesoConfig.nely/2);
+                midX = round(mesoConfig.nelx/2);
+                mesoConfig.totalVolume=0.5;%*mesoConfig.nely*mesoConfig.nelx;
+                    radius = sqrt((mesoConfig.totalVolume*mesoConfig.nelx*mesoConfig.nely-mesoConfig.nelx*mesoConfig.nely)/(-pi));
+                        for i = 1:mesoConfig.nelx
+                            for j = 1:mesoConfig.nely
+                %                 if sqrt((i-mesoConfig.nelx/2-0.5)^2+(j-mesoConfig.nely/2-0.5)*2) < min(mesoConfig.nelx,mesoConfig.nely)/3
+                %                     obj.x(j,i) = mesoConfig.totalVolume/2;
+                %                 end
+                            d = sqrt((i-midX)^2+(j-midY)^2);
+                            if(d<radius)
+                                  obj.x(j,i)= 0.01;
+                            end
+                            end
+                        end
+
+            elseif(method ==4)
+                % method 4, many circle holes
+                obj.x(1:mesoConfig.nely,1:mesoConfig.nelx) = ones(mesoConfig.nely,mesoConfig.nelx);
+                numHolesX = 7;
+                numHolesY =7;
+                totalHoles =numHolesX*numHolesY;
+                XholeCenters = 1:mesoConfig.nelx/(numHolesX+1):mesoConfig.nelx;
+                YholeCenters = 1:mesoConfig.nely/(numHolesY+1):mesoConfig.nely;
+
+                radius = sqrt((mesoConfig.totalVolume*mesoConfig.nelx*mesoConfig.nely-mesoConfig.nelx*mesoConfig.nely)/(-pi*totalHoles));
+                for i = 1:mesoConfig.nelx
+                    for j = 1:mesoConfig.nely
+                        %                 if sqrt((i-mesoConfig.nelx/2-0.5)^2+(j-mesoConfig.nely/2-0.5)*2) < min(mesoConfig.nelx,mesoConfig.nely)/3
+                        %                     obj.x(j,i) = mesoConfig.totalVolume/2;
+                        %                 end
+                        for mm = 1:(1+numHolesX)
+                            for nn = 1:(1+numHolesY)
+                                midX= XholeCenters(mm);
+                                midY= YholeCenters(nn);
+
+                                d = sqrt((i-midX)^2+(j-midY)^2);
+                                if(d<radius)
+                                    obj.x(j,i)=  0.01;
+                                end
+                            end
+                        end
+                    end
+                end
+              elseif(method ==5)
+                   % method 5, small hole in middle
+                    obj.x(1:mesoConfig.nely,1:mesoConfig.nelx) = ones(mesoConfig.nely,mesoConfig.nelx);
+                  midY = round(mesoConfig.nely/2);
+                midX = round(mesoConfig.nelx/2);
+                    radius = 3;
+                        for i = 1:mesoConfig.nelx
+                            for j = 1:mesoConfig.nely
+                %                 if sqrt((i-mesoConfig.nelx/2-0.5)^2+(j-mesoConfig.nely/2-0.5)*2) < min(mesoConfig.nelx,mesoConfig.nely)/3
+                %                     obj.x(j,i) = mesoConfig.totalVolume/2;
+                %                 end
+                            d = sqrt((i-midX)^2+(j-midY)^2);
+                            if(d<radius)
+                                  obj.x(j,i)=  0.01;
+                            end
+
+                            end
+                        end
+
+                        % Randome circles
+              elseif(method ==6)
+                % method 4, many randome circle holes
+                numHolesX =6;
+                numHolesY =6;
+                totalHoles =numHolesX*numHolesY;
+                XholeCenters = randi([0, mesoConfig.nelx],1,numHolesX+1);
+                YholeCenters =  randi([0, mesoConfig.nely],1,numHolesY+1);
+
+                  obj.x(1:mesoConfig.nely,1:mesoConfig.nelx) = ones(mesoConfig.nely,mesoConfig.nelx);
+
+                radius = sqrt((mesoConfig.totalVolume*mesoConfig.nelx*mesoConfig.nely-mesoConfig.nelx*mesoConfig.nely)/(-pi*totalHoles));
+                for i = 1:mesoConfig.nelx
+                    for j = 1:mesoConfig.nely
+                        %                 if sqrt((i-mesoConfig.nelx/2-0.5)^2+(j-mesoConfig.nely/2-0.5)*2) < min(mesoConfig.nelx,mesoConfig.nely)/3
+                        %                     obj.x(j,i) = mesoConfig.totalVolume/2;
+                        %                 end
+                        for mm = 1:(1+numHolesX)
+                            for nn = 1:(1+numHolesY)
+                                midX= XholeCenters(mm);
+                                midY= YholeCenters(nn);
+
+                                d = sqrt((i-midX)^2+(j-midY)^2);
+                                if(d<radius)
+                                    obj.x(j,i)=  0.01;
+                                end
+                            end
+
+                        end
+                    end
+                end     
+            end
+        end
+        
     end % End Methods
 end % End Class DesignVars

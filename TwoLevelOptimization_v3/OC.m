@@ -1,5 +1,5 @@
 %%%%%%%%%% OPTIMALITY CRITERIA UPDATE %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-function [xnew]=OC(nelx,nely,x,volfrac,dc ,DV, config)
+function [xnew]=OC(nelx,nely,x,volfrac,dc ,DV, config,moveLimit)
 
 % Make sure that dc is negative. 
 absL =  max(max(dc));
@@ -27,7 +27,8 @@ end
 multiplier=nelx*nely;
 % end
 
-l1 = 0; l2 = 1000000; move = 0.2;
+l1 = 0; l2 = 1000000;
+move = moveLimit;
 while (l2-l1 > 1e-4)
     lmid = 0.5*(l2+l1);
     xnew = max(0.01,max(x-move,min(1.,min(x+move,x.*sqrt(-dc./lmid)))));    

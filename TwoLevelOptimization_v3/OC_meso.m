@@ -47,8 +47,8 @@ while (l2-l1 > 1e-4)
 %     xnew(xnew>config.voidMaterialDensityCutOff)=1;
 %     xnew(xnew<=config.voidMaterialDensityCutOff)=0;
     
-%     if sum(sum(xnew)) - 1*multiplier < 0;
-     if sum(sum(lmid*dc)) - 2*SumDensity > 0;
+     if sum(sum(xnew)) - 1*multiplier < 0;
+%      if sum(sum(lmid*dc)) - 2*SumDensity > 0;
         l1 = lmid;
     else
         l2 = lmid;

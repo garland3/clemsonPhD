@@ -2,7 +2,7 @@ function  MesoDesignWrapper(config,e,ne,matProp)
 
 
 macroElementProperties = GetMacroElementPropertiesFromCSV(config,e);
-disp(['Meso Design #: ' sprintf('%4i',e ) ' of ' sprintf('%4i',ne ) ...
+disp(['Meso Design #: ' sprintf('%4i',macroElementProperties.elementNumber  ) ' of ' sprintf('%4i',ne ) ...
     ' position X = '  sprintf('%4i',macroElementProperties.xPos) ' Y = ' sprintf('%4i',macroElementProperties.yPos) ...
     ' Target Density =  ' sprintf('%4i', macroElementProperties.targetDensity) ...
     ' MesoMacro Iteration =  ' sprintf('%4i', config.macro_meso_iteration) ]);
@@ -49,22 +49,25 @@ if(macroElementProperties.densitySIMP>config.noNewMesoDesignDensityCutOff)
     % ------------------------------------------------------
     % Generate the Design Vars for the Meso Optimization
     % ------------------------------------------------------
-    [DVmeso, configMeso] = GenerateDesignVarsForMesoProblem(config,e,macroElementProperties);
+    [DVmeso, configMeso] = GenerateDesignVarsForMesoProblem(config,macroElementProperties.elementNumber ,macroElementProperties);
     
     % ----------------------------------
     % Actual Meso Design. 
     % ----------------------------------
-    [DVmeso,macroElementProperties]= MesoStructureDesignV2(matProp,configMeso,DVmeso,macroElementProperties,[]);
+    [DVmeso,macroElementProperties,configMeso.totalVolume]= MesoStructureDesignV2(matProp,configMeso,DVmeso,macroElementProperties,[]);
     
    
     macroElementProperties.D_subSys  % Show the new D found by the design. 
     Diff_Sys_Sub =  (macroElementProperties.D_subSys- macroElementProperties.D_sys);
 %     Diff_Sys_Sub
     macroElementProperties.D_sys
-    determinDiff = det(Diff_Sys_Sub);
-    determinDiff
-    termByTermDivision = macroElementProperties.D_subSys./macroElementProperties.D_sys;
-    termByTermDivision
+%     determinDiff = det(Diff_Sys_Sub);
+%     determinDiff
+    SysDividedbySubSysstem = macroElementProperties.D_sys./macroElementProperties.D_subSys;
+    SysDividedbySubSysstem
+    
+%      systemDiff =  macroElementProperties.D_sys-macroElementProperties.D_subSys;
+%     systemDiff
     
     newDesign = 1;
     if(plottingMesoDesign ==1)
@@ -77,13 +80,15 @@ if(macroElementProperties.densitySIMP>config.noNewMesoDesignDensityCutOff)
         %                 outname = sprintf('meso structure sensitivity %i density %f',e, configMeso.v1);
         %                 p.PlotArrayGeneric(DVmeso.temp1,outname);
         drawnow
-        nameGraph = sprintf('./out%i/elementpicture%i.png',config.iterationNum, e);
+        nameGraph = sprintf('./out%i/elementpicture%i.png',configMeso.iterationNum, e);
         print(nameGraph,'-dpng')
     end
 else
     %D_homog_flat = zeros(1,9);
     newDesign = 0; % false
     DVmeso=[];
+    configMeso=config;
+    configMeso.totalVolume=0.1; % just set it to something. 
 end
 
-SaveMesoUnitCellDesignToCSV(DVmeso,macroElementProperties,config.iterationNum,config.macro_meso_iteration,e,newDesign);
+SaveMesoUnitCellDesignToCSV(DVmeso,macroElementProperties,configMeso,newDesign);

@@ -20,6 +20,9 @@ classdef macroElementProp
         Eyy;
         theta;
         
+        % 
+        psuedoStrain;
+        
       
         
         

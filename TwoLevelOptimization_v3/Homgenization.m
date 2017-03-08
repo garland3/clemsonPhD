@@ -1,4 +1,4 @@
-function [designVars, D_h, objective,term1Max,term2Max,lambdaMatrix,dx3]=Homgenization(designVars, config, matProp,macroElemProps,mesoLoop,oldTerm1Max,oldTerm2Max,lambdaMatrix)
+function [designVars, D_h, objective,new_muMatrix]=Homgenization(designVars, config, matProp,macroElemProps,mesoLoop,old_muMatrix,penaltyValue)
 
 % ---------------------
 % Use the wrap around FEA
@@ -35,12 +35,12 @@ matvolFraction = 1;
 %     matProp.v 1 0;
 %     0 0 1/2*(1-matProp.v)]*matProp.E_material1/(1-matProp.v^2);
 
-Dideal=zeros(3,3);
+% Dideal=zeros(3,3);
 [~, t2] = size(config.loadingCase);
-for loadcaseIndex = 1:t2
-    Dideal  = Dideal+abs(macroElemProps.strain(:,loadcaseIndex)*macroElemProps.strain(:,loadcaseIndex)'  );
-end
-Dideal=Dideal/t2;
+% for loadcaseIndex = 1:t2
+%     Dideal  = Dideal+abs(macroElemProps.strain(:,loadcaseIndex)*macroElemProps.strain(:,loadcaseIndex)'  );
+% end
+% Dideal=Dideal/t2;
 
 
 [~, ~, B_total, ~] = matProp.effectiveElasticKEmatrix_meso(matvolFraction, config,'');
@@ -51,7 +51,7 @@ for e = 1:ne
     
     [x,y]= designVars.GivenNodeNumberGetXY(e);
     % The SIMP var is added later.
-    [ke, KexpansionBar, B_total, ~] = matProp.effectiveElasticKEmatrix_meso(matvolFraction, config,strain1);
+    [ke, ~, B_total, ~] = matProp.effectiveElasticKEmatrix_meso(matvolFraction, config,strain1);
     [~, ~, ~, F_meso1] = matProp.effectiveElasticKEmatrix_meso(matvolFraction, config,strain1);
     [~, ~, ~, F_meso2] = matProp.effectiveElasticKEmatrix_meso(matvolFraction, config,strain2);
     [~, ~, ~, F_meso3] = matProp.effectiveElasticKEmatrix_meso(matvolFraction, config,strain3);
@@ -74,15 +74,15 @@ for e = 1:ne
     F2(NodeNumbers) = F2(NodeNumbers) +F_meso2* designVars.x(y,x)^config.penal;
     F3(NodeNumbers) = F3(NodeNumbers) +F_meso3* designVars.x(y,x)^config.penal;
     
-%     
-%     if(config.addThermalExpansion ==1)
-%         alpha = matProp.effectiveThermalExpansionCoefficient(designVars.w(y,x))*designVars.x(y,x)^config.penal;
-%         U_heat = designVars.U_heatColumn(nodes1,:);
-%         averageElementTemp = mean2(U_heat); % calculate the average temperature of the 4 nodes
-%         deltaTemp = averageElementTemp- config.referenceTemperature;
-%         f_temperature = alpha*deltaTemp*KexpansionBar;
-%         F1(NodeNumbers) = F1(NodeNumbers) + f_temperature;
-%     end
+    %
+    %     if(config.addThermalExpansion ==1)
+    %         alpha = matProp.effectiveThermalExpansionCoefficient(designVars.w(y,x))*designVars.x(y,x)^config.penal;
+    %         U_heat = designVars.U_heatColumn(nodes1,:);
+    %         averageElementTemp = mean2(U_heat); % calculate the average temperature of the 4 nodes
+    %         deltaTemp = averageElementTemp- config.referenceTemperature;
+    %         f_temperature = alpha*deltaTemp*KexpansionBar;
+    %         F1(NodeNumbers) = F1(NodeNumbers) + f_temperature;
+    %     end
     
 end
 
@@ -132,9 +132,10 @@ term2Max = 0;
 
 %    if(config.addConsistencyConstraints==1 &&mesoLoop>2 )
 Diff_Sys_Sub =  (macroElemProps.D_subSys- macroElemProps.D_sys);
-%           Diff_Sys_Sub = Diff_Sys_Sub/max(max(Diff_Sys_Sub)); % scale down.
+
+% Diff_Sys_Sub = Diff_Sys_Sub/max(max(Diff_Sys_Sub)); % scale down.
 %    end
-dx3 = zeros(config.nely,config.nelx);
+% dx3 = zeros(config.nely,config.nelx);
 
 % targetStrain = inv( macroElemProps.D_sys)*ones(3,1)*10;
 
@@ -165,17 +166,19 @@ for e = 1:ne
     
     D = D_base*designVars.x(y,x)^config.penal; % add the simp multipler
     D_h_element = transpose(temp3)*D*temp3;
-%       D_h_element = D*temp3;
+    %       D_h_element = D*temp3;
     D_h = D_h_element+D_h;
+    
+    A = 3/ne*transpose(temp3)*D_base*temp3;
     
     
     % Calculate the sensitivity
     D_d = D_base*config.penal*  designVars.x(y,x)^(config.penal-1);
-     dH =  transpose(temp3)*D_d*temp3;
-%     dH =  D_d*temp3;
+    dH =  transpose(temp3)*D_d*temp3;
+    %     dH =  D_d*temp3;
     
-     D_d3 = D_base*config.penal*(config.penal-1)*  designVars.x(y,x)^(config.penal-2);
-     dH3= transpose(temp3)*D_d3*temp3;
+    %      D_d3 = D_base*config.penal*(config.penal-1)*  designVars.x(y,x)^(config.penal-2);
+    %      dH3= transpose(temp3)*D_d3*temp3;
     
     
     % inverse homogenization maximize the shear stiffness
@@ -194,13 +197,13 @@ for e = 1:ne
     % mode 2 = mu term to inforce consistency (not working), the second
     % term can only contribute a fraction amount
     % mode 3 = mu and lagrangian term using augmented lagragian
-    % mode 4 = inverse homgenization while targeting properties with the
-    % mode 5 = 
-    % diff squared
+    % mode 4 = mu and lagrangian terms where using a time step
+    % mode 5 = find equavilent epsilon (strain), then maximize strain
+    % energy
     % ----------------------------------
     if(mode ==1)
-       designVars.dc(y,x) =-dH(1,1);
-   
+        designVars.dc(y,x) =-dH(1,1);
+        
     elseif(mode==2)
         % two scale optimization
         for loadcaseIndex = 1:t2
@@ -209,65 +212,80 @@ for e = 1:ne
         term1Max = max(term1Max  ,abs(designVars.dc(y,x)));
         % This might should be added in the optimal criteria section, but
         % I'm trying it here first.
-        if(config.addConsistencyConstraints==1 &&mesoLoop>2 )            
+        if(config.addConsistencyConstraints==1 &&mesoLoop>2 )
             term2 = 2*muVersion2*(Diff_Sys_Sub.*dH.*sign(Diff_Sys_Sub))*transpose(muVersion2);
-            term2Max=max(term2Max,abs(term2));            
+            term2Max=max(term2Max,abs(term2));
             term2=muTarget*term2*oldTerm1Max/oldTerm2Max;
             designVars.dc(y,x)=  designVars.dc(y,x)+term2;
         else
             term2Max=1000;
         end
     elseif(mode ==3)
-        % two scale optimization        
-        for loadcaseIndex = 1:t2
-            designVars.dc(y,x)  = -macroElemProps.strain(:,loadcaseIndex)'*dH*macroElemProps.strain(:,loadcaseIndex)+ designVars.dc(y,x)  ;
+        % Auguemented Lagrangian Multiplier optimization
+        % Solve Equation 19
+        rowIndex = [1,1,2,3];
+        columnIndex = [1,2,2,3];
+        
+        P  =0;
+        %       Ptemp=0;
+        constraintCount = 0;
+        for k = 1:4
+            i = rowIndex(k);
+            j = columnIndex(k);
+            % temp = old_muMatrix(i,j)*-dH(i,j)+2*penaltyValue*Diff_Sys_Sub(i,j)*-dH(i,j);
+            Ptemp = A(i,j)*(-old_muMatrix(i,j)-penaltyValue*Diff_Sys_Sub(i,j));
+            P =P +Ptemp;
+            constraintCount=constraintCount+1;
         end
-        term2= muTarget*ones(1,3)*(Diff_Sys_Sub.*dH)*ones(3,1);
-        term3 = -ones(1,3)*(lambdaMatrix.*dH)*ones(3,1);
-        designVars.dc(y,x) =designVars.dc(y,x) +term2+term3;
-    elseif(mode ==4)       
-
-         temp2   =-2* (macroElemProps.D_sys-macroElemProps.D_subSys ).*dH;
-
-         term1_dx3 = 2*(dH).^2;
-         term2_dx3=-2* (macroElemProps.D_sys-macroElemProps.D_subSys ).*dH3;
-%           temp3 = (temp2(1,1)+temp2(2,2)+temp2(3,3));%+temp2(1,2)+temp2(3,3));
-% temp3 = sum(sum(temp2));
-        designVars.dc(y,x)= (temp2(1,1)+temp2(2,2)+temp2(1,2)+temp2(3,3));
-        %            end
+        move = 0.1;
+        optimalEta = -2/(constraintCount*P);
+        xx=designVars.x(y,x); % =min(optimalEta, designVars.x+move)
         
-       combined_dx3 = term1_dx3+term2_dx3;
+        designVars.x(y,x) = max(0.01,max(xx-move,min(1.,min(xx+move,optimalEta))));
         
-         dx3(y,x) = (combined_dx3(1,1)+combined_dx3(2,2)+combined_dx3(1,2)+combined_dx3(3,3));
         
+        
+        
+        designVars.dc(y,x) =dH(1,1);
+        
+    elseif(mode ==4)
+       
+           designVars.d11(y,x) =dH(1,1);
+           designVars.d12(y,x) =dH(1,2);
+           designVars.d22(y,x) =dH(2,2);
+           designVars.d33(y,x) =dH(3,3);
+           
+           designVars.De11(y,x) =D_d(1,1);
+           designVars.De12(y,x) =D_d(1,2);
+           designVars.De22(y,x) =D_d(2,2);
+           designVars.De33(y,x) =D_d(1,3);
+           
+            designVars.dc(y,x) =dH(1,1)*old_muMatrix(1,1) +  dH(1,2)*old_muMatrix(1,2) ;% +  dH(2,2)*old_muMatrix(2,2)  +dH(3,3)*old_muMatrix(3,3);
     elseif(mode ==5)
-      
-       
-             temp1111=  2 * (macroElemProps.D_sys-macroElemProps.D_subSys ).*dH;
-       
-            designVars.dc(y,x)  = temp1111(1,1)+temp1111(2,2)+temp1111(1,2)+temp1111(3,3);
-       
-         term1_dx3 = 2*(dH).^2;
-         term2_dx3=-2* (macroElemProps.D_sys-macroElemProps.D_subSys ).*dH3;
-           combined_dx3 = term1_dx3+term2_dx3;
+        loadcaseIndex=1;
+          designVars.dc(y,x)  = -macroElemProps.psuedoStrain'*dH*macroElemProps.psuedoStrain;
+          tempStrain = macroElemProps.psuedoStrain;
+          tempStrain(3)=tempStrain(3)*-1;
+           designVars.dc(y,x)  = -tempStrain'*dH*tempStrain+ designVars.dc(y,x) ;
         
-         dx3(y,x) = (combined_dx3(1,1)+combined_dx3(2,2)+combined_dx3(1,2)+combined_dx3(3,3));
-        
-        
-        
-      
     end
     
 end
-D_h = D_h/ne;
 
-lambdaMatrix = lambdaMatrix-muTarget*(Dideal- macroElemProps.D_sys);
+
+%lambdaMatrix = lambdaMatrix-muTarget*(Dideal- macroElemProps.D_sys);
+
 % lambdaMatrix = lambdaMatrix-muTarget*(D_h- macroElemProps.D_sys);
-
-
+% sys =  macroElemProps.D_sys;
+D_h = D_h/ne;
+% tempDiff =sys- D_h;
+% damping = 0.05;
+% new_muMatrix=old_muMatrix+damping*penaltyValue*(tempDiff);
+new_muMatrix=old_muMatrix;
 
 % now that we have D_h, calculate the energy objective.
 for loadcaseIndex = 1:t2
+    loadcaseIndex=1;
     objective =objective+ macroElemProps.strain(:,loadcaseIndex)'*D_h*macroElemProps.strain(:,loadcaseIndex);
 end
 
@@ -283,4 +301,4 @@ end
 %  smallest = min(min(   designVars.dc));
 %     designVars.dc=    designVars.dc-largest;
 %      designVars.dc= designVars.dc*100/(abs(smallest-largest));
-designVars.dc =  designVars.dc-50000;
+%designVars.dc =  designVars.dc-50000;

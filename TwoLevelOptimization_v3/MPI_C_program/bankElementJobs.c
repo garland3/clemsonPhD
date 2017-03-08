@@ -7,9 +7,9 @@
 #define FALSE 0
 #define MASTER_RANK 0
 #define SUB_MASTER_RANK 1
-#define NUM_MACRO_MESO_ITER 5
-#define NELX_MACRO  35
-#define NELY_MACRO 35
+#define NUM_MACRO_MESO_ITER 2
+#define NELX_MACRO  39
+#define NELY_MACRO 21
 
 void callMatlab(int mode, int macro_meso_iteration, int element);
 
@@ -61,7 +61,8 @@ int main ( int argc, char **argv )
 			// ----------------------------------------------
 			// callMatlab(int mode, int macro_meso_iteration, int element)
 			printf("Master code running Macro Gradient Materail Optimization for Interation %d\n",k);
-			callMatlab(5,k, 1);
+			callMatlab(60,k, 1);
+            callMatlab(200,k, 1);
 			//sleep(1);
 			
 			
@@ -171,7 +172,7 @@ int main ( int argc, char **argv )
 				 
 				// Run matlab code for element = elementNumber
 				// callMatlab(int mode, int macro_meso_iteration, int element)
-				callMatlab(11,k, elementNumber);
+				callMatlab(100,k, elementNumber);
 				//printf("Finished Element Optimization for e = %d\n", elementNumber);
 				 
 				 MPI_Send (&okMessage, 1, MPI_INT, MASTER_RANK, elementNumber, MPI_COMM_WORLD);
@@ -194,7 +195,7 @@ int main ( int argc, char **argv )
 					// --------------------------------------------
 					printf("SUB_MASTER --> All elements done. Recombine the entire matrix");
 					// callMatlab(int mode, int macro_meso_iteration, int element)
-					callMatlab(7,k, 1);
+					callMatlab(202,k, 1);
 			   }
 			   
 			

@@ -58,7 +58,7 @@ if(config.mode<100)
     macroDesignMode=1;
 end
 
-% -------------------------
+%% -------------------------
 % Single meso design for MPI parallelization
 % -------------------------
 if ( config.mode == 100)
@@ -111,11 +111,14 @@ end
 % -------------------------------------
 if(config.mode ==202 )
     GenerateCompleteStructureV2Improved(config)
+    return;
 end
 
-video = VideoManager;
-[vidObj, framedNumber] = video.InitializeVideo( config);
-F=getframe();
+if(config.recvid==1)
+    video = VideoManager;
+    [vidObj, framedNumber] = video.InitializeVideo( config);
+    F=getframe();
+end
 
 masterloop = 0; FEACalls = 0;
 onlyplotfinal =0;
@@ -148,7 +151,7 @@ if(macroDesignMode==1)
             DV = DV.RunFEAs(config, matProp, masterloop);
             FEACalls = FEACalls+1;
             DV= DV.CalculateObjectiveValue(config, matProp, masterloop);
-              DV = DV.CalculateVolumeFractions(config, matProp) ;
+            DV = DV.CalculateVolumeFractions(config, matProp) ;
             DV.storeOptimizationVar = [DV.storeOptimizationVar;DV.c, DV.cCompliance, DV.cHeat,DV.currentVol1Fraction,DV.currentVol2Fraction,sum(sum(DV.x)), DV.targetAverageE, DV.actualAverageE];
             
             ShowOptimizerProgress(DV,1,' topology',FEACalls,config, matProp);
@@ -167,8 +170,8 @@ if(macroDesignMode==1)
             % --------------------------------
             % Run FEA, again.
             % --------------------------------
-%             DV = DV.RunFEAs(config, matProp, masterloop);
-%             FEACalls = FEACalls+1;
+            %             DV = DV.RunFEAs(config, matProp, masterloop);
+            %             FEACalls = FEACalls+1;
             DV= DV.CalculateObjectiveValue(config, matProp, masterloop);
             ShowOptimizerProgress(DV,1,' vol fraction',FEACalls,config, matProp);
             DV.storeOptimizationVar = [DV.storeOptimizationVar;DV.c, DV.cCompliance, DV.cHeat,DV.currentVol1Fraction,DV.currentVol2Fraction,sum(sum(DV.x)), DV.targetAverageE, DV.actualAverageE];
@@ -177,7 +180,7 @@ if(macroDesignMode==1)
                 break;
             end
         end % END VOLUME FRACTION OPTIMIZATION CODE
-            
+        
         % --------------------------------
         % Rotation of material Optimization
         % --------------------------------
@@ -188,8 +191,8 @@ if(macroDesignMode==1)
                 % --------------------------------
                 % Run FEA,
                 % --------------------------------
-%                 DV = DV.RunFEAs(config, matProp, masterloop);
-%                 FEACalls = FEACalls+1;
+                %                 DV = DV.RunFEAs(config, matProp, masterloop);
+                %                 FEACalls = FEACalls+1;
                 DV= DV.CalculateObjectiveValue(config, matProp, masterloop);
                 DV.storeOptimizationVar = [DV.storeOptimizationVar;DV.c, DV.cCompliance, DV.cHeat,DV.currentVol1Fraction,DV.currentVol2Fraction,sum(sum(DV.x)), DV.targetAverageE, DV.actualAverageE];
                 ShowOptimizerProgress(DV,1,' rotation',FEACalls,config, matProp);
@@ -205,16 +208,17 @@ if(macroDesignMode==1)
             % --------------------------------
             % Run FEA, calculate sensitivities
             % --------------------------------
-%             DV = DV.RunFEAs(config, matProp, masterloop);
-%             FEACalls = FEACalls+1;
+            %             DV = DV.RunFEAs(config, matProp, masterloop);
+            %             FEACalls = FEACalls+1;
             DV = DV.CalculateVolumeFractions(config, matProp) ;
             DV= DV.CalculateObjectiveValue(config, matProp, masterloop);
             DV.storeOptimizationVar = [DV.storeOptimizationVar;DV.c, DV.cCompliance, DV.cHeat,DV.currentVol1Fraction,DV.currentVol2Fraction,sum(sum(DV.x)), DV.targetAverageE, DV.actualAverageE];
             ShowOptimizerProgress(DV,1,' E_xx and E_yy ',FEACalls,config, matProp);
         end % E_xx and E_yy Optimization
         
-        
-        [framedNumber, F]  = video.RecordFrame(config,framedNumber, F,vidObj);
+        if(config.recvid==1)
+            [framedNumber, F]  = video.RecordFrame(config,framedNumber, F,vidObj);
+        end
     end % MASTER LOOP FOR MACRO LEVEL
 end % ENDIF FOR MACRO DESIGN
 
@@ -237,7 +241,9 @@ if ( config.mode <100)
             nameGraph = sprintf('./gradTopOptimization%fwithmesh%i_load%i.png', config.w1,config.macro_meso_iteration,loadcaseIndex);
             print(nameGraph,'-dpng');
             hi=  figure(1);
-            [framedNumber, F]  = video.RecordFrame(config,framedNumber, F,vidObj);
+            if(config.recvid==1)
+                [framedNumber, F]  = video.RecordFrame(config,framedNumber, F,vidObj);
+            end
             cla(hi);
             hold off
             
@@ -247,7 +253,9 @@ if ( config.mode <100)
     outname = sprintf('./out%i/storeOptimizationVarMacroLoop%i.csv',folderNum,config.macro_meso_iteration);
     csvwrite(outname,DV.storeOptimizationVar);
 end
-video.CloseVideo( config, F,vidObj)
+if(config.recvid==1)
+    video.CloseVideo( config, F,vidObj)
+end
 
 %% ---------------------------------------------
 %
@@ -269,93 +277,93 @@ end
 %         LOOP OVER MACRO ELEMENTS AND DESIGN MESO STRUCTURE = MODE 6
 %
 % ---------------------------------------------
-if(config.mode ==6 ||config.mode ==8 || config.mode ==10)
-    % the design var object is huge, so I want to garbage collect after
-    % saving the important data to disk (.csv files).
-    clear DV
-    
-    
-    %     if(config.doUseMultiElePerDV==1) % if elements per design var.
-    %         ne =  config.numVarsX*config.numVarsY;
-    %     else
-    ne = config.nelx*config.nely; % number of elements
-    %SavedDmatrix = zeros(ne,9);
-    %     end
-    
-    checkedElements = CalculateCheckedElements(ne, config);
-    allelements = 1:ne;
-    nonCheckedElements = setdiff(allelements, checkedElements);
-    
-    if(config.parallel==1)
-        % Set up parallel computing.
-        myCluster = parcluster('local');
-        myCluster.NumWorkers = config.numWorkerProcess;
-        saveProfile(myCluster);
-        myCluster
-        
-        poolobj = gcp('nocreate'); % If no pool,create new one.
-        if isempty(poolobj)
-            parpool('local', config.numWorkerProcess)
-            poolsize = config.numWorkerProcess;
-        else
-            poolsize = poolobj.NumWorkers;
-        end
-        poolsize
-        
-        % --------------------------------------------------
-        % loop over the macro elements and design a meso structure,
-        %  parallel using parfor
-        % --------------------------------------------------
-        parfor_progress(ne);
-        
-        [~,numElementsInChecked] = size(checkedElements);
-        parfor  e = 1:numElementsInChecked
-            %             checkedElements = CalculateCheckedElements(ne, config);
-            elocal = checkedElements(e);
-            configcopy = config; % need for parfor loop.
-            configcopy.useAjacentLocal = 0;
-            MesoDesignWrapper(configcopy,elocal, ne,matProp);
-            parfor_progress;
-        end
-        [~, NumElementsInnonCheckedElements ]= size(nonCheckedElements);
-        parfor  e = 1:NumElementsInnonCheckedElements
-            elocal = nonCheckedElements(e);
-            configcopy = config; % need for parfor loop.
-            configcopy.useAjacentLocal = 1;
-            MesoDesignWrapper(configcopy,elocal, ne,matProp);
-            parfor_progress;
-        end
-        parfor_progress(0);
-        
-    else
-        % --------------------------------------------------
-        % loop over the macro elements and design a meso structure,
-        % no parallel
-        % --------------------------------------------------
-        
-        if(config.singleMesoDesign~= 1)
-            config.mesoplotfrequency = 50;
-            for  e = checkedElements
-                configcopy = config; % need for parfor loop.
-                configcopy.useAjacentLocal = 0;
-                MesoDesignWrapper(configcopy,e, ne,matProp);
-            end
-            
-            config.mesoplotfrequency = 50;
-            for  e = nonCheckedElements
-                configcopy = config; % need for parfor loop.
-                configcopy.useAjacentLocal = 1;
-                MesoDesignWrapper(configcopy,e, ne,matProp);
-            end
-        end
-        
-        if(config.singleMesoDesign == 1)
-            SingleMesoStuctureWrappe(config, ne,matProp);
-        end
-        
-    end % end parallel
-    clear DVMeso
-end
+% if(config.mode ==6 ||config.mode ==8 || config.mode ==10)
+%     % the design var object is huge, so I want to garbage collect after
+%     % saving the important data to disk (.csv files).
+%     clear DV
+%
+%
+%     %     if(config.doUseMultiElePerDV==1) % if elements per design var.
+%     %         ne =  config.numVarsX*config.numVarsY;
+%     %     else
+%     ne = config.nelx*config.nely; % number of elements
+%     %SavedDmatrix = zeros(ne,9);
+%     %     end
+%
+%     checkedElements = CalculateCheckedElements(ne, config);
+%     allelements = 1:ne;
+%     nonCheckedElements = setdiff(allelements, checkedElements);
+%
+%     if(config.parallel==1)
+%         % Set up parallel computing.
+%         myCluster = parcluster('local');
+%         myCluster.NumWorkers = config.numWorkerProcess;
+%         saveProfile(myCluster);
+%         myCluster
+%
+%         poolobj = gcp('nocreate'); % If no pool,create new one.
+%         if isempty(poolobj)
+%             parpool('local', config.numWorkerProcess)
+%             poolsize = config.numWorkerProcess;
+%         else
+%             poolsize = poolobj.NumWorkers;
+%         end
+%         poolsize
+%
+%         % --------------------------------------------------
+%         % loop over the macro elements and design a meso structure,
+%         %  parallel using parfor
+%         % --------------------------------------------------
+%         parfor_progress(ne);
+%
+%         [~,numElementsInChecked] = size(checkedElements);
+%         parfor  e = 1:numElementsInChecked
+%             %             checkedElements = CalculateCheckedElements(ne, config);
+%             elocal = checkedElements(e);
+%             configcopy = config; % need for parfor loop.
+%             configcopy.useAjacentLocal = 0;
+%             MesoDesignWrapper(configcopy,elocal, ne,matProp);
+%             parfor_progress;
+%         end
+%         [~, NumElementsInnonCheckedElements ]= size(nonCheckedElements);
+%         parfor  e = 1:NumElementsInnonCheckedElements
+%             elocal = nonCheckedElements(e);
+%             configcopy = config; % need for parfor loop.
+%             configcopy.useAjacentLocal = 1;
+%             MesoDesignWrapper(configcopy,elocal, ne,matProp);
+%             parfor_progress;
+%         end
+%         parfor_progress(0);
+%
+%     else
+%         % --------------------------------------------------
+%         % loop over the macro elements and design a meso structure,
+%         % no parallel
+%         % --------------------------------------------------
+%
+%         if(config.singleMesoDesign~= 1)
+%             config.mesoplotfrequency = 50;
+%             for  e = checkedElements
+%                 configcopy = config; % need for parfor loop.
+%                 configcopy.useAjacentLocal = 0;
+%                 MesoDesignWrapper(configcopy,e, ne,matProp);
+%             end
+%
+%             config.mesoplotfrequency = 50;
+%             for  e = nonCheckedElements
+%                 configcopy = config; % need for parfor loop.
+%                 configcopy.useAjacentLocal = 1;
+%                 MesoDesignWrapper(configcopy,e, ne,matProp);
+%             end
+%         end
+%
+%         if(config.singleMesoDesign == 1)
+%             SingleMesoStuctureWrappe(config, ne,matProp);
+%         end
+%
+%     end % end parallel
+%     clear DVMeso
+% end
 
 
 
@@ -431,7 +439,9 @@ p = plotResults;
 
 temp = config.mesoAddAdjcentCellBoundaries;
 config.mesoAddAdjcentCellBoundaries=0;
-[DVMeso, mesoconfig] = GenerateDesignVarsForMesoProblem(config,1);
+macroElementProps = macroElementProp;
+macroElementProps.targetDensity=0.5; % make up some value for now. 
+[DVMeso, mesoconfig] = GenerateDesignVarsForMesoProblem(config,1,macroElementProps);
 config.mesoAddAdjcentCellBoundaries=temp;
 
 mesoconfig.doUseMultiElePerDV =config.doUseMultiElePerDV;
@@ -450,14 +460,14 @@ ne = config.nelx*config.nely; % number of elements
 % Get the density field
 %--------------------------------------------
 macro_meso_iteration = config.macro_meso_iteration;
-macroElementProps = macroElementProp;
+%macroElementProps = macroElementProp;
 % macroElementProps.elementNumber = e;
 folderNum = config.iterationNum;
 % GET the saved element to XY position map (needed for x and w vars retrival)
 outname = sprintf('./out%i/elementXYposition%i.csv',folderNum,macro_meso_iteration);
 elementXYposition=csvread(outname);
 % Get the density field
-outname = sprintf('./out%i/densityfield%i.csv',folderNum,macro_meso_iteration);
+outname = sprintf('./out%i/SIMPdensityfield%i.csv',folderNum,macro_meso_iteration);
 xxx = csvread(outname);
 
 
@@ -467,20 +477,20 @@ for e = 1:ne
     fprintf('element %i of %i\n',e,ne);
     macroElementProps.elementNumber=e;
     results = elementXYposition(macroElementProps.elementNumber,:);
-    macroElementProps.yPosition = results(1);
-    macroElementProps.xPosition = results(2);
-    macroElementProps.density = xxx(macroElementProps.yPosition,macroElementProps.xPosition );
+    macroElementProps.yPos = results(1);
+    macroElementProps.xPos = results(2);
+    macroElementProps.densitySIMP = xxx(macroElementProps.yPos,macroElementProps.xPos );
     
     % Check if void
-    if(macroElementProps.density>config.voidMaterialDensityCutOff)
+    if(macroElementProps.densitySIMP>config.voidMaterialDensityCutOff)
         x=GetMesoUnitCellDesignFromCSV(config,e);
         DVMeso.x = x;
         % -------------------------------------
         % No, post processing
         % -------------------------------------
         if(postProcess~=1)
-            yShift = (macroElementProps.yPosition-1)*mesoconfig.nely*numTilesY+1;
-            xShift = (macroElementProps.xPosition-1)*mesoconfig.nelx*numTilesX+1;
+            yShift = (macroElementProps.yPos-1)*mesoconfig.nely*numTilesY+1;
+            xShift = (macroElementProps.xPos-1)*mesoconfig.nelx*numTilesX+1;
             DVMeso=TileMesoStructure(mesoconfig, DVMeso);
             completeStruct(yShift:(yShift+mesoconfig.nely*numTilesY-1),xShift:(xShift+mesoconfig.nelx*numTilesX-1))=DVMeso.xTile;
         else
@@ -501,12 +511,12 @@ if(postProcess==1)
         fprintf('step 2element %i of %i\n',e,ne);
         macroElementProps.elementNumber=e;
         results = elementXYposition(macroElementProps.elementNumber,:);
-        macroElementProps.yPosition = results(1);
-        macroElementProps.xPosition = results(2);
-        macroElementProps.density = xxx(macroElementProps.yPosition,macroElementProps.xPosition );
+        macroElementProps.yPos = results(1);
+        macroElementProps.xPos = results(2);
+        macroElementProps.densitySIMP = xxx(macroElementProps.yPos,macroElementProps.xPos );
         
         % Check if void
-        %if(macroElementProps.density>config.voidMaterialDensityCutOff)
+        %if(macroElementProps.densitySIMP>config.voidMaterialDensityCutOff)
         step = 2;
         completeStruct= TileMesoStructureV2(mesoconfig,config, DVMeso,macroElementProps,xxx,completeStruct,step);
         %end

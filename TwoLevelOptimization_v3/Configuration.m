@@ -58,7 +58,7 @@ classdef Configuration
         penal = 3.0; % penality used for the SIMP method
         rmin = 2; % smoothing radius for sensitivity smoothing.
         voidMaterialDensityCutOff = 0.3; % everything below this density is considered void.
-        noNewMesoDesignDensityCutOff = 0.15; % any densities below this will not be redesigned. Having a different value than voidMaterialDensityCutOft helps stabalize the algorithm on the structure edges.
+        noNewMesoDesignDensityCutOff = 0.28; % any densities below this will not be redesigned. Having a different value than voidMaterialDensityCutOft helps stabalize the algorithm on the structure edges.
         
         
         % VOLUME Fraction SEttings.
@@ -71,7 +71,7 @@ classdef Configuration
         
         % Plotting information
         plotSensitivityWhilerunning = 0;
-        mesoplotfrequency=1; % how often to plot the meso level design.
+        mesoplotfrequency=100; % how often to plot the meso level design.
         iterationsPerPlot = 5;
         doPlotVolFractionDesignVar = 0;
         doPlotTopologyDesignVar = 0;
@@ -98,7 +98,10 @@ classdef Configuration
         iterationNum=0; %  used for parallel computing.
         maxFEACalls = 50;
         maxMasterLoops = 30;
-        maxMesoLoops = 50;
+        maxMesoLoops = 100;
+        maxNumPseudoStrainLoop=6
+        PseudoStrainEndCriteria = 0.1;
+        
         terminationAverageCount = 5; % the average change over this number of iterations must be below the termination criteria
         terminationCriteria = 0.001; % if the normalized average change over  terminationAverageCount of iterations is below this value then termainted. ie. 1% change
         % not much faster.
@@ -193,12 +196,12 @@ classdef Configuration
                 % -------------------
                 obj.nelx = 39;
                 obj.nely = 21;
-                obj.nelxMeso = 35; %35;
-                obj.nelyMeso =35; %35;
+                obj.nelxMeso = 25; %35;
+                obj.nelyMeso =25; %35;
                 obj.terminationAverageCount = 10;
                 obj.terminationCriteria =0.001; % 0.0%
-                obj.maxFEACalls = 100;
-                obj.maxMasterLoops = 50;
+                obj.maxFEACalls = 40;
+                obj.maxMasterLoops = 40;
                 
             end
             
