@@ -262,11 +262,11 @@ for e = 1:ne
            
             designVars.dc(y,x) =dH(1,1)*old_muMatrix(1,1) +  dH(1,2)*old_muMatrix(1,2) ;% +  dH(2,2)*old_muMatrix(2,2)  +dH(3,3)*old_muMatrix(3,3);
     elseif(mode ==5)
-        loadcaseIndex=1;
+%         loadcaseIndex=1;
           designVars.dc(y,x)  = -macroElemProps.psuedoStrain'*dH*macroElemProps.psuedoStrain;
-          tempStrain = macroElemProps.psuedoStrain;
-          tempStrain(3)=tempStrain(3)*-1;
-           designVars.dc(y,x)  = -tempStrain'*dH*tempStrain+ designVars.dc(y,x) ;
+%           tempStrain = macroElemProps.psuedoStrain;
+%           tempStrain(3)=tempStrain(3)*-1;
+%            designVars.dc(y,x)  = -tempStrain'*dH*tempStrain+ designVars.dc(y,x) ;
         
     end
     

@@ -21,6 +21,18 @@ csvwrite(outname,uout);
 outname = sprintf('./out%i/SIMPdensityfield%i.csv',folderNum,mm_iteration);
 csvwrite(outname,designVars.x);
 
+% save the Exx field
+outname = sprintf('./out%i/ExxValues%i.csv',folderNum,mm_iteration);
+csvwrite(outname,designVars.Exx);
+
+% save the Eyy field
+outname = sprintf('./out%i/EyyValues%i.csv',folderNum,mm_iteration);
+csvwrite(outname,designVars.Eyy);
+
+% save the Theta field
+outname = sprintf('./out%i/ThetaValues%i.csv',folderNum,mm_iteration);
+csvwrite(outname,designVars.t);
+
 
 % save the volume fraction field (only if using the old methodd)
 if(config.useExxEyy~=1)
@@ -62,6 +74,7 @@ for e = 1:ne
     
     
    x=   designVars.x(yPosition,xPosition);
+%      x=   1;
    Exx=   designVars.Exx(yPosition,xPosition);
    Eyy=   designVars.Eyy(yPosition,xPosition);
    w=   designVars.w(yPosition,xPosition);

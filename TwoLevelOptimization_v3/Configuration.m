@@ -78,19 +78,24 @@ classdef Configuration
         doPlotHeat = 0;
         doPlotHeatSensitivityTopology = 0;
         doPlotStress = 0;
-        doPlotFinal =1;
+         doPlotFinal =1;
         doPlotMetrics = 0;
         doSaveDesignVarsToCSVFile = 0; % set to 1 to write plotFinal csv file instead
         doPlotAppliedStrain = 0; % For debugging only
-%         doPlotOrthDistributionVar=0;
+        doPlotOrthDistributionVar=0;
         doPlotExx= 0  ;
         doPlotEyy =  0 ;
-        doPlotEyyExxArrows =1;
+         doPlotEyyExxArrows =0;
         doPlotElasticSensitivity =  0  ;
         doPlotRotationValue =0;
+        
+        % Exx ,Eyy , Theta (and Rho) Plot Data
         doPlotCombinedExxEyyAndRotation = 1;
+        doIncludeRho =1;
+        %-----------------
+        
         recvid = 0; % record video
-        maximizePlots = 0;
+        maximizePlots = 1;
         
         % ----------------
         % Computational settings

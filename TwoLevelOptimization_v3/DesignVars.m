@@ -965,6 +965,24 @@ classdef DesignVars
             end
         end
         
+        %  -----------------------------------
+        % Flip Exx and Eyy so that theta is always positive
+        % %  -----------------------------------
+          function [obj]=FlipOrientation(obj,config)
+           
+            for i = 1:config.nelx
+                for j = 1:config.nely
+                    if(obj.t(j,i)<0)
+                           temp1=obj.Exx(j,i);
+                           obj.Exx(j,i)=obj.Eyy(j,i);
+                         obj.Eyy(j,i)=temp1;
+                         obj.t(j,i)=obj.t(j,i)+pi/2;
+                        
+                    end               
+                end
+            end
+        end
+        
         
          
         % -----------------------------
@@ -974,7 +992,7 @@ classdef DesignVars
         % Several methods exist. 
         % -----------------------------
         function [obj]= GenerateStartingMesoDesign(obj,mesoConfig,macroElementProperties)
-            method =2;
+            method =4;
            
             if(method ==1)
                 obj.x(1:mesoConfig.nely,1:mesoConfig.nelx) = mesoConfig.totalVolume; % artificial density of the elements

@@ -1,21 +1,21 @@
 function main()
 clear
 % 
-%     combinedTopologyOptimization('1', '1', '1','60', 'na');
+%           combinedTopologyOptimization('1', '1', '1','60', 'na');
 %     combinedTopologyOptimization('1', '1', '1','200', 'na');
 
     
- combinedTopologyOptimization('1', '1', '1','202', 'na');
-
+%  combinedTopologyOptimization('1', '1', '1','202', 'na'); % make complete macro-meso  structure
+      combinedTopologyOptimization('1', '1', '1','203', 'na'); % make Exx, Eyy, rho plot
  
 % test meso design for element 1, macro iteration 1
 %  combinedTopologyOptimization('1', '1', '1','100', '781');
 % combinedTopologyOptimization('1', '1', '1','100', '191');
 %   combinedTopologyOptimization('1', '1', '1','100', '2');
 %     combinedTopologyOptimization('1', '1', '1','100', '252');
-%       combinedTopologyOptimization('1', '1', '1','100', '721');
+%        combinedTopologyOptimization('1', '1', '1','100', '721');
  
- 
+%    combinedTopologyOptimization('1', '1', '1','100', '2');
 
 % numloops = 5;
 % for i =1:numloops

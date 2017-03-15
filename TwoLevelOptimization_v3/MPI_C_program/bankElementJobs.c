@@ -7,7 +7,7 @@
 #define FALSE 0
 #define MASTER_RANK 0
 #define SUB_MASTER_RANK 1
-#define NUM_MACRO_MESO_ITER 2
+#define NUM_MACRO_MESO_ITER 1
 #define NELX_MACRO  39
 #define NELY_MACRO 21
 

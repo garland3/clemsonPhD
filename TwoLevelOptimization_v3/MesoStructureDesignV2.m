@@ -17,6 +17,7 @@ macroElemProps.strain = macroElemProps.B* transpose(macroElemProps.disp); % tran
 shearStrainSum= sum(macroElemProps.strain(3,:));
 
 verboseOutput =0;
+%  doPlot=1;
 
 
 shearSign = 1;
@@ -142,7 +143,7 @@ for mm = 1:mesoConfig.maxNumPseudoStrainLoop
               if(verboseOutput==1)
           fprintf('%f \t%f \t %f and density %f, sumDiff %f\n',pstrain(1),pstrain(2),pstrain(3),      mesoConfig.totalVolume,sumOfDiffX);
               end
-          changeLimit = mesoConfig.nelx*mesoConfig.nely*0.005;
+          changeLimit = mesoConfig.nelx*mesoConfig.nely*0.003;
         if(sumOfDiffX<changeLimit)
              if(verboseOutput==1)
               fprintf('Break in Meso design. X values are not changing. \n');

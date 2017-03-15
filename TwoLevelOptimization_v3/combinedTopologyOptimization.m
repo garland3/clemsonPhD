@@ -33,6 +33,8 @@ config.mode =65;
 % 200, Plot the objectives and constraints over several iteraions
 % 201, make an .stl file for an iteration.
 % 202, Combine meso and Macro designs into a single plot and csv file.
+% 203, Make a plot of rho as a function of the Exx and Eyy found by meso
+% level optimization. 
 
 
 % 3 = both mateiral vol fraction and topology, ortho, rotation
@@ -109,10 +111,16 @@ end
 % Loop over the elements and get the design fields, and make one
 % huge array showing the actual shape of the structure, tile the
 % -------------------------------------
-if(config.mode ==202 )
+if(config.mode ==202)
     GenerateCompleteStructureV2Improved(config)
     return;
 end
+
+if(config.mode ==203)
+    GenerateRhoFunctionOfExxEyy(config)
+    return;
+end
+
 
 if(config.recvid==1)
     video = VideoManager;
@@ -188,6 +196,7 @@ if(macroDesignMode==1)
             if ( config.mode==4 || config.mode ==55 || config.mode == 60)
                 
                 DV = opt.OptimizeRotation(DV, config, matProp,masterloop);
+              
                 % --------------------------------
                 % Run FEA,
                 % --------------------------------
@@ -196,6 +205,7 @@ if(macroDesignMode==1)
                 DV= DV.CalculateObjectiveValue(config, matProp, masterloop);
                 DV.storeOptimizationVar = [DV.storeOptimizationVar;DV.c, DV.cCompliance, DV.cHeat,DV.currentVol1Fraction,DV.currentVol2Fraction,sum(sum(DV.x)), DV.targetAverageE, DV.actualAverageE];
                 ShowOptimizerProgress(DV,1,' rotation',FEACalls,config, matProp);
+               
                 
             end %END ORTHOGONAL MATERIAL DISTRIBUTION OPTIMZATION
         end
@@ -220,6 +230,14 @@ if(macroDesignMode==1)
             [framedNumber, F]  = video.RecordFrame(config,framedNumber, F,vidObj);
         end
     end % MASTER LOOP FOR MACRO LEVEL
+    
+    % Flip orientation of Exx and Eyy so that theta is positive
+    if(config.useRotation ==1)
+            if ( config.mode==4 || config.mode ==55 || config.mode == 60)
+                 DV = DV.FlipOrientation(config);
+            end
+    end
+    
 end % ENDIF FOR MACRO DESIGN
 
 
@@ -237,7 +255,7 @@ if ( config.mode <100)
             p = plotResults;
             p.plotTopAndFraction(DV, config, matProp,FEACalls ); % plot the results.
             hold on
-            p.plotStrainField(config,DV,folderNum,loadcaseIndex)
+%             p.plotStrainField(config,DV,folderNum,loadcaseIndex)
             nameGraph = sprintf('./gradTopOptimization%fwithmesh%i_load%i.png', config.w1,config.macro_meso_iteration,loadcaseIndex);
             print(nameGraph,'-dpng');
             hi=  figure(1);

@@ -94,7 +94,7 @@ classdef plotResults
             %  ----------------------------
             if(config.doPlotCombinedExxEyyAndRotation ==1)
                 subplot(plotDim1,plotDim2,plotcount); plotcount = plotcount + 1;
-                obj.doPlotCombinedExxEyyAndRotation(DV, config, loopNumb);
+                obj.doPlotCombinedExxEyyAndRotation(DV, config, loopNumb,config.doIncludeRho);
             end
             
             %  ----------------------------
@@ -330,7 +330,7 @@ classdef plotResults
         % Plot the ROTATION VAR and the Exx and Eyy as two arrows
         % representing the Exx and Eyy rotated.
         % -------------------------------------
-        function doPlotCombinedExxEyyAndRotation(obj, DV, config, loopNumb)
+        function doPlotCombinedExxEyyAndRotation(obj, DV, config, loopNumb,scaleByRho)
             
             dx1=DV.Exx.*cos(DV.t);%-DV.Eyy.*sin(DV.t);
             dy1=DV.Exx.*sin(DV.t);%+DV.Eyy.*cos(DV.t);
@@ -338,7 +338,17 @@ classdef plotResults
             dx2=DV.Eyy.*cos(DV.t+pi/2);%-DV.Eyy.*sin(DV.t);
             dy2=DV.Eyy.*sin(DV.t+pi/2);%+DV.Eyy.*cos(DV.t);
             
-            titleText = 'Exx and Eyy and Rotation of Material, Red = Exx,Green = Eyy' ;
+            if(scaleByRho==1)
+                dx1=dx1.*DV.x;
+                dy1=dy1.*DV.x;
+                dx2=dx2.*DV.x;
+                dy2=dy2.*DV.x;
+               titleText = 'Rho, Exx, Eyy, Theta of Material, Red = Exx,Green = Eyy' ;
+            else
+                 titleText = 'Exx and Eyy and Rotation of Material, Red = Exx,Green = Eyy' ;
+            end
+            
+           
             [X,Y] = meshgrid(1:config.nelx,1:config.nely);
             
             
