@@ -74,7 +74,7 @@ for e = 1:ne %ne:-1:1
         
         
         outname = sprintf('./out%i/Dmatrix_%i_forElement_%i.csv',folderNum,macro_meso_iteration,elementNumber);
-%         outname = sprintf('./out%i/DsystemIter%i_Element_%i.csv',folderNum,macro_meso_iteration,elementNumber);
+        outname = sprintf('./out%i/DsystemIter%i_Element_%i.csv',folderNum,macro_meso_iteration,elementNumber);
         Din = csvread(outname);
         
             Dcalculated= matProp.getDmatMatrixTopExxYyyRotVars(config, macroElementProps.densitySIMP,ActualExx, ActualEyy,ActualThetaValue,1);

@@ -7,6 +7,7 @@
 #define FALSE 0
 #define MASTER_RANK 0
 #define SUB_MASTER_RANK 1
+#define SUB_SUB_MASTER_RANK 2
 #define NUM_MACRO_MESO_ITER 1
 #define NELX_MACRO  39
 #define NELY_MACRO 21
@@ -32,6 +33,7 @@ int main ( int argc, char **argv )
    // broad cast (which will force everyone to wait)
    // Begin sending out jobs untill finished
    // run the combine together version of the matlab code. 
+   // Get the Exx, eyy, theta values extracted from the D_h sub systems
    
    MPI_Init(&argc, &argv);
    MPI_Comm_size(MPI_COMM_WORLD, &pool_size);
@@ -126,14 +128,23 @@ int main ( int argc, char **argv )
 				 }
 			  }
 			  
-			    // --------------------------------------------
-				// 4. MOved to SubMaster Process
-				// run the code to combine everything together
-				//
+			   
 				// Still need to wait, since all process must reach barrier
 				// --------------------------------------------
 			
 				 MPI_Barrier(MPI_COMM_WORLD); // force all to wait till all elements are finished
+                 
+                 // --------------------------------------------
+				// 4. MOved to SubMaster Process
+				// run the code to combine everything together
+				// --------------------
+                
+                
+                // --------------------------------------------
+				// 5. Get all the Exx, Eyy, theta values from the D_sub matrixes. Save all in csv files. 
+				// --------------------------------------------
+				printf("MASTER --> Get all the Exx, Eyy, theta values from the D_sub matrixes");			
+				callMatlab(203,k, 1);               
 			  	
 			  
 		 }
@@ -197,6 +208,8 @@ int main ( int argc, char **argv )
 					// callMatlab(int mode, int macro_meso_iteration, int element)
 					callMatlab(202,k, 1);
 			   }
+               
+             
 			   
 			
 		}

@@ -33,8 +33,7 @@ config.mode =65;
 % 200, Plot the objectives and constraints over several iteraions
 % 201, make an .stl file for an iteration.
 % 202, Combine meso and Macro designs into a single plot and csv file.
-% 203, Make a plot of rho as a function of the Exx and Eyy found by meso
-% level optimization. 
+% 203, Extract the Exx, Eyy, Theta, and density values from the meso D matrixes. 
 
 
 % 3 = both mateiral vol fraction and topology, ortho, rotation
@@ -116,6 +115,10 @@ if(config.mode ==202)
     return;
 end
 
+%% -------------------------------
+% Mode 203
+% Extract the Exx, Eyy, Theta, and density values from the meso D matrixes
+% -------------------------------
 if(config.mode ==203)
     GenerateRhoFunctionOfExxEyy(config)
     return;
@@ -249,13 +252,20 @@ end % ENDIF FOR MACRO DESIGN
 if ( config.mode <100)
     folderNum = config.iterationNum;
     if(1==1)
+        p = plotResults;
+        
+        % Plot without the displacement Mesh
+         p.plotTopAndFraction(DV, config, matProp,FEACalls ); % plot the results.
+         nameGraph = sprintf('./gradTopOptimization%fNOhmesh%i.png', config.w1,config.macro_meso_iteration);
+         print(nameGraph,'-dpng');
+         hi=  figure(1);
+         cla(hi);
+          % Plot WITH the displacement Mesh
         [~, t2] = size(config.loadingCase);
-        for loadcaseIndex = 1:t2
-            %   loadcase = config.loadingCase(loadcaseIndex);
-            p = plotResults;
+        for loadcaseIndex = 1:t2               
             p.plotTopAndFraction(DV, config, matProp,FEACalls ); % plot the results.
             hold on
-%             p.plotStrainField(config,DV,folderNum,loadcaseIndex)
+            p.plotStrainField(config,DV,folderNum,loadcaseIndex)
             nameGraph = sprintf('./gradTopOptimization%fwithmesh%i_load%i.png', config.w1,config.macro_meso_iteration,loadcaseIndex);
             print(nameGraph,'-dpng');
             hi=  figure(1);

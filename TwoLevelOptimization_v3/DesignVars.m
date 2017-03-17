@@ -11,6 +11,14 @@ classdef DesignVars
         Eyy; % the Exx of the orthogonal material
         t; %theta, the rotation of the orthogonal material
         
+        % Sub System Copies of design Vars and Lagrangian Multipliers
+        lambdaExx; % lambda for the Exx
+        lambdaEyy; % lambda for the Eyy
+        penaltyExxEyy; % penality value used for the Exx and Eyy Augmented Lagrangian Multiplier
+        ExxSub; % Sub system copies of design var
+        EyySub; % Sub system copies of design var
+        thetaSub; % Sub system copies of design var
+        
         % Optimization vars
         lambda1 = 0;
         mu1 = 1;
