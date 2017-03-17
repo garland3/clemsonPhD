@@ -266,27 +266,43 @@ else
     print(nameGraph,'-dpng');
 end
 % 
-%  p = plotResults;
-% diffExx = ExxMacro- DV.Exx;
-% diffEyy = EyyMacro- DV.Eyy;
-% diffTheta = ThetaMacro- DV.t;
-% 
-% 
-% relativeErrorExx=diffExx./ExxMacro;
-% relativeErrorEyy=diffEyy./EyyMacro;
-% relativeErrorTheta=diffTheta./ThetaMacro;
+ p = plotResults;
+diffExx = ExxMacro- DV.Exx;
+diffEyy = EyyMacro- DV.Eyy;
+diffTheta = ThetaMacro- DV.t;
+
+
+relativeErrorExx=diffExx./ExxMacro;
+relativeErrorEyy=diffEyy./EyyMacro;
+relativeErrorTheta=diffTheta./ThetaMacro;
+
+
+% make the range -1 to 1
+relativeErrorExx(relativeErrorExx>1)=1;
+relativeErrorExx(relativeErrorExx<-1)=-1;
+
+relativeErrorEyy(relativeErrorEyy>1)=1;
+relativeErrorEyy(relativeErrorEyy<-1)=-1;
+
+relativeErrorTheta(relativeErrorTheta>1)=1;
+relativeErrorTheta(relativeErrorTheta<-1)=-1;
+
 % figure
 % p.PlotArrayGeneric( diffExx, 'diffExx')
 % figure
 % p.PlotArrayGeneric( diffEyy, 'diffEyy')
 % figure
 % p.PlotArrayGeneric( diffTheta, 'diffTheta')
-% figure
-% p.PlotArrayGeneric(100* relativeErrorExx, 'Percent Error Exx')
-% figure
-% p.PlotArrayGeneric( 100*relativeErrorEyy, 'Perecent Error Eyy')
-% figure
-% p.PlotArrayGeneric(100* relativeErrorTheta, 'Percent Error Theta')
+
+figure
+subplot(2,2,1)
+p.PlotArrayGeneric(100* relativeErrorExx, 'Percent Error Exx')
+subplot(2,2,2)
+p.PlotArrayGeneric( 100*relativeErrorEyy, 'Perecent Error Eyy')
+subplot(2,2,3)
+p.PlotArrayGeneric(100* relativeErrorTheta, 'Percent Error Theta')
+nameGraph = sprintf('./MesoDesignExxEyyThetaVarsPercentError%i.png', config.macro_meso_iteration);
+print(nameGraph,'-dpng');
 
 
 

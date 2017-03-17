@@ -25,7 +25,9 @@ classdef Configuration
         w2 = 0;
         
         % For ATC optimization
-        addConsistencyConstraints=1;      
+        addConsistencyConstraints=1;
+        penalityEyy;
+        penalityExx;
         
         % Modeling settings
         referenceTemperature = 0; % for thermal expansion, assume that there is not strain when at this temperature.
@@ -231,7 +233,12 @@ classdef Configuration
             obj.w2  = 1- obj.w1; % weight heat transfer
             obj.totalVolume = obj.v1+obj.v2;
             
-        
+           if(obj. addConsistencyConstraints==1)
+             %   muSequence=[0.05 0.2 0.5 1 2 3 4 5 6 ]; % As a 
+                muTarget =obj. muSequence(  obj.macro_meso_iteration);
+                middleValue = sqrt(muTarget/3);
+                obj.muVector=[middleValue middleValue middleValue];
+           end
         end
         
         

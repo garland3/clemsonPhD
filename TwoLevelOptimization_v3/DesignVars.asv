@@ -336,23 +336,21 @@ classdef DesignVars
                  obj.lambdaTheta(yPos,xPos)=   obj.lambdaTheta(yPos,xPos)+obj.penaltyTheta(yPos,xPos) *diffTheta(yPos,xPos);
              end
              
-             if 1==2
-                 p = plotResults;
-                 figure
-                 subplot(2,3,1)
-                 p.PlotArrayGeneric( obj.penaltyExx, ' obj.penaltyExx')
-                 subplot(2,3,2)
-                 p.PlotArrayGeneric( obj.penaltyEyy, ' obj.penaltyEyy')
-                 subplot(2,3,3)
-                 p.PlotArrayGeneric( obj.penaltyTheta, ' obj.penaltyTheta')
-                 
+             p = plotResults;
+             figure
+             subplot(2,3,1)
+             p.PlotArrayGeneric( obj.penaltyExx, ' obj.penaltyExx')
+             subplot(2,3,2)
+             p.PlotArrayGeneric( obj.penaltyEyy, ' obj.penaltyEyy')
+              subplot(2,3,3)
+             p.PlotArrayGeneric( obj.penaltyTheta, ' obj.penaltyTheta')
+             
                  subplot(2,3,4)
-                 p.PlotArrayGeneric( obj.lambdaExx, ' obj.lambdaExx')
-                 subplot(2,3,5)
-                 p.PlotArrayGeneric( obj.lambdaEyy, ' obj.lambdaEyy')
-                 subplot(2,3,6)
-                 p.PlotArrayGeneric( obj.lambdaTheta, ' obj.lambdaTheta')
-             end
+             p.PlotArrayGeneric( obj.lambdaExx, ' obj.lambdaExx')
+                  subplot(2,3,5)
+             p.PlotArrayGeneric( obj.lambdaEyy, ' obj.lambdaEyy')
+                subplot(2,3,6)
+             p.PlotArrayGeneric( obj.lambdaEyy, ' obj.lambdaEyy')
         end
         
         

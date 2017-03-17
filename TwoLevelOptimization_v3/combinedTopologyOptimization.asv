@@ -140,12 +140,10 @@ DV = DesignVars(config);
 DV.Exx = DV.Exx*config.v1*matProp.E_material1+config.v2*matProp.E_material2;
 DV.Eyy = DV.Exx ;
 
-% if iteration 2 or higher, then get saved problems state and calcualte
-% penalty function valeus. 
- if (49<config.mode && config.mode <100  )
-    DV=DV.GetMacroStateVarsFromCSVFiles( config);
-    DV=DV.UpdatePenaltyAndLagrangianValues( config,matProp);
-end
+% if iteration 2 or higher, then
+ if (config.mode ==60)
+       DV=DV.GetMacroStateVarsFromCSVFiles( config);
+ end
 
 % --------------------------------
 % Run FEA, to get started.

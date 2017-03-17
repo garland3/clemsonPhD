@@ -101,24 +101,10 @@ if(mm_iteration>1)
     outname = sprintf('./out%i/lambdaExx%i.csv',folderNum,mm_iteration);
     csvwrite(outname,designVars.lambdaExx);
     
-    % save the lambdaEyy field
+     % save the lambdaEyy field
     outname = sprintf('./out%i/lambdaEyy%i.csv',folderNum,mm_iteration);
     csvwrite(outname,designVars.lambdaEyy);
     
-    % save the lambdaTheta field
-    outname = sprintf('./out%i/lambdaTheta%i.csv',folderNum,mm_iteration);
-    csvwrite(outname,designVars.lambdaTheta);
     
-    % save the penaltyExx field
-    outname = sprintf('./out%i/penaltyExx%i.csv',folderNum,mm_iteration);
-    csvwrite(outname,designVars.penaltyExx);
-    
-    % save the penaltyEyy field
-    outname = sprintf('./out%i/penaltyEyy%i.csv',folderNum,mm_iteration);
-    csvwrite(outname,designVars.penaltyEyy);
-    
-    % save the penaltyTheta field
-    outname = sprintf('./out%i/penaltyTheta%i.csv',folderNum,mm_iteration);
-    csvwrite(outname,designVars.penaltyTheta);
     
 end
