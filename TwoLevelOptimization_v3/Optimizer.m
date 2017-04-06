@@ -91,9 +91,7 @@ classdef Optimizer
         % ROTATION OPTIMIZATION
         % ----------------------------------
         function DV = OptimizeRotation(obj,DV,config, matProp, masterloop)
-            %                 move= 0.1* 20/(20+masterloop);
-            
-            
+            %                 move= 0.1* 20/(20+masterloop);    
             % allow multiple loading cases.
             [~, t2] = size(config.loadingCase);
             
@@ -103,8 +101,8 @@ classdef Optimizer
             for ely = 1:config.nely
                 rowMultiplier = ely-1;
                 for elx = 1:config.nelx
-                    topDensity =  DV.x(ely,elx);
-                    if(topDensity>config.noNewMesoDesignDensityCutOff)
+                    rhoSIMP =  DV.x(ely,elx);
+                    if(rhoSIMP>config.noNewMesoDesignDensityCutOff)
                         
                         % -------------------
                         % STEP 1, GET THE DISPLACEMENT FOR THIS NODE
@@ -132,20 +130,20 @@ classdef Optimizer
                         grleng = leng*config.gr ; % golden ratio lenth
                         x1 = x3 - grleng;
                         x2 = x0 + grleng;
-                        topDensity =  DV.x(ely,elx);
-                        material1Fraction  =[];% DV.w(ely,elx);
+                        rhoSIMP =  DV.x(ely,elx);
+                        mat1Frac  =[];% DV.w(ely,elx);
                         Exx = DV.Exx(ely,elx);
                         Eyy = DV.Eyy(ely,elx);
+                        
+                        thetaSubSystem = DV.thetaSub(ely,elx);
+                        penaltyValue=DV.penaltyTheta(ely,elx);
+                        lagraMultiplier=DV.lambdaTheta(ely,elx);
+                        
                         %                         orthD = DV.d(ely,elx);
-                        fx1 = obj.EvaluteARotation(U,topDensity, material1Fraction,Exx,Eyy,x1,matProp, config);
-                        fx2 = obj.EvaluteARotation(U,topDensity, material1Fraction,Exx,Eyy,x2,matProp, config);
+                        fx1 = obj.EvaluteARotation(U,rhoSIMP, mat1Frac,Exx,Eyy,x1,thetaSubSystem,penaltyValue,lagraMultiplier,matProp, config);
+                        fx2 = obj.EvaluteARotation(U,rhoSIMP, mat1Frac,Exx,Eyy,x2,thetaSubSystem,penaltyValue,lagraMultiplier,matProp, config);             
                         
-                        
-                        debug = 0;
-                        %                         if(0.499<topDensity && topDensity<0.501)
-                        %                             debug=1;
-                        %                         end
-                        %                         debug = topDensity;
+                        debug = 0;                       
                         verbosity = 0;
                         
                         if(   debug == 1)
@@ -153,7 +151,7 @@ classdef Optimizer
                             ytemp = zeros(1, size(xtemp,2));
                             count = 1;
                             for thetaTemp = xtemp
-                                ytemp(count)= obj.EvaluteARotation(U,topDensity, material1Fraction,Exx,Eyy,thetaTemp,matProp, config);
+                                ytemp(count)= obj.EvaluteARotation(U,rhoSIMP, mat1Frac,Exx,Eyy,thetaTemp,thetaSubSystem,penaltyValue,lagraMultiplier,matProp, config);
                                 count = count+1;
                             end
                             figure(2)
@@ -174,7 +172,7 @@ classdef Optimizer
                                 fx2 = fx1;
                                 leng = x3 - x0; % find the length of the interval
                                 x1 = x3 - leng*config.gr; % find golden ratio of length, subtract it from the x3 value
-                                fx1 = obj.EvaluteARotation(U,topDensity, material1Fraction,Exx,Eyy,x1,matProp, config); % calculate the fx
+                                fx1 = obj.EvaluteARotation(U,rhoSIMP, mat1Frac,Exx,Eyy,x1,thetaSubSystem,penaltyValue,lagraMultiplier,matProp, config);% calculate the fx
                                 
                             elseif(fx1>fx2) % greater than
                                 x0 = x1; % the old x1 is now x0
@@ -184,7 +182,7 @@ classdef Optimizer
                                 
                                 leng = (x3 - x0); % find the length of the interval
                                 x2 = x0 + leng*config.gr; % find golden ratio of length, subtract it from the x3 value
-                                fx2 = obj.EvaluteARotation(U,topDensity, material1Fraction,Exx,Eyy,x2,matProp, config);  % calculate the fx
+                                fx2 = obj.EvaluteARotation(U,rhoSIMP, mat1Frac,Exx,Eyy,x2,thetaSubSystem,penaltyValue,lagraMultiplier,matProp, config);  % calculate the fx
                             end
                             
                             % check to see if we are as close as we want
@@ -216,19 +214,23 @@ classdef Optimizer
         % ---------------------------
         % EVALUTE THE OBJECTIVE FUNCTION FOR A ROTATION
         %----------------------------
-        function objValue = EvaluteARotation(obj,U,topDensity, material1Fraction,Exx,Eyy,rotation,matProp, config)
-            K = matProp.getKMatrixTopExxYyyRotVars(config,topDensity,Exx, Eyy,rotation,material1Fraction);
+        function lagrangianValue = EvaluteARotation(obj,U,topDensity, material1Fraction,Exx,Eyy,thetaSys,thetaSubSystem,penaltyValue,lagraMultiplier,matProp, config)
+            K = matProp.getKMatrixTopExxYyyRotVars(config,topDensity,Exx, Eyy,thetaSys,material1Fraction);
             % LOOP OVER LOADING CASES.
             % U'S ROWS ARE UNIQUE LOADING CASES
             % EACH ROW CONTAINS 8 VALUES FOR THE 8 DOF OF THE ELEMENT
             % allow multiple loading cases.
             [~, t2] = size(config.loadingCase);
-            objValue=0;
+            term1=0;
             for i = 1:t2
                 Ucase = U(i,:)';
-                objValue= objValue+Ucase'*K*Ucase;
+                term1= term1+Ucase'*K*Ucase;
             end
-            objValue=-objValue;
+            term1=-term1;
+            
+            term2 = penaltyValue/2*(thetaSys-thetaSubSystem)^2;
+            term3 = lagraMultiplier*(thetaSys-thetaSubSystem);
+            lagrangianValue=term1+term2+term3;
         end
         
         
@@ -247,7 +249,15 @@ classdef Optimizer
                 DV.sensitivityElasticPart2 =avgSensitivy;
             end
             
-         
+            %---------------------------
+            % Add ATC terms 
+            %
+            % Add in term 2 and 3 of the numerator for the consistency
+            % constraints for ATC optimization. 
+            %---------------------------
+%              term1Exx = DV.sensitivityElastic;
+%              term1Eyy= DV.sensitivityElasticPart2;
+             
             
             
             %-----------------------
@@ -271,26 +281,22 @@ classdef Optimizer
             
             offsetup = 10000;
             
-            % scale the sensitivies to make them easiler to work with if
-            % they are small.
-            min1= min(min(abs(DV.sensitivityElastic)));
-            min2= min(min(abs(DV.sensitivityElasticPart2)));
-            if(min1<=1000 || min2<=1000)
-                DV.sensitivityElastic = DV.sensitivityElastic*offsetup;
-                DV.sensitivityElasticPart2 = DV.sensitivityElasticPart2*offsetup;
-            end
+ 
             
             
             min1= min(min(min(DV.sensitivityElastic)),min(min(DV.sensitivityElasticPart2)));
             
-            % Prevent negative sensitivies.
-            if(min1<=0 )
-                DV.sensitivityElastic = DV.sensitivityElastic-min1+1;
-                DV.sensitivityElasticPart2 = DV.sensitivityElasticPart2-min1+1;
-            end
-            
+%             % Prevent negative sensitivies.
+%             if(min1<=0 )
+%                 DV.sensitivityElastic = DV.sensitivityElastic-min1+1;
+%                 DV.sensitivityElasticPart2 = DV.sensitivityElasticPart2-min1+1;
+%             end
+%             
             
             totalMaterial = sum(sum(DV.x));
+            
+            term1Exx = DV.sensitivityElastic;
+            term1Eyy= DV.sensitivityElasticPart2;
             
             % ---------------------------------------------------
             %
@@ -300,10 +306,50 @@ classdef Optimizer
             if(config.useTargetMesoDensity~=1)
                 while (l2-l1 > 1e-4)
                     lmid = 0.5*(l2+l1);
-                    % xnew = max(0.01,max(x-move,min(1.,min(x+move,x.*sqrt(-dc./lmid)))));
+                  
                     
-                    ExxNew = max( minimum - EyyNew,  max(DV.Exx-move ,  min(  min(DV.Exx.*sqrt(DV.sensitivityElastic     ./lmid),DV.Exx+move ),matProp.E_material1)));
-                    EyyNew = max(minimum -  ExxNew,  max(DV.Eyy-move ,  min(  min(DV.Eyy.*sqrt(DV.sensitivityElasticPart2./lmid),DV.Eyy+move ),matProp.E_material1)));
+                     %---------------------------
+                    % Add ATC terms 
+                    %
+                    % Add in term 2 and 3 of the numerator for the consistency
+                    % constraints for ATC optimization.
+                    %---------------------------                    
+                    term2Exx = DV.penaltyExx.*(ExxNew- DV.ExxSub);
+                    term2Eyy = DV.penaltyEyy.*(EyyNew- DV.EyySub);
+                    
+                    term3Exx = DV.lambdaExx;
+                    term3Eyy = DV.lambdaEyy;
+                    
+                    completeExx = term1Exx+term2Exx+term3Exx;
+                    completeEyy = term1Eyy+term2Eyy+term3Eyy;
+                    
+                    % scale the sensitivies to make them easiler to work with if
+                    % they are small.
+                    min1= min(min(abs(completeExx)));
+                    min2= min(min(abs(completeEyy)));
+                    if(min1<=1000 || min2<=1000)
+                        completeExx = completeExx*offsetup;
+                        completeEyy = completeEyy*offsetup;
+                    end
+                    
+                    % Don't allow negative
+                     min1= min(min(completeExx));
+                    min2= min(min(completeEyy));
+                    min3 = min(min1,min2);
+                    if(min1<=0 || min2<=0)
+                        completeExx = completeExx-min3+1;
+                        completeEyy = completeEyy-min3+1;
+                    end
+                    
+                    
+                    
+                    
+                    
+                    
+                    %                     ExxNew = max( minimum - EyyNew,  max(DV.Exx-move ,  min(  min(DV.Exx.*sqrt(DV.sensitivityElastic     ./lmid),DV.Exx+move ),matProp.E_material1)));
+                    %                     EyyNew = max(minimum -  ExxNew,  max(DV.Eyy-move ,  min(  min(DV.Eyy.*sqrt(DV.sensitivityElasticPart2./lmid),DV.Eyy+move ),matProp.E_material1)));
+                    ExxNew = max( minimum - EyyNew,  max(DV.Exx-move ,  min(  min(DV.Exx.*sqrt(completeExx     ./lmid),DV.Exx+move ),matProp.E_material1)));
+                    EyyNew = max(minimum -  ExxNew,  max(DV.Eyy-move ,  min(  min(DV.Eyy.*sqrt(completeEyy./lmid),DV.Eyy+move ),matProp.E_material1)));
                     
                     
                     totalExx =DV.x.*ExxNew;
@@ -356,35 +402,16 @@ classdef Optimizer
                 EyyNew=averageNewE;
             end
             
-            %               DV.sensitivityElastic
-            %                DV.Exx
-            %               ExxNew
-            
-            %               % ----------------
-            %               % Eyy
-            %               % ----------------
-            %                while (l2-l1 > 1e-4)
-            %                   % xnew = max(0.01,max(x-move,min(1.,min(x+move,x.*sqrt(-dc./lmid)))));
-            %
-            %
-            %                 if E_avg- sum(sum(EyyNew))> 0;
-            %                     l1 = lmid;
-            %                 else
-            %                     l2 = lmid;
-            %                 end
-            %                end
+%             if 1==1
+%                  p = plotResults;
+%                  p.PlotArrayGeneric( array, titleText)
+%             end
+         
             
             DV.Exx=ExxNew ;
             DV.Eyy=EyyNew ;
             
-            
-            % Debugging data
-%             avg= 0.5*(DV.Exx+DV.Eyy);
-%             
-%             minE = matProp.E_material2/2;
-%             temp = avg-minE;
-%             
-%             w = temp/(matProp.E_material1-minE);
+         
         end
         
         function [dDensityEyy, dDensityExx] = GetdensitySensitivityEyyandExx(obj,config, DV)

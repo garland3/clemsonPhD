@@ -128,6 +128,24 @@ classdef plotResults
             end
             
             %  ----------------------------
+            % doSysANDSubSysDiffValues
+            %  ----------------------------
+            if(config.doSysANDSubSysDiffValues ==1)
+                subplot(plotDim1,plotDim2,plotcount); plotcount = plotcount + 1;
+                titleText = sprintf('Diff Exx Sys - Sub' );
+                obj.PlotArrayGeneric(DV.Exx - DV.ExxSub,titleText)
+                
+                subplot(plotDim1,plotDim2,plotcount); plotcount = plotcount + 1;
+                titleText = sprintf('Diff Eyy Sys - Sub' );
+                obj.PlotArrayGeneric(DV.Eyy - DV.EyySub,titleText)
+                
+                 subplot(plotDim1,plotDim2,plotcount); plotcount = plotcount + 1;
+                titleText = sprintf('Diff Theta Sys - Sub' );
+                obj.PlotArrayGeneric(DV.t - DV.thetaSub,titleText)
+            
+            end
+            
+            %  ----------------------------
             % Plot Final
             %  ----------------------------
             if(config.doPlotFinal == 1)
@@ -278,6 +296,7 @@ classdef plotResults
                 config.doPlotElasticSensitivity +...
                 config.doPlotRotationValue +...
                 config.doPlotCombinedExxEyyAndRotation +...
+                config.doSysANDSubSysDiffValues*3 +... % 3X for the 3 vars
                 config.doPlotEyyExxArrows;
             
             
@@ -347,6 +366,7 @@ classdef plotResults
             else
                  titleText = 'Exx and Eyy and Rotation of Material, Red = Exx,Green = Eyy' ;
             end
+           
             
            
             [X,Y] = meshgrid(1:config.nelx,1:config.nely);
@@ -366,6 +386,27 @@ classdef plotResults
             axis equal
             axis([-2 config.nelx+2 -2 config.nely+2])
             %                set(gca,'YDir','normal'); % http://www.mathworks.com/matlabcentral/an
+            
+            
+             
+            if(config.doIncludeSubSystemValues==1 && config.macro_meso_iteration>1)
+                titleText=strcat(titleText,' SubSysteValues  Exx=Blue, Eyy=Cyan');
+                  dx3=DV.ExxSub.*cos(DV.thetaSub);%-DV.Eyy.*sin(DV.t);
+                    dy3=DV.ExxSub.*sin(DV.thetaSub);%+DV.Eyy.*cos(DV.t);
+
+                    dx4=DV.EyySub.*cos(DV.thetaSub+pi/2);%-DV.Eyy.*sin(DV.t);
+                    dy4=DV.EyySub.*sin(DV.thetaSub+pi/2);%+DV.Eyy.*cos(DV.t);
+                    
+                    q = quiver(X,Y,dx3,dy3);
+                   q.Color = 'blue';
+                   
+                     q = quiver(X,Y,dx4,dy4);
+                   q.Color = 'Cyan';
+                
+                
+            end
+            
+            
             title(titleText);
         end
         

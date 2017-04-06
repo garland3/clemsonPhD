@@ -51,7 +51,7 @@ opt = Optimizer;
 
 matProp = MaterialProperties; % material properties Object
 config.RunPalmetto = 1;
-config= config.UpdateRunTimeComputedSettings( useInputArgs, w1text, macro_meso_iteration,mode, singleMeso_elementNumber)
+config= config.UpdateRunTimeComputedSettings( useInputArgs, w1text, macro_meso_iteration,mode, singleMeso_elementNumber);
 
 
 macroDesignMode = 0;
@@ -132,7 +132,7 @@ if(config.recvid==1)
 end
 
 masterloop = 0; FEACalls = 0;
-onlyplotfinal =0;
+
 %% ---------------------------------------------------
 % Macro Design
 % ---------------------------------------------------
@@ -239,14 +239,18 @@ if(macroDesignMode==1)
         if(config.recvid==1)
             [framedNumber, F]  = video.RecordFrame(config,framedNumber, F,vidObj);
         end
-    end % MASTER LOOP FOR MACRO LEVEL
+   
     
-    % Flip orientation of Exx and Eyy so that theta is positive
-    if(config.useRotation ==1)
+        % Flip orientation of Exx and Eyy so that theta is positive
+        if(config.useRotation ==1)
             if ( config.mode==4 || config.mode ==55 || config.mode == 60)
-                 DV = DV.FlipOrientation(config);
+                DV = DV.FlipOrientation(config);
+                ShowOptimizerProgress(DV,1,' Flipped theta ',FEACalls,config, matProp);
+                nameGraph = sprintf('./FinalWithFlip%f__%i.png', config.w1,config.macro_meso_iteration);
+                print(nameGraph,'-dpng');
             end
-    end
+        end
+     end % MASTER LOOP FOR MACRO LEVEL
     
 end % ENDIF FOR MACRO DESIGN
 

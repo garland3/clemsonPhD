@@ -13,11 +13,13 @@ cd $PBS_O_WORKDIR
 
 
 dos2unix *.*
+dos2unix /scratch2/apg/version3/MPI_C_program/*
 rm jobP*
 rm jobweight*
 rm *.csv
 rm *.stl
 rm *.png
+rm mpi*
 
 # compile the c code
 mpicc /scratch2/apg/version3/MPI_C_program/bankElementJobs.c -o /scratch2/apg/version3/bank

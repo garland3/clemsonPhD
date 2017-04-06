@@ -136,6 +136,19 @@ classdef DesignVars
                 %     matProp=  matProp.ReadConstitutiveMatrixesFromFiles(config);
                 
                 
+                % Start them out as 0. Set later if iteration 2 or higher
+                obj.lambdaExx= obj.Exx*0; % lambda for the Exx
+                obj.lambdaEyy= obj.Exx*0; % lambda for the Eyy
+                obj.lambdaTheta=obj.Exx*0; % lambda for the Theta
+                obj.penaltyExx= obj.Exx*0; % penality value used for the Exx Augmented Lagrangian Multiplier
+                obj.penaltyEyy= obj.Exx*0; % penality value used for the  Eyy Augmented Lagrangian Multiplier
+                obj.penaltyTheta= obj.Exx*0; %penality value used for the Theta Augmented Lagrangian Multiplier
+                
+                obj.ExxSub=obj.Exx*0; % Sub system copies of design var
+                obj.EyySub=obj.Exx*0; % Sub system copies of design var
+                obj.thetaSub=obj.Exx*0; % Sub system copies of design var
+                
+                
                 
             end
             
@@ -299,9 +312,10 @@ classdef DesignVars
                     % ---------------------------------------------
                     % Calculate the penalty values!!
                     % ---------------------------------------------
-                    obj.penaltyExx(yPos,xPos)=4*strainEnergy/  diffExx(yPos,xPos);
-                    obj.penaltyEyy(yPos,xPos)=4*strainEnergy/  diffEyy(yPos,xPos);
-                    obj.penaltyTheta(yPos,xPos)=4*strainEnergy/  diffTheta(yPos,xPos);
+                    omegaLocal = config.Omega;
+                    obj.penaltyExx(yPos,xPos)=2*omegaLocal*strainEnergy/  diffExx(yPos,xPos);
+                    obj.penaltyEyy(yPos,xPos)=2*omegaLocal*strainEnergy/  diffEyy(yPos,xPos);
+                    obj.penaltyTheta(yPos,xPos)=2*omegaLocal*strainEnergy/  diffTheta(yPos,xPos);
                     
                 end
             end

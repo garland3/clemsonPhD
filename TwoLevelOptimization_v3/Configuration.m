@@ -26,6 +26,7 @@ classdef Configuration
         
         % For ATC optimization
         addConsistencyConstraints=1;      
+        Omega = 0.25;
         
         % Modeling settings
         referenceTemperature = 0; % for thermal expansion, assume that there is not strain when at this temperature.
@@ -76,24 +77,26 @@ classdef Configuration
         doPlotHeat = 0;
         doPlotHeatSensitivityTopology = 0;
         doPlotStress = 0;
-         doPlotFinal =1;
+        doPlotFinal =0;
         doPlotMetrics = 0;
         doSaveDesignVarsToCSVFile = 0; % set to 1 to write plotFinal csv file instead
         doPlotAppliedStrain = 0; % For debugging only
         doPlotOrthDistributionVar=0;
         doPlotExx= 0  ;
         doPlotEyy =  0 ;
-         doPlotEyyExxArrows =0;
+        doPlotEyyExxArrows =0;
         doPlotElasticSensitivity =  0  ;
         doPlotRotationValue =0;
+        doSysANDSubSysDiffValues = 0;
         
         % Exx ,Eyy , Theta (and Rho) Plot Data
         doPlotCombinedExxEyyAndRotation = 1;
         doIncludeRho =1;
+        doIncludeSubSystemValues=1;
         %-----------------
         
         recvid = 0; % record video
-        maximizePlots = 1;
+        maximizePlots =1;
         
         % ----------------
         % Computational settings
@@ -135,7 +138,7 @@ classdef Configuration
         % ---------------------------
         % Loading cases
         % ---------------------------
-%                   loadingCase = [113]; % left clamped, load, middle right
+                    loadingCase = [113]; % left clamped, load, middle right
         %           loadingCase = [111 112 113]; % left clamped
         %            loadingCase = [111 112 ]; % left clamped
         %          loadingCase = [111 120 121]; % up, down, right in top right corrner, left clamp.
@@ -143,7 +146,7 @@ classdef Configuration
         %              loadingCase = [1];
         
         %  loadingCase = [300 301 302 303 304 305]; % shoe
-         loadingCase = [400 401 402 403 404 405]; % bridge
+        %  loadingCase = [400 401 402 403 404 405]; % bridge
         %            loadingCase = [404]; % bridge
         %             loadingCase = [113]; % cantilever
         %                 loadingCase = [111]; % top right, force in Y direction
@@ -197,10 +200,10 @@ classdef Configuration
                 % ------------
                 % Palmetto running case
                 % -------------------
-                obj.nelx = 39;
-                obj.nely = 21;
-                obj.nelxMeso = 25; %35;
-                obj.nelyMeso =25; %35;
+                obj.nelx = 30; %39
+                obj.nely = 15; % 21
+                obj.nelxMeso = 30; %35;
+                obj.nelyMeso =30; %35;
                 obj.terminationAverageCount = 10;
                 obj.terminationCriteria =0.001; % 0.0%
                 obj.maxFEACalls = 40;

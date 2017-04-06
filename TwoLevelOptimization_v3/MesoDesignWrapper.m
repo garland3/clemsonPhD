@@ -4,8 +4,7 @@ function  MesoDesignWrapper(config,e,ne,matProp)
 macroElementProperties = GetMacroElementPropertiesFromCSV(config,e);
 disp(['Meso Design #: ' sprintf('%4i',macroElementProperties.elementNumber  ) ' of ' sprintf('%4i',ne ) ...
     ' position X = '  sprintf('%4i',macroElementProperties.xPos) ' Y = ' sprintf('%4i',macroElementProperties.yPos) ...
-    ' Target Density =  ' sprintf('%4i', macroElementProperties.targetDensity) ...
-    ' MesoMacro Iteration =  ' sprintf('%4i', config.macro_meso_iteration) ]);
+      ' MesoMacro Iteration =  ' sprintf('%4i', config.macro_meso_iteration) ]);
 scalePlot = 1;
 coord(:,1) = [0 1 1 0];
 coord(:,2)  = [0 0 1 1];
@@ -58,13 +57,13 @@ if(macroElementProperties.densitySIMP>config.noNewMesoDesignDensityCutOff)
     
    
     macroElementProperties.D_subSys  % Show the new D found by the design. 
-    Diff_Sys_Sub =  (macroElementProperties.D_subSys- macroElementProperties.D_sys);
+ %   Diff_Sys_Sub =  (macroElementProperties.D_subSys- macroElementProperties.D_sys);
 %     Diff_Sys_Sub
     macroElementProperties.D_sys
 %     determinDiff = det(Diff_Sys_Sub);
 %     determinDiff
     SysDividedbySubSysstem = macroElementProperties.D_sys./macroElementProperties.D_subSys;
-    SysDividedbySubSysstem
+     SysDividedbySubSysstem
     
 %      systemDiff =  macroElementProperties.D_sys-macroElementProperties.D_subSys;
 %     systemDiff

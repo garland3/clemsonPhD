@@ -74,7 +74,7 @@ for e = 1:ne %ne:-1:1
         
         
         outname = sprintf('./out%i/Dmatrix_%i_forElement_%i.csv',folderNum,macro_meso_iteration,elementNumber);
-%         outname = sprintf('./out%i/DsystemIter%i_Element_%i.csv',folderNum,macro_meso_iteration,elementNumber);
+%          outname = sprintf('./out%i/DsystemIter%i_Element_%i.csv',folderNum,macro_meso_iteration,elementNumber);
         Din = csvread(outname);
         
             Dcalculated= matProp.getDmatMatrixTopExxYyyRotVars(config, macroElementProps.densitySIMP,ActualExx, ActualEyy,ActualThetaValue,1);
@@ -83,7 +83,7 @@ for e = 1:ne %ne:-1:1
 %         temp33=pi/2-ActualThetaValue;
 %         incr = pi/360;
 %         thetaValuesToTest1=temp33-4*pi/8+incr:incr:temp33+4*pi/8-incr;
-%         thetaValuesToTest=-ActualThetaValue+incr:incr:pi-ActualThetaValue-incr;
+          
      
         
    
@@ -92,9 +92,10 @@ for e = 1:ne %ne:-1:1
         % OPTIMAL THETA FOR ROTATION
         % -------------------
 
-        n = 0;        
-         x0 = -pi/2; %lower_bracket;
-        x3 =pi;% higher_bracket;      
+        n = 0;   
+          epsilon = pi/180; % 1 DEGREES ACCURACY
+         x0 = 0; %lower_bracket;
+        x3 =pi/2;% higher_bracket;      
         leng = x3-x0;
         grleng = leng*config.gr ; % golden ratio lenth
         x1 = x3 - grleng;
@@ -108,7 +109,10 @@ for e = 1:ne %ne:-1:1
         fx2=sumZeroTerms;
    
         verbosity = 0;
-        epsilon = pi/180; % 1 DEGREES ACCURACY
+        recordFx=[];
+        
+       
+      
 
         while(1 == 1)
             if(verbosity ==1)
@@ -149,12 +153,24 @@ for e = 1:ne %ne:-1:1
         end
         Theta = (x2 + x3)/2;
         
-         if(Theta<0)
-            Theta=Theta+pi/2;
-         end
-        
-        if(Theta>pi/2)
-            Theta=Theta-pi/2;
+     
+        % plot the domain and range of the Kappa function
+       if(1==0)
+            thetaValuesToTest=0:epsilon:pi/2;
+            for i = thetaValuesToTest
+                  Dout = matProp.rotateDmatrix(config,i, Din);
+                 fxRecord =abs( Dout(1,3))+abs(Dout(2,3))+abs(Dout(3,1))+abs(Dout(3,2));
+                recordFx=[recordFx fxRecord];
+            end
+
+            xValues = [0 Theta pi/2];
+            yValues = [ 0 1 1]*max(recordFx);
+            plot(thetaValuesToTest,recordFx);
+            hold on
+            stairs(xValues,yValues);
+            titleText = sprintf('Kappa function for element %i',e);
+            title(titleText);
+            hold off
         end
           
       
@@ -179,17 +195,47 @@ for e = 1:ne %ne:-1:1
         end
              diffDs=Din-Dcalculated;
              
-        diffX = ActualExx-Exx;
+       
+        
+        % in the case  where, Exx = Eyy, then the material is basically
+        % isotropic and rotating to find the orthotropic orientaiton will
+        % not work. In this case, set the theta to the actualTheta        
+        % the criteria is that Exx and Eyy must be within 0.2% of each
+        % other's value.
+        if(abs(100*(Exx-Eyy)/Exx)<0.2)
+            Theta=ActualThetaValue;
+            str = sprintf('Exx = Eyy, setting theta to sys theta')
+        end
+        
+        % Also, there is some difficulty when actualTheta is 0 or pi/2
+        diffTheta = abs( ActualThetaValue-Theta);
+        
+        if(diffTheta>(pi/2-epsilon))
+            if(Theta>pi/4)
+                Theta=pi/2-Theta;
+            else
+                Theta=pi/2-Theta;
+            end
+            
+              str = sprintf('Theta on wrong boundary. Switching values. ')
+                diffTheta = abs( ActualThetaValue-Theta); % The new Diff Theta
+        end
+   
+        
+        
+         diffX = ActualExx-Exx;
         diffY = ActualEyy-Eyy;
-        diffTheta =  ActualThetaValue-Theta;
+        
         
         relativeErrorDiffExx = diffX/ActualExx;
          relativeErrorDiffyy = diffY/ActualEyy;
          relativeErrorDiffTheta = diffTheta/ActualThetaValue;
-        if(relativeErrorDiffExx>0.4 || relativeErrorDiffyy>0.4)
-            sprintf('Large Error');
+        if(relativeErrorDiffExx>0.4 || relativeErrorDiffyy>0.4  || relativeErrorDiffTheta>0.4)
+            sprintf('%i Large Error', e)
         end
     
+        
+        
         
         
         %DV.x already saved.
@@ -301,6 +347,8 @@ subplot(2,2,2)
 p.PlotArrayGeneric( 100*relativeErrorEyy, 'Perecent Error Eyy')
 subplot(2,2,3)
 p.PlotArrayGeneric(100* relativeErrorTheta, 'Percent Error Theta')
+subplot(2,2,4)
+p.PlotArrayGeneric(diffTheta, 'Diff Theta')
 nameGraph = sprintf('./MesoDesignExxEyyThetaVarsPercentError%i.png', config.macro_meso_iteration);
 print(nameGraph,'-dpng');
 

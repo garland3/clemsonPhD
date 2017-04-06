@@ -78,7 +78,7 @@ for mm = 1:mesoConfig.maxNumPseudoStrainLoop
     temp=sum(abs(pstrain-pstrainOld));
     if(temp<mesoConfig.PseudoStrainEndCriteria && mm>1)
   
-            temp
+            
             temp2 = 'break becasue pseudo strain diff is small'       
              fprintf('Break Psudo Strain Loops value = [%f %f %f] PsuedoStrainLoop %i Diff %f\n',pstrain(1),pstrain(2),pstrain(3),mm,temp);
        
@@ -183,7 +183,7 @@ for mm = 1:mesoConfig.maxNumPseudoStrainLoop
         end
     end
 end
-pstrain
+% pstrain
 
 
 
@@ -191,8 +191,8 @@ if recvid==1
     close(vidObj);  %close video
 end
 
-plot(densityArray)
-densityArray(end)
+% plot(densityArray)
+% densityArray(end)
 
 disp(['Meso Design #: ' sprintf('%4i',macroElemProps.elementNumber ) ' after '  sprintf('%4i',mesoLoop ) ' meso iterations: density= '  sprintf('%f',mesoConfig.totalVolume )]);
 

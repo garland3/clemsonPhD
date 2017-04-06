@@ -126,7 +126,7 @@ designVars.dc = zeros(config.nely,config.nelx);
 objective = 0;
 
 muVersion2 = ones(1,3);
-muTarget =config. muSequence(  config.macro_meso_iteration);
+%muTarget =config. muSequence(  config.macro_meso_iteration);
 term1Max = 0;
 term2Max = 0;
 
