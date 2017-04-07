@@ -466,17 +466,14 @@ classdef Optimizer
          
         end
         
-        function [dDensityEyy, dDensityExx] = CalculateDensitySensitivity(obj,ExxNew,EyyNew,DV)
+        function [dDensityEyy, dDensityExx] = CalculateDensitySensitivity(ExxNew,EyyNew,DV)
                p00 =     -0.0449;
                p10 =   1.045e-05;
                p01 =   1.045e-05;
                p20 =   8.433e-26;
                p11 =  -1.045e-10;
                p02 =   1.789e-25;
-               
-            dDensityEyy=p01+p11.*ExxNew+2*p02.*EyyNew;
-            
-            dDensityExx=p10+ 2*p20.*ExxNew+p11.*EyyNew;
+            dDensityEyy=p01+
 %             dDensityExx = zeros(config.nely,config.nelx);
 %             dDensityEyy = zeros(config.nely,config.nelx);
 %             

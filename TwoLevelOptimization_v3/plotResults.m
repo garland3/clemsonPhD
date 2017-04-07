@@ -366,7 +366,7 @@ classdef plotResults
             else
                  titleText = 'Exx and Eyy and Rotation of Material, Red = Exx,Green = Eyy' ;
             end
-           
+           titleText=strcat(titleText,sprintf(' Iter=%d',config.macro_meso_iteration));
             
            
             [X,Y] = meshgrid(1:config.nelx,1:config.nely);
@@ -390,24 +390,33 @@ classdef plotResults
             
              
             if(config.doIncludeSubSystemValues==1 && config.macro_meso_iteration>1)
-                titleText=strcat(titleText,' SubSysteValues  Exx=Blue, Eyy=Cyan');
+                titleTextPart2=' SubSysteValues  Exx=Blue, Eyy=Cyan';
                   dx3=DV.ExxSub.*cos(DV.thetaSub);%-DV.Eyy.*sin(DV.t);
                     dy3=DV.ExxSub.*sin(DV.thetaSub);%+DV.Eyy.*cos(DV.t);
 
                     dx4=DV.EyySub.*cos(DV.thetaSub+pi/2);%-DV.Eyy.*sin(DV.t);
                     dy4=DV.EyySub.*sin(DV.thetaSub+pi/2);%+DV.Eyy.*cos(DV.t);
                     
+                     if(scaleByRho==1)
+                        dx3=dx3.*DV.x;
+                        dy3=dy3.*DV.x;
+                        dx4=dx4.*DV.x;
+                        dy4=dy4.*DV.x;
+                     end
+                    
                     q = quiver(X,Y,dx3,dy3);
                    q.Color = 'blue';
                    
                      q = quiver(X,Y,dx4,dy4);
                    q.Color = 'Cyan';
+                   title({titleText,titleTextPart2});
                 
-                
+            else
+                 title(titleText);
             end
             
             
-            title(titleText);
+           
         end
         
         

@@ -5,6 +5,7 @@ doPlot =0; % For debugging allow plotting of some information.
 if(mod(macroElemProps.elementNumber,mesoConfig.mesoplotfrequency) ==0)
     doPlot =1;
 end
+%doPlot=1
 recvid = 0; % make a video?
 
 % macroElemProps.disp= [ 0 0     0 0    0.1 0.1     0 0   ]
@@ -14,14 +15,15 @@ recvid = 0; % make a video?
 [~ ,~,macroElemProps.B] = matProp.effectiveElasticKEmatrix( macroElemProps.material1Fraction, mesoConfig,[]);
 macroElemProps.strain = macroElemProps.B* transpose(macroElemProps.disp); % transpose the disp to be vertical
 
-shearStrainSum= sum(macroElemProps.strain(3,:));
+% shearStrainSum= sum(macroElemProps.strain(3,:));
 
 verboseOutput =0;
 %  doPlot=1;
 
 
-shearSign = 1;
-if(shearStrainSum<0)
+% shearSign = 1;
+if(macroElemProps.Exx>macroElemProps.Eyy)
+% if(shearStrainSum<0)
     shearSign=1;
 else
     shearSign=-1;

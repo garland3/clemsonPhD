@@ -26,7 +26,7 @@ classdef Configuration
         
         % For ATC optimization
         addConsistencyConstraints=1;      
-        Omega = 0.25;
+        Omega = 0.1;
         
         % Modeling settings
         referenceTemperature = 0; % for thermal expansion, assume that there is not strain when at this temperature.
@@ -37,7 +37,7 @@ classdef Configuration
         %maxDorth= 0.9; % 0.5
         %minDorth = 0.1;       % 0.001
         %moveLimitExxEyy = 0.2;
-        useTargetMesoDensity = 0; % 1 = yes, 0 = no and use target Eavg
+        useTargetMesoDensity = 1; % 1 = yes, 0 = no and use target Eavg
         targetExxEyyDensity = 0.5;
         
         % rotation
@@ -96,7 +96,7 @@ classdef Configuration
         %-----------------
         
         recvid = 0; % record video
-        maximizePlots =1;
+        maximizePlots =0;
         
         % ----------------
         % Computational settings
@@ -206,8 +206,8 @@ classdef Configuration
                 obj.nelyMeso =30; %35;
                 obj.terminationAverageCount = 10;
                 obj.terminationCriteria =0.001; % 0.0%
-                obj.maxFEACalls = 40;
-                obj.maxMasterLoops = 40;
+                obj.maxFEACalls = 30;
+                obj.maxMasterLoops = 30;
                 
             end
             

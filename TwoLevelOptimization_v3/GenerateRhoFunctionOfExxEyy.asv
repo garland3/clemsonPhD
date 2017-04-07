@@ -41,8 +41,8 @@ rhoArray = [];
 ExxArray = [];
 EyyArray = [];
 thetaArray=[];
-MacroExxColumn=[];
-MacroEyyColumn=[];
+MacroExxColum=[];
+MacroEyy=[];
 
 
 for e = 1:ne %ne:-1:1
@@ -255,8 +255,8 @@ for e = 1:ne %ne:-1:1
         thetaArray=[thetaArray;Theta];
         
         
-        MacroExxColumn=[MacroExxColumn;ActualExx];
-        MacroEyyColumn=[MacroEyyColumn;ActualEyy];
+        MacroExx=[MacroExx;ActualExx];
+        MacroEyy=[MacroEyy;ActualEyy];
     else
         DV.Exx(macroElementProps.yPos,macroElementProps.xPos)=ActualExx;
         DV.Eyy(macroElementProps.yPos,macroElementProps.xPos)=ActualEyy;
@@ -288,34 +288,23 @@ if(1==1)
     xlabel('Exx');
     ylabel('Eyy');
     zlabel('Rho,Density');
-%     
-     figure(2)
-     sf = fit([MacroExxColumn, MacroEyyColumn],rhoArray,'poly23')
-     plot(sf,[MacroExxColumn,MacroEyyColumn],rhoArray)
-         xlabel('MacroExxColumn');
-    ylabel('MacroEyyColumn');
-    zlabel('Rho,Density');
-     
-%       figure(3)
-%      sf = fit([ExxArray, EyyArray],rhoArray,'poly23')
-%      plot(sf,[ExxArray,EyyArray],rhoArray)
-%         xlabel('ExxArray');
-%     ylabel('EyyArray');
-%     zlabel('Rho,Density');
-% %     
-%     
-%     xlabel('Exx');
-%     ylabel('Eyy');
-%     zlabel('Rho,Density');
-%     
-%     figure(3)
-%     scatter3(ExxArray,EyyArray,thetaArray);
-%     xlabel('Exx');
-%     ylabel('Eyy');
-%     zlabel('theta');
     
-%     figure(4)
-%        scatter3(MacroExxColumn,MacroEyyColumn,rhoArray);
+    figure(2)
+    sf = fit([ExxArray, EyyArray],rhoArray,'poly23')
+    plot(sf,[ExxArray,EyyArray],rhoArray)
+    
+    xlabel('Exx');
+    ylabel('Eyy');
+    zlabel('Rho,Density');
+    
+    figure(3)
+    scatter3(ExxArray,EyyArray,thetaArray);
+    xlabel('Exx');
+    ylabel('Eyy');
+    zlabel('theta');
+    
+    figure(4)
+       scatter3(MacroExx,MacroEyy,rhoArray);
 %     histogram(thetaArray)
     
 %     figure(5)

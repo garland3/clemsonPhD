@@ -313,9 +313,9 @@ classdef DesignVars
                     % Calculate the penalty values!!
                     % ---------------------------------------------
                     omegaLocal = config.Omega;
-                    obj.penaltyExx(yPos,xPos)=2*omegaLocal*strainEnergy/  diffExx(yPos,xPos);
-                    obj.penaltyEyy(yPos,xPos)=2*omegaLocal*strainEnergy/  diffEyy(yPos,xPos);
-                    obj.penaltyTheta(yPos,xPos)=2*omegaLocal*strainEnergy/  diffTheta(yPos,xPos);
+                    obj.penaltyExx(yPos,xPos)=2*omegaLocal*strainEnergy/ abs( diffExx(yPos,xPos));
+                    obj.penaltyEyy(yPos,xPos)=2*omegaLocal*strainEnergy/ abs (diffEyy(yPos,xPos));
+                    obj.penaltyTheta(yPos,xPos)=2*omegaLocal*strainEnergy/ abs( diffTheta(yPos,xPos));
                     
                 end
             end
@@ -1195,6 +1195,14 @@ classdef DesignVars
                         obj.Eyy(j,i)=temp1;
                         obj.t(j,i)=obj.t(j,i)+pi/2;
                         
+                        % Also flip the meso level values or else the
+                        % optimization will be crazy!
+%                         temp2 = obj.ExxSub(j,i);
+%                         obj.ExxSub(j,i)=obj.EyySub(j,i);   % Sub system copies of design var
+%                          obj.EyySub(j,i)=temp2;
+%                         obj.thetaSub(j,i)= obj.thetaSub(j,i)+pi/2;
+   
+                        
                     end
                 end
             end
@@ -1209,7 +1217,7 @@ classdef DesignVars
         % Several methods exist.
         % -----------------------------
         function [obj]= GenerateStartingMesoDesign(obj,mesoConfig,macroElementProperties)
-            method =4;
+            method =2;
             
             if(method ==1)
                 obj.x(1:mesoConfig.nely,1:mesoConfig.nelx) = mesoConfig.totalVolume; % artificial density of the elements

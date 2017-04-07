@@ -25,6 +25,7 @@ config.mode =65;
 % 55 = topology, material gradient, ortho distribution, rotation
 % 60 = topology,  E_xx and E_yy, and rotation together
 % 65 = topology,  E_xx and E_yy
+% 80 = testing response surface for Exx,Eyy, rho
 
 
 % 100 = Single meso design for MPI parallelization
@@ -58,6 +59,7 @@ macroDesignMode = 0;
 if(config.mode<100)
     macroDesignMode=1;
 end
+
 
 %% -------------------------
 % Single meso design for MPI parallelization
@@ -241,7 +243,9 @@ if(macroDesignMode==1)
         end
    
     
-        % Flip orientation of Exx and Eyy so that theta is positive
+      
+     end % MASTER LOOP FOR MACRO LEVEL
+       % Flip orientation of Exx and Eyy so that theta is positive
         if(config.useRotation ==1)
             if ( config.mode==4 || config.mode ==55 || config.mode == 60)
                 DV = DV.FlipOrientation(config);
@@ -250,7 +254,6 @@ if(macroDesignMode==1)
                 print(nameGraph,'-dpng');
             end
         end
-     end % MASTER LOOP FOR MACRO LEVEL
     
 end % ENDIF FOR MACRO DESIGN
 

@@ -1,6 +1,6 @@
 #!/bin/bash
 #PBS -N mpi1
-#PBS -l select=64:ncpus=8:mpiprocs=8:mem=8gb,walltime=05:00:00
+#PBS -l select=64:ncpus=8:mpiprocs=8:mem=8gb,walltime=03:00:00
 #PBS -j oe
 
 source /etc/profile.d/modules.sh

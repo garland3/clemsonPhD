@@ -43,8 +43,27 @@ outname = sprintf('./out%i/SIMPdensityfield%i.csv',folderNum,mm_iteration);
 x = csvread(outname);
 macroEleProps.densitySIMP = x(macroEleProps.yPos,macroEleProps.xPos );
 
-outname = sprintf('./out%i/DsystemIter%i_Element_%i.csv',folderNum,mm_iteration,e);
-D = csvread(outname);
+% Get the Exx field
+outname = sprintf('./out%i/ExxValues%i.csv',folderNum,mm_iteration);
+ExxMacro = csvread(outname);
+macroEleProps.Exx = ExxMacro(macroEleProps.yPos,macroEleProps.xPos );
+
+% Get the Eyy field
+outname = sprintf('./out%i/EyyValues%i.csv',folderNum,mm_iteration);
+EyyMacro =csvread(outname);
+macroEleProps.Eyy = EyyMacro(macroEleProps.yPos,macroEleProps.xPos );
+
+% Get the Theta field
+outname = sprintf('./out%i/ThetaValues%i.csv',folderNum,mm_iteration);
+ThetaMacro = csvread(outname);
+macroEleProps.theta = ThetaMacro(macroEleProps.yPos,macroEleProps.xPos );
+
+w=1;
+matProp=MaterialProperties;
+  D= matProp.getDmatMatrixTopExxYyyRotVars(config,macroEleProps.densitySIMP ,macroEleProps.Exx, macroEleProps.Eyy,macroEleProps.theta ,w);
+
+% outname = sprintf('./out%i/DsystemIter%i_Element_%i.csv',folderNum,mm_iteration,e);
+% D = csvread(outname);
 macroEleProps.D_sys =D;
 
 if(macroEleProps.densitySIMP>config.noNewMesoDesignDensityCutOff)
@@ -84,9 +103,9 @@ if(macroEleProps.densitySIMP>config.noNewMesoDesignDensityCutOff)
 
 
     % Get the target density
-    outname = sprintf('./out%i/TargetMesoDensities%i.csv',folderNum,mm_iteration);
-    TargetMesoDensities=csvread(outname);
-    macroEleProps.targetDensity=TargetMesoDensities(e);
+%     outname = sprintf('./out%i/TargetMesoDensities%i.csv',folderNum,mm_iteration);
+%     TargetMesoDensities=csvread(outname);
+%     macroEleProps.targetDensity=TargetMesoDensities(e);
     
 end
 
