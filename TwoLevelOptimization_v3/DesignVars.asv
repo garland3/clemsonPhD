@@ -716,7 +716,7 @@ classdef DesignVars
                 obj.   currentVol2Fraction =sum(sum( obj.x.*(1-obj.w)))/ne;
                 
                 
-               
+                
             else
                 
                 
@@ -884,17 +884,6 @@ classdef DesignVars
             %             for loadcaseIndex = 1:t2
             % UloadCase= obj.U(loadcaseIndex,:);
             
-             if(config.useTargetMesoDensity==1)
-               p00 =   obj. ResponseSurfaceCoefficents(1);
-               p10 =  obj. ResponseSurfaceCoefficents(2);
-               p01 =   obj. ResponseSurfaceCoefficents(3);
-               p20 =  obj. ResponseSurfaceCoefficents(4);
-               p11 =  obj. ResponseSurfaceCoefficents(5);
-               p02 =   obj. ResponseSurfaceCoefficents(6);
-               sumDensity=0;
-                    
-          end
-            
             % OBJECTIVE FUNCTION
             count =1;
             for ely = 1:config.nely
@@ -937,24 +926,12 @@ classdef DesignVars
                         obj.cCompliance = obj.cCompliance + Ue'*KE*Ue;
                     end
                     
-                     if(config.useTargetMesoDensity==1)
-                         xxx=obj.Exx(ely,elx);
-                          yyyy=obj.Eyy(ely,elx);
-                           estimateElementDensity =  p00 + p10*xxx + p01*yyyy + p20*xxx^2 + p11*xxx*yyyy + p02*yyyy^2;
-                           estimateElementDensity= min(max(estimateElementDensity,0.1),1);%1 is max, 0.1 is min
-                           eleDensity = obj.x(ely,elx)*estimateElementDensity;
-                           sumDensity =sumDensity+eleDensity;
-                    
-                      end
-                    
                     count=count+1;
                     
                 end % end, loop over x
             end % end, for loop over nely
             %             end % end for loop over load cases.
-              sumDensity = sumDensity/(config.nelx*config.nely*config.totalVolume);
-              
-              obj.averageMesoDensity=sumDensity;
+            
             obj.c=obj.cCompliance*config.w1+obj.cHeat*config.w2;
         end
         

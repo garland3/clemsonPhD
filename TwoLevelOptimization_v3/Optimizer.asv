@@ -433,6 +433,7 @@ classdef Optimizer
                     sumDensity =0;
                    for i = 1:config.nelx
                       for j = 1:config.nely
+                           estimateElementDensity =  p00 + p10*x + p01*y + p20*x^2 + p11*x*y + p02*y^2
                            eleDensity = DV.x(j,i)*max(ExxNew(j,i),EyyNew(j,i))/matProp.E_material1;
                            sumDensity =sumDensity+eleDensity;
                       end
@@ -466,14 +467,19 @@ classdef Optimizer
          
         end
         
-        function [dDensityEyy, dDensityExx] = CalculateDensitySensitivity(ExxNew,EyyNew,DV)
-               p00 =     -0.0449;
-               p10 =   1.045e-05;
-               p01 =   1.045e-05;
-               p20 =   8.433e-26;
-               p11 =  -1.045e-10;
-               p02 =   1.789e-25;
-            dDensityEyy=p01+
+        function [dDensityEyy, dDensityExx] = CalculateDensitySensitivity(obj,ExxNew,EyyNew,DV)
+               p00 =   DV. ResponseSurfaceCoefficents(1);
+               p10 =  DV. ResponseSurfaceCoefficents(2);
+               p01 =   DV. ResponseSurfaceCoefficents(3);
+               p20 =  DV. ResponseSurfaceCoefficents(4);
+               p11 =  DV. ResponseSurfaceCoefficents(5);
+               p02 =   DV. ResponseSurfaceCoefficents(6);
+               
+           
+                  
+            dDensityEyy=p01+p11.*ExxNew+2*p02.*EyyNew;
+            
+            dDensityExx=p10+ 2*p20.*ExxNew+p11.*EyyNew;
 %             dDensityExx = zeros(config.nely,config.nelx);
 %             dDensityEyy = zeros(config.nely,config.nelx);
 %             

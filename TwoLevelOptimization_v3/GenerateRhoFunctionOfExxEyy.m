@@ -266,6 +266,7 @@ for e = 1:ne %ne:-1:1
     end
 end
 
+
 % save the Exx field
 outname = sprintf('./out%i/ExxSubSysValues%i.csv',folderNum,macro_meso_iteration);
 csvwrite( outname,DV.Exx);
@@ -290,12 +291,15 @@ if(1==1)
     zlabel('Rho,Density');
 %     
      figure(2)
-     sf = fit([MacroExxColumn, MacroEyyColumn],rhoArray,'poly23')
+     sf = fit([MacroExxColumn, MacroEyyColumn],rhoArray,'poly22')
      plot(sf,[MacroExxColumn,MacroEyyColumn],rhoArray)
          xlabel('MacroExxColumn');
     ylabel('MacroEyyColumn');
     zlabel('Rho,Density');
-     
+     sfArray = [sf.p00 sf.p10 sf.p01 sf.p20 sf.p02 sf.p11 ];
+        nameArray = sprintf('./out%i/ExxEyyRhoFitCoefficients%i.csv',folderNum, config.macro_meso_iteration);
+    csvwrite(nameArray,sfArray);
+
 %       figure(3)
 %      sf = fit([ExxArray, EyyArray],rhoArray,'poly23')
 %      plot(sf,[ExxArray,EyyArray],rhoArray)
@@ -359,17 +363,17 @@ relativeErrorTheta(relativeErrorTheta<-1)=-1;
 % figure
 % p.PlotArrayGeneric( diffTheta, 'diffTheta')
 
-figure
-subplot(2,2,1)
-p.PlotArrayGeneric(100* relativeErrorExx, 'Percent Error Exx')
-subplot(2,2,2)
-p.PlotArrayGeneric( 100*relativeErrorEyy, 'Perecent Error Eyy')
-subplot(2,2,3)
-p.PlotArrayGeneric(100* relativeErrorTheta, 'Percent Error Theta')
-subplot(2,2,4)
-p.PlotArrayGeneric(diffTheta, 'Diff Theta')
-nameGraph = sprintf('./MesoDesignExxEyyThetaVarsPercentError%i.png', config.macro_meso_iteration);
-print(nameGraph,'-dpng');
+% figure
+% subplot(2,2,1)
+% p.PlotArrayGeneric(100* relativeErrorExx, 'Percent Error Exx')
+% subplot(2,2,2)
+% p.PlotArrayGeneric( 100*relativeErrorEyy, 'Perecent Error Eyy')
+% subplot(2,2,3)
+% p.PlotArrayGeneric(100* relativeErrorTheta, 'Percent Error Theta')
+% subplot(2,2,4)
+% p.PlotArrayGeneric(diffTheta, 'Diff Theta')
+% nameGraph = sprintf('./MesoDesignExxEyyThetaVarsPercentError%i.png', config.macro_meso_iteration);
+% print(nameGraph,'-dpng');
 
 
 

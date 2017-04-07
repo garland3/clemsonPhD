@@ -191,11 +191,11 @@ classdef plotResults
             %  DV.c, DV.cCompliance, DV.cHeat,vol1Fraction,vol2Fraction,fractionCurrent_V1Local,densitySum];
             x = 1:loopNumb;
             % y1 = DV.storeOptimizationVar(1:loopNumb,1)';
-            y2 = DV.storeOptimizationVar(1:loopNumb,2)'; % Elastic Compliance
+            elasticObjective = DV.storeOptimizationVar(1:loopNumb,2)'; % Elastic Compliance
             
             
             
-            y2 = y2/max(y2); % normalize to make plotting nice
+            elasticObjective = elasticObjective/max(elasticObjective); % normalize to make plotting nice
             
             
             if(config.useExxEyy==1)
@@ -203,20 +203,30 @@ classdef plotResults
                 % ------------------------
                 % Top, Exx, Eyy, rotation optimzation
                 % ------------------------
-                y6 = DV.storeOptimizationVar(1:loopNumb,6)'; %   sum(sum(DV.x))
-                y6 = y6/(config.nelx*config.nely);
+                summedDensity = DV.storeOptimizationVar(1:loopNumb,6)'; %   sum(sum(DV.x))
+                summedDensity = summedDensity/(config.nelx*config.nely);
                 totalVolumeTarget= config.totalVolume*ones(loopNumb,1);
                 
-                y7 = DV.storeOptimizationVar(1:loopNumb,7)'; %   DV.targetAverageE
-                y8 = DV.storeOptimizationVar(1:loopNumb,8)'; % DV.actualAverageE
+                targetAverageE = DV.storeOptimizationVar(1:loopNumb,7)'; %   DV.targetAverageE
+                actualAverageE = DV.storeOptimizationVar(1:loopNumb,8)'; % DV.actualAverageE
                 
                 
-                scaleForEvalues = 0.5/y7(1);
-                y7 = scaleForEvalues*y7; % Target E
-                y8 = scaleForEvalues*y8;
+                scaleForEvalues = 0.5/targetAverageE(1);
+                targetAverageE = scaleForEvalues*targetAverageE; % Target E
+                actualAverageE = scaleForEvalues*actualAverageE;
                 
-                plot( x, y2, 'ko-',x, y7, 'm+-', x, y8, 'c*-',x, totalVolumeTarget, 'r.-',x, y6, 'gx')
+                if(config.useTargetMesoDensity==1)
+                      mesoAvgDensity = DV.storeOptimizationVar(1:loopNumb,9)'; %
+                     plot( x, elasticObjective, 'ko-',x, targetAverageE, 'm+-', x, actualAverageE, 'c*-',x, totalVolumeTarget, 'r.-',x, summedDensity, 'gx',x,mesoAvgDensity,'b-')
+                     legend('Elast Obj','E target','E avg', 'Vol Target', 'Actual Vol','AvgMesoDensity')
+                    
+                else
+                    plot( x, elasticObjective, 'ko-',x, targetAverageE, 'm+-', x, actualAverageE, 'c*-',x, totalVolumeTarget, 'r.-',x, summedDensity, 'gx')
                 legend('Elast Obj','E target','E avg', 'Vol Target', 'Actual Vol')
+                    
+                end
+                
+                
             else
                 
                 % ------------------------
@@ -227,7 +237,7 @@ classdef plotResults
                 
                 y4 = DV.storeOptimizationVar(1:loopNumb,4)'; % volume fraction material 1
                 y5 = DV.storeOptimizationVar(1:loopNumb,5)'; % volume fraction material 2
-                plot(x, y4,'y', x, y5, 'm', x, y2, 'c', x, y3, 'r');
+                plot(x, y4,'y', x, y5, 'm', x, elasticObjective, 'c', x, y3, 'r');
                 legend('vol1', 'vol2','Elast Obj','Heat Obj');
             end
         end

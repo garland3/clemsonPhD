@@ -352,6 +352,11 @@ classdef Optimizer
                         completeEyy = completeEyy*offsetup;
                     end
                     
+                     if(max1>=10000000 || max2<=10000000)
+                        completeExx = completeExx/offsetup;
+                        completeEyy = completeEyy/offsetup;
+                    end
+                    
                     
                     
                     
@@ -409,31 +414,55 @@ classdef Optimizer
                     min2= min(min(completeEyy));
                     min3 = min(min1,min2);
                     if(min1<=0 || min2<=0)
-                        completeExx = completeExx-min3+1;
-                        completeEyy = completeEyy-min3+1;
+                        completeExx = completeExx-min3+0.0000001;
+                        completeEyy = completeEyy-min3+0.0000001;
                     end
                     
+                     [dDensityEyy, dDensityExx] = obj.CalculateDensitySensitivity(ExxNew,EyyNew,DV);
                       % scale the sensitivies to make them easiler to work with if
                     % they are small.
 %                     min1= min(min(abs(completeExx)));
 %                     min2= min(min(abs(completeEyy)));
-                        max1= max(max(abs(completeExx)));
+                      max1= max(max(abs(completeExx)));
                     max2= max(max(abs(completeEyy)));
                     if(max1<=100 || max2<=100)
                         completeExx = completeExx*offsetup;
                         completeEyy = completeEyy*offsetup;
+                        
+                        dDensityEyy=dDensityEyy*offsetup;
+                        dDensityExx=dDensityExx*offsetup;
                     end
                     
-                     [dDensityEyy, dDensityExx] = obj.CalculateDensitySensitivity(ExxNew,EyyNew,DV);
+                     if(max1>=10000000 || max2>=10000000)
+                        completeExx = completeExx/offsetup;
+                        completeEyy = completeEyy/offsetup;
+                        
+                        
+                        dDensityEyy=dDensityEyy/offsetup;
+                        dDensityExx=dDensityExx/offsetup;
+                    end
+                    
+                    
                     
                     
                     ExxNew = max( minimum - EyyNew,  max(DV.Exx-move ,  min(  min(DV.Exx.*sqrt(completeExx    ./(dDensityExx*lmid)),DV.Exx+move ),matProp.E_material1)));
                     EyyNew = max(minimum -  ExxNew,  max(DV.Eyy-move ,  min(  min(DV.Eyy.*sqrt(completeEyy./(dDensityEyy*lmid)),DV.Eyy+move ),matProp.E_material1)));
                     
                     sumDensity =0;
+                    
+                     p00 =   DV. ResponseSurfaceCoefficents(1);
+               p10 =  DV. ResponseSurfaceCoefficents(2);
+               p01 =   DV. ResponseSurfaceCoefficents(3);
+               p20 =  DV. ResponseSurfaceCoefficents(4);
+               p11 =  DV. ResponseSurfaceCoefficents(5);
+               p02 =   DV. ResponseSurfaceCoefficents(6);
                    for i = 1:config.nelx
                       for j = 1:config.nely
-                           eleDensity = DV.x(j,i)*max(ExxNew(j,i),EyyNew(j,i))/matProp.E_material1;
+                          x=ExxNew(j,i);
+                          y=EyyNew(j,i);
+                           estimateElementDensity =  p00 + p10*x + p01*y + p20*x^2 + p11*x*y + p02*y^2;
+                           estimateElementDensity= min(max(estimateElementDensity,0.1),1);%1 is max, 0.1 is min
+                           eleDensity = DV.x(j,i)*estimateElementDensity;
                            sumDensity =sumDensity+eleDensity;
                       end
                    end
@@ -467,13 +496,15 @@ classdef Optimizer
         end
         
         function [dDensityEyy, dDensityExx] = CalculateDensitySensitivity(obj,ExxNew,EyyNew,DV)
-               p00 =     -0.0449;
-               p10 =   1.045e-05;
-               p01 =   1.045e-05;
-               p20 =   8.433e-26;
-               p11 =  -1.045e-10;
-               p02 =   1.789e-25;
+               p00 =   DV. ResponseSurfaceCoefficents(1);
+               p10 =  DV. ResponseSurfaceCoefficents(2);
+               p01 =   DV. ResponseSurfaceCoefficents(3);
+               p20 =  DV. ResponseSurfaceCoefficents(4);
+               p11 =  DV. ResponseSurfaceCoefficents(5);
+               p02 =   DV. ResponseSurfaceCoefficents(6);
                
+           
+                  
             dDensityEyy=p01+p11.*ExxNew+2*p02.*EyyNew;
             
             dDensityExx=p10+ 2*p20.*ExxNew+p11.*EyyNew;

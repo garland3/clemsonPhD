@@ -215,7 +215,7 @@ if(macroDesignMode==1)
                 %                 DV = DV.RunFEAs(config, matProp, masterloop);
                 %                 FEACalls = FEACalls+1;
                 DV= DV.CalculateObjectiveValue(config, matProp, masterloop);
-                  DV.storeOptimizationVar = [DV.storeOptimizationVar;DV.c, DV.cCompliance, DV.cHeat,DV.currentVol1Fraction,DV.currentVol2Fraction,sum(sum(DV.x)), DV.targetAverageE, DV.actualAverageE DV.averageMesoDensity];
+                DV.storeOptimizationVar = [DV.storeOptimizationVar;DV.c, DV.cCompliance, DV.cHeat,DV.currentVol1Fraction,DV.currentVol2Fraction,sum(sum(DV.x)), DV.targetAverageE, DV.actualAverageE];
                 ShowOptimizerProgress(DV,1,' rotation',FEACalls,config, matProp);
                
                 
@@ -234,7 +234,7 @@ if(macroDesignMode==1)
             %             FEACalls = FEACalls+1;
             DV = DV.CalculateVolumeFractions(config, matProp) ;
             DV= DV.CalculateObjectiveValue(config, matProp, masterloop);
-             DV.storeOptimizationVar = [DV.storeOptimizationVar;DV.c, DV.cCompliance, DV.cHeat,DV.currentVol1Fraction,DV.currentVol2Fraction,sum(sum(DV.x)), DV.targetAverageE, DV.actualAverageE DV.averageMesoDensity];
+            DV.storeOptimizationVar = [DV.storeOptimizationVar;DV.c, DV.cCompliance, DV.cHeat,DV.currentVol1Fraction,DV.currentVol2Fraction,sum(sum(DV.x)), DV.targetAverageE, DV.actualAverageE];
             ShowOptimizerProgress(DV,1,' E_xx and E_yy ',FEACalls,config, matProp);
         end % E_xx and E_yy Optimization
         

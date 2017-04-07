@@ -1,12 +1,12 @@
 function main()
 clear
 % 
-            combinedTopologyOptimization('1', '1', '1','60', 'na');
-%     combinedTopologyOptimization('1', '1', '1','200', 'na');
-%          combinedTopologyOptimization('1', '1', '1','203', 'na'); % make%        Exx, Eyy, vars from Dmatrixes
+%              combinedTopologyOptimization('1', '1', '1','60', 'na');
+%      combinedTopologyOptimization('1', '1', '1','200', 'na');
+            combinedTopologyOptimization('1', '1', '1','203', 'na'); % make%        Exx, Eyy, vars from Dmatrixes
    
 % iteration 2
-%    combinedTopologyOptimization('1', '1', '2','60', 'na');
+%     combinedTopologyOptimization('1', '1', '2','60', 'na');
 
     
 %   combinedTopologyOptimization('1', '1', '1','202', 'na'); % make complete macro-meso  structure

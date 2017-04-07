@@ -33,10 +33,7 @@ classdef Configuration
         addThermalExpansion = 0; % Set to 1 to incorporate thermal expansion
         
         % Exx and Eyy Distribution
-        useExxEyy=1;
-        %maxDorth= 0.9; % 0.5
-        %minDorth = 0.1;       % 0.001
-        %moveLimitExxEyy = 0.2;
+        useExxEyy=1;       
         useTargetMesoDensity = 1; % 1 = yes, 0 = no and use target Eavg
         targetExxEyyDensity = 0.5;
         
@@ -77,7 +74,7 @@ classdef Configuration
         doPlotHeat = 0;
         doPlotHeatSensitivityTopology = 0;
         doPlotStress = 0;
-        doPlotFinal =0;
+        doPlotFinal =1;
         doPlotMetrics = 0;
         doSaveDesignVarsToCSVFile = 0; % set to 1 to write plotFinal csv file instead
         doPlotAppliedStrain = 0; % For debugging only
@@ -104,7 +101,7 @@ classdef Configuration
         iterationNum=0; %  used for parallel computing.
         maxFEACalls = 50;
         maxMasterLoops = 30;
-        maxMesoLoops = 100;
+        maxMesoLoops = 50;
         maxNumPseudoStrainLoop=6
         PseudoStrainEndCriteria = 0.1;
         
@@ -206,8 +203,8 @@ classdef Configuration
                 obj.nelyMeso =30; %35;
                 obj.terminationAverageCount = 10;
                 obj.terminationCriteria =0.001; % 0.0%
-                obj.maxFEACalls = 30;
-                obj.maxMasterLoops = 30;
+                obj.maxFEACalls = 25;
+                obj.maxMasterLoops = 25;
                 
             end
             
