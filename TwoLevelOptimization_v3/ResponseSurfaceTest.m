@@ -1,3 +1,5 @@
+function [] = ResponseSurfaceTest()
+
 matProp = MaterialProperties;
 
 % point 1, Exx extreme

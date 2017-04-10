@@ -1,0 +1,304 @@
+<html><head><title>EzyFit Frequently Asked Questions</title>
+
+<link rel=stylesheet href="docstyle1.css" type="text/css">
+</head>
+<body bgcolor=#ffffff>
+<!-- NAVBARTOP -->
+<table border=0 width="100%" cellpadding=0 cellspacing=0><tr>
+<td valign=baseline bgcolor="#e7ebf7"><b>EzyFit Frequently Asked Questions</b></td>
+</tr>
+</table>
+
+
+<h1>EzyFit Frequently Asked Questions</h1>
+<hr>
+
+<br>
+
+If you have a question which is not answered here, or a suggestion on how
+you would improve this section, please feel free to send an e-mail to
+the author, <a href="mailto:moisy@fast.u-psud.fr">moisy@fast.u-psud.fr</a>.
+
+<br>
+
+<br>
+
+<ol>
+<li><a href="#a1">Why using EzyFit instead of the standard Matlab's "Basic Fitting" tool?</a></li>
+<li><a href="#a2">Why using EzyFit instead of MathWorks' "Curve Fitting Toolbox"?</a></li>
+<li><a href="#a3">I have two curves in my figure, and I want to fit only the second one!</a></li>
+<li><a href="#a4">Why is there no EzyFit menu in my figure?</a></li>
+<li><a href="#a5">Can I change the fit color, width, etc.?</a></li>
+<li><a href="#a6">I want to fit only part of my data!</a></li>
+<li><a href="#a7">I want the fitted parameters of my data, but whithout drawing the curve!</a></li>
+<li><a href="#a8">How to change the default color/style of the fits?</a></li>
+<li><a href="#a9">What are the "initial guesses"?</a></li>
+<li><a href="#a10">What means "(lin)" or "(log)" in the equation box?</a></li>
+<li><a href="#a11">Can I extrapolate the fitted curve further than my data range?</a></li>
+<li><a href="#a12">Where are stored the values of the fitted parameters?</a></li>
+<li><a href="#a13">Can I save a fit equation?</a></li>
+<li><a href="#a14">Can I save my own settings configuration?</a></li>
+<li><a href="#a15">How does EzyFit work?</a></li>
+<li><a href="#a16">Why do I obtain the error 'Maximum number of function evaluations has been exceeded'?</a></li>
+<li><a href="#a17">How to uninstall the Ezyfit toolbox?</a></li>
+<li><a href="#a18">Why can't I open a figure saved with the Ezyfit menu?</a></li>
+
+</ol>
+
+<br>
+
+<hr>
+
+ 
+<ol>
+
+<li><b><a name="a1"></a>Why using EzyFit instead of the standard Matlab's "Basic Fitting" tool?</b><br><br>
+
+Well, the "Basic Fitting" looks nice, but it only fits polynomials!<br>
+<br></li>
+
+
+<li><b><a name="a2"></a>Why using EzyFit instead of MathWorks' "Curve Fitting Toolbox"?</b><br><br>
+
+MathWorks' "Curve Fitting Toolbox" does much more than EzyFit. But EzyFit is
+simpler (you can make it work in 1 minute), and it is free.
+For most usual problems, EzyFit will surely do the job.<br>
+
+<br></li>
+
+
+
+<li><b><a name="a3"></a>I have two curves in my figure, and I want to fit only the second one!</b><br><br>
+
+First select the curve you want to fit using the pointer (mouse), and then fit it.<br>
+<br></li>
+
+
+
+
+<li><b><a name="a4"></a>Why is there no EzyFit menu in my figure?</b><br><br>
+
+Type <tt><a href="efmenu.html">efmenu</a></tt> to have the EzyFit menu in your
+current and all subsequent figures. You may also type
+<blockquote><pre>efmenu install</pre></blockquote>
+to have the EzyFit menu by default in all your figures (this will automatically
+run <tt>efmenu</tt> at each Matlab restart).<br>
+<br></li>
+
+
+<li><b><a name="a5"></a>Can I change the fit color, width, etc.?</b><br><br>
+
+Yes, the fit properties and display settings (color, width,
+equation box...) can be changed by specifying directly some 'PropertyName/PropertyValue' pairs,
+when calling <tt>showfit</tt>, e.g.
+<blockquote><pre>plotsample power
+showfit('a*x^n; n=-1','fitcolor','red','fitlinestyle','--');
+showfit('a*x^n+c_0; n=-1','fitcolor','black','fitlinestyle','-.');
+legend show
+</pre></blockquote>
+<p><img src="ezyfit_faq_fig6.jpg"></p>
+
+See the <a href="ezyfit_settings.html">Settings page</a> for details.<br>
+
+You may also change the default settings, which are coded in the
+M-file <tt><a href="fitparam.html">fitparam.m</a></tt> (click
+<a href="matlab:edit fitparam">here</a> to open the M-file and follow the
+instructions).<br>
+
+<br></li>
+
+
+<li><b><a name="a6"></a>I want to fit only part of my data!</b><br><br>
+
+If you have Matlab >= 7.6, use the "Data Brushing" tool to select the points
+you want to fit, and then call <tt>ezfit</tt> or <tt>showfit</tt>.<br>
+    
+<br></li>
+
+
+
+
+<li><b><a name="a7"></a>I want to get the fitted parameters of my data, but whithout drawing the curve!</b><br><br>
+
+If your data are <tt>X,Y</tt>, you just obtain the fitted parameters by
+<blockquote><pre>f = ezfit(x,y,'a*ln(x/c)+k');</pre></blockquote>
+See <a href="#a11">this question</a> to see how to get the fitted values
+from <tt>f</tt>.<br>
+<br></li>
+
+
+
+
+<li><b><a name="a8"></a>How to change the default color/style of the fits?</b><br><br>
+
+See the options <tt>fp.fitcolor</tt>, <tt>fp.fitlinestyle</tt> and <tt>fp.fitlinewidth</tt>
+in <tt><a href="fitparam.html">fitparam</a></tt>.<br>
+<br></li>
+
+
+
+
+<li><b><a name="a9"></a>What are the "initial guesses"?</b><br><br>
+
+For nonlinear fits, you should provide initial guesses for the
+parameters of your fits to "help" the solver to converge towards
+the "good" values. The solver (the <tt>fminsearch</tt> function) 
+starts from the initial guesses and then varies the coefficients in an
+attempt to find the best fit.<br>
+
+For example, suppose you have the data
+<blockquote><pre>x=1:10;
+y=[15 14.2 13.6 13.2 12.9 12.7 12.5 12.4 12.4 12.2];
+plot(x,y,'*')</pre></blockquote>
+which you want to fit with an exponential decay,
+<blockquote><pre>showfit('cste+a0*exp(-x/L)');</pre></blockquote>
+You will obtain:
+<p><img src="ezyfit_faq_fig1.jpg"></p>
+which obvisouly is bad. By default, <tt>showfit</tt> has used
+<tt>cste=1</tt>, <tt>a0=1</tt> and <tt>L=1</tt>, which is too far away
+from the 'true' coefficients. To specify the intial guess:
+<blockquote><pre>showfit('cste+a0*exp(-x/L); cste=10');</pre></blockquote>
+you now obtain:
+<p><img src="ezyfit_faq_fig2.jpg"></p>
+which is clearly much better. In this example, the initial guesses for <tt>a0</tt>
+and <tt>L</tt>, which are omitted, are 1.<br>
+You may also specify the initial guesses like this:
+<blockquote><pre>showfit('cste+a0*exp(-x/L)',[10 1 1]);</pre></blockquote>
+In this case, you should specify ALL the initial guesses, in the alphabetical
+order of the parameter names (here <tt>L</tt>, <tt>a0</tt> and <tt>cste</tt> because 
+<tt>L</tt> is a capital letter).<br>
+<br></li>
+
+
+<li><b><a name="a10"></a>What means "(lin)" or "(log)" in the equation box?</b><br><br>
+
+It indicates whether the data itself, say <tt>Y</tt>, or its logarithm, <tt>LOG(Y)</tt>,
+has been fitted. By default the mean square procedure is applied to <tt>Y</tt> if the Y-axis of the current
+figure is linear, and
+it is applied <tt>LOG(Y)</tt> if the Y-axis is logarithmic. For instance, plot a
+power law in log scales,
+<blockquote><pre>plotsample power</pre></blockquote>
+If you try
+<blockquote><pre>showfit('power')</pre></blockquote>
+the logarithm of the data is fitted. If you turn the Y-axis in linear scale
+(you may use <tt>swy</tt> for this) and fit again, you will obtain different values.<br>
+
+You may also force <tt>ezfit</tt> to fit <tt>Y</tt> or <tt>LOG(Y)</tt> whatever
+the Y-axis, by specifying the optional argument
+<blockquote><pre>showfit('power;log','fitcolor','blue');
+showfit('power;lin','fitcolor','red');</pre></blockquote>
+See the example:
+<p><img src="ezyfit_faq_fig3.jpg"></p>
+In this example, the fit with option <tt>log</tt> (blue line) "works better"
+when displayed with a logarithmic Y-axis.<br>
+<br></li>
+
+
+<li><b><a name="a11"></a>Can I extrapolate the fitted curve further than my data range?</b><br><br>
+
+Yes, see the option <tt>fp.extrapol</tt> in <tt><a href="fitparam.html">fitparam</a></tt>.<br>
+<br></li>
+
+
+<li><b><a name="a12"></a>Where are stored the values of the fitted parameters?</b><br><br>
+
+Fit your data using
+<blockquote><pre>f = ezfit('a*x+b');</pre></blockquote>
+The structure <tt>f</tt> contains all the informations about your fit. The
+strings 'a' and 'b' of the parameter names are stored in <tt>f.param</tt>
+and their values are in <tt>f.m</tt>. This works also with <tt>showfit</tt>.<br>
+
+You may also directly create in the current workspace a set of variables which
+contain the values of the fitted parameters:
+<blockquote><pre>makevarfit(f);</pre></blockquote>
+This will create two variables, 'a' and 'b'. You can also set the option
+'automakevarfit = on' in <a href="fitparam.html">fitparam</a>: This will
+call <tt>makevarfit</tt> each time <tt>ezfit</tt> (or <tt>showfit</tt>) is executed.<br>
+<br></li>
+
+
+
+
+<li><b><a name="a13"></a>Can I save a fit equation?</b><br><br>
+
+Yes. First, you may define your favorite fit equation as a user-defined fit,
+by typing
+<blockquote><pre>editfit(3,'myspectrum','E(k) = C*k^(-n);  C=0.1; n=2; log');</pre></blockquote>
+This will update the file <tt>'userfit.mat'</tt> in the EzyFit directory, so
+your fit equation may be re-used in a future session. You can now fit your
+data using this user-defined fit,
+<blockquote><pre>showfit('myspectrum');</pre></blockquote>
+Since a fit equation is a simple string, another way is to create a variable,
+<blockquote><pre>myfit = 'E(k) = C*k^(-n);  C=0.1; n=2; log';</pre></blockquote>
+and to save it in a Mat-file,
+<blockquote><pre>save('myfits.mat','myfit');</pre></blockquote>
+To fit your data with this fit definition, just type
+<blockquote><pre>showfit(myfit);</pre></blockquote>
+<br></li>
+
+<br>
+
+<li><b><a name="a14"></a>Can I save my own settings configuration?</b><br><br>
+
+Yes. The default settings (color, width, equation box etc.) are coded
+in the file <tt>fitparam.m</tt>. So you may create a copy of this file
+with your own settings, and you just have to rename the settings file
+you want to use <tt>fitparam.m</tt>.
+<br></li>
+
+<br>
+
+
+<li><b><a name="a15"></a>How does EzyFit work?</b><br><br>
+
+
+The core function of the EzyFit toolbox is <tt>ezfit</tt>, which
+is based on Matlab's built-in FMINSEARCH function (Nelder-Mead
+method). FMINSEARCH performs an unconstrained nonlinear minimization of
+the SSR (sum of squared residuals) with respect to the various parameters.
+The additional function <tt>showfit</tt>
+simply calls <tt>ezfit</tt> with graphical output.<br></li>
+
+
+<br>
+
+<li><b><a name="a16"></a>Why do I obtain the error 'Maximum number of function evaluations has been exceeded'?</b><br><br>
+
+This error means that FMINSEARCH could not converge towards a solution in a
+reasonable number of
+iterations. There is no way for the moment to change this number
+of iterations in EzyFit. Try to use initial guesses closer to
+the expected values.<br></li>
+<br>
+
+<li><b><a name="a17"></a>How to uninstall the Ezyfit toolbox?</b><br><br>
+
+See the uninstallation procedure <a href="ezyfit_uninstall.html">here<a/>.<br></li>
+
+
+
+<br>
+
+<li><b><a name="a18"></a>Why can't I open a figure saved with the Ezyfit menu?</b><br><br>
+
+If the Ezyfit toolbox has been installed using <tt>efmenu</tt>,
+all saved figures (</tt>.fig</tt> files) and GUIs created using GUIDE have
+the Ezyfit menu included (sometimes several occurence of the Ezyfit menu).
+If you try to open the figure or GUI under a Matlab system without the Ezyfit
+toolbox, the error <tt>??? Error using ==> struct2handle
+Undefined function or variable 'efmenu'</tt> is issued.
+Use the function <tt><a href="remove_efmenu_fig.html">remove_efmenu_fig</a></tt>
+(introduced in Version 2.40) in order to remove the menu.
+If you want to uninstall the Ezyfit toolbox, or only the Ezyfit menus,
+see <a href="ezyfit_uninstall.html">here</a>.<br></li>
+
+
+</ol>
+
+<br>
+
+<br>
+<table width="100%" border=0 cellspacing=0 bgcolor=d0d0f0><tr><td>&nbsp</td></tr></table><br>
+2005-2016 <a href="ezyfit.html">EzyFit Toolbox</a><br>
+</body>
+</html>

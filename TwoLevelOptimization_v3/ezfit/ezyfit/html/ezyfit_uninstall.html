@@ -1,0 +1,66 @@
+<html><head><title>EzyFit Uninstallation</title>
+
+    <link rel=stylesheet href="docstyle1.css" type="text/css">
+</head>
+    <body bgcolor=#ffffff>
+        <!-- NAVBARTOP -->
+        <table border=0 width="100%" cellpadding=0 cellspacing=0><tr>
+            <td valign=baseline bgcolor="#e7ebf7"><b>EzyFit Uninstallation</b></td>
+        </tr>
+        </table>
+
+
+        <h1>EzyFit Uninstallation</h1>
+        <hr>
+
+        <br>
+        
+        <h2>Full uninstallation</h2>
+        
+        <p>In order to remove the Ezyfit toolbox from your Matlab installation,
+        follow the 3 steps:</p>
+        
+        <p>1. Edit the <tt>'startup file'</tt> by typing</p>
+        <blockquote><pre><tt>
+edit startup
+        </tt></pre></blockquote>    
+        <p>and remove the following lines</p>
+        <blockquote><pre><tt>
+%   These lines have been added by 'efmenu install' (01-Apr-2008 23:10:11):
+efmenu;   % Includes the EzyFit menu for all new figure.
+fprintf(' To get started with the EzyFit toolbox, select <a href="matlab:docezyfit">EzyFit</a> from the Help browser.\n\n');
+        </tt></pre></blockquote>
+        
+        <p>2. From the menu '<tt>File &gt; Set Path</tt>', select the directory
+        <tt>'../ezyfit'</tt>, and click on 'Remove' and 'Save'.</p>
+        
+        <p>3. Restart Matab.</p>
+        
+        
+        
+        <br>
+        <h2>Uninstallation of the Ezyfit menu only</h2>
+
+        <p>If you wish to uninstall the Ezyfit menu from your figure windows
+        but you still want to use the command-line functions of the Ezyfit
+        toolbox:</p>
+
+        <p>Apply the steps 1 and 3 above.</p>
+
+        <br>
+        <h2>Uninstallation of the Ezyfit menu from saved figure files</h2>
+
+        <p>If you have saved some figure files (.FIG) from a Matlab system
+            with the Ezyfit toolbox, the figure files include the Ezyfit menu.
+            As a consequence, those figure files cannot be opened with a Matlab
+        system without the Ezyfit toolbox.</p>
+        
+        <p>It is possible to remove the Ezyfit menu from a figure file, using
+        the <tt><a href="remove_efmenu_fig.html">remove_efmenu_fig</a></tt> function.</p>
+
+        <br>
+        <table width="100%" border=0 cellspacing=0 bgcolor=d0d0f0><tr><td>&nbsp</td></tr></table><br>
+        2005-2016 <a href="ezyfit.html">EzyFit Toolbox</a><br>
+
+    </body>
+</html>

@@ -8,7 +8,7 @@
 #define MASTER_RANK 0
 #define SUB_MASTER_RANK 1
 #define SUB_SUB_MASTER_RANK 2
-#define NUM_MACRO_MESO_ITER 3
+#define NUM_MACRO_MESO_ITER 5
 
 #define NELX_MACRO  30
 #define NELY_MACRO 15

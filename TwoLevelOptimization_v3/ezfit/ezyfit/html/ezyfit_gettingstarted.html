@@ -1,0 +1,123 @@
+<html><head><title>EzyFit Getting Started</title>
+
+    <link rel=stylesheet href="docstyle1.css" type="text/css">
+</head>
+    <body bgcolor=#ffffff>
+        <!-- NAVBARTOP -->
+        <table border=0 width="100%" cellpadding=0 cellspacing=0><tr>
+            <td valign=baseline bgcolor="#e7ebf7"><b>EzyFit Getting Started</b></td>
+        </tr>
+        </table>
+
+
+        <h1>EzyFit Getting Started</h1>
+        <hr>
+
+        <br>
+
+        <p>The EzyFit toolbox for Matlab enables you to perform simple curve fitting
+        of one-dimensional data using arbitrary fitting functions. It provides
+        command-line functions and a basic graphical user interface for interactive
+        selection of the data.</p>
+
+        <br>
+
+        <h2>Why using EzyFit?</h2>
+    
+        <p>There are three ways to perform curve fitting with Matlab: the first
+        one is using the 'Basic Fitting Interface' of Matlab, the second one is using
+        <tt>fminsearch</tt> with anonymous functions, and the third one
+        is to pay for the
+        <a href="matlab:web http://www.mathworks.com/products/curvefitting/ -browser">Curve Fitting Toolbox</a>.
+        However, for usual curve fitting of 1D data, you may find the first solution
+        rather limited, the second one a little complicated, and the third one quite
+        expensive...</p>
+
+        <p>The EzyFit Toolbox provides a free, simple and efficient way to
+        perform quick curve fitting with arbitrary (nonlinear) fitting functions:
+        You just have to type something like <tt>showfit('c+a/x^n')</tt> and EzyFit gives
+        you the values for <tt>c</tt>, <tt>a</tt> and <tt>n</tt> and shows you the
+        curve! EzyFit also provides a basic graphical user interface
+        to interactively fit selected parts of your data.</p>
+
+        <br>
+
+        <h2>First step: fitting data from the EzyFit menu</h2>
+
+        <p>First plot some sample data by typing 
+        <tt><a href="plotsample.html">plotsample</a></tt>
+        in the command window (or simply click <a href="matlab:plotsample">here</a>
+        to display the sample figure).</p>
+
+        <p>In the <tt>EzyFit</tt> menu of the figure window, select <tt>Showfit</tt>
+        and
+        choose an appropriate fitting function to fit the sample data. You may also click
+        on the link that appears in the command window to choose the default
+        fitting function associated to the sample plot. If the menu is not present in
+        your figure window, type <tt><a href="efmenu.html">efmenu</a></tt>,
+        or see the step 4 in the <a href="ezyfit_install.html">installation procedure</a>.</p>
+
+        <p><img src="ezyfit_efmenu.jpg"></p>
+        
+        <p>Choose <tt>Undo Fit</tt> if you want to remove the fit.</p>
+
+        <p>If multiple curves are present in the figure,
+        first select the one you want to fit, and then choose <tt>Showfit</tt>.</p>
+
+        <p>Two additional functions, <tt><a href="getslope.html">getslope</a></tt> and
+        <tt><a href="showslope.html">showslope</a></tt>, return the slope of the selected
+        line (use the menu
+        <tt>Insert &gt; Line</tt>), or drag a line of fixed slope, for a fit "by eye"
+        of your data.</p>
+
+        <br>
+
+        <h2>Second step: fitting data from the command window</h2>
+    
+        <p>Although fitting your data from the <tt>EzyFit</tt> menu is fast and easy,
+        using the command-line functions is much more powerful, and allows for
+        using different properties for each fit (See the <a href="ezyfit_settings.html">Settings
+        page</a> for details).</p>
+
+        <p>The key function of the toolbox is <tt><a href="ezfit.html">ezfit</a></tt>,
+        which computes the coefficients that fit the data. The function
+        <tt><a href="showfit.html">showfit</a></tt> simply calls the function
+        <tt><a href="ezfit.html">ezfit</a></tt> for the active curve, using the
+        "Data Brushing" tool of Matlab (available since version 7.6).
+        Type <a href="undofit.html">undofit</a> to remove the last fit.</p>
+
+        <p>This example fits some noisy data by a power law <tt>c * x^n</tt> and plots the result:</p>
+
+        <blockquote><pre><tt>
+plotsample power           % a power law
+showfit c*x^n
+        </tt></pre></blockquote>
+
+
+        <p>This example fits an histogram with a Gaussian, and displays the coefficients in
+        the Array Editor:</p>
+
+        <blockquote><pre><tt>
+plotsample hist           % an histogram
+f = ezfit('gauss');       % fits with a Gaussian
+f                         % displays the fit structure
+showfit(f);               % displays the fit
+editcoeff(f);             % opens the Array Editor
+        </tt></pre></blockquote>
+        
+        
+        <h3>More examples?</h3>
+        <p>Have a look to the <a href="../demo/html/efdemo.html">Sample session</a> for more examples.</p>
+        
+        <p>See also the <a href="ezyfit_faq.html">Frequently Asked Questions</a> section and
+        the <a href="ezyfit_func_cat.html">Function by category</a> section to
+        learn more about this toolbox.</p> 
+        <br>
+        
+
+        <br>
+        <table width="100%" border=0 cellspacing=0 bgcolor=d0d0f0><tr><td>&nbsp</td></tr></table><br>
+        2005-2016 <a href="ezyfit.html">EzyFit Toolbox</a><br>
+
+    </body>
+</html>

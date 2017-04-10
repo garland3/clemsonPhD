@@ -406,47 +406,58 @@ classdef Optimizer
                     completeExx = term1Exx+term2Exx+term3Exx;
                     completeEyy = term1Eyy+term2Eyy+term3Eyy;
                     
-                  
-                  
+                    
+                    
+                    
+                    
+                    
+                    [dDensityEyy, dDensityExx] = obj.CalculateDensitySensitivity(ExxNew,EyyNew,DV);
+                    % scale the sensitivies to make them easiler to work with if
+                    % they are small.
+                    %                     min1= min(min(abs(completeExx)));
+                    %                     min2= min(min(abs(completeEyy)));
+                    
+                    
                     
                     % Don't allow negative
-                     min1= min(min(completeExx));
-                    min2= min(min(completeEyy));
-                    min3 = min(min1,min2);
-                    if(min1<=0 || min2<=0)
-                        completeExx = completeExx-min3+0.0000001;
-                        completeEyy = completeEyy-min3+0.0000001;
-                    end
+                    term1 = completeExx    ./(dDensityExx*lmid);
+                    term2 = completeEyy./(dDensityEyy*lmid);
                     
-                     [dDensityEyy, dDensityExx] = obj.CalculateDensitySensitivity(ExxNew,EyyNew,DV);
-                      % scale the sensitivies to make them easiler to work with if
-                    % they are small.
-%                     min1= min(min(abs(completeExx)));
-%                     min2= min(min(abs(completeEyy)));
-                      max1= max(max(abs(completeExx)));
-                    max2= max(max(abs(completeEyy)));
+                    
+                    max1= max(max(abs(term1)));
+                    max2= max(max(abs(term2)));
                     if(max1<=100 || max2<=100)
-                        completeExx = completeExx*offsetup;
-                        completeEyy = completeEyy*offsetup;
+                        term1 = term1*offsetup;
+                        term2 = term2*offsetup;
                         
-                        dDensityEyy=dDensityEyy*offsetup;
-                        dDensityExx=dDensityExx*offsetup;
+                        %                         dDensityEyy=dDensityEyy*offsetup;
+                        %                         dDensityExx=dDensityExx*offsetup;
                     end
                     
-                     if(max1>=10000000 || max2>=10000000)
-                        completeExx = completeExx/offsetup;
-                        completeEyy = completeEyy/offsetup;
+                    if(max1>=100000 || max2>=100000)
+                        term1 = term1/offsetup;
+                        term2 = term2/offsetup;
                         
                         
-                        dDensityEyy=dDensityEyy/offsetup;
-                        dDensityExx=dDensityExx/offsetup;
+                        %                         dDensityEyy=dDensityEyy/offsetup;
+                        %                         dDensityExx=dDensityExx/offsetup;
+                    end
+                    
+                    
+                    min1= min(min(term1));
+                    min2= min(min(term2));
+                    min3 = min(min1,min2);
+                    min4 = min(min2,min3);
+                    if(min4<=0 )
+                        term1 = term1-min4+0.0000001;
+                        term2 = term2-min4+0.0000001;
                     end
                     
                     
                     
                     
-                    ExxNew = max( minimum - EyyNew,  max(DV.Exx-move ,  min(  min(DV.Exx.*sqrt(completeExx    ./(dDensityExx*lmid)),DV.Exx+move ),matProp.E_material1)));
-                    EyyNew = max(minimum -  ExxNew,  max(DV.Eyy-move ,  min(  min(DV.Eyy.*sqrt(completeEyy./(dDensityEyy*lmid)),DV.Eyy+move ),matProp.E_material1)));
+                    ExxNew = max( minimum - EyyNew,  max(DV.Exx-move ,  min(  min(DV.Exx.*sqrt(term1),DV.Exx+move ),matProp.E_material1)));
+                    EyyNew = max(minimum -  ExxNew,  max(DV.Eyy-move ,  min(  min(DV.Eyy.*sqrt(term2),DV.Eyy+move ),matProp.E_material1)));
                     
                     sumDensity =0;
                     

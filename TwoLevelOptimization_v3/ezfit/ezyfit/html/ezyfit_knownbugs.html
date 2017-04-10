@@ -1,0 +1,79 @@
+<html><head><title>EzyFit Known software problems</title>
+
+<link rel=stylesheet href="docstyle1.css" type="text/css">
+</head>
+<body bgcolor=#ffffff>
+<!-- NAVBARTOP -->
+<table border=0 width="100%" cellpadding=0 cellspacing=0><tr>
+<td valign=baseline bgcolor="#e7ebf7"><b>EzyFit Known software problems</b></td>
+</tr>
+</table>
+
+
+<h1>EzyFit Known software problems</h1>
+<hr>
+
+<br>
+
+<p>If you find a bug not documented here, first have a look
+to the updated <a href="http://www.fast.u-psud.fr/ezyfit/html/ezyfit_knownbugs.html">EzyFit
+Known software problems</a> page online.
+If it is still undocumented, send an e-mail to
+<a href="mailto:moisy@fast.u-psud.fr">moisy@fast.u-psud.fr</a>.</p><br>
+
+
+<ul>
+
+    
+<li><b>Figures and GUIs created by GUIDE always have the Ezyfit menu included.</b><br>
+
+If the Ezyfit toolbox has been installed using <tt>efmenu</tt>,
+all saved figures (</tt>.fig</tt> files) and GUIs created using GUIDE have
+the Ezyfit menu included (sometimes several occurence of the Ezyfit menu).
+If you try to open the figure or GUI under a Matlab system without the Ezyfit
+toolbox, the error <tt>??? Error using ==> struct2handle
+Undefined function or variable 'efmenu'</tt> is issued.
+Use the function <tt><a href="remove_efmenu_fig.html">remove_efmenu_fig</a></tt>
+(introduced in Version 2.40) in order to remove the menu.
+If you want to uninstall the Ezyfit toolbox, or only the Ezyfit menus,
+see <a href="ezyfit_uninstall.html">here</a>.<br><br></li>
+
+<!--
+<li><b>Since Matlab R2014b, fitting "brushed" data does not work.</b><br>
+
+The new Graphics system of Matlab introduced in R2014b changes the behavior
+of brushed data (i.e., data selected via the "Brush" tool). All the data points
+are considered in the fit. Help is welcome to fix this bug!<br><br></li>
+-->
+
+<li><b>New user defined fits created from a given window are not automatically
+updated in the EzyFit menu of other window(s).</b><br>
+
+Select the other window(s) and chose <tt>Refresh EzyFit menu</tt> in the menu,
+or type <tt><a href="efmenu.html">efmenu</a></tt> in the Command Window.<br><br></li>
+
+
+<li><b>When loading a fig file which already contains the EzyFit menu, a
+second EzyFit menu is added.</b><br>
+
+Type <tt><a href="efmenu.html">efmenu</a></tt>, this will remove the extra
+menu.<br><br></li>
+
+
+
+<li><b><tt><a href="showslope.html">showslope</a></tt> does not work with
+recent versions of Matlab.</b><br>
+
+No solution for the moment, sorry!<br><br></li>
+
+
+</ul>
+
+<br>
+
+        <br>
+        <table width="100%" border=0 cellspacing=0 bgcolor=d0d0f0><tr><td>&nbsp</td></tr></table><br>
+        2005-2016 <a href="ezyfit.html">EzyFit Toolbox</a><br>
+
+</body>
+</html>

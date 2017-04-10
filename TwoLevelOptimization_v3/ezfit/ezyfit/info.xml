@@ -1,0 +1,58 @@
+<productinfo
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:noNamespaceSchemaLocation="optional">
+<?xml-stylesheet type="text/xsl" href="optional"?>
+
+<matlabrelease>14</matlabrelease>
+<name>EzyFit</name>
+<type>toolbox</type>
+<icon>html/ef_logo16.jpg</icon>
+<help_location>html</help_location>
+
+<list>
+
+<listitem>
+<label>Help</label>
+<callback>docezyfit</callback>
+<icon>$toolbox/matlab/icons/book_mat.gif</icon>
+</listitem>
+
+<listitem>
+<label>Plot Sample</label>
+<callback>plotsample</callback>
+<icon>$toolbox/matlab/icons/demoicon.gif</icon>
+</listitem>
+
+<listitem>
+<label>Preferences</label>
+<callback>edit fitparam.m</callback>
+<icon>$toolbox/matlab/icons/figureicon.gif</icon>
+</listitem>
+
+<listitem>
+<label>Release Notes</label>
+<callback>docezyfit('ezyfit_releasenotes.html')</callback>
+<icon>$toolbox/matlab/icons/notesicon.gif</icon>
+</listitem>
+
+<listitem>
+<label>Check for Update (Web)</label>
+<callback>checkupdate_ef('dialog');</callback>
+<icon>$toolbox/matlab/icons/webicon.gif</icon>
+</listitem>
+
+<listitem>
+<label>Product Page (Web)</label>
+<callback>web http://www.fast.u-psud.fr/ezyfit -browser;</callback>
+<icon>$toolbox/matlab/icons/webicon.gif</icon>
+</listitem>
+
+<listitem>
+<label>Uninstall</label>
+<callback>docezyfit('ezyfit_uninstall.html')</callback>
+<icon>$toolbox/matlab/icons/book_mat.gif</icon>
+</listitem>
+
+</list>
+
+</productinfo>

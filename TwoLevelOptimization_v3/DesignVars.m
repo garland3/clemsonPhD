@@ -237,11 +237,11 @@ classdef DesignVars
                     obj.EyySub=csvread(outnameEyySubSysValues); % Sub system copies of design var
                     obj.thetaSub=csvread(outnameThetaSubSysValues); % Sub system copies of design var
                     
-                    
-                     if(config.macro_meso_iteration>1)
-                         nameArray = sprintf('./out%i/ExxEyyRhoFitCoefficients%i.csv',folderNum, oldIteration);
-                         obj.ResponseSurfaceCoefficents=csvread(nameArray);
-                     end
+%                     
+%                      if(config.macro_meso_iteration>1)
+%                          nameArray = sprintf('./out%i/ExxEyyRhoFitCoefficients%i.csv',folderNum, oldIteration);
+%                          obj.ResponseSurfaceCoefficents=csvread(nameArray);
+%                      end
                     
                     
                 elseif(config.mode==50)
@@ -275,12 +275,12 @@ classdef DesignVars
         % -----------------------------
         function obj = UpdatePenaltyAndLagrangianValues(obj, config,matProp)
             
-             ne = config.nelx*config.nely;
-                  diffExx = obj.Exx-obj.ExxSub;
-                diffEyy = obj.Eyy - obj.EyySub;
-                diffTheta = obj.t-obj.thetaSub;
-             
-            % if the first time, calculate the initial penalty values. 
+            ne = config.nelx*config.nely;
+            diffExx = obj.Exx-obj.ExxSub;
+            diffEyy = obj.Eyy - obj.EyySub;
+            diffTheta = obj.t-obj.thetaSub;
+            
+            % if the first time, calculate the initial penalty values.
             if(config.macro_meso_iteration==2)
                 % Get displacement fields
                 oldIteration = config.macro_meso_iteration-1;
@@ -884,16 +884,16 @@ classdef DesignVars
             %             for loadcaseIndex = 1:t2
             % UloadCase= obj.U(loadcaseIndex,:);
             
-             if(config.useTargetMesoDensity==1)
-               p00 =   obj. ResponseSurfaceCoefficents(1);
-               p10 =  obj. ResponseSurfaceCoefficents(2);
-               p01 =   obj. ResponseSurfaceCoefficents(3);
-               p20 =  obj. ResponseSurfaceCoefficents(4);
-               p11 =  obj. ResponseSurfaceCoefficents(5);
-               p02 =   obj. ResponseSurfaceCoefficents(6);
-               sumDensity=0;
-                    
-          end
+            if(config.useTargetMesoDensity==1)
+                p00 =   obj. ResponseSurfaceCoefficents(1);
+                p10 =  obj. ResponseSurfaceCoefficents(2);
+                p01 =   obj. ResponseSurfaceCoefficents(3);
+                p20 =  obj. ResponseSurfaceCoefficents(4);
+                p11 =  obj. ResponseSurfaceCoefficents(5);
+                p02 =   obj. ResponseSurfaceCoefficents(6);
+                sumDensity=0;
+                
+            end
             
             % OBJECTIVE FUNCTION
             count =1;

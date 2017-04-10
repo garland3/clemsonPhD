@@ -5,7 +5,7 @@
 
 source /etc/profile.d/modules.sh
 module purge
-module load gcc/5.3.0 openmpi/1.10.3 matlab/2015a
+module load gcc/5.3.0 openmpi/1.10.3 matlab/2016a
 # module add python/2.7.6 
 
 cd $PBS_O_WORKDIR
@@ -31,7 +31,7 @@ mcc -R -nodisplay -C  -m  combinedTopologyOptimization.m    Configuration.m Desi
 rm -R combinedTopologyOptimization_mcr
 
 
-mpirun -np 512 ./bank
+mpirun -np 460 ./bank
 
 #////   PBS -l select=64:ncpus=8:mpiprocs=8:mem=8gb,walltime=03:00:00
 

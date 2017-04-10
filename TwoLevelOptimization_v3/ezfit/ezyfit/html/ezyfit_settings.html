@@ -1,0 +1,163 @@
+<html><head><title>EzyFit Settings</title>
+
+<link rel=stylesheet href="docstyle1.css" type="text/css">
+</head>
+<body bgcolor=#ffffff>
+<!-- NAVBARTOP -->
+<table border=0 width="100%" cellpadding=0 cellspacing=0><tr>
+<td valign=baseline bgcolor="#e7ebf7"><b>EzyFit Settings</b></td>
+</tr>
+</table>
+
+
+<h1>EzyFit Settings</h1>
+<hr>
+
+<br>
+
+<p>A number of fit properties and display settings (color, width,
+equation box...) can be changed either:
+
+<ul>
+    <li>by specifying directly some 'PropertyName/PropertyValue' pairs,
+    when calling <tt><a href="showfit.html">showfit</a></tt>, e.g.
+    <pre><code>showfit('a*x+b','fitcolor','red','fitlinewidth',1);</pre></code></li>
+    
+    <li>by editing the default settings, which are coded in the
+    M-file <tt><a href="fitparam.html">fitparam.m</a></tt> (click
+<a href="matlab:edit fitparam">here</a> to open this M-file and follow the
+instructions).
+</ul>
+
+<p>The actual settings structure can be displayed by simply typing <tt>fitparam</tt>.</p>
+
+<p>This table lists the property names along with the type of values each accepts.
+Curly braces { } enclose default values.</p>
+
+<table Border="2" cellpadding=4 cellspacing=0>
+    <tr>
+        <td><b>Property Name</b></td>
+        <td><b>Property Values</b></td>
+        <td><b>Description</b></td>
+    </tr>
+    <tr>
+        <td>fitcolor</td>
+        <td>[R G B]<br>or <i>integer</i><br>or <i>string</i></td>
+        <td>Color of the fit (type 'doc colorspec' for details):<br>
+- a [R G B] vector specifies a fixed color (eg, [0 0 0] is black).<br>
+- a string specifies one of eight predefined colors (full name: 'red',
+'blue' etc, or single letters, 'r', 'b' etc).<br>
+- a numeric value specifies that the color of the fit has the same color
+as the data, but multiplied by the factor fitcolor (less than 1 for darker,
+larger than 1 for lighter).<br>
+        Default = [1 0.5 0] (orange).</td>
+    </tr>
+    <tr>
+        <td>fitlinewidth</td>
+        <td><i>integer</i></td>
+        <td>Width of the fit line (type 'doc linespec' for details). Default = 2.</td>
+    </tr>
+    <tr>
+        <td>fitlinestyle</td>
+        <td><i>string</i></td>
+        <td>Style of the fit line (type 'doc linespec' for details). Default = '-'.</td>
+    </tr>
+    <tr>
+        <td>extrapol</td>
+        <td>fig | data | {none}</td>
+        <td>Extrapolation mode ('fig'  = extrapolates the fit to the figure limits;
+'data' = extrapolates the fit to the whole data limits, even if only a selection of the data is fitted (see selectfit);
+'none' = no extrapolation)</td>
+    </tr>
+    <tr>
+        <td>npt</td>
+        <td><i>integer</i></td>
+        <td>Number of X points used to compute and display the fitted curve (typically 20 to 500, default=200)</td>
+    </tr>
+    <tr>
+        <td>dispeqmode</td>
+        <td>{on} | off</td>
+        <td>Display the equation in the command window.</td>
+    </tr>
+  <tr>
+        <td>dispeqboxmode</td>
+        <td>{on} | off</td>
+        <td>Display the equation box in the figure.</td>
+    </tr>
+    <tr>
+        <td>dispfitlegend</td>
+        <td>on | {off}</td>
+        <td>Display the legend (data and fits) in the figure</td>
+    </tr>
+    <tr>
+        <td>eqreplacemode</td>
+        <td>on | {off}</td>
+        <td>Equation replace mode ('off' = keep the parameter names in the equation;
+        'on' = replace each parameter by its numerical value in the equation).</td>
+    </tr>
+         <tr>
+        <td>corrcoefmode</td>
+        <td>{r} | r2 | none</td>
+        <td>Correlation coefficient mode: display R, R^2, or nothing.</td>
+    </tr>
+     <tr>
+        <td>linlogdisp</td>
+        <td>{on} | off</td>
+        <td>Lin/log mode display, tells whether Y or LOG(Y) is fitted.</td>
+    </tr>   
+    <tr>
+        <td>editcoeffmode</td>
+        <td>on | {off}</td>
+        <td>Open the Array Editor with the fit coefficients after showfit.
+See <a href="editcoeff.html">editcoeff</a> for details.</td>
+    </tr>
+    <tr>
+        <td>coeffarray</td>
+        <td>{row} | line</td>
+        <td>Array for the Fit Coefficients: 'row' or 'line' (this option is useful for copy-paste the coefficients in Excel)</td>
+    </tr>
+    <tr>
+        <td>automakevarfit</td>
+        <td>on | {off}</td>
+        <td>Call <a href="makevarfit.html">makevarfit</a> after each fit.
+Setting to 'on' creates on the Matlab workspace the variables associated
+to the fit parameters (the variables will be overwritten if they already exist!).</td>
+    </tr>
+    <tr>
+        <td>maxlengtheq</td>
+        <td><i>integer</i></td>
+        <td>Maximum length of the equation string to be displayed in the equation box (longer strings are truncated).
+Set 'maxlength = inf' for no truncation. Default value = 35. </td>
+    </tr>
+    <tr>
+        <td>boxlocation</td>
+        <td>[x,y,w,h]</td>
+        <td>Location and size of the equation box (in normalized units).
+        Default = [0.15 0.81 0.1 0.1].</td>
+    </tr>
+    <tr>
+        <td>whichpickdata</td>
+        <td>{first} | last</td>
+        <td>Which data to fit by default when several curves are present in the figure
+        and none is selected.</td>
+    </tr>
+    <tr>
+        <td>polynom_coeffname</td>
+        <td><i>string</i></td>
+        <td>Name of the polynom coefficients. Using a '_' (underscore) at the
+end of the coeff name allows for using the coefficient order as a subscript
+(as in latex syntax). Default: 'a_'.</td>
+    </tr>
+    <tr>
+        <td>numberofdigit</td>
+        <td><i>integer</i></td>
+        <td>Number of digits for the coefficient values. Default = 5.</td>
+    </tr>
+</table>
+
+<br>
+<table width="100%" border=0 cellspacing=0 bgcolor=d0d0f0><tr><td>&nbsp</td></tr></table><br>
+2005-2016 <a href="ezyfit.html">EzyFit Toolbox</a><br>
+
+</body>
+</html>

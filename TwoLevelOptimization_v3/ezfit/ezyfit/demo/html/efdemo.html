@@ -1,0 +1,414 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN">
+<html xmlns:mwsh="http://www.mathworks.com/namespace/mcode/v1/syntaxhighlight.dtd">
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   
+      <!--
+This HTML is auto-generated from an M-file.
+To make changes, update the M-file and republish this document.
+      -->
+      <title>Discover Ezyfit: A free curve fitting toolbox for Matlab</title>
+      <meta name="generator" content="MATLAB 7.6">
+      <meta name="date" content="2008-11-19">
+      <meta name="m-file" content="efdemo"><style>
+
+body {
+  background-color: white;
+  margin:10px;
+}
+
+h1 {
+  color: #990000; 
+  font-size: x-large;
+}
+
+h2 {
+  color: #990000;
+  font-size: medium;
+}
+
+/* Make the text shrink to fit narrow windows, but not stretch too far in 
+wide windows. */ 
+p,h1,h2,div.content div {
+  max-width: 600px;
+  /* Hack for IE6 */
+  width: auto !important; width: 600px;
+}
+
+pre.codeinput {
+  background: #EEEEEE;
+  padding: 10px;
+}
+@media print {
+  pre.codeinput {word-wrap:break-word; width:100%;}
+} 
+
+span.keyword {color: #0000FF}
+span.comment {color: #228B22}
+span.string {color: #A020F0}
+span.untermstring {color: #B20000}
+span.syscmd {color: #B28C00}
+
+pre.codeoutput {
+  color: #666666;
+  padding: 10px;
+}
+
+pre.error {
+  color: red;
+}
+
+p.footer {
+  text-align: right;
+  font-size: xx-small;
+  font-weight: lighter;
+  font-style: italic;
+  color: gray;
+}
+
+  </style></head>
+   <body>
+      <div class="content">
+         <h1>Discover Ezyfit: A free curve fitting toolbox for Matlab</h1>
+         <introduction>
+            <p>F. Moisy, 19 nov 2008.</p>
+            <p>Laboratory FAST, University Paris Sud.</p>
+         </introduction>
+         <h2>Contents</h2>
+         <div>
+            <ul>
+               <li><a href="#1">About the Ezyfit Toolbox</a></li>
+               <li><a href="#2">Simple fit: exponential decay</a></li>
+               <li><a href="#6">Initial guesses</a></li>
+               <li><a href="#9">Fitting in linear or in log scale</a></li>
+               <li><a href="#13">Using the fit structure f</a></li>
+               <li><a href="#19">Weigthed fit</a></li>
+            </ul>
+         </div>
+         <h2>About the Ezyfit Toolbox<a name="1"></a></h2>
+         <p>The EzyFit toolbox for Matlab enables you to perform simple curve fitting of one-dimensional data using arbitrary fitting
+            functions. It provides command-line functions and a basic graphical user interface for interactive selection of the data.
+         </p>
+         <h2>Simple fit: exponential decay<a name="2"></a></h2>
+         <p>First plot some data, say, an exponential decay</p><pre class="codeinput">plotsample <span class="string">exp</span> <span class="string">nodisp</span>
+</pre><img vspace="5" hspace="5" src="efdemo_01.png"> <p>A predefined fit called 'exp' allows you to fit your data:</p><pre class="codeinput">showfit <span class="string">exp</span>
+</pre><pre class="codeoutput">Equation: y(x) = a*exp(b*x)
+     a = 4.3408
+     b = -0.22743
+     R = 0.99697  (lin)
+</pre><img vspace="5" hspace="5" src="efdemo_02.png"> <p>Suppose now you want to use your own variable and function names. Let's fit this data with the function f(t)=a*exp(-t/tau),
+            and show the fit with a bold red line:
+         </p><pre class="codeinput">undofit  <span class="comment">% deletes the previous fit</span>
+showfit(<span class="string">'f(t)=a*exp(-t/tau)'</span>,<span class="string">'fitlinewidth'</span>,2,<span class="string">'fitcolor'</span>,<span class="string">'red'</span>);
+</pre><pre class="codeoutput">Equation: f(t) = a*exp(-t/tau)
+     a = 4.3409
+     tau = 4.397
+     R = 0.99697  (lin)
+</pre><img vspace="5" hspace="5" src="efdemo_03.png"> <p>Note that showfit recognizes that t is the variable, and the coefficients of the fit are named a and tau.</p>
+         <p>If you want to use the values of the coefficients a and tau into Matlab, you need to create these variables into the base
+            workspace:
+         </p><pre class="codeinput">makevarfit
+a
+tau
+</pre><pre class="codeoutput">
+a =
+
+    4.3409
+
+
+tau =
+
+    4.3970
+
+</pre><h2>Initial guesses<a name="6"></a></h2>
+         <p>Now suppose you want to fit more complex data, like a distribution showing two peaks. Let's try to fit these peaks with two
+            gaussians, each of height a, mean m and width s.
+         </p><pre class="codeinput">plotsample <span class="string">hist2</span> <span class="string">nodisp</span>
+showfit(<span class="string">'a_1*exp(-(x-x_1)^2/(2*s_1^2)) + a_2*exp(-(x-x_2)^2/(2*s_2^2))'</span>);
+</pre><pre class="codeoutput"> 
+Exiting: Maximum number of function evaluations has been exceeded
+         - increase MaxFunEvals option.
+         Current function value: 369920.454653 
+
+Equation: y(x) = a_1*exp(-(x-x_1)^2/(2*s_1^2))+a_2*exp(-(x-x_2)^2/(2*s_2^2))
+     a_1 = 41.052
+     a_2 = -2492.7
+     s_1 = 1269.4
+     s_2 = 13.262
+     x_1 = 1062.3
+     x_2 = -38.289
+     R = 0.32602  (lin)
+</pre><img vspace="5" hspace="5" src="efdemo_04.png"> <p>The solver obviously get lost in our 6-dimensional space. Let's help it, by providing initial guesses</p><pre class="codeinput">undofit
+showfit(<span class="string">'a_1*exp(-(x-m_1)^2/(2*s_1^2)) + a_2*exp(-(x-m_2)^2/(2*s_2^2)); a_1=120; m_1=7; a_2 = 100; m_2=15'</span>, <span class="string">'fitcolor'</span>,<span class="string">'blue'</span>,<span class="string">'fitlinewidth'</span>,2);
+</pre><pre class="codeoutput">Equation: y(x) = a_1*exp(-(x-m_1)^2/(2*s_1^2))+a_2*exp(-(x-m_2)^2/(2*s_2^2))
+     a_1 = 128.41
+     a_2 = 77.126
+     m_1 = 6.9929
+     m_2 = 14.783
+     s_1 = 0.42396
+     s_2 = 1.4307
+     R = 0.98977  (lin)
+</pre><img vspace="5" hspace="5" src="efdemo_05.png"> <p>The result seems to be correct now. Note that only 4 initial guesses are given here; the two other ones, s_1 and s_2, are
+            taken as 1 -- which is close to the expected solution.
+         </p>
+         <h2>Fitting in linear or in log scale<a name="9"></a></h2>
+         <p>Suppose you want to fit a power law in logarithmic scale:</p><pre class="codeinput">plotsample <span class="string">power</span> <span class="string">nodisp</span>
+showfit <span class="string">power</span>
+</pre><pre class="codeoutput">Equation: y(x) = a*x^n
+     a = 0.4784
+     n = 2.494
+     R = 0.99934  (log)
+</pre><img vspace="5" hspace="5" src="efdemo_06.png"> <p>would you have obtained the same result in linear scale? No:</p><pre class="codeinput">swy    <span class="comment">% this shortcut turns the Y-axis to linear scale</span>
+showfit(<span class="string">'power'</span>,<span class="string">'fitcolor'</span>,<span class="string">'red'</span>);
+</pre><pre class="codeoutput">Equation: y(x) = a*x^n
+     a = 2.9016
+     n = 2.2564
+     R = 0.99608  (lin)
+</pre><img vspace="5" hspace="5" src="efdemo_07.png"> <p>The value of the coefficients have changed. In the first case, LOG(Y) was fitted, whereas in the second case Y was fitted,
+            because the Y-axis has been changed.
+         </p>
+         <p>You may however force showfit to fit LOG(Y) or Y whatever the Y axis, by specifying 'lin' or 'log' in the first input argument:</p><pre class="codeinput">rmfit <span class="comment">% this removes all the fits</span>
+showfit(<span class="string">'power; lin'</span>,<span class="string">'fitcolor'</span>,<span class="string">'red'</span>);
+showfit(<span class="string">'power; log'</span>,<span class="string">'fitcolor'</span>,<span class="string">'blue'</span>);
+</pre><pre class="codeoutput">Equation: y(x) = a*x^n
+     a = 2.9016
+     n = 2.2564
+     R = 0.99608  (lin)
+Equation: y(x) = a*x^n
+     a = 0.4784
+     n = 2.494
+     R = 0.99934  (log)
+</pre><img vspace="5" hspace="5" src="efdemo_08.png"> <p>In the equation information, it is specified (lin) or (log) after the R coefficient.</p>
+         <h2>Using the fit structure f<a name="13"></a></h2>
+         <p>You can fit your the data without displaying it:</p><pre class="codeinput">x=1:10;
+y=[15 14.2 13.6 13.2 12.9 12.7 12.5 12.4 12.4 12.2];
+f = ezfit(x,y,<span class="string">'beta(rho) = beta_0 + Delta * exp(-rho * mu);  beta_0 = 12'</span>);
+</pre><p>f is a structure that contains all the informations about the fit:</p><pre class="codeinput">f
+</pre><pre class="codeoutput">
+f = 
+
+       name: 'beta(rho)=beta_0+Delta*exp(-rho*mu)'
+       yvar: 'beta'
+       xvar: 'rho'
+    fitmode: 'lin'
+         eq: 'beta_0+Delta*exp(-rho*mu)'
+          r: 0.9992
+      param: {'Delta'  'beta_0'  'mu'}
+          m: [3.9949 12.1058 0.3237]
+         m0: [1 12 1]
+          x: [1 2 3 4 5 6 7 8 9 10]
+          y: [1x10 double]
+
+</pre><p>From this structure, you can plot the data and the fit:</p><pre class="codeinput">clf
+plot(x,y,<span class="string">'r*'</span>);
+showfit(f)
+</pre><pre class="codeoutput">Equation: beta(rho) = beta_0+Delta*exp(-rho*mu)
+     Delta = 3.9949
+     beta_0 = 12.106
+     mu = 0.32368
+     R = 0.99925  (lin)
+</pre><img vspace="5" hspace="5" src="efdemo_09.png"> <p>you can also display the result of the fit</p><pre class="codeinput">dispeqfit(f)
+</pre><pre class="codeoutput">Equation: beta(rho) = beta_0+Delta*exp(-rho*mu)
+     Delta = 3.9949
+     beta_0 = 12.106
+     mu = 0.32368
+     R = 0.99925  (lin)
+</pre><p>or create the variables in the base workspace</p><pre class="codeinput">makevarfit(f)
+beta_0
+mu
+Delta
+</pre><pre class="codeoutput">
+beta_0 =
+
+   12.1058
+
+
+mu =
+
+    0.3237
+
+
+Delta =
+
+    3.9949
+
+</pre><h2>Weigthed fit<a name="19"></a></h2>
+         <p>Suppose now we want to fit data with unequal weights, shown here as error bars of different lengths:</p><pre class="codeinput">x =  1:10;
+y =  [1.56 1.20 1.10 0.74 0.57 0.55 0.31 0.27 0.28 0.11];
+dy = [0.02 0.02 0.20 0.03 0.03 0.10 0.05 0.02 0.10 0.05];
+clf, errorbar(x,y,dy,<span class="string">'o'</span>);
+</pre><img vspace="5" hspace="5" src="efdemo_10.png"> <p>In order to perform a weighted fit on this data, the vectors y and dy have to be merged into a 2-by-N matrix and given as
+            the second input argument to ezfit. Compare the results for the usual and weighted fits:
+         </p><pre class="codeinput">fw = ezfit(x, [y;dy], <span class="string">'exp'</span>);
+showfit(fw,<span class="string">'fitcolor'</span>,<span class="string">'red'</span>);
+f = ezfit(x, y, <span class="string">'exp'</span>);
+showfit(f,<span class="string">'fitcolor'</span>,<span class="string">'blue'</span>);
+</pre><pre class="codeoutput">Equation: y(x) = a*exp(b*x)
+     a = 2.0017
+     b = -0.2519
+     R = 0.98832  (lin)
+Equation: y(x) = a*exp(b*x)
+     a = 2.0071
+     b = -0.24013
+     R = 0.99067  (lin)
+</pre><img vspace="5" hspace="5" src="efdemo_11.png"> <p>The red curve (weighted fit) tends to go through the data with smaller error bars.</p>
+         <p class="footer"><br>
+            Published with MATLAB&reg; 7.6<br></p>
+      </div>
+      <!--
+##### SOURCE BEGIN #####
+%% Discover Ezyfit: A free curve fitting toolbox for Matlab
+% F. Moisy, 19 nov 2008.
+%
+% Laboratory FAST, University Paris Sud.
+
+%% About the Ezyfit Toolbox
+% The EzyFit toolbox for Matlab enables you to perform simple curve fitting
+% of one-dimensional data using arbitrary fitting functions. It provides
+% command-line functions and a basic graphical user interface for interactive
+% selection of the data.
+
+%% Simple fit: exponential decay
+% 
+% First plot some data, say, an exponential decay
+
+plotsample exp nodisp
+
+%%
+% A predefined fit 'exp' allows you to fit your data:
+
+showfit exp
+
+%%
+% Suppose now you want to use your own variable and function names.
+% Let's fit this data with the function f(t)=a*exp(-t/tau), and show the
+% fit with a bold red line:
+
+undofit  % deletes the previous fit
+showfit('f(t)=a*exp(-t/tau)','fitlinewidth',2,'fitcolor','red');
+
+%%
+% Note that showfit recognizes that t is the variable, and the coefficients
+% of the fit are named a and tau.
+%
+% If you want to use the values of the coefficients t and tau into Matlab,
+% you need to creates these variables into the base workspace:
+
+makevarfit
+a
+tau
+
+
+%% Initial guesses
+% Now suppose you want to fit more complex data, like a distribution
+% showing two peaks. Let's try to fit these peaks with two gaussians, each
+% of height a, mean m and width s.
+
+plotsample hist2 nodisp
+showfit('a_1*exp(-(x-x_1)^2/(2*s_1^2)) + a_2*exp(-(x-x_2)^2/(2*s_2^2))');
+
+%%
+% The solver obviously get lost in our 6-dimensional space. Let's help it,
+% by providing initial guesses
+
+undofit
+showfit('a_1*exp(-(x-m_1)^2/(2*s_1^2)) + a_2*exp(-(x-m_2)^2/(2*s_2^2)); a_1=120; m_1=7; a_2 = 100; m_2=15', 'fitcolor','blue','fitlinewidth',2);
+
+%%
+% The result seems to be correct now. Note that only 4 initial guesses are
+% given here; the two other ones, s_1 and s_2, are taken as 1 REPLACE_WITH_DASH_DASH which is
+% close to the expected solution.
+
+
+%% Fitting in linear or in log scale
+% Suppose you want to fit a power law in logarithmic scale:
+
+plotsample power nodisp
+showfit power
+
+%%
+% would you have obtained the same result in linear scale? No:
+swy    % this shortcut turns the Y-axis to linear scale
+showfit('power','fitcolor','red');
+
+%%
+% The value of the coefficients have changed. In the first case, LOG(Y) was
+% fitted, whereas in the second case Y was fitted, because the Y-axis has
+% been changed.
+%
+% You may however force showfit to fit LOG(Y) or Y whatever the Y axis, by
+% specifying 'lin' or 'log' in the first input argument:
+
+rmfit % this removes all the fits
+showfit('power; lin','fitcolor','red');
+showfit('power; log','fitcolor','blue');
+
+%%
+% In the equation information, it is specified (lin) or (log) after the R
+% coefficient.
+
+
+
+
+%% Using the fit structure f
+
+%%
+% You can fit your the data without displaying it:
+x=1:10;
+y=[15 14.2 13.6 13.2 12.9 12.7 12.5 12.4 12.4 12.2];
+f = ezfit(x,y,'beta(rho) = beta_0 + Delta * exp(-rho * mu);  beta_0 = 12');
+
+%%
+% f is a structure that contains all the informations about the fit:
+
+f
+
+%%
+% From this structure, you can plot the data and the fit:
+
+clf
+plot(x,y,'r*');
+showfit(f)
+
+%%
+% you can also display the result of the fit
+
+dispeqfit(f)
+
+%%
+% or create the variables in the base workspace
+
+makevarfit(f)
+beta_0
+mu
+Delta
+
+%% Weigthed fit
+% Suppose now we want to fit data with unequal weights, shown here as error
+% bars of different lengths:
+
+x =  1:10;
+y =  [1.56 1.20 1.10 0.74 0.57 0.55 0.31 0.27 0.28 0.11];
+dy = [0.02 0.02 0.20 0.03 0.03 0.10 0.05 0.02 0.10 0.05];
+clf, errorbar(x,y,dy,'o');
+
+%%
+% In order to perform a weighted fit on this data, the vectors y and dy
+% have to be merged into a 2-by-N matrix and given as the second input
+% argument to ezfit. Compare the results for the usual and weighted fits:
+
+fw = ezfit(x, [y;dy], 'exp');
+showfit(fw,'fitcolor','red');
+f = ezfit(x, y, 'exp');
+showfit(f,'fitcolor','blue');
+
+%%
+% The red curve (weighted fit) tends to go through the data with smaller
+% error bars.
+
+##### SOURCE END #####
+-->
+   </body>
+</html>

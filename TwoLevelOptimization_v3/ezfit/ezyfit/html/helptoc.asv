@@ -1,0 +1,43 @@
+<?xml version='1.0' encoding='ISO-8859-1' ?>
+
+<toc version="1.0">
+
+<tocitem target="ezyfit.html" image="$toolbox/matlab/icons/book_mat.gif">EzyFit Toolbox
+
+<tocitem target="ezyfit_gettingstarted.html" image="HelpIcon.GETTING_STARTED">Getting Started
+</tocitem>
+
+<tocitem target="../demo/html/efdemo.html" image="$toolbox/matlab/icons/demoicon.gif">Examples
+</tocitem>
+
+<tocitem target="ezyfit_faq.html" image="$toolbox/matlab/icons/pagesicon.gif">Frequently Asked Questions
+</tocitem>
+
+<tocitem target="ezyfit_install.html" image="HelpIcon.USER_GUIDE">Installation
+</tocitem>
+
+
+<tocitem target="ezyfit_uninstall.html" image="HelpIcon.USER_GUIDE">Uninstallation
+</tocitem>
+
+<tocitem target="ezyfit_settings.html" image="$toolbox/matlab/icons/pagesicon.gif">Settings
+</tocitem>
+
+<tocitem target="ezyfit_func_cat.html" image="$toolbox/matlab/icons/reficon.gif">Functions -- By Category
+</tocitem>
+
+<tocitem target="ezyfit_func_alpha.html" image="$toolbox/matlab/icons/reficon.gif">Functions -- Alphabetical List
+</tocitem>
+
+<tocitem target="ezyfit_releasenotes.html" image="$toolbox/matlab/icons/notesicon.gif">Release Notes
+</tocitem>
+
+<tocitem target="ezyfit_knownbugs.html" image="$toolbox/matlab/icons/notesicon.gif">Known software problems
+</tocitem>
+
+<tocitem target="http://www.fast.u-psud.fr/ezyfit" image="$toolbox/matlab/icons/webicon.gif">Product Page (Web)
+</tocitem>
+
+</tocitem>
+
+</toc>

@@ -1,0 +1,406 @@
+<html><head><title>EzyFit Release Notes</title>
+        
+        <link rel=stylesheet href="docstyle1.css" type="text/css">
+    </head>
+    <body bgcolor=#ffffff>
+          <!-- NAVBARTOP -->
+    <table border=0 width="100%" cellpadding=0 cellspacing=0><tr>
+                <td valign=baseline bgcolor="#e7ebf7"><b>EzyFit Release Notes</b></td>
+            </tr>
+        </table>
+        
+        
+        <h1>EzyFit Release Notes</h1>
+        <hr>
+        
+        <br>
+        
+        <p>See also the <a href="ezyfit_knownbugs.html">EzyFit known software problems</a> section.</p>
+        
+        <br>
+        <table width="100%" border="0" cellpadding="5">
+            
+            <tr valign="top"><td>V2.44</td><td>2016/04/28</td><td>
+                
+                  <p><b>Bug fixes</b>
+                        <ul>
+                            <li>Fitting data selected with the "Brushing tool" of Matlab now works correctly with Matlab >R2014b</li>
+                            <li>New definition of the correlation coefficient R,
+                            see <tt><a href="ezfit.html">ezfit</a></tt>.
+                            <li>Warning about 'cubic' interpolation removed (interpolation is now performed
+                            using 'pchip' method instead of 'cubic')</li>
+                            <li>Warning removed for obsolete function <tt>nargchk</tt> in Matlab R2016a (thanks Antoine Hector).</li>
+                        </ul>   
+                        
+                        
+            </td></tr>
+            
+            
+            <tr valign="top"><td>V2.43</td><td>2014/10/25</td><td>
+                
+                  <p><b>Bug fix</b>
+                        <ul>
+                            <li>The Ezyfit menu is compatible with the new Graphics
+                        system of Matlab R2014b (8.4). Thanks to Olaf Bousch&eacute;!</li>
+                        </ul>   
+                        
+                        <p><b>Known bug</b>:
+                    <ul>
+                        <li>
+                            <p>Fitting "brushed data" does not work with Matlab R2014b
+                        (please help to fix this bug!)</p>
+                    </li></ul>
+            </td></tr>
+            
+            <tr valign="top"><td>V2.42</td><td>2014/03/25</td><td>
+                
+                  <p><b>Bug fix</b>
+                        <ul>
+                            <li><tt>efmenu install</tt> did not work properly under Windows</li>
+                        </ul>   
+                        
+                        <p><b>Minor change</b>:
+                    <ul>
+                        <li>
+                            <p>Fix some details in the documentation relative
+                            to the use of Ezyfit under Matlab 8.</p>
+                    </li></ul>
+            </td></tr>
+            
+            <tr valign="top"><td>V2.41c</td><td>2012/07/08</td><td>
+                    
+                    <p><b>New function:</b>
+                    <ul>
+                        <li><tt><a href="getlineinfo.html">getlineinfo</a></tt>:
+                        draws a line using the pointer, and displays the length and
+                        angle of the segment in the figure.
+                    </ul>
+                    
+                    <p><b>Bug fixes</b>
+                    <ul>
+                        <li><tt><a href="showfit.html">showfit</a></tt> now recognizes
+                        correctly if the Y-axis is in lin or log coordinates (thanks Jacopo).
+                        <li><tt><a href="showfit.html">showfit</a></tt> now conserves the 'hold on / off' state of the figure (thanks
+                        Alec).
+                        <li>Equations containing a comma are now correctly recognized.
+                            This allows to make use of functions like <tt>myfun(x,t)</tt> inside
+                        a fit equation string (thanks Patrick).</li>
+                        <li>Installation of the Ezyfit menu now works properly under MacOS (thanks James Bagrow).</li>
+                    </li>
+                    </ul>
+                    
+                    <p><b>Compatibility issue</b>:
+                    <ul>
+                        <li>The standard location for the <tt>startup.m</tt> file has changed:
+                            For Windows XP, it was in the <tt>matlabroot</tt> folder
+                            (e.g. <tt>C:\Program Files\MATLAB\</tt>). It is now in the
+                            <tt>userpath</tt> folder (e.g. <tt>C:\Users\Frederic\Documents\MATLAB</tt>).
+                            Accordingly,
+                            <tt><a href="efmenu.html">efmenu</a></tt> now creates or modifies the
+                            <tt>startup.m</tt> file in the <tt>userpath</tt> folder.
+                    </li>
+                    </ul>
+                    
+                    
+            </td></tr>
+            
+            <tr valign="top"><td>V2.40</td><td>2010/07/20</td><td>
+                    <p><b>New function</b>:
+                    
+                    <ul>
+                        <li><tt><a href="remove_efmenu_fig.html">remove_efmenu_fig</a></tt>:
+                            This function removes the Ezyfit menu from figure files (.FIG).
+                            This function allows one to use figure files generated from
+                            a Matlab system with the Ezyfit toolbox on another Matlab system
+                            without the Ezyfit toolbox. This fixes the issue of the Ezyfit
+                            menu corrupting a figure file which could not be re-opened on a
+                            Matlab system without Ezyfit installed. Many thanks to
+                            Francis Burton and Nicholas Sinclair, who fixed
+                        the issue in the Matlab Central Newsgroup.</li>
+                    </ul>
+                    
+                    <p><b>Minor changes</b>:
+                    <ul>
+                        <li>The equation box is now displayed using the same font and
+                            font size than the figure axes, with a truncation (see the <a href="ezyfit_settings.html">Settings
+                        page</a> to change the tunctation length).</li>
+                    </ul>
+                    
+                    <p><b>Compatibility issue</b>:
+                    <ul>
+                        <li><tt>selecfit</tt> is removed from the toolbox. Use <tt><a href="showfit.html">showfit</a></tt>
+                            instead, with the "Data Brushing" tool (available for Matlab >= 7.6). See the release notes of V2.30
+                        for details.</li>
+                        <li><tt>selectdata</tt> and <tt>delselectdata</tt> are also removed.</li>
+                    </ul>
+            </td></tr>
+            
+            <tr valign="top"><td>V2.30</td><td>2009/02/06</td><td>
+                    <p><b>Major changes</b>:
+                    
+                    <ul>
+                        <li><tt><a href="ezfit.html">ezfit</a></tt> and <tt><a href="showfit.html">showfit</a></tt> now support the new "Data Brushing" mode
+                            of Matlab >= 7.6 (R2008a). When some data are "brushed" (i.e. when they have been
+                            selected using the "Data brushing" tool), only those data are fitted by 
+                            <tt>ezfit</tt> and <tt>showfit</tt>. If you use an older version of Matlab
+                            (version <=7.5, R2007b), this feature is not implemented, and all the
+                        curve is selected.</li>
+                        
+                        <li>Using <tt>showfit</tt> with "Brushed" data is equivalent to 
+                        <tt>selectfit</tt>. However, the combination <tt>showfit</tt>-"Data Brushing"
+                        is more stable, since it relies on the Matlab's built-in Brush mode.
+                        Since <tt>selectfit</tt> suffers from a number of bugs associated to the
+                        lasso selection of data, <tt>selectfit</tt> is not going to be maintained
+                        any more, and is going to be removed in future versions of EzyFit.
+                    </ul>
+                    
+                    <p><b>New function</b>:
+                    
+                    <ul>
+                        <li><tt><a href="ezfft.html">ezfft</a></tt>: Easy to use FFT
+                        (Power spectrum).</li>
+                    </ul>
+                    
+                    <p><b>New feature</b>:
+                    <ul>
+                        <li>New <a href="ezyfit_uninstall.html">Uninstallation</a> page in the help browser.</li>
+                    </ul>
+                    
+            </td></tr>
+            
+            
+            <tr valign="top"><td>V2.20</td><td>2008/03/08</td><td>
+                    <p><b>Major changes</b>:
+                    <ul>
+                        <li>The <tt>fit</tt> function has been renamed
+                            <tt><a href="ezfit.html">ezfit</a></tt>, in order to avoid name conflicts with the "Curve Fitting
+                        Toolbox" from MathWorks, Inc. The two toolboxes may now be used simultaneously.</li>
+                        
+                        <li>"Magic initial guesses": When using predefined fits (e.g., <tt>showfit exp</tt>,
+                            <tt>showfit power</tt> etc.), or the default fits in the EzyFit menu,
+                            suitable default initial guesses are automatically chosen from the ranges
+                            of data to be fitted. For instance, for a Gaussian fit, the initial guess
+                            for the amplitude is taken as the max of the Y data, instead of 1. This
+                            speeds up the convergence, and helps the solver when the true parameters are
+                            too far from 1. These default values are ignored if other initial guesses
+                        are provided by the user.</li>
+                        
+                        <li>Weighted fits are now accepted for <tt><a href="ezfit.html">ezfit</a></tt>
+                            (not yet for <tt>showfit</tt> and <tt>selectfit</tt>). See the <a href="../demo/html/efdemo.html">Sample session</a>
+                        for an example.</li>
+                        
+                        <li>The functions <tt>drawpolygon</tt> and <tt>selectdata</tt> have been
+                            removed, and replaced with the more stable function <tt><a href="selectdata.html">selectdata</a></tt>
+                            by John D'Errico (see <a href="http://www.mathworks.com/matlabcentral/fileexchange/loadFile.do?objectId=13857&objectType=file">Submission 13857</a>
+                            on the Matlab Central). As a result, a number of bugs of <tt><a href="selectfit.html">selectfit</a></tt> are
+                            now fixed (see below). <tt>delseldata</tt> is now based on the new <tt>selectdata</tt>,
+                        and <tt>keepseldata</tt> has been removed.</li>
+                    </ul>
+                    
+                    <p><b>New features</b>:
+                    <ul>
+                        <li>New <a href="../demo/html/efdemo.html">Sample session</a> page in the help browser.</li>
+                        <li>New predefined fits in the Ezyfit menu (e.g. <tt>'a*x^n+b'</tt>, <tt>'a*(1-exp(-x/b))'</tt>...)</li>
+                        <li>New item <tt>Refresh EzyFit menu</tt> in the menu, to update the user-defined fits
+                        of a figure window when they have been changed from another figure window.</li>
+                        <li><tt><a href="axis0.html">axis0</a></tt> includes the origin in the axis.</li>
+                        <li><tt><a href="axisl.html">axisl</a></tt> enlarges the axis of a log plot to include the nearest power of 10.</li>
+                        <li><tt><a href="loglogpn.html">loglogpn</a></tt> and <tt><a href="semilogypn.html">semilogypn</a></tt>: logarithmic plots for positive and negative Y data.</li>
+                        <li><tt><a href="dfig.html">dfig</a></tt> creates a docked figure window.</li>
+                        <li>New options <tt>figure</tt> and <tt>command</tt> for <tt><a href="getslope.html">getslope</a></tt>.</li>
+                    </ul>
+                    
+                    <p><b>Bug fixes</b>:
+                    <ul>
+                        <li><tt><a href="selectfit.html">selectfit</a></tt> now works correctly on docked figure windows, or when legends are present.
+                        However still buggy in some situations.</li>
+                        <li><tt><a href="getslope.html">getslope</a></tt> now works correctly for Matlab >=7.4, and
+                        works correctly when a legend is present.</li>
+                        <li><tt><a href="showslope.html">showslope</a></tt> now issues an error message when used with docked windows (to be improved). Undock your window first.</li>
+                        <li><tt><a href="showeqbox.html">showeqbox</a></tt> issued an error when 2nd parameter was not given.</li>
+                        <li>Help from the 'Start' button now works correctly for Matlab >= 7.4.</li>
+                    </ul>
+                    
+                    <p><b>Minor changes</b>:
+                    <ul>
+                        <li>The shortcut <tt>Ctrl-Z</tt> (Undo Fit) has been removed, because of a conflict with
+                        Matlab's Undo operation.</li>
+                    </ul>
+                    
+                    <p><b>Compatibility issue</b>:
+                        Since Matlab 7.4 (R2007a), the behavior of the command <tt>doc</tt> has changed:
+                        the command <tt>doc ezyfit</tt> does not display
+                        the Ezyfit toolbox start page in the help browser any more. If you use Matlab >=7.4,
+                        type <tt><a href="docezyfit.html">docezyfit</a></tt> to display the start page.
+                        Type <tt>docezyfit function_name</tt> or <tt>showdemo function_name</tt> to display the
+                        html documention of <tt>function_name</tt> in the help browser. If you use
+                        Matlab 7.3 or before, <tt>doc</tt> and <tt>docezyfit</tt> will
+                    produce the same result.</p>
+                    
+            </td></tr>
+            
+            
+            <tr valign="top"><td>V2.10</td><td>2006/10/30</td><td>
+                    <p><b>Major upgrade</b>: Fit properties and display settings can now be passed
+                        to <tt>showfit</tt> and <tt>selectfit</tt>, such as fit colors, linewidth etc.
+                        For example:
+                        <blockquote><tt>showfit('power','fitlinewidth',2,'fitcolor','green')</tt></blockquote>
+                        The default
+                        properties are defined in <tt>fitparam</tt>. See the <a href="ezyfit_settings.html">Settings
+                    page</a> for details.</p>
+                    
+                    <p>New options in <tt>fitparam</tt>: <tt>'selectfitloopmode'</tt> and <tt>'dispeqmode'</tt>;
+                    option <tt>'eqdisplaymode'</tt> renamed <tt>'eqreplacemode'</tt>.</p>
+                    
+                    <p>By default, the polygon procedure in <tt>selectfit</tt> is done once; set
+                        the option <tt>selectfitloopmode</tt> to 'on' to repeat the procedure until
+                    an empty polygon is drawn (as in the previous versions).</p>
+                    
+                    <p><tt>fit</tt> now accepts row and column vectors for x and y.</p>
+                    
+                    <p>Minor bug fixed: <tt>showfit</tt> and <tt>selectfit</tt> now accept a fit structure F
+                    even if the original curve has been deleted.</p>
+                    
+                    <p>Minor bug fixed: when fitting histograms, the X points are now taken at the middle
+                    of the bins.</p>
+            </td></tr>
+            
+            
+            <tr valign="top"><td>V2.04</td><td>2006/09/07</td><td>
+                    <p>New <a href="ezyfit_faq.html">Frequently Asked Questions</a> section.</p>
+                    <p>Bug fixed: <tt>Selectfit</tt> now works when a legend box is present.</p>
+                    <p>New options in <tt>fitparam</tt>: <tt>automakevarfit</tt> and <tt>whichpickdata</tt>.</p>
+                    <p><tt>fit</tt>, <tt>showfit</tt> and <tt>selectfit</tt> now also accept
+                        '!' and '$' instead of ';' to separate the list of options in the string FUN:
+                    this allows to use the syntax <tt>showfit power!log</tt> instead of <tt>showfit('power;log')</tt>.</p>
+                    <p>Minor bug fixed: showfit and selectfit
+                    now accept a fit structure F even if the original curve has been deleted.</p>
+                    <p>New options in the item '<tt>plotsample</tt>' of the Ezyfit menu.</p>
+            </td></tr>
+            
+            <tr valign="top"><td>V2.03</td><td>2006/04/12</td><td>
+                    <p>The 'EasyFit' toolbox has been renamed 'EzyFit',
+                    in order to avoid confusion with other products.</p>
+                    <p>No change with EasyFit V2.02.</p>
+            </td></tr>
+            
+            <tr valign="top"><td>V2.02</td><td>2006/03/09</td><td>
+                    <p>Minor bugs fixed (the menus disappeared 
+                    after a second call to <tt>plotsample</tt>; polynomial fits with unspecified orders was bugged).</p>
+                    <p>'<tt>efmenu install</tt>' improved.</p>
+            </td></tr>
+            
+            <tr valign="top"><td>V2.01</td><td>2006/02/27</td><td>
+                    <p><b>Major upgrade</b>: Left-hand side
+                        now accepted for the fitting equation:
+                        <blockquote><tt>fit('e(k)=c/k^n')</tt></blockquote>
+                        specifies that '<tt>k</tt>' stands for the X-Data. If not
+                    specified, '<tt>x</tt>' is taken by default.</p>
+                    <p>The fitting equation is now case sensitive ('x' and 'X' are different).</p>
+                    <p>New functions <tt>evalfit</tt>, <tt>makevarfit</tt> and <tt>showresidual</tt>.</p>
+                    <p>Bug fixed: Matlab's standard legends are now correctly supported.</p>
+                    <p>Capital greek letters, and greek letters as subscripts, are now correctly
+                    interpreted in the equation boxes.</p>
+            </td></tr>
+            
+            <tr valign="top"><td>V2.00</td><td>2006/02/10</td><td>
+                    <p><b>Major change</b>: free parameter names may now be used
+                        with <tt>fit</tt>, <tt>showfit</tt> and <tt>selectfit</tt>,
+                        e.g., <tt>fit('a0+cste/x^n')</tt>, instead of fixed parameter names
+                        <tt>m1</tt>, <tt>m2</tt>, <tt>m3</tt>... The parameter names
+                    are automatically recognized.</p>
+                    <p>New fit structure <tt>F</tt>.</p>
+                    <p>New mat-files for predefined fits and user-defined fits.</p>
+                    <p>New functions <tt>loadfit</tt>, <tt>editcoeff</tt>, <tt>showeqbox</tt>, <tt>dispeqfit</tt>.</p>
+                    <p>Greek letters (lower case) are interpreted in the equation boxes (latex syntax).</p>
+                    <p>Additional settings in <tt>fitparam</tt>.</p>
+                    <p>Easyfit menu improved (Edit Fit Coefficients and Swap of the X- and Y- axis).</p>
+                    <p>Better compatibility of the documentation with the Matlab help browser.</p>
+                    <p>Function <tt>getfit</tt> retired (<tt>fit</tt> now does what <tt>getfit</tt> did).</p>
+            </td></tr>
+
+            <tr valign="top"><td>V1.00-V1.24</td><td>(2005-2006)</td><td>
+                    <p>Prehistoric versions of the toolbox</p>
+            </td></tr>
+            
+            <!--
+            <tr valign="top"><td>V1.24</td><td>2006/01/30</td><td>
+                    <p>Bugs fixed in <tt>selectfit</tt>, <tt>drawpolygon</tt> and <tt>selectdata</tt> (better mouse button inquiries).</p>
+                    <p>Bug fixed in <tt>efmenu</tt> (<tt>selectfit</tt> was wrong).</p>
+                    <p><tt>Showslope</tt> improved.</p>
+            </td></tr>
+            
+            <tr valign="top"><td>V1.23</td><td>2006/01/25</td><td>
+                    <p>User defined fits improved again (no need to type the fit number).</p>
+                    <p>Check when fitting negative data in log mode.</p>
+            </td></tr>
+            
+            <tr valign="top"><td>V1.22</td><td>2006/01/12</td><td>
+                    <p>User defined fits in the Easyfit menu improved.</p>
+            </td></tr>
+            
+            <tr valign="top"><td>V1.21</td><td>2005/12/21</td><td>
+                    <p>Documentation improved. New 'Known bugs' section.</p>
+                    <p>File 'Readme.txt' retired.</p>
+                    <p><tt>selectfit</tt> improved (message boxes).</p>
+            </td></tr>
+            
+            <tr valign="top"><td>V1.20</td><td>2005/12/15</td><td>
+                    <p>EasyFit menu and dialog boxes included.</p>
+                    <p>Standard items for the toolbox in the Matlab 'Start' menu.</p>
+                    <p>New about, checkupdate.</p>
+                    <p>New home page (www.fast.u-psud.fr/ezyfit).</p>
+                    <p><tt>drawpolygon</tt> improved.</p>
+            </td></tr>
+            
+            <tr valign="top"><td>V1.14</td><td>2005/12/03</td><td>
+                    <p><tt>drawpolygon</tt> improved: interactive properties of the
+                    window suspended during the drawing.</p>
+            </td></tr>
+            
+            <tr valign="top"><td>V1.13</td><td>2005/11/25</td><td>
+                    <p>Bug fixed in <tt>myginput</tt> for Matlab >=7.0.0.</p>
+            </td></tr>
+            
+            <tr valign="top"><td>V1.12</td><td>2005/11/03</td><td>
+                    <p>New parameter file '<tt>paramfit.m</tt>'.</p>
+                    <p>New <tt>drawpolygon</tt>, and <tt>selectdata</tt> improved.</p>
+                    <p><tt>getslope</tt> and <tt>showslope</tt> improved.</p>
+                    <p>Now displays equations in Kaleidagraph or ABC mode.</p>
+            </td></tr>
+            
+            <tr valign="top"><td>V1.11</td><td>2005/10/31</td><td>
+                    <p><tt>fit</tt> now computes the Pearson's correlation coefficient R.</p>
+                    <p>n-th order polynomial fits added.</p>
+                    <p>Initial guess may be defined within the fitting function string (as in Kaleidagraph).</p>
+                    <p>New functions <tt>pickdata</tt>, <tt>undofit</tt>, <tt>rmfit</tt>, <tt>swx</tt>...</p>
+            </td></tr>
+            
+            <tr valign="top"><td>V1.10</td><td>2005/10/18</td><td>
+                    <p>Bug fixed for <tt>showfit</tt>.</p>
+                    <p>New function <tt>selectfit</tt>, to select data by mouse in a polygon.</p>
+                    <p>New function <tt>plotsample</tt>.</p>
+            </td></tr>
+            
+            <tr valign="top"><td>V1.05</td><td>2005/10/07</td><td>
+                    <p>New predefined fits (gaussian fits).</p>
+                    <p><tt>showfit</tt> now displays the equation in the plot.</p>
+                    <p>New file 'readme.txt'.</p>
+            </td></tr>
+            
+            <tr valign="top"><td>v1.04</td><td>2005/07/27</td><td>
+            </td></tr>
+            
+            <tr valign="top"><td>v1.00</td><td>2005/05/20</td><td>
+                    <p>First version. Originally called 'EasyFit toolbox'.</p>
+            </td></tr>
+            -->
+            
+        </table> 
+        <br>
+        
+        <table width="100%" border=0 cellspacing=0 bgcolor=d0d0f0><tr><td>&nbsp</td></tr></table><br>
+        2005-2016 <a href="ezyfit.html">EzyFit Toolbox</a><br>
+        
+    </body>
+</html>
