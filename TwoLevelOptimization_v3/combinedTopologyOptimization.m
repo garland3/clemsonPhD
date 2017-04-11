@@ -242,10 +242,10 @@ if(macroDesignMode==1)
             [framedNumber, F]  = video.RecordFrame(config,framedNumber, F,vidObj);
         end
    
-    
+     
       
      end % MASTER LOOP FOR MACRO LEVEL
-       % Flip orientation of Exx and Eyy so that theta is positive
+      % Flip orientation of Exx and Eyy so that theta is positive
         if(config.useRotation ==1)
             if ( config.mode==4 || config.mode ==55 || config.mode == 60)
                 DV = DV.FlipOrientation(config);

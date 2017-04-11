@@ -388,8 +388,6 @@ classdef Optimizer
                 % TARGET AVG MESO DENSITY AS CONSTRAINT.
                 %
                 % ---------------------------------------------------
-                negValueFlag=0;
-                negValueAdder=0;
                 
                 while (l2-l1 > 1e-4)
                     lmid = 0.5*(l2+l1);
@@ -417,23 +415,14 @@ classdef Optimizer
                     combinedTermsEyy=completeEyy./dDensityEyy;
                     
                     % Don't allow negative
-                    min1= min(min(combinedTermsEyy));
-                    min2= min(min(combinedTermsExx));
-                    min3 = min(min1,min2);
-                    if(min3<0)
-                        negValueFlag=1;
-                        negValueAdder = max(negValueAdder,-min3);
-                    end
-                    if(negValueFlag==1)
-                        combinedTermsEyy=combinedTermsEyy+negValueAdder;
-                        combinedTermsExx=combinedTermsExx+negValueAdder;
-                    end
-
-%                     combinedTermsEyy(combinedTermsEyy<=0)=0;
-%                     combinedTermsExx(combinedTermsExx<=0)=0;
+%                     min1= min(min(combinedTermsEyy));
+%                     min2= min(min(combinedTermsExx));
+%                     min3 = min(min1,min2);
+                    combinedTermsEyy(combinedTermsEyy<=0)=0;
+                    combinedTermsExx(combinedTermsExx<=0)=0;
                     
-                    if(max(mean(mean(combinedTermsEyy)),mean(mean(combinedTermsExx)))>largest)
-                        divideByLargestFlag=1;
+                    if(max(max(max(combinedTermsEyy)),max(max(combinedTermsExx)))>largest)
+                        divideByLargestFlag=1
                     end
                     
                     if(divideByLargestFlag==1)
@@ -488,9 +477,6 @@ classdef Optimizer
                     p20 =  DV. ResponseSurfaceCoefficents(4);
                     p11 =  DV. ResponseSurfaceCoefficents(5);
                     p02 =   DV. ResponseSurfaceCoefficents(6);
-                    
-                  
-                    
                     for i = 1:config.nelx
                         for j = 1:config.nely
                             x=ExxNew(j,i);
@@ -499,8 +485,6 @@ classdef Optimizer
                             estimateElementDensity= min(max(estimateElementDensity,0.1),1);%1 is max, 0.1 is min
                             eleDensity = DV.x(j,i)*estimateElementDensity;
                             sumDensity =sumDensity+eleDensity;
-                            
-                           
                         end
                     end
                     sumDensity = sumDensity/(config.nelx*config.nely*config.totalVolume);
@@ -511,24 +495,6 @@ classdef Optimizer
                         l2 = lmid;
                     end
                 end
-                
-                  debug = 0;
-                    if(debug ==1)
-                        figure(2)
-                        p = plotResults;
-                        subplot(2,2,2);
-                        p. PlotArrayGeneric(dDensityEyy,'dDensityEyy');
-                         subplot(2,2,1);
-                        p. PlotArrayGeneric(dDensityExx,'dDensityExx');
-                         subplot(2,2,3);
-                        p. PlotArrayGeneric(completeExx,'completeExx');
-                         subplot(2,2,4);
-                        p. PlotArrayGeneric(completeEyy,'completeEyy');
-                        
-                        
-                        
-                        
-                    end
                 
             end
             

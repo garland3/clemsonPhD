@@ -263,8 +263,8 @@ for e = 1:ne %ne:-1:1
         thetaArray=[thetaArray;Theta];
         
         
-        MacroExxColumn=[MacroExxColumn;ActualExx];
-        MacroEyyColumn=[MacroEyyColumn;ActualEyy];
+        MacroExxColumn=[MacroExxColumn;ActualExx*macroElementProps.densitySIMP];
+        MacroEyyColumn=[MacroEyyColumn;ActualEyy*macroElementProps.densitySIMP];
     else
         DV.Exx(macroElementProps.yPos,macroElementProps.xPos)=ActualExx;
         DV.Eyy(macroElementProps.yPos,macroElementProps.xPos)=ActualEyy;
@@ -291,98 +291,132 @@ csvwrite( outname, DV.t);
 outname = sprintf('./out%i/densityUsedSubSysValues%i.csv',folderNum,macro_meso_iteration);
 csvwrite( outname,  DV.w);
 
-if 1==1
-    Exx = matProp.E_material1;
-    Eyy = 0;
-    v= 1;
-    rhoArray = [rhoArray;v];
-    ExxArray=[ExxArray;Exx];
-    EyyArray=[EyyArray;Eyy];
-    
-     Exx = matProp.E_material1;
-    Eyy = matProp.E_material1/2;
-    v= 1;
-    rhoArray = [rhoArray;v];
-    ExxArray=[ExxArray;Exx];
-    EyyArray=[EyyArray;Eyy];
-    
-    % Both extremes
-       Exx = matProp.E_material1;
-    Eyy = matProp.E_material1;
-    v= 1;
-    rhoArray = [rhoArray;v];
-    ExxArray=[ExxArray;Exx];
-    EyyArray=[EyyArray;Eyy];
-    
-      Exx = matProp.E_material1/2;
-    Eyy =matProp.E_material1 ;
-    v= 1;
-    rhoArray = [rhoArray;v];
-    ExxArray=[ExxArray;Exx];
-    EyyArray=[EyyArray;Eyy];
-    
-    %Eyy extreme
-    Exx =0;
-    Eyy =  matProp.E_material1;
-    v= 1;
-    rhoArray = [rhoArray;v];
-    ExxArray=[ExxArray;Exx];
-    EyyArray=[EyyArray;Eyy];
-    
-    
-end
+% if 1==0
+%     Exx = matProp.E_material1;
+%     Eyy = 0;
+%     v= 1;
+%     rhoArray = [rhoArray;v];
+%     ExxArray=[ExxArray;Exx];
+%     EyyArray=[EyyArray;Eyy];
+%     
+%      Exx = matProp.E_material1;
+%     Eyy = matProp.E_material1/2;
+%     v= 1;
+%     rhoArray = [rhoArray;v];
+%     ExxArray=[ExxArray;Exx];
+%     EyyArray=[EyyArray;Eyy];
+%     
+%     % Both extremes
+%        Exx = matProp.E_material1;
+%     Eyy = matProp.E_material1;
+%     v= 1;
+%     rhoArray = [rhoArray;v];
+%     ExxArray=[ExxArray;Exx];
+%     EyyArray=[EyyArray;Eyy];
+%     
+%       Exx = matProp.E_material1/2;
+%     Eyy =matProp.E_material1 ;
+%     v= 1;
+%     rhoArray = [rhoArray;v];
+%     ExxArray=[ExxArray;Exx];
+%     EyyArray=[EyyArray;Eyy];
+%     
+%     %Eyy extreme
+%     Exx =0;
+%     Eyy =  matProp.E_material1;
+%     v= 1;
+%     rhoArray = [rhoArray;v];
+%     ExxArray=[ExxArray;Exx];
+%     EyyArray=[EyyArray;Eyy];
+%     
+%     
+% end
 
-figure(1)
+
 if(1==1)
-    scatter3(ExxArray,EyyArray,rhoArray);
-    xlabel('Exx');
-    ylabel('Eyy');
-    zlabel('Rho,Density');
+   
  nameArray = sprintf('./out%i/ExxArrayForFitting%i.csv',folderNum, config.macro_meso_iteration);
- csvwrite(nameArray,ExxArray);
+ csvwrite(nameArray,MacroExxColumn);
  
   nameArray = sprintf('./out%i/EyyArrayForFitting%i.csv',folderNum, config.macro_meso_iteration);
- csvwrite(nameArray,EyyArray);
+ csvwrite(nameArray,MacroEyyColumn);
     
  
   
  nameArray = sprintf('./out%i/RhoArrayForFitting%i.csv',folderNum, config.macro_meso_iteration);
  csvwrite(nameArray,rhoArray);
+ 
+ % REad the old arrays as well. 
+ if(config.macro_meso_iteration>1)
+     for jjj= 1:config.macro_meso_iteration-1
+      nameArray = sprintf('./out%i/ExxArrayForFitting%i.csv',folderNum, jjj);
+      MacroExxColumnTemp =  csvread(nameArray);
+      MacroExxColumn=[MacroExxColumn ;MacroExxColumnTemp];
+
+      nameArray = sprintf('./out%i/EyyArrayForFitting%i.csv',folderNum, jjj);
+     MacroEyyColumnTemp =  csvread(nameArray);
+      MacroEyyColumn=[MacroEyyColumn; MacroEyyColumnTemp];
+
+
+
+     nameArray = sprintf('./out%i/RhoArrayForFitting%i.csv',folderNum, jjj);
+      rhoArrayTemp =  csvread(nameArray);
+      rhoArray=[rhoArray; rhoArrayTemp];
+     end
+ 
+     
+ end
+ figure(1)
+     scatter3(MacroExxColumn,MacroEyyColumn,rhoArray);
+    xlabel('Exx');
+    ylabel('Eyy');
+    zlabel('Rho,Density');
     
-%      x0=[1 1 1 1 1 1];
-%      A = [];
-%      b = [];
+    
+     x0=[1 1 1 1 1 1];
+     A = [];
+     b = [];
+     
+     scaleUp = matProp.E_material1;
+     
+%      X = MacroExxColumn/matProp.E_material1;
+%      Y = MacroEyyColumn/matProp.E_material1;
+       X = MacroExxColumn;
+     Y = MacroEyyColumn;
+     Z = rhoArray*scaleUp;
+     
+
+      ub = ones(6,1)*100000;
+      lb = -ub;
+             sfArray= fmincon(@(x) fitObjective(x,X,Y,Z),x0,A,b,[],[],lb,ub);
+%       [x,fval,exitflag] = ga(@(x) fitObjective(x,X,Y,Z),  6,A,b,[],[],lb,ub);
+%        sfArray=x;
+     sfArray=sfArray/scaleUp
 %      
-%      X = ExxArray;
-%      Y = EyyArray;
-%      Z = rhoArray;
-%      
-% 
-%       ub = ones(6,1)*10000;
-%       lb = -ub;
-%             sfArray= fmincon(@(x) fitObjective(x,X,Y,Z),x0,A,b,[],[],lb,ub);
-% %      [x,fval,exitflag] = ga(@(x) fitObjective(x,X,Y,Z),  6,A,b,[],[],lb,ub)
-% %      sfArray=x;
-%      sfArray
-%      
-%      [Xgrid, Ygrid]=meshgrid(0:1000:max(X),0:1000:max(Y));
-%      
-%      p00 =sfArray(1);
-%      p10=sfArray(2);
-%      p01=sfArray(3) ;
-%      p20=sfArray(4);
-%      p11=sfArray(5);
-%      p02=sfArray(6);
-%      
-%      Zexperimental=   p00 + p10*Xgrid + p01*Ygrid + p20*Xgrid.^2 + p11*Xgrid.*Ygrid + p02*Ygrid.^2;
-%      
-%       hold on
-%      surf(Xgrid,Ygrid,Zexperimental)
-%      hold off
+     [Xgrid, Ygrid]=meshgrid(0:1000:max(X),0:1000:max(Y));
+     
+%      Xgrid=Xgrid*matProp.E_material1;
+%      Ygrid=Ygrid*matProp.E_material1;
+     
+     p00 =sfArray(1);
+     p10=sfArray(2);
+     p01=sfArray(3) ;
+     p20=sfArray(4);
+     p11=sfArray(5);
+     p02=sfArray(6);
+     
+     Zexperimental=   p00 + p10*Xgrid + p01*Ygrid + p20*Xgrid.^2 + p11*Xgrid.*Ygrid + p02*Ygrid.^2;
+     
+      hold on
+     surf(Xgrid,Ygrid,Zexperimental)
+     hold off
+     
+      nameGraph2 = sprintf('./RhoDensityOfExxEyyPlot%i.png', config.macro_meso_iteration);
+         print(nameGraph2,'-dpng');
     
      
-     %      sf = fit([MacroExxColumn, MacroEyyColumn],rhoArray,'poly22')
-     %      plot(sf,[MacroExxColumn,MacroEyyColumn],rhoArray)
+%           sf = fit([MacroExxColumn, MacroEyyColumn],rhoArray,'poly22')
+%           plot(sf,[MacroExxColumn,MacroEyyColumn],rhoArray)
      %          xlabel('MacroExxColumn');
      %     ylabel('MacroEyyColumn');
      %     zlabel('Rho,Density');
@@ -390,8 +424,10 @@ if(1==1)
 
 
 
-%         nameArray = sprintf('./out%i/ExxEyyRhoFitCoefficients%i.csv',folderNum, config.macro_meso_iteration);
-%     csvwrite(nameArray,sfArray);
+         nameArray = sprintf('./out%i/ExxEyyRhoFitCoefficients%i.csv',folderNum, config.macro_meso_iteration);
+%      csvwrite(nameArray,sfArray);
+     
+     dlmwrite(nameArray, sfArray, 'delimiter', ',', 'precision', 9); 
 
 %       figure(3)
 %      sf = fit([ExxArray, EyyArray],rhoArray,'poly23')

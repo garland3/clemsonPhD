@@ -79,7 +79,7 @@ classdef Configuration
         doSaveDesignVarsToCSVFile = 0; % set to 1 to write plotFinal csv file instead
         doPlotAppliedStrain = 0; % For debugging only
         doPlotOrthDistributionVar=0;
-        doPlotExx= 0  ;
+        doPlotExx = 0  ;
         doPlotEyy =  0 ;
         doPlotEyyExxArrows =0;
         doPlotElasticSensitivity =  0  ;
@@ -101,7 +101,7 @@ classdef Configuration
         iterationNum=0; %  used for parallel computing.
         maxFEACalls = 50;
         maxMasterLoops = 30;
-        maxMesoLoops = 50;
+        maxMesoLoops = 80;
         maxNumPseudoStrainLoop=6
         PseudoStrainEndCriteria = 0.1;
         

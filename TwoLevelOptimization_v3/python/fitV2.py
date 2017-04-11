@@ -37,7 +37,7 @@ X,Y = np.meshgrid(np.linspace(mn[0], mx[0], 20), np.linspace(mn[1], mx[1], 20))
 XX = X.flatten()
 YY = Y.flatten()
 
-order = 2    # 1: linear, 2: quadratic
+order = 2    # 1: linear, 2: quadratic, 3: cubit
 if order == 1:
     # best-fit linear plane
     A = np.c_[data[:,0], data[:,1], np.ones(data.shape[0])]
@@ -52,13 +52,22 @@ if order == 1:
 elif order == 2:
     # best-fit quadratic curve
     A = np.c_[np.ones(data.shape[0]), data[:,:2], np.prod(data[:,:2], axis=1), data[:,:2]**2]
+ 
+    C,_,_,_ = scipy.linalg.lstsq(A, data[:,2])
+    print C
+    
+    # evaluate it on a grid
+    Z = np.dot(np.c_[np.ones(XX.shape), XX, YY, XX*YY, XX**2, YY**2], C).reshape(X.shape)
+    
+elif order == 3:
+    # best-fit cubic curve
+    A = np.c_[np.ones(data.shape[0]), data[:,:2], np.prod(data[:,:2], axis=1), data[:,:2]**2]
     print A
     C,_,_,_ = scipy.linalg.lstsq(A, data[:,2])
     print C
     
     # evaluate it on a grid
     Z = np.dot(np.c_[np.ones(XX.shape), XX, YY, XX*YY, XX**2, YY**2], C).reshape(X.shape)
-
 # plot points and fitted surface
 fig = plt.figure()
 ax = fig.gca(projection='3d')

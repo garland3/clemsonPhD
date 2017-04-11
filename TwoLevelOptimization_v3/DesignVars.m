@@ -25,7 +25,8 @@ classdef DesignVars
         
        % ResponseSurfaceCoefficents=[];
        % These are the starting values. 
-         ResponseSurfaceCoefficents=[    -0.0449   1.045e-05   1.045e-05   8.433e-26  -1.045e-10   1.789e-25];
+       %  ResponseSurfaceCoefficents=[    -0.0449   1.045e-05   1.045e-05   8.433e-26  -1.045e-10   1.789e-25];
+       ResponseSurfaceCoefficents=[      1e-06 9.9998e-07 9.9999e-07 4.7961e-11 1.7498e-11 4.3607e-11];
          averageMesoDensity=0;
         
         
@@ -238,10 +239,10 @@ classdef DesignVars
                     obj.thetaSub=csvread(outnameThetaSubSysValues); % Sub system copies of design var
                     
 %                     
-%                      if(config.macro_meso_iteration>1)
-%                          nameArray = sprintf('./out%i/ExxEyyRhoFitCoefficients%i.csv',folderNum, oldIteration);
-%                          obj.ResponseSurfaceCoefficents=csvread(nameArray);
-%                      end
+                     if(config.macro_meso_iteration>1)
+                         nameArray = sprintf('./out%i/ExxEyyRhoFitCoefficients%i.csv',folderNum, oldIteration);
+                         obj.ResponseSurfaceCoefficents=csvread(nameArray);
+                     end
                     
                     
                 elseif(config.mode==50)
