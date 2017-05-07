@@ -210,15 +210,26 @@ classdef plotResults
                 targetAverageE = DV.storeOptimizationVar(1:loopNumb,7)'; %   DV.targetAverageE
                 actualAverageE = DV.storeOptimizationVar(1:loopNumb,8)'; % DV.actualAverageE
                 
+                % Consistency Constraints
+                ExxSysAndSubDiffSummed = DV.storeOptimizationVar(1:loopNumb,10)'; %
+                EyySysAndSubDiffSummed = DV.storeOptimizationVar(1:loopNumb,11)'; %
+                ThetaSysAndSubDiffSummed = DV.storeOptimizationVar(1:loopNumb,12)'; %
+                
+                %normalize
+                ExxSysAndSubDiffSummed=ExxSysAndSubDiffSummed/max(ExxSysAndSubDiffSummed);
+                EyySysAndSubDiffSummed=EyySysAndSubDiffSummed/max(EyySysAndSubDiffSummed);
+                ThetaSysAndSubDiffSummed=ThetaSysAndSubDiffSummed/max(ThetaSysAndSubDiffSummed);
+                
                 
                 scaleForEvalues = 0.5/targetAverageE(1);
                 targetAverageE = scaleForEvalues*targetAverageE; % Target E
                 actualAverageE = scaleForEvalues*actualAverageE;
                 
+                
                 if(config.useTargetMesoDensity==1)
                       mesoAvgDensity = DV.storeOptimizationVar(1:loopNumb,9)'; %
-                     plot( x, elasticObjective, 'ko-',x, targetAverageE, 'm+-', x, actualAverageE, 'c*-',x, totalVolumeTarget, 'r.-',x, summedDensity, 'gx',x,mesoAvgDensity,'b-')
-                     legend('Elast Obj','E target','E avg', 'Vol Target', 'Actual Vol','AvgMesoDensity')
+                     plot( x, elasticObjective, 'ko-',x, ExxSysAndSubDiffSummed, 'm+-', x, EyySysAndSubDiffSummed, 'c*-',x, ThetaSysAndSubDiffSummed, 'b*-',x, totalVolumeTarget, 'r.-',x, summedDensity, 'gx',x,mesoAvgDensity,'b-')
+                     legend('Elast Obj','ExxSysAndSubDiffSummed','EyySysAndSubDiffSummed','ThetaSysAndSubDiffSummed' ,'Vol Target', 'Actual Vol','AvgMesoDensity')
                     
                 else
                     plot( x, elasticObjective, 'ko-',x, targetAverageE, 'm+-', x, actualAverageE, 'c*-',x, totalVolumeTarget, 'r.-',x, summedDensity, 'gx')

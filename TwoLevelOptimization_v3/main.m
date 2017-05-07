@@ -1,12 +1,21 @@
 function main()
 clear
-% 
-%               combinedTopologyOptimization('1', '1', '1','60', 'na');
-%      combinedTopologyOptimization('1', '1', '1','200', 'na');
-%                combinedTopologyOptimization('1', '1', '1','203', 'na'); % make%        Exx, Eyy, vars from Dmatrixes
+%
+%                   combinedTopologyOptimization('1', '1', '1','60', 'na');
+%         combinedTopologyOptimization('1', '1', '1','200', 'na');
+%              combinedTopologyOptimization('1', '1', '1','203', 'na'); % make%        Exx, Eyy, vars from Dmatrixes
+% for i =1:5
+%                  combinedTopologyOptimization('1', '1', int2str(i),'203', 'na'); % make%        Exx, Eyy, vars from Dmatrixes
+%
+% end
 
 % % iteration 2
-combinedTopologyOptimization('1', '1', '2','60', 'na');
+% combinedTopologyOptimization('1', '1', '2','60', 'na');
+% combinedTopologyOptimization('1', '1', '2','200', 'na');
+
+% % iteration 2
+    combinedTopologyOptimization('1', '1', '2','60', 'na');
+    combinedTopologyOptimization('1', '1', '2','200', 'na');
 
 
 %   combinedTopologyOptimization('1', '1', '1','202', 'na'); % make complete macro-meso  structure
@@ -14,12 +23,18 @@ combinedTopologyOptimization('1', '1', '2','60', 'na');
 
 % test meso design for element 1, macro iteration 1
 %  combinedTopologyOptimization('1', '1', '1','100', '781');
-%  combinedTopologyOptimization('1', '1', '1','100', '191');
-%   combinedTopologyOptimization('1', '1', '1','100', '2');
+%    combinedTopologyOptimization('1', '1', '1','100', '191');
+nelx= 30;
+nely = 15;
+totale=nelx*nely;
+% 
+% for i = 1:totale
+%     combinedTopologyOptimization('1', '1', '1','100', int2str(i));
+% end
 
 %        combinedTopologyOptimization('1', '1', '1','100', '21');
 %          combinedTopologyOptimization('1', '1', '1','100', '441');
- 
+
 %    combinedTopologyOptimization('1', '1', '1','100', '2');
 
 % numloops = 5;
@@ -29,8 +44,8 @@ combinedTopologyOptimization('1', '1', '2','60', 'na');
 %      combinedTopologyOptimization('no', 'NA', i,'na', 'na');
 % end
 % close all
-% 
-% 
+%
+%
 %   combinedTopologyOptimization('1', '1',numloops,'12', 'na');
 
 % folderNum = 0;
@@ -50,21 +65,21 @@ combinedTopologyOptimization('1', '1', '2','60', 'na');
 % p = plotResults;
 % [r,c] = size (all);
 % loopNumb=r;
-% 
+%
 % % Get size of the grid
 % previousIterationNum=1;
 % outname = sprintf('./out%i/volfractionfield%i.csv',folderNum,previousIterationNum);
 % [gridrows, gridcolumns]=size(csvread(outname));
 % totalvolume = gridrows*gridcolumns;
-% 
+%
 % % normalize the volumes
 % %mtemp = max(designVars.storeOptimizationVar(1:loopNumb,4));
 % % designVars.storeOptimizationVar(1:loopNumb,4) = designVars.storeOptimizationVar(1:loopNumb,4)/totalvolume;
 % % %mtemp2 = max(designVars.storeOptimizationVar(1:loopNumb,5));
 % % designVars.storeOptimizationVar(1:loopNumb,5) = designVars.storeOptimizationVar(1:loopNumb,5)/totalvolume;
-% 
-% 
-% 
+%
+%
+%
 % settings = 0;
 % matProp = 0;
 % hold on
@@ -72,10 +87,10 @@ combinedTopologyOptimization('1', '1', '2','60', 'na');
 % xvalues = 1:loopNumb;
 % stairs(xvalues,iterationDiff);
 % hold off
-% 
+%
 % w1 = 0;
 %  nameGraph = sprintf('./optiParaViaIterations%i.png', w1);
 % print(nameGraph,'-dpng');
 
-
+% combinedTopologyOptimization('1', '1', '1','1', 'na');
 end

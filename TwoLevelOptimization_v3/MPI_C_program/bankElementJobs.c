@@ -8,7 +8,8 @@
 #define MASTER_RANK 0
 #define SUB_MASTER_RANK 1
 #define SUB_SUB_MASTER_RANK 2
-#define NUM_MACRO_MESO_ITER 5
+#define NUM_MACRO_MESO_ITER 11 // 3,5,11
+#define START_MACRO_MESO_ITER 1 // 1
 
 #define NELX_MACRO  30
 #define NELY_MACRO 15
@@ -53,7 +54,7 @@ int main ( int argc, char **argv )
 	}
    
    
-   for (int k = 1;k<NUM_MACRO_MESO_ITER+1;k++){
+   for (int k = START_MACRO_MESO_ITER;k<NUM_MACRO_MESO_ITER+1;k++){
      
         // -------------------------------------------------------
         //
@@ -229,7 +230,8 @@ int main ( int argc, char **argv )
    if (i_am_the_master) {
         // Call to finilize the design and track metrics. 
        // callMatlab(int mode, int macro_meso_iteration, int element)
-        callMatlab(12,NUM_MACRO_MESO_ITER, 1);
+       callMatlab(60,NUM_MACRO_MESO_ITER+1, 1);
+       callMatlab(200,NUM_MACRO_MESO_ITER+1, 1);
    }
  
 

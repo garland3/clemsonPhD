@@ -52,19 +52,36 @@ end
 DVmeso = DVmeso.CalcElementNodeMapmatrixWithPeriodicXandY(mesoConfig);
 DVmeso =  DVmeso.CalcNodeLocationMeso(mesoConfig);
 
+% -----------------------------
+% try to estimate the target density.
+% -----------------------------
+% if(mesoConfig.macro_meso_iteration>1)
+%     folderNum = mesoConfig.iterationNum;
+%     oldIteration = mesoConfig.macro_meso_iteration-1;
+%     nameArray = sprintf('./out%i/ExxEyyRhoFitCoefficients%i.csv',folderNum, oldIteration);  
+%      DVmeso.ResponseSurfaceCoefficents=csvread(nameArray);
+% end
+% 
+% p00 =   DVmeso. ResponseSurfaceCoefficents(1);
+% p10 =  DVmeso. ResponseSurfaceCoefficents(2);
+% p01 =   DVmeso. ResponseSurfaceCoefficents(3);
+% p20 =  DVmeso. ResponseSurfaceCoefficents(4);
+% p11 =  DVmeso. ResponseSurfaceCoefficents(5);
+% p02 =   DVmeso. ResponseSurfaceCoefficents(6);
+% x=macroElemProps.Exx/matProp.E_material1;
+% y=macroElemProps.Eyy/matProp.E_material1;
+% mesoConfig.totalVolume= min( p00 + p10*x + p01*y + p20*x^2 + p11*x*y + p02*y^2,1); % estimate the target density
 
-% --------------------------------------------
-%    CALCULATE SENSITIVITY
-%
-%    UPDATE THE DESGIN OF THE UNIT CELL
-% --------------------------------------------
-% Loop Calculatint the sensitivity and changing the design var X
+mesoConfig.totalVolume=0.5;
+
 
 densityArray = 100;
 
 old_muMatrix = ones(3,3);
 penaltyValue=0.5;
 macroElemProps.D_subSys = ones(3,3);
+
+
 
 pstrain=ones(3,1)/3;
 pstrain(3)=pstrain(3)*shearSign;
@@ -73,8 +90,16 @@ pstrainOld=ones(3,1);
 
 counter = 1;
 volumeUpdateInterval = 12;
-mesoConfig.totalVolume=0.5; % start at 50% density and go from there. 
+% mesoConfig.totalVolume=0.5; % start at 50% density and go from there. 
 
+% --------------------
+% Use the old density and 
+% --------------------
+
+
+% --------------------
+% Start pseudo strain loops
+% --------------------
 for mm = 1:mesoConfig.maxNumPseudoStrainLoop   
     
     temp=sum(abs(pstrain-pstrainOld));

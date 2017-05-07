@@ -26,7 +26,7 @@ classdef Configuration
         
         % For ATC optimization
         addConsistencyConstraints=1;      
-        Omega = 0.1;
+        Omega = 0.15;
         
         % Modeling settings
         referenceTemperature = 0; % for thermal expansion, assume that there is not strain when at this temperature.
@@ -36,12 +36,13 @@ classdef Configuration
         useExxEyy=1;       
         useTargetMesoDensity = 1; % 1 = yes, 0 = no and use target Eavg
         targetExxEyyDensity = 0.5;
+        useThetaInSurfaceFit = 0;
         
         % rotation
         useRotation =1;
         minRotation =-pi/2;
         maxRotation = pi/2;
-        rotationMoveLimit = pi/36;
+        rotationMoveLimit = pi/10;
         
         
         % number of elements
@@ -74,7 +75,7 @@ classdef Configuration
         doPlotHeat = 0;
         doPlotHeatSensitivityTopology = 0;
         doPlotStress = 0;
-        doPlotFinal =1;
+        doPlotFinal =0;
         doPlotMetrics = 0;
         doSaveDesignVarsToCSVFile = 0; % set to 1 to write plotFinal csv file instead
         doPlotAppliedStrain = 0; % For debugging only
@@ -93,7 +94,7 @@ classdef Configuration
         %-----------------
         
         recvid = 0; % record video
-        maximizePlots =0;
+        maximizePlots= 0;
         
         % ----------------
         % Computational settings
@@ -197,14 +198,14 @@ classdef Configuration
                 % ------------
                 % Palmetto running case
                 % -------------------
-                obj.nelx = 30; %39
-                obj.nely = 15; % 21
-                obj.nelxMeso = 30; %35;
-                obj.nelyMeso =30; %35;
+                obj.nelx = 30; %39 % 30
+                obj.nely = 15; % 21 % 15
+                obj.nelxMeso = 20; %35;
+                obj.nelyMeso =20; %35;
                 obj.terminationAverageCount = 10;
                 obj.terminationCriteria =0.001; % 0.0%
-                obj.maxFEACalls = 25;
-                obj.maxMasterLoops = 25;
+                obj.maxFEACalls = 80;
+                obj.maxMasterLoops = 60;
                 
             end
             

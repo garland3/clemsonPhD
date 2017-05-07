@@ -29,6 +29,15 @@ csvwrite(outname,designVars.Exx);
 outname = sprintf('./out%i/EyyValues%i.csv',folderNum,mm_iteration);
 csvwrite(outname,designVars.Eyy);
 
+
+% save the Exx sensitivity field
+outname = sprintf('./out%i/sensitivityElastic%i.csv',folderNum,mm_iteration);
+csvwrite(outname,designVars.sensitivityElastic);
+
+% save the Eyy sensitivity field
+outname = sprintf('./out%i/sensitivityElasticPart2%i.csv',folderNum,mm_iteration);
+csvwrite(outname,designVars.sensitivityElasticPart2 );
+
 % save the Theta field
 outname = sprintf('./out%i/ThetaValues%i.csv',folderNum,mm_iteration);
 csvwrite(outname,designVars.t);

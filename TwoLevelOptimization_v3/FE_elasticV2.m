@@ -17,9 +17,10 @@ bottomFixed=0;
 bridgeStart = (row*(column-2)+1)*2; % (row*(floor(column/2))+1)*2;
 bridgeEnd=(row*(column-1))*2; % (row*(1+floor(column/2)))*2;
 
+loadMagnitude = 10000;%500
 % loading condition
 if loadingCase == 111
-    FappliedLoad = 500;
+    FappliedLoad = loadMagnitude;
     tt=   1:2*row :2*row*(column); % ... % left side
     t2=tt+1;      
     t3 = [];
@@ -31,7 +32,7 @@ if loadingCase == 111
     F(ndof) = FappliedLoad;
     
 elseif loadingCase ==112
-    FappliedLoad = -500;
+    FappliedLoad = -loadMagnitude;
     tt=   1:2*row :2*row*(column); % ... % left side
     t2=tt+1;
     Essential=[tt t2];
@@ -40,7 +41,7 @@ elseif loadingCase ==112
     F(row*2) = FappliedLoad;
     
 elseif loadingCase ==113
-    FappliedLoad = 500;
+    FappliedLoad = loadMagnitude;
     tt=   1:2*row :2*row*(column); % ... % left side
     t2=tt+1;
     Essential=[tt t2];
@@ -54,7 +55,7 @@ elseif loadingCase ==113
     %
     % -------------------------------------------------
 elseif loadingCase ==300
-      FappliedLoad = -500;   
+      FappliedLoad = -loadMagnitude;   
       bottomFixed = 1;
      
       fnodes =  (row*(column-1)+1)*2:2:(row*(column-1)+floor(row/4))*2; % top left quarter, y degrees of freedom, pointing down. 
@@ -62,28 +63,28 @@ elseif loadingCase ==300
        F(fnodes) =FappliedLoad/count;
       
 elseif loadingCase ==301
-        FappliedLoad = -500;   
+        FappliedLoad = -loadMagnitude;   
       bottomFixed = 1;
      
       fnodes =   (row*(column-1)+1)*2:2:(row*(column-1)+floor(row/2))*2; % top left half, y degrees of freedom, pointing down. 
       count = size(fnodes,2);
        F(fnodes) =FappliedLoad/count;
 elseif loadingCase ==302
-      FappliedLoad = -500;   
+      FappliedLoad = -loadMagnitude;   
       bottomFixed = 1;
      
      fnodes= (row*(column-1)+1)*2:2:ndof; % whole top, y degrees of freedom, pointing down. 
       count = size(fnodes,2);
        F(fnodes) =FappliedLoad/count;
 elseif loadingCase ==303
-         FappliedLoad = -500;   
+         FappliedLoad = -loadMagnitude;   
       bottomFixed = 1;
      
       fnodes =  (row*(column-1)+1+floor(row/2))*2:2:ndof; % top right half, y degrees of freedom, pointing down. 
       count = size(fnodes,2);
        F(fnodes) =FappliedLoad/count;
 elseif loadingCase ==304
-     FappliedLoad = -500;   
+     FappliedLoad = -loadMagnitude;   
       bottomFixed = 1;
      
       fnodes =  (row*(column-1)+1+floor(3*row/4))*2:2:ndof; % top right quarter, x and y degrees of freedom, pointing down and left. 
@@ -91,7 +92,7 @@ elseif loadingCase ==304
        F(fnodes) =FappliedLoad/count;
        
 elseif loadingCase ==305
-     FappliedLoad = -500;   
+     FappliedLoad = -loadMagnitude;   
       bottomFixed = 1;
      
       fnodes =  (row*(column-1)+floor(row/2))*2:2:ndof; % top right half, x  degree of freedome only, pushing off. 
@@ -105,7 +106,7 @@ elseif loadingCase ==305
     % -------------------------------------------------
 elseif loadingCase ==400
        
-     FappliedLoad = -500;   
+     FappliedLoad = -loadMagnitude;   
      bottomFixed = 1;
         
      startOffset = 0;
@@ -117,7 +118,7 @@ elseif loadingCase ==400
 
 elseif loadingCase ==401
      
-     FappliedLoad = -500;   
+     FappliedLoad = -loadMagnitude;   
       bottomFixed = 1;
       
 %         bridgeStart = (row*(floor(column/2))+1)*2;
@@ -130,7 +131,7 @@ elseif loadingCase ==401
      count = size(fnodes,2);
      F(fnodes) =FappliedLoad/count;
 elseif loadingCase ==402
-      FappliedLoad = -500;   
+      FappliedLoad = -loadMagnitude;   
       bottomFixed = 1;
       
 %         bridgeStart = (row*(floor(column/2))+1)*2;
@@ -144,7 +145,7 @@ elseif loadingCase ==402
      F(fnodes) =FappliedLoad/count;
       
 elseif loadingCase ==403
-      FappliedLoad = -500;   
+      FappliedLoad = -loadMagnitude;   
       bottomFixed = 1;
       
 %         bridgeStart = (row*(floor(column/2))+1)*2;
@@ -158,7 +159,7 @@ elseif loadingCase ==403
      F(fnodes) =FappliedLoad/count;
      
  elseif loadingCase ==404
-      FappliedLoad = -500;   
+      FappliedLoad = -loadMagnitude;   
       bottomFixed = 1;
       
 %         bridgeStart = (row*(floor(column/2))+1)*2;
@@ -171,7 +172,7 @@ elseif loadingCase ==403
      count = size(fnodes,2);
      F(fnodes) =FappliedLoad/count;
   elseif loadingCase ==405
-      FappliedLoad = 500;   
+      FappliedLoad = loadMagnitude;   
       bottomFixed = 1;
       
 %         bridgeStart = (row*(floor(column/2))+1)*2;

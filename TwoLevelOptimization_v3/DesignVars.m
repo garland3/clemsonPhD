@@ -17,17 +17,24 @@ classdef DesignVars
         lambdaTheta=0; % lambda for the Theta
         penaltyExx=0; % penality value used for the Exx Augmented Lagrangian Multiplier
         penaltyEyy=0; % penality value used for the  Eyy Augmented Lagrangian Multiplier
-        penaltyTheta=0; %penality value used for the Theta Augmented Lagrangian Multiplier
+        penaltyTheta=0; %penality value used for the Theta Augmented Lagrangian Multipliery=
+        
+        penaltyMesoDensity=0;
+        lagrangianMesoDensity=0.1;
         
         ExxSub=0; % Sub system copies of design var
         EyySub=0; % Sub system copies of design var
         thetaSub=0; % Sub system copies of design var
+        maxElemStraniEnergy=0;
         
-       % ResponseSurfaceCoefficents=[];
-       % These are the starting values. 
-       %  ResponseSurfaceCoefficents=[    -0.0449   1.045e-05   1.045e-05   8.433e-26  -1.045e-10   1.789e-25];
-       ResponseSurfaceCoefficents=[      1e-06 9.9998e-07 9.9999e-07 4.7961e-11 1.7498e-11 4.3607e-11];
-         averageMesoDensity=0;
+        % ResponseSurfaceCoefficents=[];
+        % These are the starting values.
+        %  ResponseSurfaceCoefficents=[    -0.0449   1.045e-05   1.045e-05   8.433e-26  -1.045e-10   1.789e-25];
+        ResponseSurfaceCoefficents=0;
+        averageMesoDensity=0;
+        ExxSysAndSubDiffSummed=0;
+        EyySysAndSubDiffSummed=0;
+        ThetaSysAndSubDiffSummed=0;
         
         
         
@@ -158,10 +165,21 @@ classdef DesignVars
                 
             end
             
+            if(config.useThetaInSurfaceFit==1)
+%                 obj. ResponseSurfaceCoefficents=[  9.99999999779786e-06 9.9999086180473e-06 9.99990080613124e-06 1.00000000554909e-05 -1.33226777965037e-10 -1.94015928184367e-10 9.99999972290092e-06 4.71726205107711e-11 9.99990147075606e-06 9.99982147731046e-06];
+                
+                 obj. ResponseSurfaceCoefficents=[ -0.1357    0.3071    1.1000   -0.1042    0.5286   -0.4000    0.1327   -0.4000   -0.1273    0.1273];
+            else
+               % obj. ResponseSurfaceCoefficents=[ 1.0000000000463e-05 9.99988184437107e-06 9.9998491550433e-06 -3.40115537230351e-11 -5.52110060132392e-12 -3.81038581303971e-11];
+             %  obj.ResponseSurfaceCoefficents=[    -0.0449   1.045e-05   1.045e-05   8.433e-26  -1.045e-10   1.789e-25];
+               
+                      obj.ResponseSurfaceCoefficents=[     -0.0449    1.0449    1.0449    0.0000   -1.0449    0.0000]
+            end
+            
             
             
         end
-        
+    
         % -----------------------------
         % Get the state of the macro optimization saved in csv files.
         %
@@ -228,21 +246,23 @@ classdef DesignVars
                         obj.penaltyTheta= csvread(outnamepenaltyTheta); %penality value used for the Theta Augmented Lagrangian Multiplier
                     elseif(config.macro_meso_iteration==2)
                         % set the lagrangians to zero for now. They will be
-                        % updated later after the penalty is calculated. 
+                        % updated later after the penalty is calculated.
                         obj.lambdaExx=zeros(config.nely,config.nelx);
                         obj.lambdaEyy= obj.lambdaExx;
-                        obj.lambdaTheta= obj.lambdaExx;                     
+                        obj.lambdaTheta= obj.lambdaExx;
                     end
                     
                     obj.ExxSub=csvread(outnameExxSubSysValues); % Sub system copies of design var
                     obj.EyySub=csvread(outnameEyySubSysValues); % Sub system copies of design var
                     obj.thetaSub=csvread(outnameThetaSubSysValues); % Sub system copies of design var
                     
-%                     
-                     if(config.macro_meso_iteration>1)
-                         nameArray = sprintf('./out%i/ExxEyyRhoFitCoefficients%i.csv',folderNum, oldIteration);
-                         obj.ResponseSurfaceCoefficents=csvread(nameArray);
-                     end
+                    %
+%                     if(config.macro_meso_iteration>1)
+%                         nameArray = sprintf('./out%i/ExxEyyRhoFitCoefficients%i.csv',folderNum, oldIteration);
+%                          xxx= dlmread(nameArray);
+%                          sprintf('%.12f',xxx(1));
+%                         obj.ResponseSurfaceCoefficents=xxx;
+%                     end
                     
                     
                 elseif(config.mode==50)
@@ -277,9 +297,14 @@ classdef DesignVars
         function obj = UpdatePenaltyAndLagrangianValues(obj, config,matProp)
             
             ne = config.nelx*config.nely;
-            diffExx = obj.Exx-obj.ExxSub;
-            diffEyy = obj.Eyy - obj.EyySub;
-            diffTheta = obj.t-obj.thetaSub;
+            diffExx = obj.ExxSub-obj.Exx;
+            diffEyy = obj.EyySub-obj.Eyy  ;
+            diffTheta = obj.thetaSub-obj.t;
+%              diffExx = -obj.Exx+obj.ExxSub;
+%             diffEyy = -obj.Eyy + obj.EyySub;
+%             diffTheta = -obj.t+obj.thetaSub;
+
+              
             
             % if the first time, calculate the initial penalty values.
             if(config.macro_meso_iteration==2)
@@ -289,10 +314,19 @@ classdef DesignVars
                 outname = sprintf('./out%i/displacement%i.csv',folderNum,oldIteration);
                 UpreviousIteration =  csvread(outname);
                 
-           
+                  % read the Exx sensitivity field
+                outname = sprintf('./out%i/sensitivityElastic%i.csv',folderNum,oldIteration);
+                ExxSensitivity= csvread(outname);
+                
+                % read the Eyy sensitivity field
+                outname = sprintf('./out%i/sensitivityElasticPart2%i.csv',folderNum,oldIteration);
+                EyySensitivity = csvread(outname);
+                
+               
+                
                 
                 % loop over the elements.
-               
+                
                 for e = 1:ne
                     
                     [xPos,yPos]= obj.GivenNodeNumberGetXY(e);
@@ -317,21 +351,33 @@ classdef DesignVars
                         u_local = transpose(UpreviousIteration(loadcaseIndex,NodeNumbers));
                         strainEnergy_temp=transpose(u_local)*KE*u_local;
                         strainEnergy=strainEnergy+strainEnergy_temp;
-                      
+                        
                         
                     end
-                   
+                    
                     % ---------------------------------------------
                     % Calculate the penalty values!!
                     % ---------------------------------------------
-                    omegaLocal = config.Omega;
-                    obj.penaltyExx(yPos,xPos)=min(2*omegaLocal*strainEnergy/ abs( diffExx(yPos,xPos)),strainEnergy);
-                    obj.penaltyEyy(yPos,xPos)=min(2*omegaLocal*strainEnergy/ abs (diffEyy(yPos,xPos)),strainEnergy);
-                    obj.penaltyTheta(yPos,xPos)=min(2*omegaLocal*strainEnergy/ abs( diffTheta(yPos,xPos)),strainEnergy); % max penalty of strainEnergy*100
-                    
+                    omegaLocal =config.Omega;
+                    %                     obj.penaltyExx(yPos,xPos)=min(2*omegaLocal*strainEnergy/ abs( diffExx(yPos,xPos)),strainEnergy);
+                    %                     obj.penaltyEyy(yPos,xPos)=min(2*omegaLocal*strainEnergy/ abs (diffEyy(yPos,xPos)),strainEnergy);
+                    %                     obj.penaltyTheta(yPos,xPos)=min(2*omegaLocal*strainEnergy/ abs( diffTheta(yPos,xPos)),strainEnergy); % max penalty of strainEnergy*100
+                    %
+%                     obj.penaltyExx(yPos,xPos)=omegaLocal*ExxSensitivity(yPos,xPos);
+%                     obj.penaltyEyy(yPos,xPos)=omegaLocal*EyySensitivity(yPos,xPos);
+                    obj.penaltyTheta(yPos,xPos)=omegaLocal*strainEnergy;
+                    %
                 end
+                
             end
             
+%             maxP = max(max(max( obj.penaltyExx)),max(max(obj.penaltyEyy)));
+%               obj.penaltyExx=config.Omega*  obj.penaltyExx/maxP;% divide by largest, scale by the Omega
+%                 obj.penaltyEyy= config.Omega* obj.penaltyEyy/maxP;
+%                 
+%                 maxPTheta = max(max( obj.penaltyTheta));
+%                  obj.penaltyTheta=config.Omega* obj.penaltyTheta/maxPTheta;  
+              
             
             
             % ---------------------------------------------
@@ -341,44 +387,75 @@ classdef DesignVars
             if(config.macro_meso_iteration>2)
                 
                 updateMultiplier = 3;
-                for e = 1:ne                    
-                    [xPos,yPos]= obj.GivenNodeNumberGetXY(e);                    
-                     obj.penaltyExx(yPos,xPos)=   obj.penaltyExx(yPos,xPos)*updateMultiplier;
+                for e = 1:ne
+                    [xPos,yPos]= obj.GivenNodeNumberGetXY(e);
+                    obj.penaltyExx(yPos,xPos)=   obj.penaltyExx(yPos,xPos)*updateMultiplier;
                     obj.penaltyEyy(yPos,xPos)= obj.penaltyEyy(yPos,xPos)*updateMultiplier;
-                    obj.penaltyTheta(yPos,xPos)=  obj.penaltyTheta(yPos,xPos)*updateMultiplier;                    
+                    obj.penaltyTheta(yPos,xPos)=  obj.penaltyTheta(yPos,xPos)*updateMultiplier;
                 end
                 
             end
             
             
-             % ---------------------------------------------
-             % Calculate the lagrangian values.
-             % ---------------------------------------------
-             
-             for e = 1:ne
-                 [xPos,yPos]= obj.GivenNodeNumberGetXY(e);
-                 obj.lambdaExx(yPos,xPos)= obj.lambdaExx(yPos,xPos)+obj.penaltyExx(yPos,xPos) *diffExx(yPos,xPos);
-                 obj.lambdaEyy(yPos,xPos)=  obj.lambdaEyy(yPos,xPos)+obj.penaltyEyy(yPos,xPos) *diffEyy(yPos,xPos);
-                 obj.lambdaTheta(yPos,xPos)=   obj.lambdaTheta(yPos,xPos)+obj.penaltyTheta(yPos,xPos) *diffTheta(yPos,xPos);
-             end
-             
-             if 1==2
-                 p = plotResults;
-                 figure
-                 subplot(2,3,1)
-                 p.PlotArrayGeneric( obj.penaltyExx, ' obj.penaltyExx')
-                 subplot(2,3,2)
-                 p.PlotArrayGeneric( obj.penaltyEyy, ' obj.penaltyEyy')
-                 subplot(2,3,3)
-                 p.PlotArrayGeneric( obj.penaltyTheta, ' obj.penaltyTheta')
-                 
-                 subplot(2,3,4)
-                 p.PlotArrayGeneric( obj.lambdaExx, ' obj.lambdaExx')
-                 subplot(2,3,5)
-                 p.PlotArrayGeneric( obj.lambdaEyy, ' obj.lambdaEyy')
-                 subplot(2,3,6)
-                 p.PlotArrayGeneric( obj.lambdaTheta, ' obj.lambdaTheta')
-             end
+            % ---------------------------------------------
+            % Calculate the lagrangian values.
+            % ---------------------------------------------
+              obj.lambdaExx= zeros(size(obj.Exx));
+                obj.lambdaEyy=  zeros(size(obj.Exx));
+            
+%             for e = 1:ne
+%                 [xPos,yPos]= obj.GivenNodeNumberGetXY(e);
+%                 deltaT = 0.1;
+% %                 obj.lambdaExx(yPos,xPos)= obj.lambdaExx(yPos,xPos)+deltaT *diffExx(yPos,xPos);
+% %                 obj.lambdaEyy(yPos,xPos)=  obj.lambdaEyy(yPos,xPos)+deltaT*diffEyy(yPos,xPos);
+%               
+%                 obj.lambdaTheta(yPos,xPos)=   obj.lambdaTheta(yPos,xPos)+obj.penaltyTheta(yPos,xPos) *diffTheta(yPos,xPos);
+%                 
+%                 
+%                 
+% %                 obj.lambdaExx(yPos,xPos)=0; %obj.lambdaExx(yPos,xPos)+obj.penaltyExx(yPos,xPos) *diffExx(yPos,xPos);
+% %                 obj.lambdaEyy(yPos,xPos)=  0;%obj.lambdaEyy(yPos,xPos)+obj.penaltyEyy(yPos,xPos) *diffEyy(yPos,xPos);
+% %                 obj.lambdaTheta(yPos,xPos)=  0;% obj.lambdaTheta(yPos,xPos)+obj.penaltyTheta(yPos,xPos) *diffTheta(yPos,xPos)
+%             end
+            
+            
+            % calculate the penalties now
+            if(config.macro_meso_iteration==2)
+                smallestLambdExx = min(min(obj.lambdaExx));
+                smallestLambdEyy = min(min(obj.lambdaEyy));
+                smallestOfTwo = min(smallestLambdExx,smallestLambdEyy);
+                obj.penaltyExx=abs(omegaLocal*ExxSensitivity./(obj.lambdaExx-smallestOfTwo));
+                obj.penaltyEyy=abs(omegaLocal*EyySensitivity./(obj.lambdaEyy-smallestOfTwo));
+                
+%                 obj.penaltyExx=obj.penaltyExx*25;
+%                 obj.penaltyEyy=obj.penaltyEyy*25;
+                
+               % d =matProp.E_material1
+                p = ones(size(EyySensitivity))*max(max(ExxSensitivity))/matProp.E_material1;
+%                  obj.penaltyExx=abs(omegaLocal*ExxSensitivity./(obj.lambdaExx-smallestOfTwo));
+%                 obj.penaltyEyy=abs(omegaLocal*EyySensitivity./(obj.lambdaEyy-smallestOfTwo));
+                obj.penaltyExx=p;
+                obj.penaltyEyy=p;
+                
+            end
+            
+            if 1==0
+                p = plotResults;
+                figure
+                subplot(2,3,1)
+                p.PlotArrayGeneric( obj.penaltyExx, ' obj.penaltyExx')
+                subplot(2,3,2)
+                p.PlotArrayGeneric( obj.penaltyEyy, ' obj.penaltyEyy')
+                subplot(2,3,3)
+                p.PlotArrayGeneric( obj.penaltyTheta, ' obj.penaltyTheta')
+                
+                subplot(2,3,4)
+                p.PlotArrayGeneric( obj.lambdaExx, ' obj.lambdaExx')
+                subplot(2,3,5)
+                p.PlotArrayGeneric( obj.lambdaEyy, ' obj.lambdaEyy')
+                subplot(2,3,6)
+                p.PlotArrayGeneric( obj.lambdaTheta, ' obj.lambdaTheta')
+            end
         end
         
         
@@ -717,7 +794,7 @@ classdef DesignVars
                 obj.   currentVol2Fraction =sum(sum( obj.x.*(1-obj.w)))/ne;
                 
                 
-               
+                
             else
                 
                 
@@ -878,26 +955,25 @@ classdef DesignVars
             elementsInRow = config.nelx+1;
             
             obj.cCompliance=0;
+            obj. ExxSysAndSubDiffSummed=0;
+            obj. EyySysAndSubDiffSummed=0;
+            obj.  ThetaSysAndSubDiffSummed=0;
             
             % allow multiple loading cases.
             [~, t2] = size(config.loadingCase);
             
             %             for loadcaseIndex = 1:t2
             % UloadCase= obj.U(loadcaseIndex,:);
-            
+            o = Optimizer;
             if(config.useTargetMesoDensity==1)
-                p00 =   obj. ResponseSurfaceCoefficents(1);
-                p10 =  obj. ResponseSurfaceCoefficents(2);
-                p01 =   obj. ResponseSurfaceCoefficents(3);
-                p20 =  obj. ResponseSurfaceCoefficents(4);
-                p11 =  obj. ResponseSurfaceCoefficents(5);
-                p02 =   obj. ResponseSurfaceCoefficents(6);
+                co =   obj. ResponseSurfaceCoefficents;
                 sumDensity=0;
-                
             end
             
+            obj.maxElemStraniEnergy=0;
             % OBJECTIVE FUNCTION
             count =1;
+            temp3=obj.Exx*0;
             for ely = 1:config.nely
                 rowMultiplier = ely-1;
                 for elx = 1:config.nelx
@@ -931,32 +1007,84 @@ classdef DesignVars
                     
                     % allow multiple loading cases.
                     Urows = obj.U(:,NodeNumbers);
+                    elementCompliance=0;
                     for tt = 1:t2
                         Ue = Urows(tt,:)';
                         %                         obj.sensitivityElastic(ely,elx) =-Ue'*KEsensitive*Ue+ obj.sensitivityElastic(ely,elx);
                         % Calculate the total elastic compliance
-                        obj.cCompliance = obj.cCompliance + Ue'*KE*Ue;
+                        temp =  Ue'*KE*Ue;
+                        elementCompliance=elementCompliance+temp;                     
+                     
+                    end
+                     obj.cCompliance = obj.cCompliance+elementCompliance;
+                     
+                     % record the largetst element strain energy
+                     if( elementCompliance>obj.maxElemStraniEnergy)
+                         obj.maxElemStraniEnergy= elementCompliance;
+                     end
+                     
+                    if(config.useTargetMesoDensity==1)
+                        xxx=obj.Exx(ely,elx)/matProp.E_material1;
+                        yyy=obj.Eyy(ely,elx)/matProp.E_material1;
+                        theta =  obj.t(ely,elx);
+                        
+                        [~, ~,estimateElementDensity] = o.CalculateDensitySensitivityandRho(xxx,yyy,theta,obj.ResponseSurfaceCoefficents,config,matProp);
+                        
+                        estimateElementDensity= min(max(estimateElementDensity,0.05),1);%1 is max, 0.05 is min
+                        eleDensity = obj.x(ely,elx)*estimateElementDensity;
+                        sumDensity =sumDensity+eleDensity;
+                        temp3(ely,elx) = eleDensity;
                     end
                     
-                     if(config.useTargetMesoDensity==1)
-                         xxx=obj.Exx(ely,elx);
-                          yyyy=obj.Eyy(ely,elx);
-                           estimateElementDensity =  p00 + p10*xxx + p01*yyyy + p20*xxx^2 + p11*xxx*yyyy + p02*yyyy^2;
-                           estimateElementDensity= min(max(estimateElementDensity,0.1),1);%1 is max, 0.1 is min
-                           eleDensity = obj.x(ely,elx)*estimateElementDensity;
-                           sumDensity =sumDensity+eleDensity;
-                    
-                      end
                     
                     count=count+1;
                     
                 end % end, loop over x
             end % end, for loop over nely
             %             end % end for loop over load cases.
-              sumDensity = sumDensity/(config.nelx*config.nely*config.totalVolume);
-              
-              obj.averageMesoDensity=sumDensity;
+            
+            % Calculate how well the consistency constraints are working.
+            if(config.macro_meso_iteration>1)
+                obj.ExxSysAndSubDiffSummed=sum(sum(obj.x.*((obj.Exx-obj.ExxSub).^2).^(1/2))); % make sure it is absolute value, by square, then sqrt
+                obj.EyySysAndSubDiffSummed=sum(sum(obj.x.*((obj.Eyy-obj.EyySub).^2).^(1/2)));% sum(sum(sqrt(obj.x.*(obj.Eyy-obj.EyySub).^2)));
+                obj.ThetaSysAndSubDiffSummed=sum(sum(obj.x.*((obj.t-obj.thetaSub).^2).^(1/2)));%sum(sum(sqrt(obj.x.*(obj.t-obj.thetaSub).^2)));
+            else
+                obj.ExxSysAndSubDiffSummed=0;
+                obj.EyySysAndSubDiffSummed  =0;
+                obj.ThetaSysAndSubDiffSummed=0;
+            end
+            
+            [~, ~,rhoValue] = o.CalculateDensitySensitivityandRho(obj.Exx/matProp.E_material1,obj.Eyy/matProp.E_material1,obj.t,obj.ResponseSurfaceCoefficents,config,matProp);
+            rhoValue=max(0.05,min(rhoValue,1));
+            
+            temp1=rhoValue.*obj.x;
+            temp2 = sum(sum(temp1));
+            mesoDensity=temp2/(config.nelx*config.nely*config.totalVolume);
+            sumDensity = sumDensity/(config.nelx*config.nely*config.totalVolume);
+            
+            obj.averageMesoDensity=sumDensity;
+            %                obj.averageMesoDensity=mesoDensity;
             obj.c=obj.cCompliance*config.w1+obj.cHeat*config.w2;
+            if(obj.c<0)
+                t = 'something really wrong'
+            end
+        end
+        
+        function obj = AddDataToStoreOptimizationVarArray(obj)
+             obj.storeOptimizationVar = [obj.storeOptimizationVar;...
+                 obj.c, ...
+                 obj.cCompliance,...
+                 obj.cHeat, ...
+                 obj.currentVol1Fraction, ...
+                 obj.currentVol2Fraction, ...
+                 sum(sum(obj.x)),...
+                 obj.targetAverageE, ...
+                 obj.actualAverageE, ...
+                 obj.averageMesoDensity...
+                 obj.ExxSysAndSubDiffSummed...
+                 obj.EyySysAndSubDiffSummed...
+                 obj.ThetaSysAndSubDiffSummed...
+                 ];
         end
         
         
@@ -1193,11 +1321,11 @@ classdef DesignVars
         % Return the K_matrix that discribes this meso structure's
         % properties
         % ------------------------------------------------------------
-        function macroElemProps = GetHomogenizedProperties(obj, config,homgSettings, matProp, loop,macroElemProps)
-            
-            [macroElemProps.D_homog]=FE_elasticV2_homgonization(obj, config, matProp);
-            
-        end % end CalculateSensitiviesMesoStructure
+%         function macroElemProps = GetHomogenizedProperties(obj, config,homgSettings, matProp, loop,macroElemProps)
+%             
+%             [macroElemProps.D_homog]=FE_elasticV2_homgonization(obj, config, matProp);
+%             
+%         end % end CalculateSensitiviesMesoStructure
         
         
         
@@ -1235,11 +1363,11 @@ classdef DesignVars
                         
                         % Also flip the meso level values or else the
                         % optimization will be crazy!
-%                         temp2 = obj.ExxSub(j,i);
-%                         obj.ExxSub(j,i)=obj.EyySub(j,i);   % Sub system copies of design var
-%                          obj.EyySub(j,i)=temp2;
-%                         obj.thetaSub(j,i)= obj.thetaSub(j,i)+pi/2;
-   
+                        %                         temp2 = obj.ExxSub(j,i);
+                        %                         obj.ExxSub(j,i)=obj.EyySub(j,i);   % Sub system copies of design var
+                        %                          obj.EyySub(j,i)=temp2;
+                        %                         obj.thetaSub(j,i)= obj.thetaSub(j,i)+pi/2;
+                        
                         
                     end
                 end

@@ -10,22 +10,23 @@ module load gcc/5.3.0 openmpi/1.10.3 matlab/2016a
 
 cd $PBS_O_WORKDIR
 
-
-
-dos2unix *.*
-dos2unix /scratch2/apg/version3/MPI_C_program/*
 rm jobP*
 rm jobweight*
 rm *.csv
 rm *.stl
 rm *.png
 rm mpi*
+rm /scratch2/apg/version3/out0/*.csv
+
+dos2unix *.*
+dos2unix /scratch2/apg/version3/MPI_C_program/*
+
 
 # compile the c code
 mpicc /scratch2/apg/version3/MPI_C_program/bankElementJobs.c -o /scratch2/apg/version3/bank
 
 # compile the matlab code
-mcc -R -nodisplay -C  -m  combinedTopologyOptimization.m    Configuration.m DesignVars.m elementK_heat.m elK_elastic.m FE_elasticV2.m FindAvergeChangeOfLastValue.m freezeColors.m GenerateDesignVarsForMesoProblem.m GetMacroElementPropertiesFromCSV.m GetMesoUnitCellDesignFromCSV.m Homgenization.m macroElementProp.m MaterialProperties.m mesoAddAdjcentCellDataObject.m  MesoDesignWrapper.m MesoStructureDesignV2.m OC.m Optimizer.m parfor_progress.m plotResults.m  SaveMacroProblemStateToCSV.m SaveMesoUnitCellDesignToCSV.m SingleMesoStuctureWrappe.m  temperatureFEA_V3.m TestMesoDesign.m TileMesoStructure.m unfreezeColors.m  VideoManager.m
+mcc -R -nodisplay -C  -m  combinedTopologyOptimization.m    Configuration.m DesignVars.m elementK_heat.m elK_elastic.m FE_elasticV2.m FindAvergeChangeOfLastValue.m freezeColors.m GenerateDesignVarsForMesoProblem.m GetMacroElementPropertiesFromCSV.m GetMesoUnitCellDesignFromCSV.m Homgenization.m macroElementProp.m MaterialProperties.m mesoAddAdjcentCellDataObject.m  MesoDesignWrapper.m MesoStructureDesignV2.m OC.m Optimizer.m parfor_progress.m plotResults.m  SaveMacroProblemStateToCSV.m SaveMesoUnitCellDesignToCSV.m SingleMesoStuctureWrappe.m  temperatureFEA_V3.m TestMesoDesign.m TileMesoStructure.m unfreezeColors.m  VideoManager.m  fitObjective.m fitObjectiveV2.m
 
 # weird that sometimes this folder causes problems
 rm -R combinedTopologyOptimization_mcr
