@@ -247,7 +247,8 @@ classdef Optimizer
             %             term1=-term1/maxElemStraniEnergy;
             
             %             term2 = penaltyValue/2*(thetaSys-thetaSubSystem)^2;
-            term2 = penaltyValue*(thetaSys-thetaSubSystem)^2;
+%             term2 = penaltyValue*(thetaSys-thetaSubSystem)^2;
+               term2 = penaltyValue*abs(thetaSys-thetaSubSystem);
             %             term3 = lagraMultiplier*(thetaSys-thetaSubSystem);
             %             lagrangianValue=term1+term2+term3;
             %             normalizer=penaltyValue/2*(pi/4)^2;
@@ -309,9 +310,8 @@ classdef Optimizer
             totalMaterial = sum(sum(DV.x));
             
             term1Exx = DV.sensitivityElastic;
-            term1Eyy= DV.sensitivityElasticPart2;
-            
-            useOptimalCriteria = 0;
+            term1Eyy= DV.sensitivityElasticPart2;            
+           
             
             % ---------------------------------------------------
             %
@@ -532,13 +532,16 @@ classdef Optimizer
             DV.sensitivityElasticPart2 = DV.check( config.nelx, config.nely,config.rmin,DV.x,DV.sensitivityElasticPart2);
             
           
-             if(config.macro_meso_iteration>=2 && mod(masterloop,3)==1)
-                 deltaT=2;
+%              if(config.macro_meso_iteration>=2 && mod(masterloop,3)==1)
+           if(config.macro_meso_iteration>=2 )
+                 deltaT=0.2;
                    diffExx = DV.ExxSub-DV.Exx;
                  diffEyy = DV.EyySub-DV.Eyy  ;
-                  
-                 DV.lambdaExx= DV.lambdaExx+deltaT *diffExx;
-                DV.lambdaEyy=  DV.lambdaEyy+deltaT*diffEyy;
+%                   
+                 DV.lambdaExx=max( min(DV.lambdaExx+deltaT *diffExx,matProp.E_material1),-matProp.E_material1);
+                DV.lambdaEyy= max( min( DV.lambdaEyy+deltaT*diffEyy,matProp.E_material1),-matProp.E_material1);
+%                   DV.lambdaExx=DV.lambdaExx+deltaT *diffExx;
+%                 DV.lambdaEyy= DV.lambdaEyy+deltaT*diffEyy;
                 disp('Updated Lambda Values Exx Eyy')
                 
             end
@@ -550,10 +553,6 @@ classdef Optimizer
             %-----------------------
             largest=1e8;
           
-            l1 = 0; l2 = largest;% move = 0.2;
-            
-          
-            
             move = matProp.E_material1*0.05;
             minimum = matProp.E_material2;
             
@@ -581,18 +580,16 @@ classdef Optimizer
             % TARGET AVG MESO DENSITY AS CONSTRAINT.
             % Update 3 (idea) 
             %
-            % ---------------------------------------------------
-            negValueFlag=0;
-            negValueAdder=0;
+            % ---------------------------------------------------          
             l1 = 0; l2 = largest;% move = 0.2;
             sumDensity =0;
             while (l2-l1 > 1e-4)
                 lambda1 = 0.5*(l2+l1);
-%                 [dDensityEyy, dDensityExx,rhoValue] = obj.CalculateDensitySensitivityandRho(ExxNew/matProp.E_material1,EyyNew/matProp.E_material1,DV.t,DV.ResponseSurfaceCoefficents,config,matProp);
+                  [dDensityEyy, dDensityExx,rhoValue] = obj.CalculateDensitySensitivityandRho(ExxNew/matProp.E_material1,EyyNew/matProp.E_material1,DV.t,DV.ResponseSurfaceCoefficents,config,matProp);
                 
                 % testing. Set equal to one for now.
-                dDensityExx=ones(size(term1Exx));
-                dDensityEyy=ones(size(term1Exx));
+%                 dDensityExx=ones(size(term1Exx));
+%                 dDensityEyy=ones(size(term1Exx));
                 
                
                 combinedTermsExx=(term1Exx+term2Exx)./(lambda1*dDensityExx);
@@ -603,8 +600,8 @@ classdef Optimizer
 %                 targetEyy = EyyNew.*combinedTermsEyy;
                  targetExx = DV.Exx.*combinedTermsExx;
                 targetEyy = DV.Eyy.*combinedTermsEyy;
-                ExxNew = max(0,max( minimum - EyyNew,  max(DV.Exx-move ,  min(  min(targetExx,DV.Exx+move ),matProp.E_material1))));
-                EyyNew = max(0,max(minimum -  ExxNew,  max(DV.Eyy-move ,  min(  min(targetEyy,DV.Eyy+move ),matProp.E_material1))));
+                ExxNew = max(0.1,max( minimum - EyyNew,  max(DV.Exx-move ,  min(  min(targetExx,DV.Exx+move ),matProp.E_material1))));
+                EyyNew = max(0.1,max(minimum -  ExxNew,  max(DV.Eyy-move ,  min(  min(targetEyy,DV.Eyy+move ),matProp.E_material1))));
                 
                 
                 
@@ -637,14 +634,15 @@ classdef Optimizer
             multiplier= 10000;
             text1 =    sprintf('\nExxNew\t\t\t\t\t[1,1   5,1      5,5],  %f ,%f %f',ExxNew(1,1) ,ExxNew(5,1),ExxNew(5,5));
             text2 =    sprintf('ExxSub\t\t\t\t\t[1,1   5,1      5,5],  %f ,%f %f',DV.ExxSub(1,1),DV.ExxSub(5,1),DV.ExxSub(5,5));
-            text3=    sprintf('Exx\t\t\t\t\t\t[1,1   5,1      5,5],  %f ,%f %f',DV.Exx(1,1),DV.Exx(5,1),DV.Exx(5,5));
+            text3=    sprintf('Exx\\t\t\t\t\t\t[1,1   5,1      5,5],  %f ,%f %f',DV.Exx(1,1),DV.Exx(5,1),DV.Exx(5,5));
             text4 =    sprintf('DiffXXNew \t\t\t\t[1,1   5,1      5,5],  %f ,%f %f',ExxNew(1,1) - DV.ExxSub(1,1),ExxNew(5,1) - DV.ExxSub(5,1),ExxNew(5,5) - DV.ExxSub(5,5));
-            text5 =    sprintf('combinedTermsExx\t[1,1   5,1      5,5],  %f ,%f %f',combinedTermsExx(1,1),combinedTermsExx(5,1),combinedTermsExx(5,5));
-            text6 =    sprintf('penaltyExx*10000 \t\t\t\t\t[1,1   5,1      5,5],  %f ,%f %f',DV.penaltyExx(1,1)*multiplier,DV.penaltyExx(5,1)*multiplier,DV.penaltyExx(5,5)*multiplier);
+            text5 =    sprintf('combinedTermsExx\t\t[1,1   5,1      5,5],  %f ,%f %f',combinedTermsExx(1,1),combinedTermsExx(5,1),combinedTermsExx(5,5));
+            text6 =    sprintf('penaltyExx*10000\t\t[1,1   5,1      5,5],  %f ,%f %f',DV.penaltyExx(1,1)*multiplier,DV.penaltyExx(5,1)*multiplier,DV.penaltyExx(5,5)*multiplier);
             
-            text7 =    sprintf('lambdaExx \t\t\t\t\t[1,1   5,1      5,5],  %f ,%f %f',DV.lambdaExx(1,1),DV.lambdaExx(5,1),DV.lambdaExx(5,5));
+            text7 =    sprintf('lambdaExx\t\t\t\t[1,1   5,1      5,5],  %f ,%f %f',DV.lambdaExx(1,1),DV.lambdaExx(5,1),DV.lambdaExx(5,5));
+             text75 =    sprintf('dDensityExx\t\t\t\t[1,1   5,1      5,5],  %f ,%f %f',dDensityExx(1,1),dDensityExx(5,1),dDensityExx(5,5));
             
-            text8 =    sprintf('lambda1 and density\t\t\t[  %f ,%f\n',lambda1,sumDensity);
+            text8 =    sprintf('lambda1 and density\t\t[  %f ,%f\n',lambda1,sumDensity);
             
             disp(text1)
             disp(text2)
@@ -653,6 +651,7 @@ classdef Optimizer
             disp(text5)
             disp(text6)
             disp(text7)
+             disp(text75)
             disp(text8)
             
             
@@ -720,44 +719,103 @@ classdef Optimizer
         
         function [EyySensitivty, ExxSensitivity,rhoValue] = CalculateDensitySensitivityandRho(obj,Exx,Eyy,theta,Coefficents,config,matProp)
             co = Coefficents;
-            if(config.useThetaInSurfaceFit==1)
+            useAnn=0;
+            if(useAnn==1)
                 
-                % make it so that Exx is always larger
-                temp1=Eyy;
-                valueConditionTrue = Eyy>Exx;
-                Eyy(valueConditionTrue)=Exx(valueConditionTrue);
-                Exx(valueConditionTrue)=temp1(valueConditionTrue);
-                %                 if(Eyy>Exx)
-                %                     Exx=Eyy;
-                %                     Eyy=Exx;
-                %                 end
-                
-                
-                
-                % rhoValue= x(1)  + x(2)* exp(E_xx)  + x(3)* exp(E_yy)+x(4) *exp(theta) +x(5)*E_xx  + x(6)* E_yy +x(7)*theta+ x(8)*E_xx.*E_yy;
-                % ExxSensitivity=  x(2)* exp(E_xx)  +x(5) + x(8)*E_yy;
-                % EyySensitivty= x(3)* exp(E_yy) + x(6)+ x(8)*E_xx;
-                rhoValue= co(1)+co(2)*Exx+co(3)*Eyy+co(4)*theta+co(5)*Exx.^2+co(6)* Eyy.^2+co(7)*theta.^2+co(8)*Exx.*Eyy+co(9)*Eyy.*theta+co(10)*Exx.*theta;
-                ExxSensitivity =co(2)+2*co(5)*Exx+co(8)*Eyy+co(10)*theta;
-                EyySensitivty = co(3)+2*co(6)* Eyy+co(8)*Exx+co(9)*theta;
-                
-                % Scale Up
-                %                 rhoValue=rhoValue*scaleUp;
-                %                 ExxSensitivity=ExxSensitivity*scaleUp;
-                %                 EyySensitivty=EyySensitivty*scaleUp;
-                
-                %                 rhoValue(rhoValue>1)=1;
-                %                 rhoValue(rhoValue<0)=1;
+                % Make the inputs be so taht Exx > Eyy
+                % Rather than a strict theta, use the distance from pi/4, since the problem
+                % is symmetric arround pi/4
+              
+               temp = Exx;
+                logic = Eyy>Exx;
+                Exx(logic)=Eyy(logic);
+                Eyy(logic) =temp(logic);
+                % 
+                % min(thetaArray)
+                % max(thetaArray)
+                % thetaArray=((pi/4)^2+thetaArray.^2).^(1/2);
+                temp2 = theta;
+                logic2 = theta>pi/4;
+                logic3 = theta<pi/4;
+                theta(logic2)=theta(logic2)-pi/4;
+                theta(logic3)=pi/4-theta(logic3);
                 
                 
+                Exx=Exx*matProp.E_material1;
+                 Eyy=Eyy*matProp.E_material1;
+                 
+                 [t1,t2]=size(Exx);
+                 
+                Exx=reshape(Exx,1,[]);
+                Eyy=reshape(Eyy,1,[]);
+                theta=reshape(theta,1,[]);
+                
+                X=[Exx;Eyy;theta];
+                [rhoValue,~,~] = annRhoOfExxEyyTheta(X,[],[]);
+                
+                deltaT=5;
+                X(1,:)=X(1,:)+deltaT;
+                 [rhoValueXShift,~,~] = annRhoOfExxEyyTheta(X,[],[]);
+                 
+                ExxSensitivity=(rhoValueXShift-rhoValue)/deltaT;
+                
+                
+                  X(2,:)=X(2,:)+deltaT;
+                 [rhoValueYShift,~,~] = annRhoOfExxEyyTheta(X,[],[]);
+                 
+                EyySensitivty=(rhoValueYShift-rhoValue)/deltaT;
+                
+                % REshape to the orginal shape
+                 rhoValue=reshape(rhoValue,t1,t2);
+                ExxSensitivity=reshape(ExxSensitivity,t1,t2);
+                EyySensitivty=reshape(EyySensitivty,t1,t2);
+                
+                rhoValue(rhoValue>1)=1;
+                 rhoValue(rhoValue<0)=0;
+                 
+                 ExxSensitivity(ExxSensitivity<0)=0.000001;
+                   EyySensitivty(EyySensitivty<0)=0.000001;
                 
             else
-                % obj. ResponseSurfaceCoefficents=[ 1.0000000000463e-05 9.99988184437107e-06 9.9998491550433e-06 -3.40115537230351e-11 -5.52110060132392e-12 -3.81038581303971e-11];
-                
-                minAllowed = 0.01;
-                EyySensitivty=max(co(3)+co(5).*Exx+2*co(6).*Eyy,minAllowed);
-                ExxSensitivity=max(co(2)+ 2*co(4).*Exx+co(5).*Eyy,minAllowed);
-                rhoValue=   co(1) + co(2)*Exx + co(3)*Eyy + co(4)*Exx.^2 + co(5)*Exx.*Eyy + co(6)*Eyy.^2;
+                if(config.useThetaInSurfaceFit==1)
+
+                    % make it so that Exx is always larger
+                    temp1=Eyy;
+                    valueConditionTrue = Eyy>Exx;
+                    Eyy(valueConditionTrue)=Exx(valueConditionTrue);
+                    Exx(valueConditionTrue)=temp1(valueConditionTrue);
+                    %                 if(Eyy>Exx)
+                    %                     Exx=Eyy;
+                    %                     Eyy=Exx;
+                    %                 end
+
+
+
+                    % rhoValue= x(1)  + x(2)* exp(E_xx)  + x(3)* exp(E_yy)+x(4) *exp(theta) +x(5)*E_xx  + x(6)* E_yy +x(7)*theta+ x(8)*E_xx.*E_yy;
+                    % ExxSensitivity=  x(2)* exp(E_xx)  +x(5) + x(8)*E_yy;
+                    % EyySensitivty= x(3)* exp(E_yy) + x(6)+ x(8)*E_xx;
+                    rhoValue= co(1)+co(2)*Exx+co(3)*Eyy+co(4)*theta+co(5)*Exx.^2+co(6)* Eyy.^2+co(7)*theta.^2+co(8)*Exx.*Eyy+co(9)*Eyy.*theta+co(10)*Exx.*theta;
+                    ExxSensitivity =co(2)+2*co(5)*Exx+co(8)*Eyy+co(10)*theta;
+                    EyySensitivty = co(3)+2*co(6)* Eyy+co(8)*Exx+co(9)*theta;
+
+                    % Scale Up
+                    %                 rhoValue=rhoValue*scaleUp;
+                    %                 ExxSensitivity=ExxSensitivity*scaleUp;
+                    %                 EyySensitivty=EyySensitivty*scaleUp;
+
+                    %                 rhoValue(rhoValue>1)=1;
+                    %                 rhoValue(rhoValue<0)=1;
+
+
+
+                else
+                    % obj. ResponseSurfaceCoefficents=[ 1.0000000000463e-05 9.99988184437107e-06 9.9998491550433e-06 -3.40115537230351e-11 -5.52110060132392e-12 -3.81038581303971e-11];
+
+                    minAllowed = 0.01;
+                    EyySensitivty=max(co(3)+co(5).*Exx+2*co(6).*Eyy,minAllowed);
+                    ExxSensitivity=max(co(2)+ 2*co(4).*Exx+co(5).*Eyy,minAllowed);
+                    rhoValue=   co(1) + co(2)*Exx + co(3)*Eyy + co(4)*Exx.^2 + co(5)*Exx.*Eyy + co(6)*Eyy.^2;
+                end
             end
             
         end

@@ -2,6 +2,7 @@
 #include <mpi.h>
 #include <unistd.h>
 #include<stdlib.h>
+#include <time.h>
 
 #define TRUE 1
 #define FALSE 0
@@ -15,13 +16,16 @@
 #define NELY_MACRO 15
 
 
-void callMatlab(int mode, int macro_meso_iteration, int element);
+int callMatlab(int mode, int macro_meso_iteration, int element);
 
 int main ( int argc, char **argv )
 {
    int pool_size, my_rank, destination;
    int i_am_the_master = FALSE; 
    int nelm; //Number of elements
+   struct timespec tim, tim2;
+   tim.tv_sec = 0;
+   tim.tv_nsec = 50000;
       
  
   
@@ -95,6 +99,9 @@ int main ( int argc, char **argv )
                         printf("sent Element Job %d to %d\n", elementNumber, destination);
                         //count = count + 1;
                         elementNumber=elementNumber+1;
+                        nanosleep(&tim , &tim2) ;// Matlab is giving me some weird Bus error. Maybe trying to read the same files all at the same time is
+                          // causing issues? I'll slow down the process by making them 1 second apart. 
+                          // https://stackoverflow.com/questions/7684359/how-to-use-nanosleep-in-c-what-are-tim-tv-sec-and-tim-tv-nsec
                      }
                  }
               }
@@ -191,8 +198,8 @@ int main ( int argc, char **argv )
                          
                         // Run matlab code for element = elementNumber
                         // callMatlab(int mode, int macro_meso_iteration, int element)
-                        callMatlab(100,k, elementNumber);
-                        //printf("Finished Element Optimization for e = %d\n", elementNumber);
+                         callMatlab(100,k, elementNumber);
+                      //  printf("Finished Element Optimization for e = %d withstatus %d\n", elementNumber,status);
                          
                         MPI_Send (&okMessage, 1, MPI_INT, MASTER_RANK, elementNumber, MPI_COMM_WORLD);
                         // fprintf(log_file, "sent row %d to %d\n", row, MASTER_RANK);
@@ -243,18 +250,33 @@ int main ( int argc, char **argv )
 }
 
 
-void callMatlab(int mode, int macro_meso_iteration, int element){
+int callMatlab(int mode, int macro_meso_iteration, int element){
 	
 	char command[200];
 	char commandHuman[200];
 	int useCommandLineArgs = 1;
 	//double w1 = 1;
 	int w1 = 1;
+    int returnValue=5;;
 
    sprintf(command, "./combinedTopologyOptimization %d %d %d %d %d ",useCommandLineArgs, w1, macro_meso_iteration, mode, element);
    sprintf(commandHuman, "combinedTopologyOptimization , macroMeso =  %d , mode = %d, element =  %d ", macro_meso_iteration, mode, element);
    puts(commandHuman);
   // sleep(1);
-  system(command);
+  // Try 5 times to get the command right with a return of 0
+  // Matlab sometimes randomely fails. 
+   for (int i = 0; i < 5; i++) {
+        returnValue=system(command);
+       // printf( "Finished Command With Exit value %d \n", returnValue);
+        if(returnValue!=0){
+               printf( "Command Failed with code %d try again: %s \n", returnValue, commandHuman);
+              //  sleep(5);
+        } else {
+            break;
+        }
+        
+  
+   }
+  return returnValue;
 		
 }

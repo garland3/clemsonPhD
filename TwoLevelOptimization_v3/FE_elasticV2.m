@@ -46,7 +46,14 @@ elseif loadingCase ==113
     t2=tt+1;
     Essential=[tt t2];
     Essential = unique(Essential);    
-    F( (row*2)*floor(column/2)) = FappliedLoad; % middle to the right  
+    if(mod(column,2)==0)
+        % even number of column
+        F( (row*2)*floor(column/2)) = FappliedLoad/2; % middle to the right  
+         F( (row*2)*(floor(column/2)+1)) = FappliedLoad/2; % middle to the right  
+    else
+        % odd number of columns
+         F( (row*2)*floor(column/2)) = FappliedLoad; % middle to the right  
+    end
     
 
     % -------------------------------------------------

@@ -42,7 +42,7 @@ classdef Configuration
         useRotation =1;
         minRotation =-pi/2;
         maxRotation = pi/2;
-        rotationMoveLimit = pi/10;
+        rotationMoveLimit = pi/45;
         
         
         % number of elements
@@ -102,9 +102,9 @@ classdef Configuration
         iterationNum=0; %  used for parallel computing.
         maxFEACalls = 50;
         maxMasterLoops = 30;
-        maxMesoLoops = 80;
+        maxMesoLoops = 100;
         maxNumPseudoStrainLoop=6
-        PseudoStrainEndCriteria = 0.1;
+        PseudoStrainEndCriteria = 0.05;
         
         terminationAverageCount = 5; % the average change over this number of iterations must be below the termination criteria
         terminationCriteria = 0.001; % if the normalized average change over  terminationAverageCount of iterations is below this value then termainted. ie. 1% change
@@ -200,12 +200,12 @@ classdef Configuration
                 % -------------------
                 obj.nelx = 30; %39 % 30
                 obj.nely = 15; % 21 % 15
-                obj.nelxMeso = 20; %35;
-                obj.nelyMeso =20; %35;
+                obj.nelxMeso = 10; %35;
+                obj.nelyMeso =10; %35;
                 obj.terminationAverageCount = 10;
                 obj.terminationCriteria =0.001; % 0.0%
-                obj.maxFEACalls = 80;
-                obj.maxMasterLoops = 60;
+                obj.maxFEACalls = 200;
+                obj.maxMasterLoops = 300;
                 
             end
             
@@ -232,6 +232,11 @@ classdef Configuration
             obj.w2  = 1- obj.w1; % weight heat transfer
             obj.totalVolume = obj.v1+obj.v2;
             
+            % On the first macro iteration, limit the number of FEA calls. 
+            % convergence is simple. 
+            if(obj.macro_meso_iteration ==1)
+                 obj.maxFEACalls=100;
+            end
         
         end
         

@@ -147,7 +147,12 @@ DV.Eyy = DV.Exx ;
  if (49<config.mode && config.mode <100  )
     DV=DV.GetMacroStateVarsFromCSVFiles( config);
     DV=DV.UpdatePenaltyAndLagrangianValues( config,matProp);
-end
+ end
+
+ if ( config.mode == 1)
+     DV.Exx =ones(size(  DV.Exx))*2.837914e+04 ;
+     DV.Eyy =ones(size(  DV.Exx))*2.837914e+04 ;
+ end
 
 % --------------------------------
 % Run FEA, to get started.

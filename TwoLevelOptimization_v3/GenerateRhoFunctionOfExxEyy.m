@@ -42,6 +42,8 @@ EyyArray = [];
 thetaArray=[];
 MacroExxColumn=[];
 MacroEyyColumn=[];
+MacroThetaColumn=[];
+RhoColumn=[];
 
 
 for e = 1:ne %ne:-1:1
@@ -74,6 +76,10 @@ for e = 1:ne %ne:-1:1
             continue;
         end
         v =  csvread(outname);
+        if(v>1)
+           message = 'Volume is greater than 1???' 
+           break
+        end
         
         
         outname = sprintf('./out%i/Dmatrix_%i_forElement_%i.csv',folderNum,macro_meso_iteration,elementNumber);
@@ -238,11 +244,32 @@ for e = 1:ne %ne:-1:1
         diffY = ActualEyy-Eyy;
         
         
-        relativeErrorDiffExx = diffX/ActualExx;
-        relativeErrorDiffyy = diffY/ActualEyy;
-        relativeErrorDiffTheta = diffTheta/ActualThetaValue;
-        if(relativeErrorDiffExx>5 || relativeErrorDiffyy>5  || relativeErrorDiffTheta>0.4)
-            sprintf('%i Large Error', e)
+        relativeErrorDiffExx = abs(diffX)/ActualExx;
+        relativeErrorDiffyy = abs(diffY)/ActualEyy;
+        relativeErrorDiffTheta = abs(diffTheta)/ActualThetaValue;
+        
+        maxError = 0.1;
+        LargeErroFlag = 0;
+        if(relativeErrorDiffExx>maxError)
+          fprintf('%i Exx Large Error: Target  = %f mesovalue = %f\n', e,ActualExx,Exx)
+             LargeErroFlag = 1;
+        end
+        if(relativeErrorDiffyy>maxError)
+            fprintf('%i Eyy Large Error: Target  = %f mesovalue = %f\n', e,ActualEyy,Eyy)
+             LargeErroFlag = 1;
+        end
+        if( relativeErrorDiffTheta>maxError)
+            fprintf('%i Theta Large Error: Target  = %f mesovalue = %f\n', e,ActualThetaValue,Theta)
+             LargeErroFlag = 1;
+        end
+        
+        if( LargeErroFlag ==1)
+            fprintf('More Data: Target: Value: Relative Error\n')
+            fprintf('Exx %f %f %f\n',ActualExx,Exx,relativeErrorDiffExx)
+            fprintf('Eyy %f %f %f\n',ActualEyy,Eyy,relativeErrorDiffyy)
+            fprintf('Theta %f %f %f\n',ActualThetaValue,Theta,relativeErrorDiffTheta)
+            fprintf('rho = %f\n',v);
+            %: Targets %f %f %f, Meso %f %f %f, Rho=%f\n',ActualExx,ActualEyy,ActualThetaValue,Exx,Eyy,Theta,v)
         end
         
         
@@ -262,11 +289,15 @@ for e = 1:ne %ne:-1:1
             ExxArray=[ExxArray;Exx];
             EyyArray=[EyyArray;Eyy];
             thetaArray=[thetaArray;Theta];
+            
+                MacroExxColumn=[MacroExxColumn;ActualExx*macroElementProps.densitySIMP];
+                MacroEyyColumn=[MacroEyyColumn;ActualEyy*macroElementProps.densitySIMP];
+                MacroThetaColumn=[MacroThetaColumn;ActualThetaValue];
+                RhoColumn=[RhoColumn;v];
         end
         
         
-        MacroExxColumn=[MacroExxColumn;ActualExx*macroElementProps.densitySIMP];
-        MacroEyyColumn=[MacroEyyColumn;ActualEyy*macroElementProps.densitySIMP];
+      
     else
         DV.Exx(macroElementProps.yPos,macroElementProps.xPos)=ActualExx;
         DV.Eyy(macroElementProps.yPos,macroElementProps.xPos)=ActualEyy;
@@ -292,6 +323,25 @@ csvwrite( outname, DV.t);
 % save the density field
 outname = sprintf('./out%i/densityUsedSubSysValues%i.csv',folderNum,macro_meso_iteration);
 csvwrite( outname,  DV.w);
+
+%------------------------
+% Save the macro columns as well. This will help with future analysis
+% ----------------------------
+% save the MacroExxColumn
+outname = sprintf('./out%i/MacroExxColumn%i.csv',folderNum,macro_meso_iteration);
+csvwrite( outname,MacroExxColumn);
+
+% save the MacroEyyColumn
+outname = sprintf('./out%i/MacroEyyColumn%i.csv',folderNum,macro_meso_iteration);
+csvwrite( outname,MacroEyyColumn);
+
+% save the MacroThetaColumn
+outname = sprintf('./out%i/MacroThetaColumn%i.csv',folderNum,macro_meso_iteration);
+csvwrite( outname, MacroThetaColumn);
+
+% save the RhoColumn
+outname = sprintf('./out%i/RhoColumn%i.csv',folderNum,macro_meso_iteration);
+csvwrite( outname,  RhoColumn);
 
 % if 1==0
 %     Exx = matProp.E_material1;
@@ -382,6 +432,7 @@ if(1==1)
     
     figure(1)
     scaleUp = matProp.E_material1;
+    config.useThetaInSurfaceFit=1;
     if(config.useThetaInSurfaceFit==1)
         
         % -----------------------
@@ -406,22 +457,22 @@ if(1==1)
         % theta between 0 and pi/4
         % ----------------------------
         
-        for index =1: size(ExxArray,1)
-            
-            exxvalue = ExxArray(index);
-            eyyvalue = EyyArray(index);
-            thetavalue = thetaArray(index);
-            if(eyyvalue>exxvalue)
-                ExxArray(index)=eyyvalue;
-                EyyArray(index)=exxvalue;
-            end
-            
-            if(thetavalue>pi/4)
-                % find the distance from the pi/2
-                thetaArray(index)=(pi/2-thetavalue);
-            end
-            
-        end
+      % Make the inputs be so taht Exx > Eyy
+% Rather than a strict theta, use the distance from pi/4, since the problem
+% is symmetric arround pi/4
+temp = ExxArray;
+logic = EyyArray>ExxArray;
+ExxArray(logic)=EyyArray(logic);
+EyyArray(logic) =temp(logic);
+% 
+% min(thetaArray)
+% max(thetaArray)
+% thetaArray=((pi/4)^2+thetaArray.^2).^(1/2);
+temp2 = thetaArray;
+logic2 = thetaArray>pi/4;
+logic3 = thetaArray<pi/4;
+thetaArray(logic2)=thetaArray(logic2)-pi/4;
+thetaArray(logic3)=pi/4-thetaArray(logic3);
          
          figure
           scatter3(ExxArray,EyyArray,thetaArray,circleSize,RhoColor);
@@ -652,12 +703,12 @@ relativeErrorEyy(relativeErrorEyy<-1)=-1;
 relativeErrorTheta(relativeErrorTheta>1)=1;
 relativeErrorTheta(relativeErrorTheta<-1)=-1;
 
-% figure
-% p.PlotArrayGeneric( diffExx, 'diffExx')
-% figure
-% p.PlotArrayGeneric( diffEyy, 'diffEyy')
-% figure
-% p.PlotArrayGeneric( diffTheta, 'diffTheta')
+figure
+p.PlotArrayGeneric( diffExx, 'diffExx')
+figure
+p.PlotArrayGeneric( diffEyy, 'diffEyy')
+figure
+p.PlotArrayGeneric( diffTheta, 'diffTheta')
 
 % figure
 % subplot(2,2,1)

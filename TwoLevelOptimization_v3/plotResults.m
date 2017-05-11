@@ -225,11 +225,12 @@ classdef plotResults
                 targetAverageE = scaleForEvalues*targetAverageE; % Target E
                 actualAverageE = scaleForEvalues*actualAverageE;
                 
+                elasticObjective(elasticObjective<0)=0;
                 
                 if(config.useTargetMesoDensity==1)
                       mesoAvgDensity = DV.storeOptimizationVar(1:loopNumb,9)'; %
                      plot( x, elasticObjective, 'ko-',x, ExxSysAndSubDiffSummed, 'm+-', x, EyySysAndSubDiffSummed, 'c*-',x, ThetaSysAndSubDiffSummed, 'b*-',x, totalVolumeTarget, 'r.-',x, summedDensity, 'gx',x,mesoAvgDensity,'b-')
-                     legend('Elast Obj','ExxSysAndSubDiffSummed','EyySysAndSubDiffSummed','ThetaSysAndSubDiffSummed' ,'Vol Target', 'Actual Vol','AvgMesoDensity')
+                     legend('Elast Obj','ExxSysAndSubDiffSummed','EyySysAndSubDiffSummed','ThetaSysAndSubDiffSummed' ,'Vol Target', 'Actual Vol','AvgMesoDensity','Location','northoutside')
                     
                 else
                     plot( x, elasticObjective, 'ko-',x, targetAverageE, 'm+-', x, actualAverageE, 'c*-',x, totalVolumeTarget, 'r.-',x, summedDensity, 'gx')
@@ -411,7 +412,7 @@ classdef plotResults
             
              
             if(config.doIncludeSubSystemValues==1 && config.macro_meso_iteration>1)
-                titleTextPart2=' SubSysteValues  Exx=Blue, Eyy=Cyan';
+                titleTextPart2=' SubSysteValues  Exx=Yellow, Eyy=Cyan';
                   dx3=DV.ExxSub.*cos(DV.thetaSub);%-DV.Eyy.*sin(DV.t);
                     dy3=DV.ExxSub.*sin(DV.thetaSub);%+DV.Eyy.*cos(DV.t);
 
@@ -426,7 +427,7 @@ classdef plotResults
                      end
                     
                     q = quiver(X,Y,dx3,dy3);
-                   q.Color = 'blue';
+                   q.Color = 'yellow';
                    
                      q = quiver(X,Y,dx4,dy4);
                    q.Color = 'Cyan';
@@ -655,7 +656,7 @@ classdef plotResults
             hold off
             
             w1 = 0;
-            nameGraph = sprintf('./optiParaViaIterations%i.png', w1);
+            nameGraph = sprintf('./optiParaViaIterations%iIteration%i.png', w1,config.macro_meso_iteration);
             print(nameGraph,'-dpng');
         end
         

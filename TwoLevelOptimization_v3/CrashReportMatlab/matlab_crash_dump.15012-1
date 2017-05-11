@@ -1,0 +1,109 @@
+
+------------------------------------------------------------------------
+             Bus error detected at Wed May 10 23:12:42 2017
+------------------------------------------------------------------------
+
+Configuration:
+  Crash Decoding      : Disabled
+  Crash Mode          : continue (default)
+  Current Graphics Driver: Unknown software 
+  Current Visual      : None
+  Default Encoding    : UTF-8
+  GNU C Library       : 2.12 stable
+  Host Name           : node0246
+  MATLAB Architecture : glnxa64
+  MATLAB Root         : /software/matlab/R2016a
+  MATLAB Version      : 9.0.0.341360 (R2016a)
+  OpenGL              : software
+  Operating System    : Linux 2.6.32-504.16.2.el6.x86_64 #1 SMP Tue Apr 21 10:35:19 CDT 2015 x86_64
+  Processor ID        : x86 Family 6 Model 15 Stepping 7, GenuineIntel
+  Virtual Machine     : Java 1.7.0_60-b19 with Oracle Corporation Java HotSpot(TM) 64-Bit Server VM mixed mode
+  Window System       : No active display
+
+Fault Count: 1
+
+
+Abnormal termination:
+Bus error
+
+Register State (from fault):
+  RAX = 00002b74c0cd0000  RBX = 00002b74a3ffe6d0
+  RCX = 0000003198ae558a  RDX = 0000000000000001
+  RSP = 00002b74a3ffe5e0  RBP = 00002b74a3ffe640
+  RSI = 0000000000002f28  RDI = 0000000000000000
+
+   R8 = 0000000000000269   R9 = 0000000000000000
+  R10 = 0000000000000001  R11 = 0000000000000246
+  R12 = 0000000000000000  R13 = 00002b74c0cd0000
+  R14 = 00002b74a3ffe760  R15 = 00002b74a3ffe640
+
+  RIP = 000000319fe07ad9  EFL = 0000000000010246
+
+   CS = 0033   FS = 0000   GS = 0000
+
+Stack Trace (from fault):
+[  0] 0x000000319fe07ad9                      /usr/lib64/libfontconfig.so.1+00031449
+[  1] 0x000000319fe07bb9                      /usr/lib64/libfontconfig.so.1+00031673
+[  2] 0x000000319fe0762d                      /usr/lib64/libfontconfig.so.1+00030253
+[  3] 0x000000319fe0772a                      /usr/lib64/libfontconfig.so.1+00030506 FcDirCacheLoad+00000042
+[  4] 0x000000319fe0e3b5                      /usr/lib64/libfontconfig.so.1+00058293 FcDirCacheRead+00000085
+[  5] 0x000000319fe0a219                      /usr/lib64/libfontconfig.so.1+00041497
+[  6] 0x000000319fe0a4a6                      /usr/lib64/libfontconfig.so.1+00042150 FcConfigBuildFonts+00000054
+[  7] 0x000000319fe136cb                      /usr/lib64/libfontconfig.so.1+00079563 FcInitLoadConfigAndFonts+00000027
+[  8] 0x000000319fe13795                      /usr/lib64/libfontconfig.so.1+00079765 FcInit+00000037
+[  9] 0x000000319fe09667                      /usr/lib64/libfontconfig.so.1+00038503 FcConfigGetCurrent+00000023
+[ 10] 0x000000319fe13726                      /usr/lib64/libfontconfig.so.1+00079654 FcInitBringUptoDate+00000006
+[ 11] 0x000000319fe15bf2                      /usr/lib64/libfontconfig.so.1+00089074 FcFontList+00000082
+[ 12] 0x00002b74bbc1f686 /software/matlab/R2016a/sys/java/jre/glnxa64/jre/lib/amd64/headless/libmawt.so+00013958 Java_sun_awt_X11FontManager_getFontPathNative+00000422
+[ 13] 0x00002b74a841b1ef                                   <unknown-module>+00000000
+[ 14] 0x00002b74a840e233                                   <unknown-module>+00000000
+[ 15] 0x00002b74a840e233                                   <unknown-module>+00000000
+[ 16] 0x00002b74a840e233                                   <unknown-module>+00000000
+[ 17] 0x00002b74a840e233                                   <unknown-module>+00000000
+[ 18] 0x00002b74a840e233                                   <unknown-module>+00000000
+[ 19] 0x00002b74a840e350                                   <unknown-module>+00000000
+[ 20] 0x00002b74a840e8e1                                   <unknown-module>+00000000
+[ 21] 0x00002b74a840e233                                   <unknown-module>+00000000
+[ 22] 0x00002b74a840e233                                   <unknown-module>+00000000
+[ 23] 0x00002b74a840e233                                   <unknown-module>+00000000
+[ 24] 0x00002b74a840e233                                   <unknown-module>+00000000
+[ 25] 0x00002b74a840e233                                   <unknown-module>+00000000
+[ 26] 0x00002b74a840e233                                   <unknown-module>+00000000
+[ 27] 0x00002b74a84084e7                                   <unknown-module>+00000000
+[ 28] 0x00002b74a53128f5 /software/matlab/R2016a/sys/java/jre/glnxa64/jre/lib/amd64/server/libjvm.so+06289653
+[ 29] 0x00002b74a5311358 /software/matlab/R2016a/sys/java/jre/glnxa64/jre/lib/amd64/server/libjvm.so+06284120
+[ 30] 0x00002b74a52d57ca /software/matlab/R2016a/sys/java/jre/glnxa64/jre/lib/amd64/server/libjvm.so+06039498
+[ 31] 0x00002b74a52d5a24 /software/matlab/R2016a/sys/java/jre/glnxa64/jre/lib/amd64/server/libjvm.so+06040100
+[ 32] 0x00002b74a52d5e7a /software/matlab/R2016a/sys/java/jre/glnxa64/jre/lib/amd64/server/libjvm.so+06041210
+[ 33] 0x00002b74a5389d26 /software/matlab/R2016a/sys/java/jre/glnxa64/jre/lib/amd64/server/libjvm.so+06778150
+[ 34] 0x00002b74a539a35a /software/matlab/R2016a/sys/java/jre/glnxa64/jre/lib/amd64/server/libjvm.so+06845274 JVM_FindClassFromClassLoader+00000490
+[ 35] 0x00002b74a7fc568c /software/matlab/R2016a/sys/java/jre/glnxa64/jre/lib/amd64/libjava.so+00054924 Java_java_lang_Class_forName0+00000300
+[ 36] 0x00002b74a841a7f8                                   <unknown-module>+00000000
+[ 37] 0x00002b74a840e233                                   <unknown-module>+00000000
+[ 38] 0x00002b74a840e233                                   <unknown-module>+00000000
+[ 39] 0x00002b74a84084e7                                   <unknown-module>+00000000
+[ 40] 0x00002b74a53128f5 /software/matlab/R2016a/sys/java/jre/glnxa64/jre/lib/amd64/server/libjvm.so+06289653
+[ 41] 0x00002b74a5311358 /software/matlab/R2016a/sys/java/jre/glnxa64/jre/lib/amd64/server/libjvm.so+06284120
+[ 42] 0x00002b74a534b099 /software/matlab/R2016a/sys/java/jre/glnxa64/jre/lib/amd64/server/libjvm.so+06520985
+[ 43] 0x00002b74a535501a /software/matlab/R2016a/sys/java/jre/glnxa64/jre/lib/amd64/server/libjvm.so+06561818
+[ 44] 0x00002b74999c9631    /software/matlab/R2016a/bin/glnxa64/libmwjmi.so+00824881
+[ 45] 0x00002b74999ddae7    /software/matlab/R2016a/bin/glnxa64/libmwjmi.so+00908007 _Z12mljFindClassPKc+00000247
+[ 46] 0x00002b74b9e12a04     /software/matlab/R2016a/bin/glnxa64/libmwhg.so+04450820
+[ 47] 0x00002b748312b156 /software/matlab/R2016a/bin/glnxa64/libmwservices.so+03498326
+[ 48] 0x00002b748312b4fd /software/matlab/R2016a/bin/glnxa64/libmwservices.so+03499261 _Z26svWS_CommitDatabaseUpdates27svCommitDatabaseUpdatesType+00000157
+[ 49] 0x00002b748311720e /software/matlab/R2016a/bin/glnxa64/libmwservices.so+03416590
+[ 50] 0x00002b748311d0de /software/matlab/R2016a/bin/glnxa64/libmwservices.so+03440862 _Z25svWS_ProcessPendingEventsiib+00000046
+[ 51] 0x00002b749045ced2    /software/matlab/R2016a/bin/glnxa64/libmwmcr.so+00696018
+[ 52] 0x00002b749045d211    /software/matlab/R2016a/bin/glnxa64/libmwmcr.so+00696849
+[ 53] 0x00002b7490449cfd    /software/matlab/R2016a/bin/glnxa64/libmwmcr.so+00617725
+[ 54] 0x0000003199607aa1                             /lib64/libpthread.so.0+00031393
+[ 55] 0x0000003198ae8bbd                                   /lib64/libc.so.6+00953277 clone+00000109
+[ 56] 0x0000000000000000                                   <unknown-module>+00000000
+
+
+If this problem is reproducible, please submit a Service Request via:
+    http://www.mathworks.com/support/contact_us/
+
+A technical support engineer might contact you with further information.
+
+Thank you for your help.

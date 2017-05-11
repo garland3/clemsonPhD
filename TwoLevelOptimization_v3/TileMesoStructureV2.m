@@ -39,6 +39,7 @@ yCurrent=macroElementProps.yPos;
 yUp=yCurrent+1;
 yDown=yCurrent-1;
 
+ % densityCurrentElement = xx(yCurrent, xCurrent);
 
 % densityUp = xx(yUp, xCurrent);
 % densityDown = xx(yDown, xCurrent);
@@ -124,12 +125,18 @@ if(yUp<macroSettings.nely)
     end
 end
 
+add_leftV2 = add_left;
+add_topV2 = add_top;
+add_rightV2 = add_right;
+add_bottomV2 = add_bottom;
 
 % changed my mind, only do bottom and right overlaps
 add_left=0;
 add_top=0;
 
-add_right=0;add_bottom=0;
+% changed my mind again. Do none, only do bottom and right overlaps
+add_right=0;
+add_bottom=0;
 
 nelxTile = mesoSettings.nelx *(mesoSettings.numTilesX+add_left+add_right );
 nelyTile = mesoSettings.nely *(mesoSettings.numTilesY+add_top+add_bottom );
@@ -197,8 +204,94 @@ elseif(step==2)
             temp=zeros(size(temp));
         end
         
+        
+        % ----------------------------------------
+        % Add external Boundary
+        % ----------------------------------------
+        numrows =9;
+        % -----------------------------------
+        if(macroElementProps.densitySIMP>macroSettings.voidMaterialDensityCutOff)
+            % if solid, and on the edge of design domain, then add material
+            % -----------------------------------
+            if(yCurrent==1) % then on the bottom row
+                temp(1:numrows,:)=1;
+            end
+            
+            if(yCurrent==macroSettings.nely  ) % then on the bottom row
+                temp(end-numrows:end,:)=1;
+            end
+            
+            if(xCurrent==1 ) % then on the bottom row
+                temp(:,1:numrows)=1;
+            end
+            
+            if(xCurrent==macroSettings.nelx) % then on the bottom row
+                temp(:,end-numrows:end)=1;
+            end
+            
+            % ----------------------------------------------
+            % if  solid, and AddXXX is false then add material in the XX
+            % direction
+            % ----------------------------------
+            if( add_topV2==0 && (cut_topLeft==0 && cut_topRight ==0))
+                 temp(end-numrows:end,:)=1;
+            end
+            
+            if( add_bottomV2==0 && (cut_bottomLeft==0 && cut_bottomRight ==0))
+                temp(1:numrows,:)=1;
+            end
+            
+            if( add_leftV2==0 && (cut_topLeft==0 && cut_bottomLeft ==0))
+                temp(:,1:numrows)=1;
+            end
+            
+            if( add_rightV2==0 && (cut_topRight==0 && cut_bottomRight ==0))
+                temp(:,end-numrows:end)=1;
+            end
+            
+            % ----------------------------
+            % Add diagianols
+            % ----------------------------
+            [t1 t2]=size(temp);
+            tempOnes = ones(size(temp));
+            
+           
+            if(cut_topLeft ==1)
+                 for i = 0:numrows-1
+                    DiagMiddle =diag(ones(1,t1-i),i);
+                    temp(DiagMiddle==1) = tempOnes(DiagMiddle==1);
+                 end
+            end
+            
+            if(cut_topRight ==1)
+                for i = 0:numrows-1
+                    DiagMiddle =fliplr(diag(ones(1,t1-i),i));
+                    temp(DiagMiddle==1) = tempOnes(DiagMiddle==1);
+                 end
+            end
+            
+             if(cut_bottomRight ==1)
+                for i = 0:numrows-1
+                    DiagMiddle =rot90(diag(ones(1,t1-i),i),2);
+                    temp(DiagMiddle==1) = tempOnes(DiagMiddle==1);
+                 end
+             end
+            
+            if(cut_bottomLeft ==1)
+                for i = 0:numrows-1
+                    DiagMiddle =flipud(diag(ones(1,t1-i),i));
+                    temp(DiagMiddle==1) = tempOnes(DiagMiddle==1);
+                 end
+            end
+            
+
+            
+        end
+        
         completeStruct(ybounds,xbounds)= temp;
-%     end
+        %     end
+
+
     
 end
 
