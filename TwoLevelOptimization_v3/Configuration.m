@@ -33,13 +33,13 @@ classdef Configuration
         addThermalExpansion = 0; % Set to 1 to incorporate thermal expansion
         
         % Exx and Eyy Distribution
-        useExxEyy=1;       
+        useExxEyy=1;    % must be 0 for gradient material optimization       
         useTargetMesoDensity = 1; % 1 = yes, 0 = no and use target Eavg
         targetExxEyyDensity = 0.5;
         useThetaInSurfaceFit = 0;
         
         % rotation
-        useRotation =1;
+        useRotation =1; % must be 0 for gradient material optimization
         minRotation =-pi/2;
         maxRotation = pi/2;
         rotationMoveLimit = pi/45;
@@ -59,16 +59,16 @@ classdef Configuration
         
         
         % VOLUME Fraction SEttings.
-        timestep = 0.2; % time step for the volume fraction update algorithm
-        volFractionDamping = 0.2;
-        v1 = 0.3; % amount of material 1 to use. default to 10%
-        v2 = 0.3; % amount of material 2 to use. default to 30%, reduced so there is less meso structures to compute
+        timestep = 0.001; % time step for the volume fraction update algorithm
+        volFractionDamping = 10;
+        v1 = 0.2; % amount of material 1 to use. default to 10%
+        v2 = 0.4; % amount of material 2 to use. default to 30%, reduced so there is less meso structures to compute
         totalVolume; % = v1+v2;
         
         
         % Plotting information
         plotSensitivityWhilerunning = 0;
-        mesoplotfrequency=100; % how often to plot the meso level design.
+        mesoplotfrequency=1; % how often to plot the meso level design.
         iterationsPerPlot = 5;
         doPlotVolFractionDesignVar = 0;
         doPlotTopologyDesignVar = 0;
@@ -77,6 +77,7 @@ classdef Configuration
         doPlotStress = 0;
         doPlotFinal =0;
         doPlotMetrics = 0;
+        doPlotConsistencyConstraintsInMetrics = 1;
         doSaveDesignVarsToCSVFile = 0; % set to 1 to write plotFinal csv file instead
         doPlotAppliedStrain = 0; % For debugging only
         doPlotOrthDistributionVar=0;
@@ -89,7 +90,7 @@ classdef Configuration
         
         % Exx ,Eyy , Theta (and Rho) Plot Data
         doPlotCombinedExxEyyAndRotation = 1;
-        doIncludeRho =1;
+        doIncludeRho=1;;
         doIncludeSubSystemValues=1;
         %-----------------
         
@@ -104,7 +105,7 @@ classdef Configuration
         maxMasterLoops = 30;
         maxMesoLoops = 100;
         maxNumPseudoStrainLoop=6
-        PseudoStrainEndCriteria = 0.05;
+        PseudoStrainEndCriteria = 0.1;
         
         terminationAverageCount = 5; % the average change over this number of iterations must be below the termination criteria
         terminationCriteria = 0.001; % if the normalized average change over  terminationAverageCount of iterations is below this value then termainted. ie. 1% change
@@ -200,11 +201,11 @@ classdef Configuration
                 % -------------------
                 obj.nelx = 30; %39 % 30
                 obj.nely = 15; % 21 % 15
-                obj.nelxMeso = 10; %35;
-                obj.nelyMeso =10; %35;
+                obj.nelxMeso = 25; %35;
+                obj.nelyMeso =25; %35;
                 obj.terminationAverageCount = 10;
                 obj.terminationCriteria =0.001; % 0.0%
-                obj.maxFEACalls = 200;
+                obj.maxFEACalls = 300;
                 obj.maxMasterLoops = 300;
                 
             end

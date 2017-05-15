@@ -51,7 +51,7 @@ yDown=yCurrent-1;
 % -----------------------------
 % Check Right
 % -------------------
-if(xRight<macroSettings.nelx)
+if(xRight<=macroSettings.nelx)
     
     density = xx(yCurrent, xRight);
     if(density>macroSettings.voidMaterialDensityCutOff)
@@ -102,7 +102,7 @@ end
 % -----------------------------
 % Check up
 % -------------------
-if(yUp<macroSettings.nely)
+if(yUp<=macroSettings.nely)
     
     densityUp = xx(yUp, xCurrent);
     if(densityUp>macroSettings.voidMaterialDensityCutOff)

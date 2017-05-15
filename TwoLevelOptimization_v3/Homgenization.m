@@ -43,18 +43,20 @@ matvolFraction = 1;
 % Dideal=Dideal/t2;
 
 
-[~, ~, B_total, ~] = matProp.effectiveElasticKEmatrix_meso(matvolFraction, config,'');
+%[~, ~, B_total, ~] = matProp.effectiveElasticKEmatrix_meso(matvolFraction, config,'');
+
+% The SIMP var is added later.
+[ke, ~, B_total, ~] = matProp.effectiveElasticKEmatrix_meso(matvolFraction, config,strain1);
+[~, ~, ~, F_meso1] = matProp.effectiveElasticKEmatrix_meso(matvolFraction, config,strain1);
+[~, ~, ~, F_meso2] = matProp.effectiveElasticKEmatrix_meso(matvolFraction, config,strain2);
+[~, ~, ~, F_meso3] = matProp.effectiveElasticKEmatrix_meso(matvolFraction, config,strain3);
 
 
 for e = 1:ne
     
     
     [x,y]= designVars.GivenNodeNumberGetXY(e);
-    % The SIMP var is added later.
-    [ke, ~, B_total, ~] = matProp.effectiveElasticKEmatrix_meso(matvolFraction, config,strain1);
-    [~, ~, ~, F_meso1] = matProp.effectiveElasticKEmatrix_meso(matvolFraction, config,strain1);
-    [~, ~, ~, F_meso2] = matProp.effectiveElasticKEmatrix_meso(matvolFraction, config,strain2);
-    [~, ~, ~, F_meso3] = matProp.effectiveElasticKEmatrix_meso(matvolFraction, config,strain3);
+   
     
     % Insert the element stiffness matrix into the global.
     nodes1 = designVars.IEN(e,:);
@@ -138,6 +140,17 @@ Diff_Sys_Sub =  (macroElemProps.D_subSys- macroElemProps.D_sys);
 % dx3 = zeros(config.nely,config.nelx);
 
 % targetStrain = inv( macroElemProps.D_sys)*ones(3,1)*10;
+material1Fraction=1;
+E_base =    matProp.effectiveElasticProperties( material1Fraction, config);
+%     E = E_base;
+
+v = 0.3; % Piossons ratio
+% D is called C* in some journal papers.
+D_base = [ 1 v 0;
+    v 1 0;
+    0 0 1/2*(1-v)]*E_base/(1-v^2);
+    
+    
 
 for e = 1:ne
     [x,y]= designVars.GivenNodeNumberGetXY(e);
@@ -149,15 +162,7 @@ for e = 1:ne
     Ulocal2 = T2(dofNumbers);
     Ulocal3 = T3(dofNumbers);
     %         material1Fraction = designVars.w(y,x); % 100% of material 1 right now.
-    material1Fraction=1;
-    E_base =    matProp.effectiveElasticProperties( material1Fraction, config);
-    %     E = E_base;
-    
-    v = 0.3; % Piossons ratio
-    % D is called C* in some journal papers.
-    D_base = [ 1 v 0;
-        v 1 0;
-        0 0 1/2*(1-v)]*E_base/(1-v^2);
+   
     
     Ulocal1 = full(Ulocal1);Ulocal2 = full(Ulocal2);Ulocal3 = full(Ulocal3);
     temp1_X = [transpose(Ulocal1) transpose(Ulocal2) transpose(Ulocal3)];

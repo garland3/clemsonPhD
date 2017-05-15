@@ -25,7 +25,7 @@ int main ( int argc, char **argv )
    int nelm; //Number of elements
    struct timespec tim, tim2;
    tim.tv_sec = 0;
-   tim.tv_nsec = 50000;
+   tim.tv_nsec = 500000;
       
  
   
@@ -146,7 +146,7 @@ int main ( int argc, char **argv )
                
                 // Still need to wait, since all process must reach barrier
                 // --------------------------------------------
-                printf( "At position before Master Barrier");
+                printf( "At position before Master Barrier\n");
                  MPI_Barrier(MPI_COMM_WORLD); // force all to wait till all elements are finished
                  
                 

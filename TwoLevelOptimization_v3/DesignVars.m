@@ -39,7 +39,7 @@ classdef DesignVars
         
         
         % Optimization vars (volume fraction optimization)
-        lambda1 = 0;
+        lambda1 = 250;
         mu1 = 1;
         c = 0; % objective.
         cCompliance = 0;
@@ -55,7 +55,7 @@ classdef DesignVars
         sensitivityHeat; % Sensitivity 2, heat
         currentVol1Fraction;
         currentVol2Fraction;
-        targetAverageE =0;
+        targetAvgExxEyy=50000;
         actualAverageE=0;
         
         %complianceSensitivity; %
@@ -456,7 +456,7 @@ classdef DesignVars
                 
             end
             
-            if 1==1
+            if 1==0
                 figure(1)
                 p = plotResults;
                 figure
@@ -785,7 +785,7 @@ classdef DesignVars
             ne = config.nelx*config.nely;
             %             neSolid = config.nelx*config.nely*(config.v1+config.v2);
             totalMaterial = sum(sum(obj.x));
-            obj.targetAverageE=(config.v1*matProp.E_material1+config.v2*matProp.E_material2)/(config.v1+config.v2);
+%             obj.targetAverageE=(config.v1*matProp.E_material1+config.v2*matProp.E_material2)/(config.v1+config.v2);
             
             if(config.useExxEyy==1)
                 %                    avg= 0.5*(obj.Exx+obj.Eyy);
@@ -1042,18 +1042,18 @@ classdef DesignVars
                         obj.maxElemStraniEnergy= elementCompliance;
                     end
                     
-                    if(config.useTargetMesoDensity==1)
-                        xxx=obj.Exx(ely,elx)/matProp.E_material1;
-                        yyy=obj.Eyy(ely,elx)/matProp.E_material1;
-                        theta =  obj.t(ely,elx);
-                        
-                        [~, ~,estimateElementDensity] = o.CalculateDensitySensitivityandRho(xxx,yyy,theta,obj.ResponseSurfaceCoefficents,config,matProp);
-                        
-                        estimateElementDensity= min(max(estimateElementDensity,0.05),1);%1 is max, 0.05 is min
-                        eleDensity = obj.x(ely,elx)*estimateElementDensity;
-                        sumDensity =sumDensity+eleDensity;
-                        temp3(ely,elx) = eleDensity;
-                    end
+%                     if(config.useTargetMesoDensity==1)
+%                         xxx=obj.Exx(ely,elx)/matProp.E_material1;
+%                         yyy=obj.Eyy(ely,elx)/matProp.E_material1;
+%                         theta =  obj.t(ely,elx);
+%                         
+%                         [~, ~,estimateElementDensity] = o.CalculateDensitySensitivityandRho(xxx,yyy,theta,obj.ResponseSurfaceCoefficents,config,matProp);
+%                         
+%                         estimateElementDensity= min(max(estimateElementDensity,0.05),1);%1 is max, 0.05 is min
+%                         eleDensity = obj.x(ely,elx)*estimateElementDensity;
+%                         sumDensity =sumDensity+eleDensity;
+%                         temp3(ely,elx) = eleDensity;
+%                     end
                     
                     
                     count=count+1;
@@ -1072,14 +1072,18 @@ classdef DesignVars
                 obj.EyySysAndSubDiffSummed  =0;
                 obj.ThetaSysAndSubDiffSummed=0;
             end
+          
             
-            [~, ~,rhoValue] = o.CalculateDensitySensitivityandRho(obj.Exx/matProp.E_material1,obj.Eyy/matProp.E_material1,obj.t,obj.ResponseSurfaceCoefficents,config,matProp);
-            rhoValue=max(0.05,min(rhoValue,1));
-            
-            temp1=rhoValue.*obj.x;
-            temp2 = sum(sum(temp1));
-            mesoDensity=temp2/(config.nelx*config.nely*config.totalVolume);
-            sumDensity = sumDensity/(config.nelx*config.nely*config.totalVolume);
+            if(config.useTargetMesoDensity==1)
+                  
+                [~, ~,rhoValue] = o.CalculateDensitySensitivityandRho(obj.Exx/matProp.E_material1,obj.Eyy/matProp.E_material1,obj.t,obj.x ,obj.ResponseSurfaceCoefficents,config,matProp);
+                rhoValue=max(0.05,min(rhoValue,1));             
+                temp2 = sum(sum(rhoValue));
+                sumDensity=temp2/(config.nelx*config.nely*config.totalVolume);
+%                 sumDensity = sumDensity/(config.nelx*config.nely*config.totalVolume);
+            else
+                sumDensity=0;
+            end
             
             obj.averageMesoDensity=sumDensity;
             %                obj.averageMesoDensity=mesoDensity;
@@ -1097,7 +1101,7 @@ classdef DesignVars
                 obj.currentVol1Fraction, ...
                 obj.currentVol2Fraction, ...
                 sum(sum(obj.x)),...
-                obj.targetAverageE, ...
+                obj.targetAvgExxEyy, ...
                 obj.actualAverageE, ...
                 obj.averageMesoDensity...
                 obj.ExxSysAndSubDiffSummed...
@@ -1402,7 +1406,7 @@ classdef DesignVars
         % Several methods exist.
         % -----------------------------
         function [obj]= GenerateStartingMesoDesign(obj,mesoConfig,macroElementProperties)
-            method =2;
+            method =3;
             
             if(method ==1)
                 obj.x(1:mesoConfig.nely,1:mesoConfig.nelx) = mesoConfig.totalVolume; % artificial density of the elements

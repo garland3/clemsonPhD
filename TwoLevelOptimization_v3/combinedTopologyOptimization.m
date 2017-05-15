@@ -35,6 +35,7 @@ config.mode =65;
 % 201, make an .stl file for an iteration.
 % 202, Combine meso and Macro designs into a single plot and csv file.
 % 203, Extract the Exx, Eyy, Theta, and density values from the meso D matrixes. 
+% 204, Calculate objective of macro using D sub system matrixes. 
 
 
 % 3 = both mateiral vol fraction and topology, ortho, rotation
@@ -49,6 +50,7 @@ config.mode =65;
 
 
 opt = Optimizer;
+
 
 matProp = MaterialProperties; % material properties Object
 config.RunPalmetto = 1;
@@ -89,7 +91,7 @@ if(config.mode ==200)
     % config.macro_meso_iteration=5;
     NumMacroMesoIteration= config.macro_meso_iteration;
     p=plotResults;
-    p.PlotObjectiveFunctionAndConstraintsOverSevearlIterations(NumMacroMesoIteration,config);
+    p.PlotObjectiveFunctionAndConstraintsOverSevearlIterations(NumMacroMesoIteration,config,matProp);
     return
 end
 
@@ -126,6 +128,14 @@ if(config.mode ==203)
     return;
 end
 
+%% -------------------------------
+% Mode 204
+% Calculate objective of macro using D sub system matrixes. 
+% -------------------------------
+if(config.mode ==204)
+    UseSubSystemDmatricesForMacroProblem(config,matProp)
+    return;
+end
 
 if(config.recvid==1)
     video = VideoManager;
@@ -139,8 +149,11 @@ masterloop = 0; FEACalls = 0;
 % Macro Design
 % ---------------------------------------------------
 DV = DesignVars(config);
-DV.Exx = DV.Exx*config.v1*matProp.E_material1+config.v2*matProp.E_material2;
+%  DV.Exx = DV.Exx*config.v1*matProp.E_material1+config.v2*matProp.E_material2;
+% DV.Exx = ones(size(DV.Exx))*4.799014e+03;
+DV.Exx = ones(size(DV.Exx))*DV.targetAvgExxEyy;
 DV.Eyy = DV.Exx ;
+% DV.w= ones(size(DV.Exx));
 
 % if iteration 2 or higher, then get saved problems state and calcualte
 % penalty function valeus. 
@@ -150,9 +163,11 @@ DV.Eyy = DV.Exx ;
  end
 
  if ( config.mode == 1)
-     DV.Exx =ones(size(  DV.Exx))*2.837914e+04 ;
-     DV.Eyy =ones(size(  DV.Exx))*2.837914e+04 ;
+     DV.Exx = ones(size(DV.Exx))*matProp.E_material1;
+        DV.Eyy = DV.Exx ;
  end
+ 
+%  opt.GenerateInterpolateANN(DV.ResponseSurfaceCoefficents,config,matProp);
 
 % --------------------------------
 % Run FEA, to get started.
@@ -373,7 +388,7 @@ function ShowOptimizerProgress(DV,doPlot,name,FEACalls,config, matProp)
 
 % PRINT RESULTS
 disp([' FEA calls.: ' sprintf('%4i',FEACalls) ' Obj.: ' sprintf('%10.4f',DV.c) ' Vol. 1: ' sprintf('%6.3f', DV.currentVol1Fraction)  ' Vol. 2: ' sprintf('%6.3f', DV.currentVol2Fraction) ...
-    ' Target E.: ' sprintf('%4i',DV.targetAverageE)    ' Current E.: ' sprintf('%4i',DV.actualAverageE) ' Avg Meso Density '  sprintf('%4i',DV.averageMesoDensity) name] );
+    ' Target E.: ' sprintf('%4i',DV.targetAvgExxEyy)    ' Current E.: ' sprintf('%4i',DV.actualAverageE) ' Avg Meso Density '  sprintf('%4i',DV.averageMesoDensity) name] );
 
 if(doPlot==1)
     p = plotResults;

@@ -290,8 +290,8 @@ for e = 1:ne %ne:-1:1
             EyyArray=[EyyArray;Eyy];
             thetaArray=[thetaArray;Theta];
             
-                MacroExxColumn=[MacroExxColumn;ActualExx*macroElementProps.densitySIMP];
-                MacroEyyColumn=[MacroEyyColumn;ActualEyy*macroElementProps.densitySIMP];
+                MacroExxColumn=[MacroExxColumn;ActualExx*macroElementProps.densitySIMP^(config.penal)];
+                MacroEyyColumn=[MacroEyyColumn;ActualEyy*macroElementProps.densitySIMP^(config.penal)];
                 MacroThetaColumn=[MacroThetaColumn;ActualThetaValue];
                 RhoColumn=[RhoColumn;v];
         end
@@ -343,6 +343,8 @@ csvwrite( outname, MacroThetaColumn);
 outname = sprintf('./out%i/RhoColumn%i.csv',folderNum,macro_meso_iteration);
 csvwrite( outname,  RhoColumn);
 
+annTest(macro_meso_iteration);
+
 % if 1==0
 %     Exx = matProp.E_material1;
 %     Eyy = 0;
@@ -385,341 +387,341 @@ csvwrite( outname,  RhoColumn);
 % end
 
 
-if(1==1)
-    
-    nameArray = sprintf('./out%i/ExxArrayForFitting%i.csv',folderNum, config.macro_meso_iteration);
-    csvwrite(nameArray,ExxArray);
-    
-    nameArray = sprintf('./out%i/EyyArrayForFitting%i.csv',folderNum, config.macro_meso_iteration);
-    csvwrite(nameArray,EyyArray);
-    
-    nameArray = sprintf('./out%i/ThetaArrayForFitting%i.csv',folderNum, config.macro_meso_iteration);
-    csvwrite(nameArray,thetaArray);
-    
-    
-    
-    nameArray = sprintf('./out%i/RhoArrayForFitting%i.csv',folderNum, config.macro_meso_iteration);
-    csvwrite(nameArray,rhoArray);
-    
-    % REad the old arrays as well.
-    if(config.macro_meso_iteration>1)
-        for jjj= 1:config.macro_meso_iteration-1
-            nameArray = sprintf('./out%i/ExxArrayForFitting%i.csv',folderNum, jjj);
-            MacroExxColumnTemp =  csvread(nameArray);
-            ExxArray=[ExxArray ;MacroExxColumnTemp];
-            
-            nameArray = sprintf('./out%i/EyyArrayForFitting%i.csv',folderNum, jjj);
-            MacroEyyColumnTemp =  csvread(nameArray);
-            EyyArray=[EyyArray; MacroEyyColumnTemp];
-            
-            
-            nameArray = sprintf('./out%i/ThetaArrayForFitting%i.csv',folderNum, jjj);
-            thetaArrayTemp =  csvread(nameArray);
-            thetaArray=[thetaArray; thetaArrayTemp];
-            
-            
-            
-            nameArray = sprintf('./out%i/RhoArrayForFitting%i.csv',folderNum, jjj);
-            rhoArrayTemp =  csvread(nameArray);
-            rhoArray=[rhoArray; rhoArrayTemp];
-        end
-        
-        
-    end
-    
-    
-    
-    
-    figure(1)
-    scaleUp = matProp.E_material1;
-    config.useThetaInSurfaceFit=1;
-    if(config.useThetaInSurfaceFit==1)
-        
-        % -----------------------
-        % PLot the raw data. Scale up the rho, to make the color range
-        % larger. 
-        % -----------------------
-        RhoColor=rhoArray; % color
-        circleSize = ones(size(ExxArray))*100; % circle size.
-        scatter3(ExxArray,EyyArray,thetaArray,circleSize,RhoColor);
-        xlabel('Exx');
-        ylabel('Eyy');
-        zlabel('Theta');
-        title(sprintf('Rho (the color) as a function of Exx, Eyy, theta: iter %i',config.macro_meso_iteration));
-        colorbar
-        
-        nameGraph2 = sprintf('./RhoDensityOfExxEyyPlot%i.png', config.macro_meso_iteration);
-        print(nameGraph2,'-dpng');
-        
-        % ----------------------------
-        % Plot 2, with symmmetry taken into account. 
-        % Make Exx always larger
-        % theta between 0 and pi/4
-        % ----------------------------
-        
-      % Make the inputs be so taht Exx > Eyy
-% Rather than a strict theta, use the distance from pi/4, since the problem
-% is symmetric arround pi/4
-temp = ExxArray;
-logic = EyyArray>ExxArray;
-ExxArray(logic)=EyyArray(logic);
-EyyArray(logic) =temp(logic);
+% if(1==1)
+%     
+%     nameArray = sprintf('./out%i/ExxArrayForFitting%i.csv',folderNum, config.macro_meso_iteration);
+%     csvwrite(nameArray,ExxArray);
+%     
+%     nameArray = sprintf('./out%i/EyyArrayForFitting%i.csv',folderNum, config.macro_meso_iteration);
+%     csvwrite(nameArray,EyyArray);
+%     
+%     nameArray = sprintf('./out%i/ThetaArrayForFitting%i.csv',folderNum, config.macro_meso_iteration);
+%     csvwrite(nameArray,thetaArray);
+%     
+%     
+%     
+%     nameArray = sprintf('./out%i/RhoArrayForFitting%i.csv',folderNum, config.macro_meso_iteration);
+%     csvwrite(nameArray,rhoArray);
+%     
+%     % REad the old arrays as well.
+%     if(config.macro_meso_iteration>1)
+%         for jjj= 1:config.macro_meso_iteration-1
+%             nameArray = sprintf('./out%i/ExxArrayForFitting%i.csv',folderNum, jjj);
+%             MacroExxColumnTemp =  csvread(nameArray);
+%             ExxArray=[ExxArray ;MacroExxColumnTemp];
+%             
+%             nameArray = sprintf('./out%i/EyyArrayForFitting%i.csv',folderNum, jjj);
+%             MacroEyyColumnTemp =  csvread(nameArray);
+%             EyyArray=[EyyArray; MacroEyyColumnTemp];
+%             
+%             
+%             nameArray = sprintf('./out%i/ThetaArrayForFitting%i.csv',folderNum, jjj);
+%             thetaArrayTemp =  csvread(nameArray);
+%             thetaArray=[thetaArray; thetaArrayTemp];
+%             
+%             
+%             
+%             nameArray = sprintf('./out%i/RhoArrayForFitting%i.csv',folderNum, jjj);
+%             rhoArrayTemp =  csvread(nameArray);
+%             rhoArray=[rhoArray; rhoArrayTemp];
+%         end
+%         
+%         
+%     end
+%     
+%     
+%     
+%     
+%     figure(1)
+%     scaleUp = matProp.E_material1;
+%     config.useThetaInSurfaceFit=1;
+%     if(config.useThetaInSurfaceFit==1)
+%         
+%         % -----------------------
+%         % PLot the raw data. Scale up the rho, to make the color range
+%         % larger. 
+%         % -----------------------
+%         RhoColor=rhoArray; % color
+%         circleSize = ones(size(ExxArray))*100; % circle size.
+%         scatter3(ExxArray,EyyArray,thetaArray,circleSize,RhoColor);
+%         xlabel('Exx');
+%         ylabel('Eyy');
+%         zlabel('Theta');
+%         title(sprintf('Rho (the color) as a function of Exx, Eyy, theta: iter %i',config.macro_meso_iteration));
+%         colorbar
+%         
+%         nameGraph2 = sprintf('./RhoDensityOfExxEyyPlot%i.png', config.macro_meso_iteration);
+%         print(nameGraph2,'-dpng');
+%         
+%         % ----------------------------
+%         % Plot 2, with symmmetry taken into account. 
+%         % Make Exx always larger
+%         % theta between 0 and pi/4
+%         % ----------------------------
+%         
+%       % Make the inputs be so taht Exx > Eyy
+% % Rather than a strict theta, use the distance from pi/4, since the problem
+% % is symmetric arround pi/4
+% temp = ExxArray;
+% logic = EyyArray>ExxArray;
+% ExxArray(logic)=EyyArray(logic);
+% EyyArray(logic) =temp(logic);
+% % 
+% % min(thetaArray)
+% % max(thetaArray)
+% % thetaArray=((pi/4)^2+thetaArray.^2).^(1/2);
+% temp2 = thetaArray;
+% logic2 = thetaArray>pi/4;
+% logic3 = thetaArray<pi/4;
+% thetaArray(logic2)=thetaArray(logic2)-pi/4;
+% thetaArray(logic3)=pi/4-thetaArray(logic3);
+%          
+%          figure
+%           scatter3(ExxArray,EyyArray,thetaArray,circleSize,RhoColor);
+%         xlabel('Exx');
+%         ylabel('Eyy');
+%         zlabel('Theta');
+%         title(sprintf('Plot 2Rho (the color) as a function of Exx, Eyy, theta: iter %i',config.macro_meso_iteration));
+%         colorbar
+%         
+%           nameGraph2 = sprintf('./Plot2RhoDensityOfExxEyyPlot%i.png', config.macro_meso_iteration);
+%         print(nameGraph2,'-dpng');
+%         
+%         
+%         % -------------------------------
+%         % Least squares fit
+%         % ------------------------------
+%         
+%         x0=ones(1,10);
+%        x0 = randi([-5,5],1,10);
+%         A = [];
+%         b = [];
+%                
+%        
+%         % theta the same
+%         % rho the same.
+%         % scale down Exx, Eyy
+%        
+%         X = ExxArray/scaleUp;
+%         Y = EyyArray/scaleUp;
+%         
+% %         Z = thetaArray/(pi/4);
+%           Z = thetaArray;
+%          R = rhoArray;
+%         
+%         
+%         ub = ones(6,1)*10000;
+%         lb = -ub;
+%          o=Optimizer;
+%         [coefficients finalObjective]= fmincon(@(x) fitObjectiveV2(x,X,Y,Z,R,o,config,matProp),x0,A,b,[],[],lb,ub);
+%        
+%         finalObjective
+%         
+%         % use the scaled data
+% %         numPointsXandY = 20;
+%         %tt  =1/numPointsXandY;
+%         tt  =0.05;
+%     
+%         [Xgrid, Ygrid, Zgrid]=meshgrid(0:tt:max(X),0:tt:max(Y),0:0.2:max(Z));
+%      
+%         % Reshape into columns
+%         E_xx=reshape(Xgrid,[],1);
+%         E_yy=reshape(Ygrid,[],1);
+%         theta=reshape(Zgrid,[],1);
+%         
+%         x=coefficients;
+%         
+%         %------------
+%         % Calcualte the rho values using the fitting polynomial
+%         %------------
+%        [~, ~,rhoExperimental] = o.CalculateDensitySensitivityandRho(E_xx,E_yy,theta,coefficients,config,matProp);
+%    
+%         % -----------------------
+%         % Plot
+%         % - rescale the data to the correct form
+%         % - plot scatter3
+%         %-------------------------
+% %         rhoExperimental=rhoExperimental/scaleUp;
+% %         E_xx=E_xx*scaleUp;
+% %         E_yy=E_yy*scaleUp;
+% %    rhoExperimental=rhoExperimental;
+% %    theta=theta;
 % 
-% min(thetaArray)
-% max(thetaArray)
-% thetaArray=((pi/4)^2+thetaArray.^2).^(1/2);
-temp2 = thetaArray;
-logic2 = thetaArray>pi/4;
-logic3 = thetaArray<pi/4;
-thetaArray(logic2)=thetaArray(logic2)-pi/4;
-thetaArray(logic3)=pi/4-thetaArray(logic3);
-         
-         figure
-          scatter3(ExxArray,EyyArray,thetaArray,circleSize,RhoColor);
-        xlabel('Exx');
-        ylabel('Eyy');
-        zlabel('Theta');
-        title(sprintf('Plot 2Rho (the color) as a function of Exx, Eyy, theta: iter %i',config.macro_meso_iteration));
-        colorbar
-        
-          nameGraph2 = sprintf('./Plot2RhoDensityOfExxEyyPlot%i.png', config.macro_meso_iteration);
-        print(nameGraph2,'-dpng');
-        
-        
-        % -------------------------------
-        % Least squares fit
-        % ------------------------------
-        
-        x0=ones(1,10);
-       x0 = randi([-5,5],1,10);
-        A = [];
-        b = [];
-               
-       
-        % theta the same
-        % rho the same.
-        % scale down Exx, Eyy
-       
-        X = ExxArray/scaleUp;
-        Y = EyyArray/scaleUp;
-        
-%         Z = thetaArray/(pi/4);
-          Z = thetaArray;
-         R = rhoArray;
-        
-        
-        ub = ones(6,1)*10000;
-        lb = -ub;
-         o=Optimizer;
-        [coefficients finalObjective]= fmincon(@(x) fitObjectiveV2(x,X,Y,Z,R,o,config,matProp),x0,A,b,[],[],lb,ub);
-       
-        finalObjective
-        
-        % use the scaled data
-%         numPointsXandY = 20;
-        %tt  =1/numPointsXandY;
-        tt  =0.05;
-    
-        [Xgrid, Ygrid, Zgrid]=meshgrid(0:tt:max(X),0:tt:max(Y),0:0.2:max(Z));
-     
-        % Reshape into columns
-        E_xx=reshape(Xgrid,[],1);
-        E_yy=reshape(Ygrid,[],1);
-        theta=reshape(Zgrid,[],1);
-        
-        x=coefficients;
-        
-        %------------
-        % Calcualte the rho values using the fitting polynomial
-        %------------
-       [~, ~,rhoExperimental] = o.CalculateDensitySensitivityandRho(E_xx,E_yy,theta,coefficients,config,matProp);
-   
-        % -----------------------
-        % Plot
-        % - rescale the data to the correct form
-        % - plot scatter3
-        %-------------------------
-%         rhoExperimental=rhoExperimental/scaleUp;
-%         E_xx=E_xx*scaleUp;
-%         E_yy=E_yy*scaleUp;
-%    rhoExperimental=rhoExperimental;
-%    theta=theta;
-
-        
-%         E_xx(E_yy>E_xx)=0;
-%         E_yy(E_yy>E_xx)=0;
-        
-        
-        figure
-        circleSize = ones(size(E_xx))*100; % circle size.
-        scatter3(E_xx,E_yy,theta,circleSize,rhoExperimental,'filled');
-        title(sprintf('Response surface,Rho (the color) as a function of Exx, Eyy, theta: iter %i',config.macro_meso_iteration));
-        colorbar
-         xlabel('Exx');
-        ylabel('Eyy');
-        zlabel('Theta');
-        %                 hold off
-        
-        nameGraph2 = sprintf('./RhoDensityOfExxEyyThetaResponseSurfacePlot%i.png', config.macro_meso_iteration);
-        print(nameGraph2,'-dpng');
-        
-          nameArray = sprintf('./out%i/ExxEyyRhoFitCoefficients%i.csv',folderNum, config.macro_meso_iteration);
-        %      csvwrite(nameArray,sfArray);
-        
-        dlmwrite(nameArray, x, 'delimiter', ',', 'precision', 15);
-        
-        
-    else
-        % ---------------------------------------------------
-        % Plot and surface fit where
-        %
-        % rho is a function of Exx and Eyy
-        % ---------------------------------------------------
-        scatter3(ExxArray,EyyArray,rhoArray);
-        xlabel('Exx');
-        ylabel('Eyy');
-        zlabel('Rho,Density');
-        
-        x0=[1 1 1 1 1 1];
-        A = [];
-        b = [];
-        
-        scaleUp = matProp.E_material1;
-        
-        %      X = MacroExxColumn/matProp.E_material1;
-        %      Y = MacroEyyColumn/matProp.E_material1;
-        X = ExxArray;
-        Y = EyyArray;
-        
-        Z = rhoArray*scaleUp;
-        
-        ub = ones(6,1)*100000;
-        lb = -ub;
-        coefficients= fmincon(@(x) fitObjective(x,X,Y,Z),x0,A,b,[],[],lb,ub);
-        %       [x,fval,exitflag] = ga(@(x) fitObjective(x,X,Y,Z),  6,A,b,[],[],lb,ub);
-        %        sfArray=x;
-        coefficients=coefficients/scaleUp
-        %
-        [Xgrid, Ygrid]=meshgrid(0:1000:max(X),0:1000:max(Y));
-        
-        %      Xgrid=Xgrid*matProp.E_material1;
-        %      Ygrid=Ygrid*matProp.E_material1;
-        
-        p00 =coefficients(1);
-        p10=coefficients(2);
-        p01=coefficients(3) ;
-        p20=coefficients(4);
-        p11=coefficients(5);
-        p02=coefficients(6);
-        
-        Zexperimental=   p00 + p10*Xgrid + p01*Ygrid + p20*Xgrid.^2 + p11*Xgrid.*Ygrid + p02*Ygrid.^2;
-        
-        hold on
-        surf(Xgrid,Ygrid,Zexperimental)
-        hold off
-        
-        nameArray = sprintf('./out%i/ExxEyyRhoFitCoefficients%i.csv',folderNum, config.macro_meso_iteration);
-        %      csvwrite(nameArray,sfArray);
-        
-        dlmwrite(nameArray, coefficients, 'delimiter', ',', 'precision', 15);
-        
-        
-        nameGraph2 = sprintf('./RhoDensityOfExxEyyPlot%i.png', config.macro_meso_iteration);
-        print(nameGraph2,'-dpng');
-    end
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    %           sf = fit([MacroExxColumn, MacroEyyColumn],rhoArray,'poly22')
-    %           plot(sf,[MacroExxColumn,MacroEyyColumn],rhoArray)
-    %          xlabel('MacroExxColumn');
-    %     ylabel('MacroEyyColumn');
-    %     zlabel('Rho,Density');
-    %      sfArray = [sf.p00 sf.p10 sf.p01 sf.p20 sf.p02 sf.p11 ];
-    
-    
-    
-    
-    
-    %       figure(3)
-    %      sf = fit([ExxArray, EyyArray],rhoArray,'poly23')
-    %      plot(sf,[ExxArray,EyyArray],rhoArray)
-    %         xlabel('ExxArray');
-    %     ylabel('EyyArray');
-    %     zlabel('Rho,Density');
-    % %
-    %
-    %     xlabel('Exx');
-    %     ylabel('Eyy');
-    %     zlabel('Rho,Density');
-    %
-    %     figure(3)
-    %     scatter3(ExxArray,EyyArray,thetaArray);
-    %     xlabel('Exx');
-    %     ylabel('Eyy');
-    %     zlabel('theta');
-    
-    %     figure(4)
-    %        scatter3(MacroExxColumn,MacroEyyColumn,rhoArray);
-    %     histogram(thetaArray)
-    
-    %     figure(5)
-    %     DV = DV.CalculateVolumeFractions( config,matProp);
-else
-    DV.CalculateVolumeFractions( config,matProp)
-    p = plotResults;
-    FEACalls=1;
-    p.plotTopAndFraction(DV,  config, matProp, FEACalls); % plot the results.
-    
-    
-    nameGraph = sprintf('./MesoDesignExxEyyThetaVars%i.png', config.macro_meso_iteration);
-    print(nameGraph,'-dpng');
-end
-%
-p = plotResults;
-diffExx = ExxMacro- DV.Exx;
-diffEyy = EyyMacro- DV.Eyy;
-diffTheta = ThetaMacro- DV.t;
-
-
-relativeErrorExx=diffExx./ExxMacro;
-relativeErrorEyy=diffEyy./EyyMacro;
-relativeErrorTheta=diffTheta./ThetaMacro;
-
-
-% make the range -1 to 1
-relativeErrorExx(relativeErrorExx>1)=1;
-relativeErrorExx(relativeErrorExx<-1)=-1;
-
-relativeErrorEyy(relativeErrorEyy>1)=1;
-relativeErrorEyy(relativeErrorEyy<-1)=-1;
-
-relativeErrorTheta(relativeErrorTheta>1)=1;
-relativeErrorTheta(relativeErrorTheta<-1)=-1;
-
-figure
-p.PlotArrayGeneric( diffExx, 'diffExx')
-figure
-p.PlotArrayGeneric( diffEyy, 'diffEyy')
-figure
-p.PlotArrayGeneric( diffTheta, 'diffTheta')
-
+%         
+% %         E_xx(E_yy>E_xx)=0;
+% %         E_yy(E_yy>E_xx)=0;
+%         
+%         
+%         figure
+%         circleSize = ones(size(E_xx))*100; % circle size.
+%         scatter3(E_xx,E_yy,theta,circleSize,rhoExperimental,'filled');
+%         title(sprintf('Response surface,Rho (the color) as a function of Exx, Eyy, theta: iter %i',config.macro_meso_iteration));
+%         colorbar
+%          xlabel('Exx');
+%         ylabel('Eyy');
+%         zlabel('Theta');
+%         %                 hold off
+%         
+%         nameGraph2 = sprintf('./RhoDensityOfExxEyyThetaResponseSurfacePlot%i.png', config.macro_meso_iteration);
+%         print(nameGraph2,'-dpng');
+%         
+%           nameArray = sprintf('./out%i/ExxEyyRhoFitCoefficients%i.csv',folderNum, config.macro_meso_iteration);
+%         %      csvwrite(nameArray,sfArray);
+%         
+%         dlmwrite(nameArray, x, 'delimiter', ',', 'precision', 15);
+%         
+%         
+%     else
+%         % ---------------------------------------------------
+%         % Plot and surface fit where
+%         %
+%         % rho is a function of Exx and Eyy
+%         % ---------------------------------------------------
+%         scatter3(ExxArray,EyyArray,rhoArray);
+%         xlabel('Exx');
+%         ylabel('Eyy');
+%         zlabel('Rho,Density');
+%         
+%         x0=[1 1 1 1 1 1];
+%         A = [];
+%         b = [];
+%         
+%         scaleUp = matProp.E_material1;
+%         
+%         %      X = MacroExxColumn/matProp.E_material1;
+%         %      Y = MacroEyyColumn/matProp.E_material1;
+%         X = ExxArray;
+%         Y = EyyArray;
+%         
+%         Z = rhoArray*scaleUp;
+%         
+%         ub = ones(6,1)*100000;
+%         lb = -ub;
+%         coefficients= fmincon(@(x) fitObjective(x,X,Y,Z),x0,A,b,[],[],lb,ub);
+%         %       [x,fval,exitflag] = ga(@(x) fitObjective(x,X,Y,Z),  6,A,b,[],[],lb,ub);
+%         %        sfArray=x;
+%         coefficients=coefficients/scaleUp
+%         %
+%         [Xgrid, Ygrid]=meshgrid(0:1000:max(X),0:1000:max(Y));
+%         
+%         %      Xgrid=Xgrid*matProp.E_material1;
+%         %      Ygrid=Ygrid*matProp.E_material1;
+%         
+%         p00 =coefficients(1);
+%         p10=coefficients(2);
+%         p01=coefficients(3) ;
+%         p20=coefficients(4);
+%         p11=coefficients(5);
+%         p02=coefficients(6);
+%         
+%         Zexperimental=   p00 + p10*Xgrid + p01*Ygrid + p20*Xgrid.^2 + p11*Xgrid.*Ygrid + p02*Ygrid.^2;
+%         
+%         hold on
+%         surf(Xgrid,Ygrid,Zexperimental)
+%         hold off
+%         
+%         nameArray = sprintf('./out%i/ExxEyyRhoFitCoefficients%i.csv',folderNum, config.macro_meso_iteration);
+%         %      csvwrite(nameArray,sfArray);
+%         
+%         dlmwrite(nameArray, coefficients, 'delimiter', ',', 'precision', 15);
+%         
+%         
+%         nameGraph2 = sprintf('./RhoDensityOfExxEyyPlot%i.png', config.macro_meso_iteration);
+%         print(nameGraph2,'-dpng');
+%     end
+%     
+%     
+%     
+%     
+%     
+%     
+%     
+%     
+%     
+%     %           sf = fit([MacroExxColumn, MacroEyyColumn],rhoArray,'poly22')
+%     %           plot(sf,[MacroExxColumn,MacroEyyColumn],rhoArray)
+%     %          xlabel('MacroExxColumn');
+%     %     ylabel('MacroEyyColumn');
+%     %     zlabel('Rho,Density');
+%     %      sfArray = [sf.p00 sf.p10 sf.p01 sf.p20 sf.p02 sf.p11 ];
+%     
+%     
+%     
+%     
+%     
+%     %       figure(3)
+%     %      sf = fit([ExxArray, EyyArray],rhoArray,'poly23')
+%     %      plot(sf,[ExxArray,EyyArray],rhoArray)
+%     %         xlabel('ExxArray');
+%     %     ylabel('EyyArray');
+%     %     zlabel('Rho,Density');
+%     % %
+%     %
+%     %     xlabel('Exx');
+%     %     ylabel('Eyy');
+%     %     zlabel('Rho,Density');
+%     %
+%     %     figure(3)
+%     %     scatter3(ExxArray,EyyArray,thetaArray);
+%     %     xlabel('Exx');
+%     %     ylabel('Eyy');
+%     %     zlabel('theta');
+%     
+%     %     figure(4)
+%     %        scatter3(MacroExxColumn,MacroEyyColumn,rhoArray);
+%     %     histogram(thetaArray)
+%     
+%     %     figure(5)
+%     %     DV = DV.CalculateVolumeFractions( config,matProp);
+% else
+%     DV.CalculateVolumeFractions( config,matProp)
+%     p = plotResults;
+%     FEACalls=1;
+%     p.plotTopAndFraction(DV,  config, matProp, FEACalls); % plot the results.
+%     
+%     
+%     nameGraph = sprintf('./MesoDesignExxEyyThetaVars%i.png', config.macro_meso_iteration);
+%     print(nameGraph,'-dpng');
+% end
+% %
+% p = plotResults;
+% diffExx = ExxMacro- DV.Exx;
+% diffEyy = EyyMacro- DV.Eyy;
+% diffTheta = ThetaMacro- DV.t;
+% 
+% 
+% relativeErrorExx=diffExx./ExxMacro;
+% relativeErrorEyy=diffEyy./EyyMacro;
+% relativeErrorTheta=diffTheta./ThetaMacro;
+% 
+% 
+% % make the range -1 to 1
+% relativeErrorExx(relativeErrorExx>1)=1;
+% relativeErrorExx(relativeErrorExx<-1)=-1;
+% 
+% relativeErrorEyy(relativeErrorEyy>1)=1;
+% relativeErrorEyy(relativeErrorEyy<-1)=-1;
+% 
+% relativeErrorTheta(relativeErrorTheta>1)=1;
+% relativeErrorTheta(relativeErrorTheta<-1)=-1;
+% 
 % figure
-% subplot(2,2,1)
-% p.PlotArrayGeneric(100* relativeErrorExx, 'Percent Error Exx')
-% subplot(2,2,2)
-% p.PlotArrayGeneric( 100*relativeErrorEyy, 'Perecent Error Eyy')
-% subplot(2,2,3)
-% p.PlotArrayGeneric(100* relativeErrorTheta, 'Percent Error Theta')
-% subplot(2,2,4)
-% p.PlotArrayGeneric(diffTheta, 'Diff Theta')
-% nameGraph = sprintf('./MesoDesignExxEyyThetaVarsPercentError%i.png', config.macro_meso_iteration);
+% p.PlotArrayGeneric( diffExx, 'diffExx')
+% figure
+% p.PlotArrayGeneric( diffEyy, 'diffEyy')
+% figure
+% p.PlotArrayGeneric( diffTheta, 'diffTheta')
+% 
+% % figure
+% % subplot(2,2,1)
+% % p.PlotArrayGeneric(100* relativeErrorExx, 'Percent Error Exx')
+% % subplot(2,2,2)
+% % p.PlotArrayGeneric( 100*relativeErrorEyy, 'Perecent Error Eyy')
+% % subplot(2,2,3)
+% % p.PlotArrayGeneric(100* relativeErrorTheta, 'Percent Error Theta')
+% % subplot(2,2,4)
+% % p.PlotArrayGeneric(diffTheta, 'Diff Theta')
+% % nameGraph = sprintf('./MesoDesignExxEyyThetaVarsPercentError%i.png', config.macro_meso_iteration);
 % print(nameGraph,'-dpng');
 
 

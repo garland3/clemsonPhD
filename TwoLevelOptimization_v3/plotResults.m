@@ -187,6 +187,10 @@ classdef plotResults
             drawnow
         end
         
+        
+        %---------------------------------------
+        % Plot Design Metrics 
+        %---------------------------------------
         function PlotDesignMetrics(obj, DV, config, matProp, loopNumb)
             %  DV.c, DV.cCompliance, DV.cHeat,vol1Fraction,vol2Fraction,fractionCurrent_V1Local,densitySum];
             x = 1:loopNumb;
@@ -215,10 +219,34 @@ classdef plotResults
                 EyySysAndSubDiffSummed = DV.storeOptimizationVar(1:loopNumb,11)'; %
                 ThetaSysAndSubDiffSummed = DV.storeOptimizationVar(1:loopNumb,12)'; %
                 
+                smallest = 1000;
+                startValue=103; % avoid iteration 1
+                endValue=size(ThetaSysAndSubDiffSummed,2);
+                if(endValue>startValue)
+                    position=0;
+                    for jjj = startValue:endValue
+                        NumExxDiff = ExxSysAndSubDiffSummed(jjj)/matProp.E_material1;
+                        NumEyyDiff = EyySysAndSubDiffSummed(jjj)/matProp.E_material1;
+                        NumThetaDiff = ThetaSysAndSubDiffSummed(jjj)/(pi/2);
+                        together=NumExxDiff+NumEyyDiff+NumThetaDiff;
+                        if(together<smallest)
+                            smallest=together;
+                            position=jjj;
+                        end                    
+                    end
+                    jjj=position;
+                    NumExxDiff = ExxSysAndSubDiffSummed(jjj)/matProp.E_material1;
+                    NumEyyDiff = EyySysAndSubDiffSummed(jjj)/matProp.E_material1;
+                    NumThetaDiff = ThetaSysAndSubDiffSummed(jjj)/(pi/2);
+                    fprintf('Smallest value at %d,NumExxDiff %.2f, NumEyyDiff %.2f, NumThetaDiff %.2f \n ', jjj,NumExxDiff,NumEyyDiff,NumThetaDiff);
+                end
+                
                 %normalize
                 ExxSysAndSubDiffSummed=ExxSysAndSubDiffSummed/max(ExxSysAndSubDiffSummed);
                 EyySysAndSubDiffSummed=EyySysAndSubDiffSummed/max(EyySysAndSubDiffSummed);
                 ThetaSysAndSubDiffSummed=ThetaSysAndSubDiffSummed/max(ThetaSysAndSubDiffSummed);
+                
+                
                 
                 
                 scaleForEvalues = 0.5/targetAverageE(1);
@@ -231,10 +259,15 @@ classdef plotResults
                       mesoAvgDensity = DV.storeOptimizationVar(1:loopNumb,9)'; %
                      plot( x, elasticObjective, 'ko-',x, ExxSysAndSubDiffSummed, 'm+-', x, EyySysAndSubDiffSummed, 'c*-',x, ThetaSysAndSubDiffSummed, 'b*-',x, totalVolumeTarget, 'r.-',x, summedDensity, 'gx',x,mesoAvgDensity,'b-')
                      legend('Elast Obj','ExxSysAndSubDiffSummed','EyySysAndSubDiffSummed','ThetaSysAndSubDiffSummed' ,'Vol Target', 'Actual Vol','AvgMesoDensity','Location','northoutside')
-                    
+                     
                 else
-                    plot( x, elasticObjective, 'ko-',x, targetAverageE, 'm+-', x, actualAverageE, 'c*-',x, totalVolumeTarget, 'r.-',x, summedDensity, 'gx')
-                legend('Elast Obj','E target','E avg', 'Vol Target', 'Actual Vol')
+                    if(config.doPlotConsistencyConstraintsInMetrics==1)
+                        plot( x, elasticObjective, 'ko-',x, ExxSysAndSubDiffSummed, 'm+-', x, EyySysAndSubDiffSummed, 'c*-',x, ThetaSysAndSubDiffSummed, 'b*-',x, targetAverageE, 'r.-', x, actualAverageE, 'gx',x, summedDensity, 'b-');%,x, summedDensity, 'gx')
+                        legend('Elast Obj','ExxSysAndSubDiffSummed','EyySysAndSubDiffSummed','ThetaSysAndSubDiffSummed' ,'targetAverageE', 'actualAverageE','totalVolume','Location','northoutside')
+                    else
+                        plot( x, elasticObjective, 'ko-',x, targetAverageE, 'm+-', x, actualAverageE, 'c*-',x, totalVolumeTarget, 'r.-',x, summedDensity, 'gx')
+                        legend('Elast Obj','E target','E avg', 'Vol Target', 'Actual Vol')
+                    end
                     
                 end
                 
@@ -607,7 +640,7 @@ classdef plotResults
             title(nameGraph);
         end
         
-        function  [] = PlotObjectiveFunctionAndConstraintsOverSevearlIterations(obj,maxiterations,config)
+        function  [] = PlotObjectiveFunctionAndConstraintsOverSevearlIterations(obj,maxiterations,config,matProp)
             
             close all
             
@@ -648,7 +681,7 @@ classdef plotResults
             
             
 %             config = 0;
-            matProp = 0;
+           % matProp = 0;
             hold on
             p.PlotDesignMetrics( DV, config, matProp, loopNumb)
             xvalues = 1:loopNumb;

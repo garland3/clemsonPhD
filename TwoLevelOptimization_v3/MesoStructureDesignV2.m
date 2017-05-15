@@ -95,7 +95,8 @@ volumeUpdateInterval = 12;
 % --------------------
 % Use the old density and 
 % --------------------
-
+diffEtargetVolume=1;
+TargetCloseNess=0.03; % 1%
 
 % --------------------
 % Start pseudo strain loops
@@ -103,11 +104,11 @@ volumeUpdateInterval = 12;
 for mm = 1:mesoConfig.maxNumPseudoStrainLoop   
     
     temp=sum(abs(pstrain-pstrainOld));
-    if(temp<mesoConfig.PseudoStrainEndCriteria && mm>1)
+    if(temp<mesoConfig.PseudoStrainEndCriteria && mm>1 && abs(diffEtargetVolume)<TargetCloseNess)
   
             
-            temp2 = 'break becasue pseudo strain diff is small'       
-             fprintf('Break Psudo Strain Loops value = [%f %f %f] PsuedoStrainLoop %i Diff %f\n',pstrain(1),pstrain(2),pstrain(3),mm,temp);
+            temp2 = 'break becasue pseudo strain diff is small and volume target meet'       
+             fprintf('Break Psudo Strain Loops value = [%f %f %f] PsuedoStrainLoop %i Diff %f: Diff E target %f\n',pstrain(1),pstrain(2),pstrain(3),mm,temp,diffEtargetVolume);
        
         break;
     end
@@ -143,12 +144,33 @@ for mm = 1:mesoConfig.maxNumPseudoStrainLoop
         % Update the volume constraint
         % ------------------------------
         counter=counter+1;
+        versionVolUpdate = 2;
         if(mod(counter,volumeUpdateInterval)==1)
             termByTermDivision = macroElemProps.D_sys./macroElemProps.D_subSys;
+            if(versionVolUpdate==1)               
+               diffEtargetVolume = -1+(termByTermDivision(1,1)+termByTermDivision(2,2))/2;
+            else    
+                if(macroElemProps.theta<pi/4)
+                    if(macroElemProps.Exx>macroElemProps.Eyy)
+
+                            diffEtargetVolume = -1+termByTermDivision(1,1);
+                    else
+                             diffEtargetVolume = -1+termByTermDivision(2,2);
+                    end
+                else
+                     if(macroElemProps.Exx<macroElemProps.Eyy)
+
+                            diffEtargetVolume = -1+termByTermDivision(1,1);
+                    else
+                             diffEtargetVolume = -1+termByTermDivision(2,2);
+                    end
+                    
+                end
+            end
             
-            diff = -1+(termByTermDivision(1,1)+termByTermDivision(2,2))/2;
+         
             damp=0.25;
-            temp = diff*damp;
+            temp = diffEtargetVolume*damp;
             maxChange = 0.1;
             temp = max(min(temp,maxChange),-maxChange);
             oldVolume =    mesoConfig.totalVolume;
@@ -170,7 +192,7 @@ for mm = 1:mesoConfig.maxNumPseudoStrainLoop
               if(verboseOutput==1)
           fprintf('%f \t%f \t %f and density %f, sumDiff %f\n',pstrain(1),pstrain(2),pstrain(3),      mesoConfig.totalVolume,sumOfDiffX);
               end
-          changeLimit = mesoConfig.nelx*mesoConfig.nely*0.003;
+          changeLimit = mesoConfig.nelx*mesoConfig.nely*0.002;
         if(sumOfDiffX<changeLimit)
              if(verboseOutput==1)
               fprintf('Break in Meso design. X values are not changing. \n');
