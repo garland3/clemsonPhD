@@ -120,7 +120,7 @@ classdef DesignVars
             obj.B = B_out;
             
             macroDesignMode = 0;
-            if(config.mode<100)
+            if(config.mode<100 || config.mode==111 || config.mode==112) % mode 111 and  112 is meso validation target generation
                 macroDesignMode=1;
             end
             
@@ -324,8 +324,8 @@ classdef DesignVars
                 outname = sprintf('./out%i/sensitivityElasticPart2%i.csv',folderNum,oldIteration);
                 EyySensitivity = csvread(outname);
                 
-            end
-            if(config.macro_meso_iteration>=2)
+%             end
+%             if(config.macro_meso_iteration>=2)
                 
                 % loop over the elements.
                 
@@ -361,6 +361,7 @@ classdef DesignVars
                     % Calculate the penalty values!!
                     % ---------------------------------------------
                     omegaLocal =config.Omega;
+                    omegaLocal=omegaLocal*0.5;
                     
                     if(config.macro_meso_iteration>=3)
                         multiplier = 4*(config.macro_meso_iteration-2);
@@ -970,7 +971,7 @@ classdef DesignVars
         %  % -- FEA data sent to this function.
         %
         % -----------------------------------------
-        function obj = CalculateObjectiveValue(obj, config, matProp, loop)
+        function obj = CalculateObjectiveValue(obj, config, matProp, loop,OptimizerLocal)
             elementsInRow = config.nelx+1;
             
             obj.cCompliance=0;
@@ -983,7 +984,7 @@ classdef DesignVars
             
             %             for loadcaseIndex = 1:t2
             % UloadCase= obj.U(loadcaseIndex,:);
-            o = Optimizer;
+            o = OptimizerLocal;
             if(config.useTargetMesoDensity==1)
                 co =   obj. ResponseSurfaceCoefficents;
                 sumDensity=0;
@@ -1075,9 +1076,16 @@ classdef DesignVars
           
             
             if(config.useTargetMesoDensity==1)
+                 theta = obj.t;
+%                logic2 = theta>pi/4;
+%                logic3 = 0<theta<pi/4;
+%                  logic4 = theta<0;
+%                theta(logic2)=theta(logic2)-pi/4;
+%                theta(logic3)=pi/4-theta(logic3);
+%                 theta(logic4)=-pi/4-theta(logic4);
                   
-                [~, ~,rhoValue] = o.CalculateDensitySensitivityandRho(obj.Exx/matProp.E_material1,obj.Eyy/matProp.E_material1,obj.t,obj.x ,obj.ResponseSurfaceCoefficents,config,matProp);
-                rhoValue=max(0.05,min(rhoValue,1));             
+                [~, ~,rhoValue] = o.CalculateDensitySensitivityandRho(obj.Exx/matProp.E_material1,obj.Eyy/matProp.E_material1,theta,obj.x ,obj.ResponseSurfaceCoefficents,config,matProp);
+                rhoValue=max(0,min(rhoValue,1));             
                 temp2 = sum(sum(rhoValue));
                 sumDensity=temp2/(config.nelx*config.nely*config.totalVolume);
 %                 sumDensity = sumDensity/(config.nelx*config.nely*config.totalVolume);

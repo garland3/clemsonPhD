@@ -12,21 +12,22 @@
 #define NUM_MACRO_MESO_ITER 11 // 3,5,11
 #define START_MACRO_MESO_ITER 1 // 1
 
-#define NELX_MACRO  30
-#define NELY_MACRO 15
+#define NELX_MACRO  30 // 30 // 1331 
+#define NELY_MACRO 15 //15 // 1
+
+#define MODE 1 //1 = Multscale optimization 2. Meso Validation
 
 
 int callMatlab(int mode, int macro_meso_iteration, int element);
+int MultiscaleMasterNode( int macro_meso_iteration , int pool_size , int my_rank);
+int MesoValidationMasterNode(int macro_meso_iteration,int pool_size,int my_rank );
 
 int main ( int argc, char **argv )
 {
    int pool_size, my_rank, destination;
    int i_am_the_master = FALSE; 
    int nelm; //Number of elements
-   struct timespec tim, tim2;
-   tim.tv_sec = 0;
-   tim.tv_nsec = 500000;
-      
+  
  
   
    MPI_Status status;
@@ -66,108 +67,20 @@ int main ( int argc, char **argv )
         //
         // -------------------------------------------------------
         if (i_am_the_master) {
-            // ----------------------------------------------
-            // 1. run macro level on master
-            // ----------------------------------------------
-            // callMatlab(int mode, int macro_meso_iteration, int element)
-            printf("Master code running Macro Gradient Materail Optimization for Interation %d\n",k);
-            callMatlab(60,k, 1);
-            callMatlab(200,k, 1);
-            //sleep(1);
-            
-            
-            // -----------------
-            // 2 Pause everyone until we are ready for the element iterations. 
-            // -----------------
-            MPI_Barrier(MPI_COMM_WORLD);
-            //MPI_Bcast(b, ROWS, MPI_INT, MASTER_RANK, MPI_COMM_WORLD);
-            
-            // --------------------------------------------
-            // 3. Send out jobs. 
-            // --------------------------------------------
-            //int count = 0;
-            int elementNumber=1;
-           
-            for (destination = 0; destination < pool_size; destination++) {
-                 if (destination != my_rank) {
-                     if(elementNumber<nelm+1){
-                             
-                        //for (j = 0; j < COLS; j++) int_buffer[j] = a[count][j];
-                        //MPI_Send(int_buffer, COLS, MPI_INT, destination, count,
-                        //		 MPI_COMM_WORLD);
-                        MPI_Send(&elementNumber, 1, MPI_INT, destination, elementNumber, MPI_COMM_WORLD);
-                        printf("sent Element Job %d to %d\n", elementNumber, destination);
-                        //count = count + 1;
-                        elementNumber=elementNumber+1;
-                        nanosleep(&tim , &tim2) ;// Matlab is giving me some weird Bus error. Maybe trying to read the same files all at the same time is
-                          // causing issues? I'll slow down the process by making them 1 second apart. 
-                          // https://stackoverflow.com/questions/7684359/how-to-use-nanosleep-in-c-what-are-tim-tv-sec-and-tim-tv-nsec
-                     }
-                 }
-              }
-              
-            printf("\nSent Intial jobs to workers\n");
-
-            int valueReturned;
-            int rec_elementNumber;
-            
-            
-              for (int i = 0; i < nelm; i++) {
-                  // ------------------------------------
-                  // Wait for a message saying someone finished their job. 
-                  // ------------------------------------
-                 MPI_Recv (&valueReturned, 1, MPI_INT, MPI_ANY_SOURCE,   MPI_ANY_TAG, MPI_COMM_WORLD, &status);
-                 sender = status.MPI_SOURCE;
-                 rec_elementNumber = status.MPI_TAG;
-                 //c[row] = int_buffer[0];
-                // printf("received  results from element %d from %d\n", rec_elementNumber, sender);
-                 destination = sender;
-                 
-                  // ------------------------------------
-                  // If more jobs, then send a new one. , plus 1 becuase we started at 1
-                  // ------------------------------------
-                 if (elementNumber < nelm+1) {
-                    //for (j = 0; j < COLS; j++) int_buffer[j] = a[count][j];					
-                    MPI_Send(&elementNumber, 1, MPI_INT, destination, elementNumber, MPI_COMM_WORLD);
-                    printf("sent Element Job %d to %d\n", elementNumber, destination);
-                    //count = count + 1;
-                    elementNumber=elementNumber+1;
-                    
-                 }
-                 else {
-                       // ------------------------------------
-                      // If NO jobs, then send a termination messsage
-                      // ------------------------------------
-                    MPI_Send(NULL, 0, MPI_INT, destination, terminateTag, MPI_COMM_WORLD);
-                    printf("terminated process %d with tag %d, i value is %d\n", sender, terminateTag, i);
-                 }
-              }
-              
-               
-                // Still need to wait, since all process must reach barrier
-                // --------------------------------------------
-                printf( "At position before Master Barrier\n");
-                 MPI_Barrier(MPI_COMM_WORLD); // force all to wait till all elements are finished
-                 
-                
-                // --------------------------------------------
-                // 5. Get all the Exx, Eyy, theta values from the D_sub matrixes. Save all in csv files. 
-                // --------------------------------------------
-                printf("MASTER --> Get all the Exx, Eyy, theta values from the D_sub matrixes");			
-                callMatlab(203,k, 1);               
-                
-              
-         }
-         
+            if(MODE==1){
+                MultiscaleMasterNode(k,pool_size,my_rank);
+            }
+            else if(MODE==2){
+                 MesoValidationMasterNode(k,pool_size,my_rank);
+            }              
+         }         
          else
-        {
-           
+        {           
             // -------------------------------------------------------
             //
             // Padawan code!! Obey the master
             //
-            // -------------------------------------------------------
-          
+            // -------------------------------------------------------          
                
                 // ------------------------
                 // 1. Pause till master code sends out a message that he is done with macro level
@@ -218,7 +131,7 @@ int main ( int argc, char **argv )
                    
                    
                    
-                if (my_rank == SUB_MASTER_RANK){
+                if (my_rank == SUB_MASTER_RANK && MODE==1){
                      // --------------------------------------------
                     // 4. run the code to combine everything together
                     // --------------------------------------------
@@ -234,19 +147,14 @@ int main ( int argc, char **argv )
        
    } // End the master for loop over the macro-meso iterations
    
-   if (i_am_the_master) {
+   if (i_am_the_master && MODE==1) {
         // Call to finilize the design and track metrics. 
        // callMatlab(int mode, int macro_meso_iteration, int element)
        callMatlab(60,NUM_MACRO_MESO_ITER+1, 1);
        callMatlab(200,NUM_MACRO_MESO_ITER+1, 1);
    }
- 
 
-  
-
-   MPI_Finalize ();
-   
-  
+   MPI_Finalize ();   
 }
 
 
@@ -257,7 +165,7 @@ int callMatlab(int mode, int macro_meso_iteration, int element){
 	int useCommandLineArgs = 1;
 	//double w1 = 1;
 	int w1 = 1;
-    int returnValue=5;;
+    int returnValue=0;
 
    sprintf(command, "./combinedTopologyOptimization %d %d %d %d %d ",useCommandLineArgs, w1, macro_meso_iteration, mode, element);
    sprintf(commandHuman, "combinedTopologyOptimization , macroMeso =  %d , mode = %d, element =  %d ", macro_meso_iteration, mode, element);
@@ -274,9 +182,230 @@ int callMatlab(int mode, int macro_meso_iteration, int element){
         } else {
             break;
         }
-        
-  
    }
-  return returnValue;
-		
+  return returnValue;		
+}
+
+// ----------------------------------------------
+// =============================================
+//              MULTISCALE OPTIMIZATION  
+//              MASTER NODE
+// =============================================
+// ----------------------------------------------
+int MultiscaleMasterNode(int macro_meso_iteration,int pool_size,int my_rank ){
+    int  nelm = NELX_MACRO*NELY_MACRO;
+	int k=macro_meso_iteration;
+     struct timespec tim, tim2;
+   tim.tv_sec = 0;
+   tim.tv_nsec = 500000;
+   int sender, destination;
+    int terminateTag;
+     MPI_Status status;
+     
+      terminateTag = nelm +10;
+      
+    // ----------------------------------------------
+    // 1. run macro level on master
+    // ----------------------------------------------
+    // callMatlab(int mode, int macro_meso_iteration, int element)
+    printf("Master code running Macro Gradient Materail Optimization for Interation %d\n",k);
+    callMatlab(60,k, 1);
+    callMatlab(200,k, 1);
+    //sleep(1);
+    
+    
+    // -----------------
+    // 2 Pause everyone until we are ready for the element iterations. 
+    // -----------------
+    MPI_Barrier(MPI_COMM_WORLD);
+    //MPI_Bcast(b, ROWS, MPI_INT, MASTER_RANK, MPI_COMM_WORLD);
+    
+    // --------------------------------------------
+    // 3. Send out jobs. 
+    // --------------------------------------------
+    //int count = 0;
+    int elementNumber=1;
+     
+   
+    for (int destination = 0; destination < pool_size; destination++) {
+         if (destination != my_rank) {
+             if(elementNumber<nelm+1){
+                     
+                //for (j = 0; j < COLS; j++) int_buffer[j] = a[count][j];
+                //MPI_Send(int_buffer, COLS, MPI_INT, destination, count,
+                //		 MPI_COMM_WORLD);
+                MPI_Send(&elementNumber, 1, MPI_INT, destination, elementNumber, MPI_COMM_WORLD);
+                printf("sent Element Job %d to %d\n", elementNumber, destination);
+                //count = count + 1;
+                elementNumber=elementNumber+1;
+                nanosleep(&tim , &tim2) ;// Matlab is giving me some weird Bus error. Maybe trying to read the same files all at the same time is
+                  // causing issues? I'll slow down the process by making them 1 second apart. 
+                  // https://stackoverflow.com/questions/7684359/how-to-use-nanosleep-in-c-what-are-tim-tv-sec-and-tim-tv-nsec
+             }
+         }
+      }
+      
+    printf("\nSent Intial jobs to workers\n");
+
+    int valueReturned;
+    int rec_elementNumber;
+    
+    
+      for (int i = 0; i < nelm; i++) {
+          // ------------------------------------
+          // Wait for a message saying someone finished their job. 
+          // ------------------------------------
+         MPI_Recv (&valueReturned, 1, MPI_INT, MPI_ANY_SOURCE,   MPI_ANY_TAG, MPI_COMM_WORLD, &status);
+         sender = status.MPI_SOURCE;
+         rec_elementNumber = status.MPI_TAG;
+         //c[row] = int_buffer[0];
+        // printf("received  results from element %d from %d\n", rec_elementNumber, sender);
+         destination = sender;
+         
+          // ------------------------------------
+          // If more jobs, then send a new one. , plus 1 becuase we started at 1
+          // ------------------------------------
+         if (elementNumber < nelm+1) {
+            //for (j = 0; j < COLS; j++) int_buffer[j] = a[count][j];					
+            MPI_Send(&elementNumber, 1, MPI_INT, destination, elementNumber, MPI_COMM_WORLD);
+            printf("sent Element Job %d to %d\n", elementNumber, destination);
+            //count = count + 1;
+            elementNumber=elementNumber+1;
+            
+         }
+         else {
+               // ------------------------------------
+              // If NO jobs, then send a termination messsage
+              // ------------------------------------
+            MPI_Send(NULL, 0, MPI_INT, destination, terminateTag, MPI_COMM_WORLD);
+            printf("terminated process %d with tag %d, i value is %d\n", sender, terminateTag, i);
+         }
+      }
+      
+       
+        // Still need to wait, since all process must reach barrier
+        // --------------------------------------------
+        printf( "At position before Master Barrier\n");
+         MPI_Barrier(MPI_COMM_WORLD); // force all to wait till all elements are finished
+         
+        
+        // --------------------------------------------
+        // 5. Get all the Exx, Eyy, theta values from the D_sub matrixes. Save all in csv files. 
+        // --------------------------------------------
+        printf("MASTER --> Get all the Exx, Eyy, theta values from the D_sub matrixes");			
+        callMatlab(203,k, 1);   
+        
+        return 1;
+
+}
+
+
+// ----------------------------------------------
+// =============================================
+//              MESO VALIDATION 
+//              MASTER NODE
+// =============================================
+// ----------------------------------------------
+int MesoValidationMasterNode(int macro_meso_iteration,int pool_size ,int my_rank){
+	int k = macro_meso_iteration;
+    int  nelm = NELX_MACRO*NELY_MACRO;
+    struct timespec tim, tim2;
+   tim.tv_sec = 0;
+   tim.tv_nsec = 500000;
+   int sender,destination;
+    int terminateTag;
+     MPI_Status status;
+      terminateTag = nelm +10;
+      
+    // ----------------------------------------------
+    // 1. run macro level on master
+    // ----------------------------------------------
+    // callMatlab(int mode, int macro_meso_iteration, int element)
+    printf("Generate Targets for Meso Validation%d\n",k);
+    callMatlab(111,k, 1);
+   
+    
+    
+    // -----------------
+    // 2 Pause everyone until we are ready for the element iterations. 
+    // -----------------
+    MPI_Barrier(MPI_COMM_WORLD);
+    //MPI_Bcast(b, ROWS, MPI_INT, MASTER_RANK, MPI_COMM_WORLD);
+    
+    // --------------------------------------------
+    // 3. Send out jobs. 
+    // --------------------------------------------
+    //int count = 0;
+    int elementNumber=1;
+   
+    for (int destination = 0; destination < pool_size; destination++) {
+         if (destination != my_rank) {
+             if(elementNumber<nelm+1){
+                     
+                //for (j = 0; j < COLS; j++) int_buffer[j] = a[count][j];
+                //MPI_Send(int_buffer, COLS, MPI_INT, destination, count,
+                //		 MPI_COMM_WORLD);
+                MPI_Send(&elementNumber, 1, MPI_INT, destination, elementNumber, MPI_COMM_WORLD);
+                printf("sent Element Job %d to %d\n", elementNumber, destination);
+                //count = count + 1;
+                elementNumber=elementNumber+1;
+                nanosleep(&tim , &tim2) ;// Matlab is giving me some weird Bus error. Maybe trying to read the same files all at the same time is
+                  // causing issues? I'll slow down the process by making them 1 second apart. 
+                  // https://stackoverflow.com/questions/7684359/how-to-use-nanosleep-in-c-what-are-tim-tv-sec-and-tim-tv-nsec
+             }
+         }
+      }
+      
+    printf("\nSent Intial jobs to workers\n");
+
+    int valueReturned;
+    int rec_elementNumber;
+    
+    
+      for (int i = 0; i < nelm; i++) {
+          // ------------------------------------
+          // Wait for a message saying someone finished their job. 
+          // ------------------------------------
+         MPI_Recv (&valueReturned, 1, MPI_INT, MPI_ANY_SOURCE,   MPI_ANY_TAG, MPI_COMM_WORLD, &status);
+         sender = status.MPI_SOURCE;
+         rec_elementNumber = status.MPI_TAG;
+         //c[row] = int_buffer[0];
+        // printf("received  results from element %d from %d\n", rec_elementNumber, sender);
+         destination = sender;
+         
+          // ------------------------------------
+          // If more jobs, then send a new one. , plus 1 becuase we started at 1
+          // ------------------------------------
+         if (elementNumber < nelm+1) {
+            //for (j = 0; j < COLS; j++) int_buffer[j] = a[count][j];					
+            MPI_Send(&elementNumber, 1, MPI_INT, destination, elementNumber, MPI_COMM_WORLD);
+            printf("sent Element Job %d to %d\n", elementNumber, destination);
+            //count = count + 1;
+            elementNumber=elementNumber+1;
+            
+         }
+         else {
+               // ------------------------------------
+              // If NO jobs, then send a termination messsage
+              // ------------------------------------
+            MPI_Send(NULL, 0, MPI_INT, destination, terminateTag, MPI_COMM_WORLD);
+            printf("terminated process %d with tag %d, i value is %d\n", sender, terminateTag, i);
+         }
+      }
+      
+       
+        // Still need to wait, since all process must reach barrier
+        // --------------------------------------------
+        printf( "At position before Master Barrier\n");
+         MPI_Barrier(MPI_COMM_WORLD); // force all to wait till all elements are finished
+         
+        
+        // --------------------------------------------
+        // 5. REad validation results
+        // --------------------------------------------
+        printf("MASTER --> Interprete the Meso validation results, ");			
+        callMatlab(112,k, 1);   
+        
+        return 1;
+
 }

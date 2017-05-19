@@ -45,23 +45,55 @@ MacroEyyColumn=[];
 MacroThetaColumn=[];
 RhoColumn=[];
 
+  if(config.validationModeOn==1)
+      ne= config. validationGridSizeNelx ^3;
+  end
+
 
 for e = 1:ne %ne:-1:1
     strangeResultsFlag=0;
     fprintf('element %i of %i\n',e,ne);
     macroElementProps.elementNumber=e;
-    results = elementXYposition(macroElementProps.elementNumber,:);
-    macroElementProps.yPos = results(1);
-    macroElementProps.xPos = results(2);
     elementNumber=e;
-    macroElementProps.densitySIMP = xxx(macroElementProps.yPos,macroElementProps.xPos );
-    ActualThetaValue = ThetaMacro(macroElementProps.yPos,macroElementProps.xPos );
-    ActualExx = ExxMacro(macroElementProps.yPos,macroElementProps.xPos );
-    ActualEyy = EyyMacro(macroElementProps.yPos,macroElementProps.xPos );
+    if(config.validationModeOn==0)
+        % ---------------
+        %    Multiscale topology optimization case. 
+        % ---------------
+        results = elementXYposition(macroElementProps.elementNumber,:);
+        macroElementProps.yPos = results(1);
+        macroElementProps.xPos = results(2);
+
+     
+        macroElementProps.densitySIMP = xxx(macroElementProps.yPos,macroElementProps.xPos );
+        ActualThetaValue = ThetaMacro(macroElementProps.yPos,macroElementProps.xPos );
+        ActualExx = ExxMacro(macroElementProps.yPos,macroElementProps.xPos );
+        ActualEyy = EyyMacro(macroElementProps.yPos,macroElementProps.xPos );
+    else
+        % ---------------
+        %    Meso Validation Case
+        % ---------------
+        macroElementProps.yPos = 1;
+        macroElementProps.xPos = e;
+           macroElementProps.densitySIMP =1;
+         ActualThetaValue = ThetaMacro(e );
+        ActualExx = ExxMacro(e );
+        ActualEyy = EyyMacro(e);
+        
+        numValues = config.validationGridSizeNelx ^3;
+        DV.Exx = ones(1,numValues);
+        DV.Eyy= ones(1,numValues);
+        DV.t= ones(1,numValues);
+        DV.w= ones(1,numValues);
+        DV.x =ones(1,numValues);;
+        
+    end
     
     
     
-    
+    % ---------------------------------
+    % If SIMP density is above minimum, then find the equivalent macro
+    % properties from the D_meso matrix. 
+    % ---------------------------------
     if(macroElementProps.densitySIMP>config.voidMaterialDensityCutOff)
         % save the psuedo strain values
         %         outname = sprintf('./out%i/psuedostrain_Ite%i_forElement%i.csv',folderNum,macro_meso_iteration,elementNumber);
@@ -202,27 +234,20 @@ for e = 1:ne %ne:-1:1
         end
         diffDs=Din-Dcalculated;
         
-        if(Exx>matProp.E_material1)
-            Exx=matProp.E_material1 ;
-            strangeResultsFlag=1;
+        if(config.validationModeOn==0)
+            if(Exx>matProp.E_material1)
+                Exx=matProp.E_material1 ;
+                strangeResultsFlag=1;
+            end
+
+            if(Eyy>matProp.E_material1)
+                Eyy=matProp.E_material1 ;
+                strangeResultsFlag=1;
+            end
         end
         
-        if(Eyy>matProp.E_material1)
-            Eyy=matProp.E_material1 ;
-            strangeResultsFlag=1;
-        end
         
-        
-        
-        % in the case  where, Exx = Eyy, then the material is basically
-        % isotropic and rotating to find the orthotropic orientaiton will
-        % not work. In this case, set the theta to the actualTheta
-        % the criteria is that Exx and Eyy must be within 0.2% of each
-        % other's value.
-        if(abs(100*(Exx-Eyy)/Exx)<0.2)
-            Theta=ActualThetaValue;
-            str = sprintf('Exx = Eyy, setting theta to sys theta')
-        end
+     
         
         % Also, there is some difficulty when actualTheta is 0 or pi/2
         diffTheta = abs( ActualThetaValue-Theta);
@@ -238,6 +263,17 @@ for e = 1:ne %ne:-1:1
             diffTheta = abs( ActualThetaValue-Theta); % The new Diff Theta
         end
         
+           
+        % in the case  where, Exx = Eyy, then the material is basically
+        % isotropic and rotating to find the orthotropic orientaiton will
+        % not work. In this case, set the theta to the actualTheta
+        % the criteria is that Exx and Eyy must be within 0.2% of each
+        % other's value.
+        if(abs(100*(Exx-Eyy)/Exx)<5)
+%            if(abs(100*(ActualExx-ActualEyy)/ActualEyy)<5)
+            Theta=ActualThetaValue;
+            str = sprintf('Exx = Eyy, setting theta to sys theta')
+        end
         
         
         diffX = ActualExx-Exx;
@@ -275,12 +311,13 @@ for e = 1:ne %ne:-1:1
         
         
         
-        
-        %DV.x already saved.
-        DV.Exx(macroElementProps.yPos,macroElementProps.xPos)=Exx;
-        DV.Eyy(macroElementProps.yPos,macroElementProps.xPos)=Eyy;
-        DV.t(macroElementProps.yPos,macroElementProps.xPos)=Theta;
-        DV.w(macroElementProps.yPos,macroElementProps.xPos)=v;
+     
+            %DV.x already saved.
+            DV.Exx(macroElementProps.yPos,macroElementProps.xPos)=Exx;
+            DV.Eyy(macroElementProps.yPos,macroElementProps.xPos)=Eyy;
+            DV.t(macroElementProps.yPos,macroElementProps.xPos)=Theta;
+            DV.w(macroElementProps.yPos,macroElementProps.xPos)=v;
+      
         
         %                 objectiveValue = ObjectiveCalculateEffectiveVars(x,DmatrixIN, matProp,config);
         
@@ -290,10 +327,10 @@ for e = 1:ne %ne:-1:1
             EyyArray=[EyyArray;Eyy];
             thetaArray=[thetaArray;Theta];
             
-                MacroExxColumn=[MacroExxColumn;ActualExx*macroElementProps.densitySIMP^(config.penal)];
-                MacroEyyColumn=[MacroEyyColumn;ActualEyy*macroElementProps.densitySIMP^(config.penal)];
-                MacroThetaColumn=[MacroThetaColumn;ActualThetaValue];
-                RhoColumn=[RhoColumn;v];
+            MacroExxColumn=[MacroExxColumn;ActualExx*macroElementProps.densitySIMP^(config.penal)];
+            MacroEyyColumn=[MacroEyyColumn;ActualEyy*macroElementProps.densitySIMP^(config.penal)];
+            MacroThetaColumn=[MacroThetaColumn;ActualThetaValue];
+            RhoColumn=[RhoColumn;v];
         end
         
         
@@ -343,7 +380,118 @@ csvwrite( outname, MacroThetaColumn);
 outname = sprintf('./out%i/RhoColumn%i.csv',folderNum,macro_meso_iteration);
 csvwrite( outname,  RhoColumn);
 
-annTest(macro_meso_iteration);
+
+% --------------------------------------------------------
+%
+%    Meso Validation Case
+%
+% --------------------------------------------------------
+if(config.validationModeOn==1)
+    
+    % --------------------------
+    % Plot the raw data showing the density as circles
+    % --------------------------
+    RhoColor=RhoColumn; % color
+    circleSize = ones(size(RhoColumn))*100; % circle size.
+    scatter3(MacroExxColumn,MacroEyyColumn,MacroThetaColumn,circleSize,RhoColor,'filled','MarkerEdgeColor','k')
+    title(sprintf('Meso Validation,Density Plot '));
+    colorbar
+    xlabel('Exx');
+    ylabel('Eyy');
+    zlabel('Theta');
+    %colormap('gray')
+   % colormap(flipud(gray(256)));
+   colormap('summer');
+    
+    nameGraph2 = sprintf('./MesoValiation_RawData%i.png', config.macro_meso_iteration);
+    print(nameGraph2,'-dpng');
+    
+    
+    % --------------------------
+    % Plot the Exx Error as circles
+    % --------------------------
+    figure
+    diffExx = MacroExxColumn-ExxArray;
+    diffExx=abs(diffExx);
+    ColorColumn=diffExx; % color
+    circleSize = ones(size(ColorColumn))*100; % circle size.
+    scatter3(MacroExxColumn,MacroEyyColumn,MacroThetaColumn,circleSize,ColorColumn,'filled','MarkerEdgeColor','k')
+    title(sprintf('Exx Error as circles (Target - Actual)'));
+    colorbar
+    xlabel('Exx');
+    ylabel('Eyy');
+    zlabel('Theta');    
+     %colormap('gray')
+   % colormap(flipud(gray(256)));
+   colormap('summer');
+    nameGraph2 = sprintf('./MesoValiation_ExxError%i.png', config.macro_meso_iteration);
+    print(nameGraph2,'-dpng');
+    
+     % --------------------------
+    % Plot the Eyy Error as circles
+    % --------------------------
+    figure
+    diffEyy = MacroEyyColumn-EyyArray;
+        diffEyy=abs(diffEyy);
+    ColorColumn=diffEyy; % color
+    circleSize = ones(size(ColorColumn))*100; % circle size.
+    scatter3(MacroExxColumn,MacroEyyColumn,MacroThetaColumn,circleSize,ColorColumn,'filled','MarkerEdgeColor','k')
+    title(sprintf('Eyy Error as circles (Target - Actual)'));
+    colorbar
+    xlabel('Exx');
+    ylabel('Eyy');
+    zlabel('Theta'); 
+ %colormap('gray')
+   % colormap(flipud(gray(256)));
+   colormap('summer');
+    nameGraph2 = sprintf('./MesoValiation_EyyError%i.png', config.macro_meso_iteration);
+    print(nameGraph2,'-dpng');
+    
+    
+    % --------------------------
+    % Plot the Theta Error as circles
+    % --------------------------
+    figure
+    diffTheta = MacroThetaColumn-thetaArray;
+     diffTheta=abs(diffTheta);
+    ColorColumn=diffTheta; % color
+    circleSize = ones(size(ColorColumn))*100; % circle size.
+    scatter3(MacroExxColumn,MacroEyyColumn,MacroThetaColumn,circleSize,ColorColumn,'filled','MarkerEdgeColor','k')
+    title(sprintf('Theta Error as circles (Target - Actual)'));
+    colorbar
+    xlabel('Exx');
+    ylabel('Eyy');
+    zlabel('Theta'); 
+ %colormap('gray')
+   % colormap(flipud(gray(256)));
+   colormap('summer');
+    nameGraph2 = sprintf('./MesoValiation_ThetaError%i.png', config.macro_meso_iteration);
+    print(nameGraph2,'-dpng');
+    
+    
+    % --------------------------
+    % Plot the Combined Normalized Error
+    % --------------------------
+    figure
+    % take ABS, and normalize
+    totalError = abs(diffExx)/matProp.E_material1+abs(diffEyy)/matProp.E_material1+abs(diffTheta)/(pi/2);    
+    ColorColumn=totalError; % color
+    circleSize = ones(size(ColorColumn))*100; % circle size.
+    scatter3(MacroExxColumn,MacroEyyColumn,MacroThetaColumn,circleSize,ColorColumn,'filled','MarkerEdgeColor','k')
+    title(sprintf('Normalized Summed Error as circles for Exx, Eyy, Theta'));
+    colorbar
+    xlabel('Exx');
+    ylabel('Eyy');
+    zlabel('Theta');    
+    %colormap('gray')
+   % colormap(flipud(gray(256)));
+   colormap('summer');
+    nameGraph2 = sprintf('./MesoValiation_combinedError%i.png', config.macro_meso_iteration);
+    print(nameGraph2,'-dpng');
+    
+end
+
+%annTest(macro_meso_iteration);
 
 % if 1==0
 %     Exx = matProp.E_material1;
@@ -353,7 +501,7 @@ annTest(macro_meso_iteration);
 %     ExxArray=[ExxArray;Exx];
 %     EyyArray=[EyyArray;Eyy];
 %
-%      Exx = matProp.E_material1;
+%      Exx = matProp.E_material1;dos
 %     Eyy = matProp.E_material1/2;
 %     v= 1;
 %     rhoArray = [rhoArray;v];
@@ -705,24 +853,93 @@ annTest(macro_meso_iteration);
 % relativeErrorTheta(relativeErrorTheta>1)=1;
 % relativeErrorTheta(relativeErrorTheta<-1)=-1;
 % 
+% xplots = 3;
+% yplots = 3;
+% c= 1;
 % figure
+% subplot(xplots,yplots,c);c=c+1;
+% 
 % p.PlotArrayGeneric( diffExx, 'diffExx')
-% figure
+% subplot(xplots,yplots,c);c=c+1;
 % p.PlotArrayGeneric( diffEyy, 'diffEyy')
-% figure
+% subplot(xplots,yplots,c);c=c+1;
 % p.PlotArrayGeneric( diffTheta, 'diffTheta')
 % 
-% % figure
-% % subplot(2,2,1)
-% % p.PlotArrayGeneric(100* relativeErrorExx, 'Percent Error Exx')
-% % subplot(2,2,2)
-% % p.PlotArrayGeneric( 100*relativeErrorEyy, 'Perecent Error Eyy')
-% % subplot(2,2,3)
-% % p.PlotArrayGeneric(100* relativeErrorTheta, 'Percent Error Theta')
-% % subplot(2,2,4)
-% % p.PlotArrayGeneric(diffTheta, 'Diff Theta')
-% % nameGraph = sprintf('./MesoDesignExxEyyThetaVarsPercentError%i.png', config.macro_meso_iteration);
+% subplot(xplots,yplots,c);c=c+1;
+% p.PlotArrayGeneric( ExxMacro, 'ExxMacro')
+% 
+% subplot(xplots,yplots,c);c=c+1;
+% p.PlotArrayGeneric( EyyMacro, 'EyyMacro')
+% 
+% subplot(xplots,yplots,c);c=c+1;
+% p.PlotArrayGeneric( ThetaMacro, 'ThetaMacro')
+
+% x = [ExxMacro; EyyMacro; ThetaMacro]
+
+% figure
+% subplot(2,2,1)
+% p.PlotArrayGeneric(100* relativeErrorExx, 'Percent Error Exx')
+% subplot(2,2,2)
+% p.PlotArrayGeneric( 100*relativeErrorEyy, 'Perecent Error Eyy')
+% subplot(2,2,3)
+% p.PlotArrayGeneric(100* relativeErrorTheta, 'Percent Error Theta')
+% subplot(2,2,4)
+% p.PlotArrayGeneric(diffTheta, 'Diff Theta')
+% nameGraph = sprintf('./MesoDesignExxEyyThetaVarsPercentError%i.png', config.macro_meso_iteration);
 % print(nameGraph,'-dpng');
+% validationMeso =1;
+% if(validationMeso ==1)
+% 
+%     totalValidationProblems=config.nely*config.nelx;
+%     numSegments = floor(totalValidationProblems^(1/3));
+%     numSegmentsExx = numSegments;
+%     numSegmentsTheta = floor(totalValidationProblems/(numSegmentsExx^2));
+% 
+%     numSegmentsExx=numSegmentsExx-1;
+%     numSegmentsTheta=numSegmentsTheta-1;
+% 
+%     ExxVector =0:matProp.E_material1/numSegmentsExx:matProp.E_material1;
+%     EyyVector =0:matProp.E_material1/numSegmentsExx:matProp.E_material1;
+%     thetaVector = 0:(pi/2)/numSegmentsTheta:pi/2;
+%     [ExxValues EyyValues ThetaValues] = meshgrid(ExxVector,ExxVector,thetaVector);
+% 
+%     %ExxValues=padarray(ExxValues,
+%     ExxValues=reshape(ExxValues,1,[]);
+%     [t1 t2]=size(ExxValues);
+%     ExxValues=padarray(ExxValues,[0 totalValidationProblems-t2],'post');
+%     ExxValues=reshape(ExxValues,config.nely,config.nelx);
+% 
+%     EyyValues=reshape(EyyValues,1,[]);
+%     EyyValues=padarray(EyyValues,[0 totalValidationProblems-t2],'post');
+%     EyyValues=reshape(EyyValues,config.nely,config.nelx);
+% 
+%     ThetaValues=reshape(ThetaValues,1,[]);
+%     ThetaValues=padarray(ThetaValues,[0 totalValidationProblems-t2],'post');
+%     ThetaValues=reshape(ThetaValues,config.nely,config.nelx);
+% 
+%     xSimp = ones(t1, t2);
+%     xSimp=reshape(xSimp,1,[]);
+%     xSimp=padarray(xSimp,[0 totalValidationProblems-t2],'post');
+%     xSimp=reshape(xSimp,config.nely,config.nelx); 
+%     
+%     
+%     ExxNewArray = [];
+%      EyyNewArray = [];
+%       EyyNewArray = [];
+%        EzzNewArray = [];
+%     for e = 1:t1*t2
+%         Xcondition = ExxVector(1)==DV.Exx(e);
+%         Ycondition = 1;%ExxVector(1)==DV.Exx(e);
+%         thetaCondtion =1;% ThetaValues(1)==DV.t(e);
+%         %rhoCondtion = ExxVector(1)==DV.Exx(e);
+%         if(Xcondition==1 && Ycondition==1 && thetaCondtion==1)
+%             
+%         end
+%         
+%     end
+%     
+%     
+% end
 
 
 

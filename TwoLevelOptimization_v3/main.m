@@ -2,10 +2,14 @@ function main()
 clear
 close all
 
+% %     combinedTopologyOptimization('1', '1', '1','111', 'na'); % generate meso validation targets
+%       combinedTopologyOptimization('1', '1', '1','112', 'na'); % evalute meso design metrics. 
+%        annTest(1)
 % %
-% combinedTopologyOptimization('1', '1', '1','60', 'na');
+ combinedTopologyOptimization('1', '1', '1','60', 'na');
 % combinedTopologyOptimization('1', '1', '1','200', 'na');
-%              combinedTopologyOptimization('1', '1', '1','203', 'na'); % make%        Exx, Eyy, vars from Dmatrixes
+%                combinedTopologyOptimization('1', '1', '1','203', 'na'); % Extract Exx, Eyy, theta
+%                     combinedTopologyOptimization('1', '1', '1','202', 'na'); % Make complete structure from macro and meso
 % for i =1:10
 %                  combinedTopologyOptimization('1', '1', int2str(i),'203', 'na'); % make%        Exx, Eyy, vars from Dmatrixes
 % 
@@ -26,11 +30,12 @@ close all
 
 
 %     combinedTopologyOptimization('1', '1', '1','202', 'na'); % make complete macro-meso  structure
-      combinedTopologyOptimization('1', '1', '1','203', 'na'); % make Exx, Eyy, rho plot
+%       combinedTopologyOptimization('1', '1', '1','203', 'na'); % make Exx, Eyy, rho plot
 
 % test meso design for element 1, macro iteration 1
-%   combinedTopologyOptimization('1', '1', '1','100', '781');
-%     combinedTopologyOptimization('1', '1', '1','100', '191');
+%    combinedTopologyOptimization('1', '1', '1','100', '781');
+%        combinedTopologyOptimization('1', '1', '1','100', '10');
+%         combinedTopologyOptimization('1', '1', '1','100', '1');
 nelx= 30;
 nely = 15;
 totale=nelx*nely;

@@ -1,57 +1,57 @@
-function []= SaveMacroProblemStateToCSV(config,designVars,matProp)
+function []= SaveMacroProblemStateToCSV(config,DV,matProp)
 
 folderNum = config.iterationNum;
 mm_iteration = config.macro_meso_iteration;
 
 % Save element->node mapping
 outname = sprintf('./out%i/elementNodeMap%i.csv',folderNum,mm_iteration);
-csvwrite(outname,designVars.IEN);
+csvwrite(outname,DV.IEN);
 
 % % Save element to XY position map (needed for x and w vars retrival)
 outname = sprintf('./out%i/elementXYposition%i.csv',folderNum,mm_iteration);
-csvwrite(outname,designVars.elementXYposition);
+csvwrite(outname,DV.elementXYposition);
 
 
 % Save displacement field
 outname = sprintf('./out%i/displacement%i.csv',folderNum,mm_iteration);
-uout = full(designVars.U);
+uout = full(DV.U);
 csvwrite(outname,uout);
 
 % save the density field
 outname = sprintf('./out%i/SIMPdensityfield%i.csv',folderNum,mm_iteration);
-csvwrite(outname,designVars.x);
+csvwrite(outname,DV.x);
 
 % save the Exx field
 outname = sprintf('./out%i/ExxValues%i.csv',folderNum,mm_iteration);
-csvwrite(outname,designVars.Exx);
+csvwrite(outname,DV.Exx);
 
 % save the Eyy field
 outname = sprintf('./out%i/EyyValues%i.csv',folderNum,mm_iteration);
-csvwrite(outname,designVars.Eyy);
+csvwrite(outname,DV.Eyy);
 
 
 % save the Exx sensitivity field
 outname = sprintf('./out%i/sensitivityElastic%i.csv',folderNum,mm_iteration);
-csvwrite(outname,designVars.sensitivityElastic);
+csvwrite(outname,DV.sensitivityElastic);
 
 % save the Eyy sensitivity field
 outname = sprintf('./out%i/sensitivityElasticPart2%i.csv',folderNum,mm_iteration);
-csvwrite(outname,designVars.sensitivityElasticPart2 );
+csvwrite(outname,DV.sensitivityElasticPart2 );
 
 % save the Theta field
 outname = sprintf('./out%i/ThetaValues%i.csv',folderNum,mm_iteration);
-csvwrite(outname,designVars.t);
+csvwrite(outname,DV.t);
 
 
 % save the volume fraction field (only if using the old methodd)
 if(config.useExxEyy~=1)
     outname = sprintf('./out%i/volfractionfield%i.csv',folderNum,mm_iteration);
-    csvwrite(outname,designVars.w);
+    csvwrite(outname,DV.w);
 end
 
 % save the lambda value
 outname = sprintf('./out%i/lambda%i.csv',folderNum,mm_iteration);
-csvwrite(outname,designVars.lambda1);   
+csvwrite(outname,DV.lambda1);   
 
 % for the new meso design method using the Exx and Eyy and the consistency
 % constraints I need
@@ -104,26 +104,26 @@ ne = config.nelx*config.nely;
 if(mm_iteration>1)
     % save the lambdaExx field
     outname = sprintf('./out%i/lambdaExx%i.csv',folderNum,mm_iteration);
-    csvwrite(outname,designVars.lambdaExx);
+    csvwrite(outname,DV.lambdaExx);
     
     % save the lambdaEyy field
     outname = sprintf('./out%i/lambdaEyy%i.csv',folderNum,mm_iteration);
-    csvwrite(outname,designVars.lambdaEyy);
+    csvwrite(outname,DV.lambdaEyy);
     
     % save the lambdaTheta field
     outname = sprintf('./out%i/lambdaTheta%i.csv',folderNum,mm_iteration);
-    csvwrite(outname,designVars.lambdaTheta);
+    csvwrite(outname,DV.lambdaTheta);
     
     % save the penaltyExx field
     outname = sprintf('./out%i/penaltyExx%i.csv',folderNum,mm_iteration);
-    csvwrite(outname,designVars.penaltyExx);
+    csvwrite(outname,DV.penaltyExx);
     
     % save the penaltyEyy field
     outname = sprintf('./out%i/penaltyEyy%i.csv',folderNum,mm_iteration);
-    csvwrite(outname,designVars.penaltyEyy);
+    csvwrite(outname,DV.penaltyEyy);
     
     % save the penaltyTheta field
     outname = sprintf('./out%i/penaltyTheta%i.csv',folderNum,mm_iteration);
-    csvwrite(outname,designVars.penaltyTheta);
+    csvwrite(outname,DV.penaltyTheta);
     
 end

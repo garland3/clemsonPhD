@@ -105,8 +105,7 @@ classdef Configuration
         maxMasterLoops = 30;
         maxMesoLoops = 100;
         maxNumPseudoStrainLoop=6
-        PseudoStrainEndCriteria = 0.1;
-        
+        PseudoStrainEndCriteria = 0.1;        
         terminationAverageCount = 5; % the average change over this number of iterations must be below the termination criteria
         terminationCriteria = 0.001; % if the normalized average change over  terminationAverageCount of iterations is below this value then termainted. ie. 1% change
         % not much faster.
@@ -116,6 +115,13 @@ classdef Configuration
         useCommandLineArgs = 0;
         RunPalmetto =1;
         gr =  (1+sqrt(5))/2 -1 ; % golden ratio  0.618033988749895
+        
+        % ---------------------------
+        % Meso Validation seetings
+        % mode = 111 or 112
+        % ---------------------------
+        validationGridSizeNelx = 11; % , This value cubed will be the number of sub problems, 320^2 about 100,000
+        validationModeOn=0; % 1 = yes. 
         
         % -----------------
         % Use different mixture rules for effective elastic properteis
@@ -199,8 +205,8 @@ classdef Configuration
                 % ------------
                 % Palmetto running case
                 % -------------------
-                obj.nelx = 30; %39 % 30
-                obj.nely = 15; % 21 % 15
+                obj.nelx = 30; %% 30
+                obj.nely = 15; %  15
                 obj.nelxMeso = 25; %35;
                 obj.nelyMeso =25; %35;
                 obj.terminationAverageCount = 10;
@@ -238,6 +244,14 @@ classdef Configuration
             if(obj.macro_meso_iteration ==1)
                  obj.maxFEACalls=100;
             end
+            
+            
+            % 111 = Validate Meso (generate Targets)
+            % 112 = Read the meso design information and compute validation metrics
+           if(  obj.validationModeOn)
+                obj.nelx = obj.validationGridSizeNelx; 
+                obj.nely = obj.validationGridSizeNelx;                
+           end
         
         end
         

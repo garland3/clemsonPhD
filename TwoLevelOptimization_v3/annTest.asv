@@ -1,4 +1,6 @@
+function []=annTest(iterations)
 % module load  matlab/2016a
+fprintf('annTest'
 
 
 
@@ -7,11 +9,16 @@ EyyArray=[];
 thetaArray=[];
 rhoArray=[];
 
-for ii = [0 1]
+iterationsArray = [1];
+
+count = 1;
+for ii = [0  ]
     folderNum=ii;
-    for jjj= 1:7
+    iterations=iterationsArray(count);
+    count=count+1;
+    for jjj= 1:iterations
         % nameArray = sprintf('./out%i/ExxArrayForFitting%i.csv',folderNum, jjj);
-        macro_meso_iteration=jjj;
+        macro_meso_iteration=jjj
         nameArray = sprintf('./out%i/MacroExxColumn%i.csv',folderNum,macro_meso_iteration);
         MacroExxColumnTemp =  csvread(nameArray);
         ExxArray=[ExxArray ;MacroExxColumnTemp];
@@ -43,6 +50,8 @@ temp = ExxArray;
 logic = EyyArray>ExxArray;
 ExxArray(logic)=EyyArray(logic);
 EyyArray(logic) =temp(logic);
+
+maxExx = max(EyyArray);
 %
 % min(thetaArray)
 % max(thetaArray)
@@ -71,6 +80,7 @@ colorbar
 xlabel('Exx');
 ylabel('Eyy');
 zlabel('Theta');
+axis([0 maxExx 0 maxExx 0 pi/4]);
 %                 hold off
 
 nameGraph2 = sprintf('./AnnRawDataTest3DGrid.png');
@@ -104,12 +114,14 @@ print('ANN_regressionTest2.png','-dpng');
 genFunction(net,'annRhoOfExxEyyTheta_version2');
 
 %--------------------------
+% Plot a grid where the ANN finds the density
 % plot to see if it matches something reasonable
 %-----------------------------------
-Xmax = max(ExxArray);
-Ymax = max(EyyArray);
-Zmax= max(thetaArray);
-numValues = 15;
+matProp = MaterialProperties; % material properties Object
+Xmax = matProp.E_material1;
+Ymax = matProp.E_material1;
+Zmax= pi/4;
+numValues = 10;
 [Xgrid, Ygrid, Zgrid]=meshgrid(0:Xmax/numValues:Xmax,...
     0:Ymax/numValues:Ymax ,...
     0:Zmax/numValues:Zmax);
@@ -118,20 +130,44 @@ numValues = 15;
 E_xx=reshape(Xgrid,[],1);
 E_yy=reshape(Ygrid,[],1);
 theta=reshape(Zgrid,[],1);
+[t1, t2, t3]=size(Xgrid);
 
 % Make the inputs be so taht Exx > Eyy
 % Rather than a strict theta, use the distance from pi/4, since the problem
 % is symmetric arround pi/4
+% ExxTemp = [];
+% EyyTemp=[];
+% ThetaTemp=[];
+% for iiii = 1:size(E_xx)
+%     if(E_yy(iiii)<E_xx(iiii) && theta(iiii)>pi/4)
+%         ExxTemp=[ExxTemp; E_xx(iiii)];
+%         EyyTemp=[EyyTemp;E_yy(iiii)];
+%        % logic = E_yy>E_xx;
+%         %E_xx(logic)=E_yy(logic);
+%         %E_yy(logic) =temp(logic);
+%         %temp2 = thetaArray;
+%        % if(theta(iiii)>pi/4)
+%             ThetaTemp=[ThetaTemp;theta(iiii)-pi/4];
+%         %else
+%          %     ThetaTemp=[ThetaTemp;-pi/4-theta(iiii)];
+%         %end
+% %         logic2 = thetaArray>pi/4;
+% %         logic3 = thetaArray<pi/4;
+% %         thetaArray(logic2)=thetaArray(logic2)-pi/4;
+% %         thetaArray(logic3)=pi/4-thetaArray(logic3);
+%     end
+% end
+% E_xx=ExxTemp;
+% E_yy=EyyTemp;
+% theta=ThetaTemp;
 temp = E_xx;
 logic = E_yy>E_xx;
 E_xx(logic)=E_yy(logic);
 E_yy(logic) =temp(logic);
-temp2 = thetaArray;
-logic2 = thetaArray>pi/4;
-logic3 = thetaArray<pi/4;
-thetaArray(logic2)=thetaArray(logic2)-pi/4;
-thetaArray(logic3)=pi/4-thetaArray(logic3);
-
+logic2 = theta>pi/4;
+logic3 = theta<pi/4;
+theta(logic2)=theta(logic2)-pi/4;
+theta(logic3)=pi/4-theta(logic3);
 
 
 xTest = [E_xx' ; E_yy'; theta'];
@@ -150,13 +186,35 @@ colorbar
 xlabel('Exx');
 ylabel('Eyy');
 zlabel('Theta');
+axis([0 maxExx 0 maxExx 0 pi/4]);
 %                 hold off
 
 nameGraph2 = sprintf('./AnnTest3DGrid.png');
 print(nameGraph2,'-dpng');
 
+rhoExperimental
+t1
+t2
+t3
+rhoExperimental=reshape(rhoExperimental,[t1 t2 t3]);
 
 
+
+outname = sprintf('./out%i/ANN_interp_E_xx.csv',0);
+csvwrite(outname,Xgrid);
+outname = sprintf('./out%i/ANN_interp_E_yy.csv',0);
+csvwrite(outname,Ygrid);
+outname = sprintf('./out%i/ANN_interp_Theta.csv',0);
+csvwrite(outname,Zgrid);
+outname = sprintf('./out%i/ANN_interp_Rho.csv',0);
+csvwrite(outname,rhoExperimental);
+
+Xq=100000*0.6;
+Yq=100000*0.4;
+Zq=0;
+Vq = interp3(Xgrid,Ygrid,Zgrid,rhoExperimental,Xq,Yq,Zq);
+
+fprintf('InterpValue = %f',Vq);
 
 % % Plot the current work
 % o=Optimizer;
@@ -208,7 +266,7 @@ for jjjj = [0.05 0.1 0.2 0.3]
 
         dividedByValue = experimental/annValue;
         if(dividedByValue<lowerV ||dividedByValue>upperV)
-            fprintf('%i Exx %f Eyy %f Theta %f rho %f AnnRho %f \n',i, x(1,i), x(2,i), x(3,i),experimental,annValue)
+           % fprintf('%i Exx %f Eyy %f Theta %f rho %f AnnRho %f \n',i, x(1,i), x(2,i), x(3,i),experimental,annValue)
             ExxArrayV2=[ExxArrayV2 x(1,i)];
             EyyArrayV2=[EyyArrayV2 x(2,i)];
             thetaArrayV2=[thetaArrayV2 x(3,i)];
@@ -242,6 +300,7 @@ for jjjj = [0.05 0.1 0.2 0.3]
     xlabel('Exx');
     ylabel('Eyy');
     zlabel('Theta');
+    axis([0 maxExx 0 maxExx 0 pi/4]);
 
     nameGraph2 = sprintf('./annDoNotFitWellErrorMoreThan%i.png',jjjj*100);
     print(nameGraph2,'-dpng');

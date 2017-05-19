@@ -30,6 +30,8 @@ config.mode =65;
 
 % 100 = Single meso design for MPI parallelization
 % 110 = TESTING MESO design methods
+% 111 = Validate Meso (generate Targets)
+% 112 = Read the meso design information and compute validation metrics
 
 % 200, Plot the objectives and constraints over several iteraions
 % 201, make an .stl file for an iteration.
@@ -80,6 +82,27 @@ end
 if(config.mode ==110) % meso-structure design
     DV = DesignVars(config);
     TestMesoDesign(DV,config,matProp);
+    return;
+end
+
+%% ---------------------------------------------
+%          Validate Meso (generate Targets), MODE = 111        
+% ---------------------------------------------
+if(config.mode ==111) 
+    DV = DesignVars(config);
+    GenerateMesoValidationTargets(DV,config,matProp);
+    return;
+end
+
+%% ---------------------------------------------
+%         Read the meso design information, MODE = 112
+%        and compute validation metrics 
+% ---------------------------------------------
+if(config.mode ==112) 
+    DV = DesignVars(config);
+    fprintf('compute Meso Design Metrics... Not implemented\n');
+      GenerateRhoFunctionOfExxEyy(config)
+   % ComputeMesoDesignMetrics(DV,config,matProp);
     return;
 end
 
@@ -167,7 +190,7 @@ DV.Eyy = DV.Exx ;
         DV.Eyy = DV.Exx ;
  end
  
-%  opt.GenerateInterpolateANN(DV.ResponseSurfaceCoefficents,config,matProp);
+%  opt=opt.GenerateInterpolateANN(DV.ResponseSurfaceCoefficents,config,matProp);
 
 % --------------------------------
 % Run FEA, to get started.
@@ -190,7 +213,7 @@ if(macroDesignMode==1)
             % --------------------------------
             DV = DV.RunFEAs(config, matProp, masterloop);
             FEACalls = FEACalls+1;
-            DV= DV.CalculateObjectiveValue(config, matProp, masterloop);
+            DV= DV.CalculateObjectiveValue(config, matProp, masterloop,opt);
             DV = DV.CalculateVolumeFractions(config, matProp) ;
             DV = AddDataToStoreOptimizationVarArray(DV);
             ShowOptimizerProgress(DV,1,' topology',FEACalls,config, matProp);
@@ -211,7 +234,7 @@ if(macroDesignMode==1)
             % --------------------------------
             %             DV = DV.RunFEAs(config, matProp, masterloop);
             %             FEACalls = FEACalls+1;
-            DV= DV.CalculateObjectiveValue(config, matProp, masterloop);
+            DV= DV.CalculateObjectiveValue(config, matProp, masterloop,opt);
             ShowOptimizerProgress(DV,1,' vol fraction',FEACalls,config, matProp);
             DV = AddDataToStoreOptimizationVarArray(DV);
             if( TestForTermaination(DV, config,masterloop) ==1)
@@ -235,7 +258,7 @@ if(macroDesignMode==1)
                     % --------------------------------
                     DV = DV.RunFEAs(config, matProp, masterloop);
                     FEACalls = FEACalls+1;
-                    DV= DV.CalculateObjectiveValue(config, matProp, masterloop);
+                    DV= DV.CalculateObjectiveValue(config, matProp, masterloop,opt);
                     DV = AddDataToStoreOptimizationVarArray(DV);
                     ShowOptimizerProgress(DV,1,' rotation',FEACalls,config, matProp);
                     
@@ -254,7 +277,7 @@ if(macroDesignMode==1)
                         DV = DV.RunFEAs(config, matProp, masterloop);
                         FEACalls = FEACalls+1;
             DV = DV.CalculateVolumeFractions(config, matProp) ;
-            DV= DV.CalculateObjectiveValue(config, matProp, masterloop);
+            DV= DV.CalculateObjectiveValue(config, matProp, masterloop,opt);
             DV = AddDataToStoreOptimizationVarArray(DV);
             ShowOptimizerProgress(DV,1,' E_xx and E_yy ',FEACalls,config, matProp);
         end % E_xx and E_yy Optimization

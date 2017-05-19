@@ -100,19 +100,19 @@ K_ff = K(Free,Free);
 % http://www.mathworks.com/help/distcomp/gpuarray.html
 % http://www.mathworks.com/matlabcentral/answers/63692-matlab-cuda-slow-in-solving-matrix-vector-equation-a-x-b
 
-if(config.useGPU ==1)
-    % GPU matrix solve.
-    K_ff_gpu = gpuArray(K_ff);
-    F_f_gpu = gpuArray(F_f1);
-    T_gpu = K_ff_gpu\F_f_gpu;
-    T1(Free) = gather(T_gpu);
-else
+% if(config.useGPU ==1)
+%     % GPU matrix solve.
+%     K_ff_gpu = gpuArray(K_ff);
+%     F_f_gpu = gpuArray(F_f1);
+%     T_gpu = K_ff_gpu\F_f_gpu;
+%     T1(Free) = gather(T_gpu);
+% else
     % normal matrix solve
     T1(Free) = K_ff \ F_f1;
     T2(Free) = K_ff \ F_f2;
     T3(Free) = K_ff \ F_f3;
     
-end
+% end
 
 u0=0;
 T1(Essential) = u0;

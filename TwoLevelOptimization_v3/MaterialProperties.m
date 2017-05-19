@@ -97,9 +97,9 @@ classdef MaterialProperties
                     end
                     
                     % --------------------
-                    % Average the 2 Ds (D_h and D_old
+                    %----------------- OLID [ Average the 2 Ds (D_h and                    %D_old]
                     % --------------------
-                    D = (D_h+D_old)/2;
+                    D = D_h ; %(D_h+D_old)/2;
                     
                     
                     D_flat = reshape(D,1,9);

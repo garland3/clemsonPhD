@@ -3,110 +3,155 @@ function  macroEleProps = GetMacroElementPropertiesFromCSV(config,e)
 % constraints I need
 % 1. Topology var. Tells me if I need to make a new design or not. DONE
 % 2. XY position map, DONE
-% 3. D_system matrix for each element in the macro design. 
+% 3. D_system matrix for each element in the macro design.
 % 4. Displacement field. So that I can calculate the strain on each. DONE
-% element. 
+% element.
 
 
-
-mm_iteration = config.macro_meso_iteration;
-macroEleProps = macroElementProp;
-macroEleProps.elementNumber = e;
-
-folderNum = config.iterationNum;
-
-% Get element->node mapping
-outname = sprintf('./out%i/elementNodeMap%i.csv',folderNum,mm_iteration);
-IEN = csvread(outname);
-
-% % Get displacement fields
-outname = sprintf('./out%i/displacement%i.csv',folderNum,mm_iteration);
-U =  csvread(outname);
-
-
-% -----------------------------------
-%
-% 1 element per design var case on macro level
-%
-% -----------------------------------
-% if(config.doUseMultiElePerDV~=1) % if elements per design var.
-
-% GET the saved element to XY position map (needed for x and w vars retrival)
-outname = sprintf('./out%i/elementXYposition%i.csv',folderNum,mm_iteration);
-elementXYposition=csvread(outname);
-results = elementXYposition(macroEleProps.elementNumber,:);
-macroEleProps.yPos = results(1);
-macroEleProps.xPos = results(2);
-
-% Get the density field
-outname = sprintf('./out%i/SIMPdensityfield%i.csv',folderNum,mm_iteration);
-x = csvread(outname);
-macroEleProps.densitySIMP = x(macroEleProps.yPos,macroEleProps.xPos );
-
-% Get the Exx field
-outname = sprintf('./out%i/ExxValues%i.csv',folderNum,mm_iteration);
-ExxMacro = csvread(outname);
-macroEleProps.Exx = ExxMacro(macroEleProps.yPos,macroEleProps.xPos );
-
-% Get the Eyy field
-outname = sprintf('./out%i/EyyValues%i.csv',folderNum,mm_iteration);
-EyyMacro =csvread(outname);
-macroEleProps.Eyy = EyyMacro(macroEleProps.yPos,macroEleProps.xPos );
-
-% Get the Theta field
-outname = sprintf('./out%i/ThetaValues%i.csv',folderNum,mm_iteration);
-ThetaMacro = csvread(outname);
-macroEleProps.theta = ThetaMacro(macroEleProps.yPos,macroEleProps.xPos );
-
-w=1;
-matProp=MaterialProperties;
-  D= matProp.getDmatMatrixTopExxYyyRotVars(config,macroEleProps.densitySIMP ,macroEleProps.Exx, macroEleProps.Eyy,macroEleProps.theta ,w);
-
-% outname = sprintf('./out%i/DsystemIter%i_Element_%i.csv',folderNum,mm_iteration,e);
-% D = csvread(outname);
-macroEleProps.D_sys =D;
-
-if(macroEleProps.densitySIMP>config.noNewMesoDesignDensityCutOff)
+if(config.validationModeOn==0)    
+    % ----------------------------------------------    
+    %
+    %      Normal Multiscale optimization 
+    % 
+    % ----------------------------------------------
     
-    nodes1=  IEN(e,:);
-    macroEleProps.elementNodes=nodes1;
-    xNodes = nodes1*2-1;
-    yNodes = nodes1*2;
-    dofNumbers = [xNodes(1) yNodes(1) xNodes(2) yNodes(2) xNodes(3) yNodes(3) xNodes(4) yNodes(4)];
+    mm_iteration = config.macro_meso_iteration;
+    macroEleProps = macroElementProp;
+    macroEleProps.elementNumber = e;
     
-    % plan for multi-loading cases.
-    [~, t2] = size(config.loadingCase);
-    for loadcaseIndex = 1:t2
-        utemp = U(loadcaseIndex,:);
-        u_local =   utemp(dofNumbers);
+    folderNum = config.iterationNum;
+    
+    % Get element->node mapping
+    outname = sprintf('./out%i/elementNodeMap%i.csv',folderNum,mm_iteration);
+    IEN = csvread(outname);
+    
+    % % Get displacement fields
+    outname = sprintf('./out%i/displacement%i.csv',folderNum,mm_iteration);
+    U =  csvread(outname);
+    
+    % -----------------------------------
+    %
+    % 1 element per design var case on macro level
+    %
+    % -----------------------------------
+    % GET the saved element to XY position map (needed for x and w vars retrival)
+    outname = sprintf('./out%i/elementXYposition%i.csv',folderNum,mm_iteration);
+    elementXYposition=csvread(outname);
+    results = elementXYposition(macroEleProps.elementNumber,:);
+    macroEleProps.yPos = results(1);
+    macroEleProps.xPos = results(2);
+    
+    % Get the density field
+    outname = sprintf('./out%i/SIMPdensityfield%i.csv',folderNum,mm_iteration);
+    x = csvread(outname);
+    macroEleProps.densitySIMP = x(macroEleProps.yPos,macroEleProps.xPos );
+    
+    % Get the Exx field
+    outname = sprintf('./out%i/ExxValues%i.csv',folderNum,mm_iteration);
+    ExxMacro = csvread(outname);
+    macroEleProps.Exx = ExxMacro(macroEleProps.yPos,macroEleProps.xPos );
+    
+    % Get the Eyy field
+    outname = sprintf('./out%i/EyyValues%i.csv',folderNum,mm_iteration);
+    EyyMacro =csvread(outname);
+    macroEleProps.Eyy = EyyMacro(macroEleProps.yPos,macroEleProps.xPos );
+    
+    % Get the Theta field
+    outname = sprintf('./out%i/ThetaValues%i.csv',folderNum,mm_iteration);
+    ThetaMacro = csvread(outname);
+    macroEleProps.theta = ThetaMacro(macroEleProps.yPos,macroEleProps.xPos );
+    
+    w=1;
+    matProp=MaterialProperties;
+    D= matProp.getDmatMatrixTopExxYyyRotVars(config,macroEleProps.densitySIMP ,macroEleProps.Exx, macroEleProps.Eyy,macroEleProps.theta ,w);
+    
+    % outname = sprintf('./out%i/DsystemIter%i_Element_%i.csv',folderNum,mm_iteration,e);
+    % D = csvread(outname);
+    macroEleProps.D_sys =D;
+    
+    if(macroEleProps.densitySIMP>config.noNewMesoDesignDensityCutOff)
+        nodes1=  IEN(e,:);
+        macroEleProps.elementNodes=nodes1;
+        xNodes = nodes1*2-1;
+        yNodes = nodes1*2;
+        dofNumbers = [xNodes(1) yNodes(1) xNodes(2) yNodes(2) xNodes(3) yNodes(3) xNodes(4) yNodes(4)];
         
-        %         offsetX = mean(u_local([1 3 5 7]));
-        %         offsetY = mean(u_local([2 4 6 8]));
-        offsetX = u_local(7);
-        offsetY = u_local(8);
-        u_local([1 3 5 7]) = u_local([1 3 5 7])-offsetX;
-        u_local([2 4 6 8]) = u_local([2 4 6 8])-offsetY;
-        macroEleProps.disp(loadcaseIndex,:)  = u_local;
-    end
-    
-    %     macroEleProps.elementNumber
-    
-    
-    % % Get the volume fraction field (but only if using the old method)
-    if(config.useExxEyy~=1)
-        outname = sprintf('./out%i/volfractionfield%i.csv',folderNum,mm_iteration);
-        w = csvread(outname);
-        macroEleProps.material1Fraction = w(macroEleProps.yPos,macroEleProps.xPos );
+        % plan for multi-loading cases.
+        [~, t2] = size(config.loadingCase);
+        for loadcaseIndex = 1:t2
+            utemp = U(loadcaseIndex,:);
+            u_local =   utemp(dofNumbers);
+            
+            %         offsetX = mean(u_local([1 3 5 7]));
+            %         offsetY = mean(u_local([2 4 6 8]));
+            offsetX = u_local(7);
+            offsetY = u_local(8);
+            u_local([1 3 5 7]) = u_local([1 3 5 7])-offsetX;
+            u_local([2 4 6 8]) = u_local([2 4 6 8])-offsetY;
+            macroEleProps.disp(loadcaseIndex,:)  = u_local;
+        end
+        
+        % % Get the volume fraction field (but only if using the old method)
+        if(config.useExxEyy~=1)
+            outname = sprintf('./out%i/volfractionfield%i.csv',folderNum,mm_iteration);
+            w = csvread(outname);
+            macroEleProps.material1Fraction = w(macroEleProps.yPos,macroEleProps.xPos );
+        else
+            macroEleProps.material1Fraction = 1; % set to 1 as a place holder
+        end
     else
-         macroEleProps.material1Fraction = 1; % set to 1 as a place holder
+        fprintf('SIMP density is below threshold\n');
     end
-
-
-    % Get the target density
-%     outname = sprintf('./out%i/TargetMesoDensities%i.csv',folderNum,mm_iteration);
-%     TargetMesoDensities=csvread(outname);
-%     macroEleProps.targetDensity=TargetMesoDensities(e);
+elseif(config.validationModeOn==1)
+    % -----------------------------------
+    %
+    %       Validation problem for meso designs.
+    %
+    % -----------------------------------
+    folderNum=0;
+    mm_iteration=1;
+    % read the Exx field
+    outname = sprintf('./out%i/ExxValues%i.csv',folderNum,mm_iteration);
+    ExxValues= csvread(outname);
     
+    % read the Eyy field
+    outname = sprintf('./out%i/EyyValues%i.csv',folderNum,mm_iteration);
+    EyyValues= csvread(outname);
+    
+    % read the Theta field
+    outname = sprintf('./out%i/ThetaValues%i.csv',folderNum,mm_iteration);
+    ThetaValues=csvread(outname);
+    
+    Exx=ExxValues(e);
+    Eyy=EyyValues(e);
+    theta=ThetaValues(e);
+    
+    macroEleProps = macroElementProp;
+    macroEleProps.elementNumber = e;
+    macroEleProps.yPos =1;
+    macroEleProps.xPos = e;
+    macroEleProps.material1Fraction=1;
+    macroEleProps.disp=ones(1,8);
+    
+    
+    macroEleProps.densitySIMP = 1;
+    macroEleProps.Exx =Exx;
+    macroEleProps.Eyy =Eyy;
+    macroEleProps.theta=theta;
+    
+    
+    w=1;
+    matProp=MaterialProperties;
+    D= matProp.getDmatMatrixTopExxYyyRotVars(config,macroEleProps.densitySIMP ,macroEleProps.Exx, macroEleProps.Eyy,macroEleProps.theta ,w);
+    
+    % outname = sprintf('./out%i/DsystemIter%i_Element_%i.csv',folderNum,mm_iteration,e);
+    % D = csvread(outname);
+    macroEleProps.D_sys =D;
+    
+    
+    
+end
+
 end
 
 % else

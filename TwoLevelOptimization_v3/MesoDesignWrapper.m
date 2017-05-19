@@ -5,9 +5,9 @@ macroElementProperties = GetMacroElementPropertiesFromCSV(config,e);
 disp(['Meso Design #: ' sprintf('%4i',macroElementProperties.elementNumber  ) ' of ' sprintf('%4i',ne ) ...
     ' position X = '  sprintf('%4i',macroElementProperties.xPos) ' Y = ' sprintf('%4i',macroElementProperties.yPos) ...
       ' MesoMacro Iteration =  ' sprintf('%4i', config.macro_meso_iteration) ]);
-scalePlot = 1;
-coord(:,1) = [0 1 1 0];
-coord(:,2)  = [0 0 1 1];
+% scalePlot = 1;
+% coord(:,1) = [0 1 1 0];
+% coord(:,2)  = [0 0 1 1];
 
 % ----------------------------------------------
 % Check Density
@@ -24,26 +24,26 @@ if(macroElementProperties.densitySIMP>config.noNewMesoDesignDensityCutOff)
         config.doPlotAppliedStrain = 0; plottingMesoDesign = 0;    plotting = 0; % this was for debugging
     end
     
-    if(plotting ==1)
-        figure(1)
-        [~, t2] = size(config.loadingCase);
-        for loadcaseIndex = 1:t2
-            % utemp = U(loadcaseIndex,:);
-            U2 = macroElementProperties.disp(loadcaseIndex,:)*scalePlot;
-            coordD = zeros(5,2);
-            for temp = 1:4
-                coordD(temp,1) =  coord(temp,1)+ U2(2*temp-1); % X value
-                coordD(temp,2) =  coord(temp,2)+ U2(2*temp); % Y value
-            end
-            coord2 = coord;
-            coordD(5,:) = coordD(1,:) ;
-            coord2(5,:) = coord2(1,:);
-            subplot(2,2*t2,2*loadcaseIndex-1);
-            plot(coordD(:,1),coordD(:,2), '-b',coord2(:,1),coord2(:,2), '-g');
-            axis([-0.3 1.3 -0.3 1.3])
-            axis square
-        end
-    end
+%     if(plotting ==1)
+%         figure(1)
+%         [~, t2] = size(config.loadingCase);
+%         for loadcaseIndex = 1:t2
+%             % utemp = U(loadcaseIndex,:);
+%             U2 = macroElementProperties.disp(loadcaseIndex,:)*scalePlot;
+%             coordD = zeros(5,2);
+%             for temp = 1:4
+%                 coordD(temp,1) =  coord(temp,1)+ U2(2*temp-1); % X value
+%                 coordD(temp,2) =  coord(temp,2)+ U2(2*temp); % Y value
+%             end
+%             coord2 = coord;
+%             coordD(5,:) = coordD(1,:) ;
+%             coord2(5,:) = coord2(1,:);
+%             subplot(2,2*t2,2*loadcaseIndex-1);
+%             plot(coordD(:,1),coordD(:,2), '-b',coord2(:,1),coord2(:,2), '-g');
+%             axis([-0.3 1.3 -0.3 1.3])
+%             axis square
+%         end
+%     end
     
     % ------------------------------------------------------
     % Generate the Design Vars for the Meso Optimization
