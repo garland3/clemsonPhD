@@ -69,7 +69,7 @@ if(config.validationModeOn==0)
     % D = csvread(outname);
     macroEleProps.D_sys =D;
     
-    if(macroEleProps.densitySIMP>config.noNewMesoDesignDensityCutOff)
+    if(macroEleProps.densitySIMP>config.noNewMesoDesignDensityCutOff ||config.multiscaleMethodCompare==1)
         nodes1=  IEN(e,:);
         macroEleProps.elementNodes=nodes1;
         xNodes = nodes1*2-1;

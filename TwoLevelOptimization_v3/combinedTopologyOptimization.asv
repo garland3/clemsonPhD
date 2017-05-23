@@ -447,9 +447,8 @@ end
 % --------------------------------------------------------
 function []= GenerateCompleteStructureV2Improved(config)
 
-
+if(
 postProcess = 1;
-
 close all
 p = plotResults;
 

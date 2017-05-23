@@ -35,7 +35,7 @@ close all
 % test meso design for element 1, macro iteration 1
 %    combinedTopologyOptimization('1', '1', '1','100', '781');
 %          combinedTopologyOptimization('1', '1', '1','100', '10');
-%           combinedTopologyOptimization('1', '1', '1','100', '107');
+%           combinedTopologyOptimization('1', '1', '1','100', '2');
 nelx= 15;
 nely = 15;
 totale=nelx*nely;
@@ -61,17 +61,17 @@ numloops = 5;
 %
 %   combinedTopologyOptimization('1', '1',numloops,'12', 'na');
 
-%  combinedTopologyOptimization('1', '1','1', '1','na' ); % macro homogenizattion   
+
 % ---------------------------------
 % multiscale compare loop
 % ---------------------------------
-for i = 1:5
-%      combinedTopologyOptimization('1', '1',int2str(i), '1','na' ); % macro homogenizattion    
-%   
-%     for j = 1:225      
-%         combinedTopologyOptimization('1', '1',int2str(i), '100',int2str(j)); % meso level 
-%     end
-       combinedTopologyOptimization('1', '1',int2str(i), '202','na' ); % make complete structure 
+for i = 1:100
+    combinedTopologyOptimization('1', '1',int2str(i), '1','na' ); % macro homogenizattion    
+  
+    for j = 1:225      
+        combinedTopologyOptimization('1', '1',int2str(i), '100',int2str(j)); % meso level 
+    end
+      combinedTopologyOptimization('1', '1',int2str(i), '1','na' ); % macro homogenizattion    
 end
 % combinedTopologyOptimization('1', '1', int2str(i),'112', 'na'); % evalute meso design metrics.
 

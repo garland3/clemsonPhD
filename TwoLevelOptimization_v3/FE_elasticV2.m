@@ -247,7 +247,7 @@ for e = 1:ne
 %     K(NodeNumbers,NodeNumbers) = K(NodeNumbers,NodeNumbers) + DV.x(y,x)^config.penal*ke;
 
       % KE = matProp.getKMatrixUseTopGradOrthoDistrRotVars(config,DV.x(y,x),DV.w(y,x),DV.d(y,x),DV.t(y,x));
-      KE = matProp.getKMatrixTopExxYyyRotVars(config,DV.x(y,x),DV.Exx(y,x), DV.Eyy(y,x),DV.t(y,x),DV.w(y,x));
+      KE = matProp.getKMatrixTopExxYyyRotVars(config,DV.x(y,x),DV.Exx(y,x), DV.Eyy(y,x),DV.t(y,x),DV.w(y,x),e);
       K(NodeNumbers,NodeNumbers) = K(NodeNumbers,NodeNumbers) + KE;
     
 %     if(config.addThermalExpansion ==1)

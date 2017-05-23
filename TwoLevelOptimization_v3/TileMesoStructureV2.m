@@ -19,6 +19,8 @@ numTilesX=mesoSettings.numTilesX;
 numTilesY = mesoSettings.numTilesY;
 
 
+
+
 % preform the logic tests  to see if we need to add material or remove
 % material for the post processing.
 cut_topLeft = 0;
@@ -46,6 +48,35 @@ yDown=yCurrent-1;
 %
 % densityxLeft= xx(yCurrent, xLeft);
 % densityxRight= xx(yCurrent, xRight);
+
+if(macroSettings.multiscaleMethodCompare==1)
+    nelxTile = mesoSettings.nelx *(mesoSettings.numTilesX+add_left+add_right );
+    nelyTile = mesoSettings.nely *(mesoSettings.numTilesY+add_top+add_bottom );
+    yShift = (macroElementProps.yPos-1)*mesoSettings.nely*numTilesY+1-(mesoSettings.nely*add_bottom);
+    xShift = (macroElementProps.xPos-1)*mesoSettings.nelx*numTilesX+1-(mesoSettings.nelx*add_left);
+    
+    % --------------------------------------------------
+    % Generate the actual tiled matrix
+    % --------------------------------------------------
+    tiledDensity = zeros(nelyTile,nelxTile);
+    % ZeroRegions = ones(nelyTile,nelxTile);
+    
+    % count = 1;
+    for i = 1:nelyTile  % y
+        for j= 1:nelxTile % x
+            
+            microY = mod(i-1,mesoSettings.nely)+1;
+            microX = mod(j-1,mesoSettings.nelx)+1;
+            tiledDensity(i,j) = DVMeso.x(microY,microX);
+        end
+    end
+    
+    
+    ybounds = yShift:(yShift+nelyTile-1);
+    xbounds = xShift:(xShift+nelxTile-1);
+    completeStruct(ybounds,xbounds)= completeStruct(ybounds,xbounds)+tiledDensity;
+    return;
+end
 
 
 % -----------------------------

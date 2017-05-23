@@ -3,38 +3,40 @@
 #include <unistd.h>
 #include<stdlib.h>
 #include <time.h>
+#include <string.h>
 
 #define TRUE 1
 #define FALSE 0
+#define TERMINATION_TAG 123456789 
 #define MASTER_RANK 0
 #define SUB_MASTER_RANK 1
 #define SUB_SUB_MASTER_RANK 2
 #define NUM_MACRO_MESO_ITER 11 // 3,5,11
 #define START_MACRO_MESO_ITER 1 // 1
 
-#define NELX_MACRO  30 // 30 // 1331 
-#define NELY_MACRO 15 //15 // 1
+//#define NELX_MACRO  15 // 30 // 1331 
+//#define NELY_MACRO 15 //15 // 1
 
-#define MODE 1 //1 = Multscale optimization 2. Meso Validation
+#define MODE 3 //1 = Multscale optimization 2. Meso Validation 3.  multiscaleMethodCompare
 
 
 int callMatlab(int mode, int macro_meso_iteration, int element);
 int MultiscaleMasterNode( int macro_meso_iteration , int pool_size , int my_rank);
 int MesoValidationMasterNode(int macro_meso_iteration,int pool_size,int my_rank );
 
+ int DetermineNumberOfElements(int macro_meso_iteration,int folderNumber );
+
+
+
 int main ( int argc, char **argv )
-{
+{    
    int pool_size, my_rank, destination;
    int i_am_the_master = FALSE; 
-   int nelm; //Number of elements
-  
- 
-  
+   int nelm; //Number of elements 
    MPI_Status status;
-   int terminateTag;
     FILE *log_file;
-	
 	int sender;
+    int maxMacroMesoIterationCount;   
    
    // For each macro loop 
    // run macro level on master
@@ -45,21 +47,29 @@ int main ( int argc, char **argv )
    
    MPI_Init(&argc, &argv);
    MPI_Comm_size(MPI_COMM_WORLD, &pool_size);
-   MPI_Comm_rank(MPI_COMM_WORLD, &my_rank);
+   MPI_Comm_rank(MPI_COMM_WORLD, &my_rank);   
+ 
+  
    
-   nelm = NELX_MACRO*NELY_MACRO;
-   terminateTag = nelm +10;
-   
-    if (my_rank == MASTER_RANK){
+     if (my_rank == MASTER_RANK){
 		i_am_the_master = TRUE;
 	}else {
 		 
-
-	   log_file = fopen ("/tmp/gustav_log", "w");
+	   log_file = fopen ("./log.txt", "w");
 	}
+    
+    //------------
+    // if Mode is validation, then only do 1 iteration. 
+    //------------
+    if(MODE==1 ){
+        maxMacroMesoIterationCount=NUM_MACRO_MESO_ITER;
+    }else if(MODE==2){
+         maxMacroMesoIterationCount=1;
+    } else if( MODE==3){
+        maxMacroMesoIterationCount=100;
+    }
    
-   
-   for (int k = START_MACRO_MESO_ITER;k<NUM_MACRO_MESO_ITER+1;k++){
+   for (int k = START_MACRO_MESO_ITER;k<maxMacroMesoIterationCount+1;k++){
      
         // -------------------------------------------------------
         //
@@ -67,7 +77,7 @@ int main ( int argc, char **argv )
         //
         // -------------------------------------------------------
         if (i_am_the_master) {
-            if(MODE==1){
+            if(MODE==1 || MODE==3){
                 MultiscaleMasterNode(k,pool_size,my_rank);
             }
             else if(MODE==2){
@@ -89,8 +99,8 @@ int main ( int argc, char **argv )
                 
                  // If we have more nodes than elements, then ignore nelm+1 nodes and have them do nothing
                  // they must still participate in the Barriers. 
-                if(my_rank<nelm+1)
-                {
+                //if(my_rank<nelm+1)
+                //{
                     
                     //MPI_Bcast(b, COLS, MPI_INT, MASTER_RANK, MPI_COMM_WORLD);
                     fprintf(log_file, "Got past the barrier as  work\n");
@@ -106,7 +116,7 @@ int main ( int argc, char **argv )
                     fflush(log_file);
                       
                     // While we keep getting new jobs. 
-                    while (status.MPI_TAG != terminateTag) { /* The job is not finished */
+                    while (status.MPI_TAG != TERMINATION_TAG) { /* The job is not finished */
                         
                          
                         // Run matlab code for element = elementNumber
@@ -123,15 +133,15 @@ int main ( int argc, char **argv )
                     }
                     printf( "process with rank %d exiting on  tag %d\n", my_rank,status.MPI_TAG);
                     //fflush(log_file);
-                } else{
-                      printf( "My rank is higher than max jobs needed. Rank = %d\n", my_rank);
-                }// end  if(my_rank<nel+1)
+              //  } else{
+                //      printf( "My rank is higher than max jobs needed. Rank = %d\n", my_rank);
+                //}// end  if(my_rank<nel+1)
                   
                 MPI_Barrier(MPI_COMM_WORLD); // force all to wait till all elements are finished
                    
                    
                    
-                if (my_rank == SUB_MASTER_RANK && MODE==1){
+                if (my_rank == SUB_MASTER_RANK && (MODE==1 || MODE==3)){
                      // --------------------------------------------
                     // 4. run the code to combine everything together
                     // --------------------------------------------
@@ -193,25 +203,31 @@ int callMatlab(int mode, int macro_meso_iteration, int element){
 // =============================================
 // ----------------------------------------------
 int MultiscaleMasterNode(int macro_meso_iteration,int pool_size,int my_rank ){
-    int  nelm = NELX_MACRO*NELY_MACRO;
-	int k=macro_meso_iteration;
-     struct timespec tim, tim2;
-   tim.tv_sec = 0;
-   tim.tv_nsec = 500000;
-   int sender, destination;
-    int terminateTag;
-     MPI_Status status;
-     
-      terminateTag = nelm +10;
+    int  nelm ;//= NELX_MACRO*NELY_MACRO;	
+    struct timespec tim, tim2;
+    tim.tv_sec = 0;
+    tim.tv_nsec = 500000;
+    int sender, destination; 
+     MPI_Status status;    
+
       
     // ----------------------------------------------
     // 1. run macro level on master
     // ----------------------------------------------
     // callMatlab(int mode, int macro_meso_iteration, int element)
-    printf("Master code running Macro Gradient Materail Optimization for Interation %d\n",k);
-    callMatlab(60,k, 1);
-    callMatlab(200,k, 1);
+    printf("Master code running Macro Gradient Materail Optimization for Interation %d\n",macro_meso_iteration);
+    
+    if( MODE==1){
+          callMatlab(60,macro_meso_iteration, 1);
+    } else if(MODE==3){
+         callMatlab(1,macro_meso_iteration, 1);
+    }
+  
+
+    callMatlab(200,macro_meso_iteration, 1);
     //sleep(1);
+    
+     nelm= DetermineNumberOfElements(macro_meso_iteration,0 );
     
     
     // -----------------
@@ -241,6 +257,10 @@ int MultiscaleMasterNode(int macro_meso_iteration,int pool_size,int my_rank ){
                 nanosleep(&tim , &tim2) ;// Matlab is giving me some weird Bus error. Maybe trying to read the same files all at the same time is
                   // causing issues? I'll slow down the process by making them 1 second apart. 
                   // https://stackoverflow.com/questions/7684359/how-to-use-nanosleep-in-c-what-are-tim-tv-sec-and-tim-tv-nsec
+             } else {
+                  MPI_Send(NULL, 0, MPI_INT, destination, TERMINATION_TAG, MPI_COMM_WORLD);
+                   printf("No more jobs. Terminated process %d with tag %d\n", destination, TERMINATION_TAG);
+                 
              }
          }
       }
@@ -277,8 +297,8 @@ int MultiscaleMasterNode(int macro_meso_iteration,int pool_size,int my_rank ){
                // ------------------------------------
               // If NO jobs, then send a termination messsage
               // ------------------------------------
-            MPI_Send(NULL, 0, MPI_INT, destination, terminateTag, MPI_COMM_WORLD);
-            printf("terminated process %d with tag %d, i value is %d\n", sender, terminateTag, i);
+            MPI_Send(NULL, 0, MPI_INT, destination, TERMINATION_TAG, MPI_COMM_WORLD);
+            printf("terminated process %d with tag %d, i value is %d\n", sender, TERMINATION_TAG, i);
          }
       }
       
@@ -286,14 +306,16 @@ int MultiscaleMasterNode(int macro_meso_iteration,int pool_size,int my_rank ){
         // Still need to wait, since all process must reach barrier
         // --------------------------------------------
         printf( "At position before Master Barrier\n");
-         MPI_Barrier(MPI_COMM_WORLD); // force all to wait till all elements are finished
+        MPI_Barrier(MPI_COMM_WORLD); // force all to wait till all elements are finished
          
         
         // --------------------------------------------
         // 5. Get all the Exx, Eyy, theta values from the D_sub matrixes. Save all in csv files. 
         // --------------------------------------------
-        printf("MASTER --> Get all the Exx, Eyy, theta values from the D_sub matrixes");			
-        callMatlab(203,k, 1);   
+        if( MODE==1){
+            printf("MASTER --> Get all the Exx, Eyy, theta values from the D_sub matrixes");			
+            callMatlab(203,macro_meso_iteration, 1);   
+        }
         
         return 1;
 
@@ -308,14 +330,14 @@ int MultiscaleMasterNode(int macro_meso_iteration,int pool_size,int my_rank ){
 // ----------------------------------------------
 int MesoValidationMasterNode(int macro_meso_iteration,int pool_size ,int my_rank){
 	int k = macro_meso_iteration;
-    int  nelm = NELX_MACRO*NELY_MACRO;
+    int  nelm ;//= NELX_MACRO*NELY_MACRO;
     struct timespec tim, tim2;
    tim.tv_sec = 0;
    tim.tv_nsec = 500000;
    int sender,destination;
-    int terminateTag;
+   // int terminateTag;
      MPI_Status status;
-      terminateTag = nelm +10;
+    // terminateTag =nelm+10;
       
     // ----------------------------------------------
     // 1. run macro level on master
@@ -323,6 +345,8 @@ int MesoValidationMasterNode(int macro_meso_iteration,int pool_size ,int my_rank
     // callMatlab(int mode, int macro_meso_iteration, int element)
     printf("Generate Targets for Meso Validation%d\n",k);
     callMatlab(111,k, 1);
+    
+    nelm= DetermineNumberOfElements(macro_meso_iteration,0 );
    
     
     
@@ -352,6 +376,9 @@ int MesoValidationMasterNode(int macro_meso_iteration,int pool_size ,int my_rank
                 nanosleep(&tim , &tim2) ;// Matlab is giving me some weird Bus error. Maybe trying to read the same files all at the same time is
                   // causing issues? I'll slow down the process by making them 1 second apart. 
                   // https://stackoverflow.com/questions/7684359/how-to-use-nanosleep-in-c-what-are-tim-tv-sec-and-tim-tv-nsec
+             } else{
+                  MPI_Send(NULL, 0, MPI_INT, destination, TERMINATION_TAG, MPI_COMM_WORLD);
+                  printf("terminated process %d with tag %d\n", sender, TERMINATION_TAG);
              }
          }
       }
@@ -388,8 +415,8 @@ int MesoValidationMasterNode(int macro_meso_iteration,int pool_size ,int my_rank
                // ------------------------------------
               // If NO jobs, then send a termination messsage
               // ------------------------------------
-            MPI_Send(NULL, 0, MPI_INT, destination, terminateTag, MPI_COMM_WORLD);
-            printf("terminated process %d with tag %d, i value is %d\n", sender, terminateTag, i);
+            MPI_Send(NULL, 0, MPI_INT, destination, TERMINATION_TAG, MPI_COMM_WORLD);
+            printf("terminated process %d with tag %d, i value is %d\n", sender, TERMINATION_TAG, i);
          }
       }
       
@@ -409,3 +436,44 @@ int MesoValidationMasterNode(int macro_meso_iteration,int pool_size ,int my_rank
         return 1;
 
 }
+
+int DetermineNumberOfElements(int macro_meso_iteration,int folderNumber ){
+   int bufSize = 10000;
+    char str[bufSize];
+    FILE * file;
+
+    char outname[200] ;
+   
+  
+    sprintf(outname,"./out%i/SIMPdensityfield%i.csv",folderNumber,macro_meso_iteration);
+   //  sprintf(outname,"../out%i/SIMPdensityfield%i.csv",folderNumber,macro_meso_iteration);
+    file = fopen( outname, "r");
+    int rowCount = 0;
+    int commaCount=0;
+    
+    if (file) {
+        while (fscanf(file, "%s", str)!=EOF){
+            int charCount = strlen(str);
+            rowCount++;
+             printf("rowCount %i : %s\n",rowCount, str);
+             
+             if(rowCount==1){
+                for(int m=0; m<charCount; m++) {
+                    char temp = str[m];
+                    if(temp== ',') {
+                        commaCount++;
+                    } 
+                }
+             }
+        }
+           
+        fclose(file);
+    } else {
+        printf("Error reading file\n");
+    }
+    
+    printf("Row Count = %i, Comma Count = %i, total Values = %i\n",rowCount,commaCount,rowCount*(commaCount+1));
+    
+    return commaCount,rowCount*(commaCount+1);
+	
+}  

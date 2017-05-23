@@ -1,13 +1,13 @@
 function [x]= GetMesoUnitCellDesignFromCSV(settings,elementNumber)
 
-% save the density field
+% Get the density field
 folderNum= settings.iterationNum;
 outname = sprintf('./out%i/densityfield%iforElement%i.csv',folderNum,settings.macro_meso_iteration,elementNumber);
 
 if exist(outname, 'file') == 2
 x=csvread(outname);
 else
-    fprintf('Error Getting Elemeent %i\n',elementNumber);
+    fprintf('Error Getting Element %i: %s\n',elementNumber,outname);
     x = zeros(settings.nelyMeso,settings.nelxMeso);
 end
 

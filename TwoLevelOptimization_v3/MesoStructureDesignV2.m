@@ -72,7 +72,14 @@ DVmeso =  DVmeso.CalcNodeLocationMeso(mesoConfig);
 % y=macroElemProps.Eyy/matProp.E_material1;
 % mesoConfig.totalVolume= min( p00 + p10*x + p01*y + p20*x^2 + p11*x*y + p02*y^2,1); % estimate the target density
 
+DVmeso= DVmeso.GenerateMesoStructureCoordinationMask(mesoConfig,macroElemProps);
+
 mesoConfig.totalVolume=0.5;
+
+ if(mesoConfig.multiscaleMethodCompare==1)
+    mesoConfig.totalVolume= macroElemProps.densitySIMP;
+    mesoConfig.penal=3; % macro level is 1, meso level is 3
+ end
 
 
 densityArray = 100;
@@ -89,22 +96,17 @@ pstrainOld=ones(3,1);
 
 
 counter = 1;
-volumeUpdateInterval = 12;
 % mesoConfig.totalVolume=0.5; % start at 50% density and go from there. 
 
-% --------------------
-% Use the old density and 
-% --------------------
-diffEtargetVolume=1;
-TargetCloseNess=0.03; % 1%
 
+diffEtargetVolume=1; % initilize this value. 
 % --------------------
 % Start pseudo strain loops
 % --------------------
 for mm = 1:mesoConfig.maxNumPseudoStrainLoop   
     
     temp=sum(abs(pstrain-pstrainOld));
-    if(temp<mesoConfig.PseudoStrainEndCriteria && mm>1 && abs(diffEtargetVolume)<TargetCloseNess)
+    if(temp<mesoConfig.PseudoStrainEndCriteria && mm>1 && abs(diffEtargetVolume)<mesoConfig.TargetECloseNess)
   
             
             temp2 = 'break becasue pseudo strain diff is small and volume target meet'       
@@ -124,112 +126,138 @@ for mm = 1:mesoConfig.maxNumPseudoStrainLoop
         [ DVmeso ,D_h, objective,muMatrix] = Homgenization(DVmeso, mesoConfig, matProp, macroElemProps,mesoLoop,old_muMatrix,penaltyValue);
         macroElemProps.D_subSys=D_h;
         
-        
-        % ------------------------------
-        % Update the pseudo strain
-        % ------------------------------
-        pstrain=macroElemProps.psuedoStrain;
-      
-        diffSys=macroElemProps.D_sys./macroElemProps.D_subSys;
-        damp =0.1;
-        temp = [diffSys(1,1) ;diffSys(2,2); diffSys(3,3)];
-        temp(3)=temp(3)*shearSign;
-        temp = temp/(sum(abs(temp)));
-        pstrain=pstrain+damp*temp;        
-        
-        pstrain=pstrain/(sum(sum(abs(pstrain))));        
-        macroElemProps.psuedoStrain=pstrain;
-        
-        % ------------------------------
-        % Update the volume constraint
-        % ------------------------------
-        counter=counter+1;
-        versionVolUpdate = 2;
-        if(mod(counter,volumeUpdateInterval)==1)
-            termByTermDivision = macroElemProps.D_sys./macroElemProps.D_subSys;
-            if(versionVolUpdate==1)               
-               diffEtargetVolume = -1+(termByTermDivision(1,1)+termByTermDivision(2,2))/2;
-            else    
-                if(macroElemProps.theta<pi/4)
-                    if(macroElemProps.Exx>macroElemProps.Eyy)
+        if(mesoConfig.multiscaleMethodCompare~=1)
+            % ------------------------------
+            % Update the pseudo strain
+            % ------------------------------
+            pstrain=macroElemProps.psuedoStrain;
 
-                            diffEtargetVolume = -1+termByTermDivision(1,1);
-                    else
-                             diffEtargetVolume = -1+termByTermDivision(2,2);
-                    end
-                else
-                     if(macroElemProps.Exx<macroElemProps.Eyy)
+            diffSys=macroElemProps.D_sys./macroElemProps.D_subSys;
+            damp =0.1;
+            temp = [diffSys(1,1) ;diffSys(2,2); diffSys(3,3)];
+            temp(3)=temp(3)*shearSign;
+            temp = temp/(sum(abs(temp)));
+            pstrain=pstrain+damp*temp;        
 
-                            diffEtargetVolume = -1+termByTermDivision(1,1);
+            pstrain=pstrain/(sum(sum(abs(pstrain))));        
+            macroElemProps.psuedoStrain=pstrain;
+
+            % ------------------------------
+            % Update the volume constraint
+            % ------------------------------
+            counter=counter+1;
+
+            if(mod(counter,mesoConfig.volumeUpdateInterval)==1)
+                termByTermDivision = macroElemProps.D_sys./macroElemProps.D_subSys;
+                if(mesoConfig.mesoVolumeUpdateMethod==1)               
+                   diffEtargetVolume = -1+(termByTermDivision(1,1)+termByTermDivision(2,2))/2;
+                else    
+                    if(macroElemProps.theta<pi/4)
+                        if(macroElemProps.Exx>macroElemProps.Eyy)
+
+                                diffEtargetVolume = -1+termByTermDivision(1,1);
+                        else
+                                 diffEtargetVolume = -1+termByTermDivision(2,2);
+                        end
                     else
-                             diffEtargetVolume = -1+termByTermDivision(2,2);
+                         if(macroElemProps.Exx<macroElemProps.Eyy)
+
+                                diffEtargetVolume = -1+termByTermDivision(1,1);
+                        else
+                                 diffEtargetVolume = -1+termByTermDivision(2,2);
+                        end
+
                     end
-                    
                 end
+
+
+                damp=0.25;
+                temp = diffEtargetVolume*damp;
+                maxChange = 0.1;
+                temp = max(min(temp,maxChange),-maxChange);
+                oldVolume =    mesoConfig.totalVolume;
+                newVolume=mesoConfig.totalVolume+temp;
+                minimumDensity=0.1;
+                mesoConfig.totalVolume=min(max(newVolume,minimumDensity),1);
+                ttttt=1;
+            end       
+
+
+            % ------------------------------
+            % Test for a converged design that is not changing. 
+            % ------------------------------
+
+            % test for convergeance of the x (density) values. Break out of
+            % loop if they are not changing. 
+            DiffX = oldX-DVmeso.x;
+            sumOfDiffX = sum(sum(abs(DiffX)));
+                  if(verboseOutput==1)
+              fprintf('%f \t%f \t %f and density %f, sumDiff %f\n',pstrain(1),pstrain(2),pstrain(3),      mesoConfig.totalVolume,sumOfDiffX);
+                  end
+              changeLimit = mesoConfig.nelx*mesoConfig.nely*0.002;
+            if(sumOfDiffX<changeLimit)
+                 if(verboseOutput==1)
+                  fprintf('Break in Meso design. X values are not changing. \n');
+                 end
+               break; 
+            end
+
+             oldX=  DVmeso.x;        
+
+            densityArray = [densityArray sum(sum(DVmeso.x))];       
+
+
+
+            % FILTERING OF SENSITIVITIES
+            [DVmeso.dc]   = DVmeso.check(mesoConfig.nelx,mesoConfig.nely,mesoConfig.rmin,DVmeso.x,DVmeso.dc);
+
+             DVmeso.dc= DVmeso.AddCoordinationMaskToSensitivies(mesoConfig,macroElemProps);
+
+            moveLimit=0.05;
+            [DVmeso.x] = OC(mesoConfig.nelx,mesoConfig.nely,DVmeso.x,mesoConfig.totalVolume,DVmeso.dc, DVmeso, mesoConfig,moveLimit);
+
+
+
+
+            
+        else
+            % ----------------------------------------------
+            % Multiscale compare algorithm
+            % ----------------------------------------------
+            [DVmeso.dc]   = DVmeso.check(mesoConfig.nelx,mesoConfig.nely,mesoConfig.rmin,DVmeso.x,DVmeso.dc);
+            moveLimit=0.05;
+            [DVmeso.x] = OC(mesoConfig.nelx,mesoConfig.nely,DVmeso.x,mesoConfig.totalVolume,DVmeso.dc, DVmeso, mesoConfig,moveLimit);
+            
+            DiffX = oldX-DVmeso.x;
+            changeLimit = mesoConfig.nelx*mesoConfig.nely*0.001;
+            sumOfDiffX = sum(sum(abs(DiffX)));
+            if(sumOfDiffX<changeLimit)
+                if(verboseOutput==1)
+                    fprintf('Break in Meso design. X values are not changing. \n');
+                end
+                break;
             end
             
-         
-            damp=0.25;
-            temp = diffEtargetVolume*damp;
-            maxChange = 0.1;
-            temp = max(min(temp,maxChange),-maxChange);
-            oldVolume =    mesoConfig.totalVolume;
-            newVolume=mesoConfig.totalVolume+temp;
-            minimumDensity=0.1;
-            mesoConfig.totalVolume=min(max(newVolume,minimumDensity),1);
-            ttttt=1;
-        end       
-                   
-      
-        % ------------------------------
-        % Test for a converged design that is not changing. 
-        % ------------------------------
-           
-        % test for convergeance of the x (density) values. Break out of
-        % loop if they are not changing. 
-        DiffX = oldX-DVmeso.x;
-        sumOfDiffX = sum(sum(abs(DiffX)));
-              if(verboseOutput==1)
-          fprintf('%f \t%f \t %f and density %f, sumDiff %f\n',pstrain(1),pstrain(2),pstrain(3),      mesoConfig.totalVolume,sumOfDiffX);
-              end
-          changeLimit = mesoConfig.nelx*mesoConfig.nely*0.002;
-        if(sumOfDiffX<changeLimit)
-             if(verboseOutput==1)
-              fprintf('Break in Meso design. X values are not changing. \n');
-             end
-           break; 
+            oldX=  DVmeso.x;
+            
         end
-        
-         oldX=  DVmeso.x;        
-    
-        densityArray = [densityArray sum(sum(DVmeso.x))];       
-     
-        
-        % FILTERING OF SENSITIVITIES
-        [DVmeso.dc]   = DVmeso.check(mesoConfig.nelx,mesoConfig.nely,mesoConfig.rmin,DVmeso.x,DVmeso.dc);
-        
-        moveLimit=0.05;
-        [DVmeso.x] = OC(mesoConfig.nelx,mesoConfig.nely,DVmeso.x,mesoConfig.totalVolume,DVmeso.dc, DVmeso, mesoConfig,moveLimit);
-        
-      
-        
         
         if(doPlot ==1)
-            figure(1)
-            subplot(2,1,1)
-            titleText = sprintf('meso design -> topology var Iter: %i',mesoLoop);
-            p.PlotArrayGeneric(DVmeso.x,titleText); % plot the results.
-          
-            drawnow
-        end
-        
-        
-        if recvid==1
-            drawnow
-            F(vid) = getframe(figure(1)); % %Get frame of the topology in each iteration
-            writeVideo(vidObj,F(vid)); %Save the topology in the video
-            vid=vid+1;
-        end
+                figure(1)
+                subplot(1,1,1)
+                titleText = sprintf('meso design -> topology var Iter: %i',mesoLoop);
+                p.PlotArrayGeneric(DVmeso.x,titleText); % plot the results.
+
+                drawnow
+            end
+
+
+            if recvid==1
+                drawnow
+                F(vid) = getframe(figure(1)); % %Get frame of the topology in each iteration
+                writeVideo(vidObj,F(vid)); %Save the topology in the video
+                vid=vid+1;
+            end
     end
 end
 % pstrain

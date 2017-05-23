@@ -11,6 +11,10 @@ csvwrite(outname,DV.IEN);
 outname = sprintf('./out%i/elementXYposition%i.csv',folderNum,mm_iteration);
 csvwrite(outname,DV.elementXYposition);
 
+% % % Save NodeToXYArrayMap
+% outname = sprintf('./out%i/NodeToXYArrayMap%i.csv',folderNum,mm_iteration);
+% csvwrite(outname,DV.NodeToXYArrayMap);
+
 
 % Save displacement field
 outname = sprintf('./out%i/displacement%i.csv',folderNum,mm_iteration);

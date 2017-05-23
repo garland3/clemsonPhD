@@ -140,11 +140,7 @@ classdef MaterialProperties
             if(config.validationModeOn==1)
                 if(config.macro_meso_iteration>1)
                  D_out= obj.GetSavedDMatrix(e);
-                 
-                 if(config.multiscaleMethodCompare==1)
-                     D_out=D_out*topDensity;
-                 end
-                 
+                 D_out=D_out*topDensity;
                 else
                       D_out = [ 1 obj.v 0;
                                 obj.v 1 0;

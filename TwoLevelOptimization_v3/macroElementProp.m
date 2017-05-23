@@ -15,7 +15,7 @@ classdef macroElementProp
         densitySIMP; % SIMP density of this macro element
         
         % dont' need these (at least I don't think so!!). 
-        material1Fraction; % the volume fraction of material 1 at this element
+        material1Fraction=1; % the volume fraction of material 1 at this element
         Exx;
         Eyy;
         theta;

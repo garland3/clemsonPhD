@@ -1,6 +1,6 @@
 #!/bin/bash
 #PBS -N mpi1
-#PBS -l select=30:ncpus=8:mpiprocs=8:mem=16gb,walltime=03:00:00
+#PBS -l select=64:ncpus=8:mpiprocs=4:mem=8gb,walltime=10:00:00
 #PBS -j oe
 
 source /etc/profile.d/modules.sh
@@ -28,38 +28,32 @@ dos2unix /scratch2/apg/version3/MPI_C_program/bankElementJobs.c
 mpicc /scratch2/apg/version3/MPI_C_program/bankElementJobs.c -o /scratch2/apg/version3/bank
 
 # compile the matlab code
-mcc -R -nodisplay -C  -m  combinedTopologyOptimization.m    Configuration.m DesignVars.m elementK_heat.m elK_elastic.m FE_elasticV2.m FindAvergeChangeOfLastValue.m freezeColors.m GenerateDesignVarsForMesoProblem.m GetMacroElementPropertiesFromCSV.m GetMesoUnitCellDesignFromCSV.m Homgenization.m macroElementProp.m MaterialProperties.m mesoAddAdjcentCellDataObject.m  MesoDesignWrapper.m MesoStructureDesignV2.m OC.m Optimizer.m parfor_progress.m plotResults.m  SaveMacroProblemStateToCSV.m SaveMesoUnitCellDesignToCSV.m   temperatureFEA_V3.m TestMesoDesign.m TileMesoStructure.m unfreezeColors.m  VideoManager.m GenerateMesoValidationTargets.m
+mcc -R -nodisplay -C  -m  combinedTopologyOptimization.m    Configuration.m DesignVars.m elementK_heat.m elK_elastic.m FE_elasticV2.m FindAvergeChangeOfLastValue.m freezeColors.m GenerateDesignVarsForMesoProblem.m GetMacroElementPropertiesFromCSV.m GetMesoUnitCellDesignFromCSV.m Homgenization.m macroElementProp.m MaterialProperties.m mesoAddAdjcentCellDataObject.m  MesoDesignWrapper.m MesoStructureDesignV2.m OC.m Optimizer.m parfor_progress.m plotResults.m  SaveMacroProblemStateToCSV.m SaveMesoUnitCellDesignToCSV.m   temperatureFEA_V3.m TestMesoDesign.m TileMesoStructure.m unfreezeColors.m  VideoManager.m GenerateMesoValidationTargets.m annOutput_matUpdateV2.m annOutput_matUpdateV1.m
 
 # weird that sometimes this folder causes problems
 #rm -R combinedTopologyOptimization_mcr
 
+echo 'Finished compiling'
+mpirun -np 256 --mca mpi_cuda_support 0 ./bank
 
-mpirun -np 240 ./bank
+echo 'Finished mpirun'
 #./bank
 
 #////   
-# // PBS -l select=58:ncpus=8:mpiprocs=8:mem=8gb:interconnect=10g,walltime=07:00:00
+
 # mpirun -np 460 ./bank
 
-#//PBS -l select=64:ncpus=8:mpiprocs=8:mem=8gb,walltime=03:00:00
-##PBS  -l select=30:ncpus=4:mpiprocs=4:mem=16gb,walltime=07:00:00
+
+#//PBS -l select=64:ncpus=8:mpiprocs=4:mem=8gb,walltime=10:00:00 # 2 GB ram per processor and 4 cpus per 2 mpi processes (mpirun 256)
+
+# ///#PBS -l select=3:ncpus=8:mpiprocs=4:mem=16gb,walltime=10:00:00 (mpirun 12)
 
 
 
-# use 10 cpus and 10 gb, becasue palmetto keeps killing my jobs becasue of not enough cpus
-# rm *.csv
-# bump up the resolution on the analysis code. 40 x20 at least.  (80 x40 would be better
-# make a folder to store the .csv files
-# clear previous data
-# compile the matlab code
-# loop from 1 1o 10
-# - make a new folder with the iterationNumber to export the .csv files to
-# - run the matlab code, accept in put args for the weights of the objectives. 
-# 
-# Note, request 12 cpus, so that each run can have its own cpu and we can run in parallel. 
-#mcc -R -nodisplay  -m  combinedTopologyOptimization.m Configuration.m DesignVars.m elastic_top.m  elementK_heat.m elK_elastic.m FE_elasticV2.m  MaterialProperties.m plotResults.m temperatureFEA_V3.m  
 
-#combinedTopologyOptimization('1','0.5','1')
+# // PBS -l select=58:ncpus=8:mpiprocs=8:mem=8gb:interconnect=10g,walltime=07:00:00 // interconnect speed not that imporant
+
+
 
 
 

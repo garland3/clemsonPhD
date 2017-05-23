@@ -194,7 +194,14 @@ for e = 1:ne
     
     % maximize the stiffness in the y direciton
     % designVars.dc(y,x) = -dH(2,2);
-    mode =5;
+    
+     if(config.multiscaleMethodCompare~=1)
+         % Normal case
+        mode =5;
+     else
+         % Multiscale compare case. 
+        mode =6;
+     end
     
     % ----------------------------------
     % Update the sensitiviy
@@ -203,7 +210,8 @@ for e = 1:ne
     % term can only contribute a fraction amount
     % mode 3 = mu and lagrangian term using augmented lagragian
     % mode 4 = mu and lagrangian terms where using a time step
-    % mode 5 = find equavilent epsilon (strain), then maximize strain
+    % mode 5 = psuedo strain method
+    % mode 6 = max strain energy using macro strains
     % energy
     % ----------------------------------
     if(mode ==1)
@@ -272,6 +280,12 @@ for e = 1:ne
 %           tempStrain = macroElemProps.psuedoStrain;
 %           tempStrain(3)=tempStrain(3)*-1;
 %            designVars.dc(y,x)  = -tempStrain'*dH*tempStrain+ designVars.dc(y,x) ;
+       
+
+    elseif(mode ==6)
+         for loadcaseIndex = 1:t2
+            designVars.dc(y,x)  = -macroElemProps.strain(:,loadcaseIndex)'*dH*macroElemProps.strain(:,loadcaseIndex)+ designVars.dc(y,x)  ;
+        end
         
     end
     

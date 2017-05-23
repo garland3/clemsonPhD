@@ -285,15 +285,8 @@ classdef DesignVars
                     % get the lambda value
                     outname = sprintf('./out%i/lambda%i.csv',folderNum,previousIterationNum);
                     obj.lambda1=csvread(outname);
-                elseif(config.mode==1 && config.multiscaleMethodCompare==1)
-                     folderNum = config.iterationNum;
-                    oldIteration = config.macro_meso_iteration-1;                    
-                    outnameX = sprintf('./out%i/SIMPdensityfield%i.csv',folderNum,oldIteration);
-                    obj.x = csvread(outnameX); % the "density" at each element
-                    
-                    
                 else
-                   fprintf('First iteration, no macro state vars to read');
+                    message = 'First iteration, no macro state vars to read';
                 end
             end
         end
@@ -947,7 +940,7 @@ classdef DesignVars
                     end
                     
                     % Calculate generic KE with 1 as the SIMP density
-                    e = obj.GetNodeNumberGivenXY(config, elx,ely);
+                    number = obj.GetNodeNumberGivenXY(config, x,y)
                     KEgeneric = matProp.getKMatrixTopExxYyyRotVars(config,1,obj.Exx(ely,elx), obj.Eyy(ely,elx),obj.t(ely,elx),obj.w(ely,elx),e);
                     % Calculate the elastic sensitivity!
                     KEsensitive = KEgeneric*config.penal*obj.x(ely,elx)^(config.penal-1);

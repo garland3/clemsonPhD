@@ -4,7 +4,7 @@ function  MesoDesignWrapper(config,e,ne,matProp)
 macroElementProperties = GetMacroElementPropertiesFromCSV(config,e);
 disp(['Meso Design #: ' sprintf('%4i',macroElementProperties.elementNumber  ) ' of ' sprintf('%4i',ne ) ...
     ' position X = '  sprintf('%4i',macroElementProperties.xPos) ' Y = ' sprintf('%4i',macroElementProperties.yPos) ...
-      ' MesoMacro Iteration =  ' sprintf('%4i', config.macro_meso_iteration) ]);
+    ' MesoMacro Iteration =  ' sprintf('%4i', config.macro_meso_iteration) ]);
 % scalePlot = 1;
 % coord(:,1) = [0 1 1 0];
 % coord(:,2)  = [0 0 1 1];
@@ -13,37 +13,37 @@ disp(['Meso Design #: ' sprintf('%4i',macroElementProperties.elementNumber  ) ' 
 % Check Density
 % Check if void we actually need to make a new design.
 % -----------------------------------------------
-if(macroElementProperties.densitySIMP>config.noNewMesoDesignDensityCutOff)
-   
+if(macroElementProperties.densitySIMP>config.noNewMesoDesignDensityCutOff || config.multiscaleMethodCompare==1)
+    
     % ------------------------------------------------------
     % Plot (only a few)
     % ------------------------------------------------------
-     if(mod(e,config.mesoplotfrequency) ==0)
+    if(mod(e,config.mesoplotfrequency) ==0)
         config.doPlotAppliedStrain = 1;  plottingMesoDesign = 1;  plotting = 1; % this was for debugging % this was for debugging
     else
         config.doPlotAppliedStrain = 0; plottingMesoDesign = 0;    plotting = 0; % this was for debugging
     end
     
-%     if(plotting ==1)
-%         figure(1)
-%         [~, t2] = size(config.loadingCase);
-%         for loadcaseIndex = 1:t2
-%             % utemp = U(loadcaseIndex,:);
-%             U2 = macroElementProperties.disp(loadcaseIndex,:)*scalePlot;
-%             coordD = zeros(5,2);
-%             for temp = 1:4
-%                 coordD(temp,1) =  coord(temp,1)+ U2(2*temp-1); % X value
-%                 coordD(temp,2) =  coord(temp,2)+ U2(2*temp); % Y value
-%             end
-%             coord2 = coord;
-%             coordD(5,:) = coordD(1,:) ;
-%             coord2(5,:) = coord2(1,:);
-%             subplot(2,2*t2,2*loadcaseIndex-1);
-%             plot(coordD(:,1),coordD(:,2), '-b',coord2(:,1),coord2(:,2), '-g');
-%             axis([-0.3 1.3 -0.3 1.3])
-%             axis square
-%         end
-%     end
+    %     if(plotting ==1)
+    %         figure(1)
+    %         [~, t2] = size(config.loadingCase);
+    %         for loadcaseIndex = 1:t2
+    %             % utemp = U(loadcaseIndex,:);
+    %             U2 = macroElementProperties.disp(loadcaseIndex,:)*scalePlot;
+    %             coordD = zeros(5,2);
+    %             for temp = 1:4
+    %                 coordD(temp,1) =  coord(temp,1)+ U2(2*temp-1); % X value
+    %                 coordD(temp,2) =  coord(temp,2)+ U2(2*temp); % Y value
+    %             end
+    %             coord2 = coord;
+    %             coordD(5,:) = coordD(1,:) ;
+    %             coord2(5,:) = coord2(1,:);
+    %             subplot(2,2*t2,2*loadcaseIndex-1);
+    %             plot(coordD(:,1),coordD(:,2), '-b',coord2(:,1),coord2(:,2), '-g');
+    %             axis([-0.3 1.3 -0.3 1.3])
+    %             axis square
+    %         end
+    %     end
     
     % ------------------------------------------------------
     % Generate the Design Vars for the Meso Optimization
@@ -51,28 +51,36 @@ if(macroElementProperties.densitySIMP>config.noNewMesoDesignDensityCutOff)
     [DVmeso, configMeso] = GenerateDesignVarsForMesoProblem(config,macroElementProperties.elementNumber ,macroElementProperties);
     
     % ----------------------------------
-    % Actual Meso Design. 
+    % Actual Meso Design.
     % ----------------------------------
     [DVmeso,macroElementProperties,configMeso.totalVolume]= MesoStructureDesignV2(matProp,configMeso,DVmeso,macroElementProperties,[]);
     
-   
-    macroElementProperties.D_subSys  % Show the new D found by the design. 
- %   Diff_Sys_Sub =  (macroElementProperties.D_subSys- macroElementProperties.D_sys);
-%     Diff_Sys_Sub
-    macroElementProperties.D_sys
-%     determinDiff = det(Diff_Sys_Sub);
-%     determinDiff
-    SysDividedbySubSysstem = macroElementProperties.D_sys./macroElementProperties.D_subSys;
-     SysDividedbySubSysstem
-    
-%      systemDiff =  macroElementProperties.D_sys-macroElementProperties.D_subSys;
-%     systemDiff
+    if(configMeso.multiscaleMethodCompare~=1)
+        macroElementProperties.D_subSys  % Show the new D found by the design.
+        %   Diff_Sys_Sub =  (macroElementProperties.D_subSys- macroElementProperties.D_sys);
+        %     Diff_Sys_Sub
+        macroElementProperties.D_sys
+        %     determinDiff = det(Diff_Sys_Sub);
+        %     determinDiff
+        SysDividedbySubSysstem = macroElementProperties.D_sys./macroElementProperties.D_subSys;
+        SysDividedbySubSysstem
+        
+        %      systemDiff =  macroElementProperties.D_sys-macroElementProperties.D_subSys;
+        %     systemDiff
+    end
     
     newDesign = 1;
     if(plottingMesoDesign ==1)
         p = plotResults;
         figure(1)
-        subplot(2,2,2);
+        
+        if(configMeso.coordinateMesoBoundaries==1 && configMeso.macro_meso_iteration>1)
+            subplot(1,2,1);
+            p.PlotArrayGeneric(DVmeso.mesoStructNTCmask,'NTC  sensitivity mask');
+            
+        end
+        
+        subplot(1,2,2);
         outname = sprintf('meso structure for macro element %i density %f',e, configMeso.v1);
         p.PlotArrayGeneric(DVmeso.x,outname);
         %                 subplot(2,2,3);
@@ -87,7 +95,7 @@ else
     newDesign = 0; % false
     DVmeso=[];
     configMeso=config;
-    configMeso.totalVolume=0.1; % just set it to something. 
+    configMeso.totalVolume=0.1; % just set it to something.
 end
 
 SaveMesoUnitCellDesignToCSV(DVmeso,macroElementProperties,configMeso,newDesign);

@@ -74,8 +74,7 @@ classdef Configuration
         PseudoStrainEndCriteria = 0.1;  
         TargetECloseNess=0.03; % part of the termination criteria
         volumeUpdateInterval=12;
-        coordinateMesoBoundaries = 0;
-        mesoDesignInitalConditions = 1; % 1 = randome, 2= square, 3 = circle
+        coordinateMesoBoundaries = 1;
         
         
         % Plotting information
@@ -83,7 +82,7 @@ classdef Configuration
         mesoplotfrequency=1; % how often to plot the meso level design.
         iterationsPerPlot = 5;
         doPlotVolFractionDesignVar = 0;
-        doPlotTopologyDesignVar = 1;
+        doPlotTopologyDesignVar = 0;
         doPlotHeat = 0;
         doPlotHeatSensitivityTopology = 0;
         doPlotStress = 0;
@@ -101,7 +100,7 @@ classdef Configuration
         doSysANDSubSysDiffValues = 0;
         
         % Exx ,Eyy , Theta (and Rho) Plot Data
-        doPlotCombinedExxEyyAndRotation = 0;
+        doPlotCombinedExxEyyAndRotation = 1;
         doIncludeRho=1;;
         doIncludeSubSystemValues=1;
         %-----------------
@@ -124,7 +123,7 @@ classdef Configuration
         useCommandLineArgs = 0;
         RunPalmetto =1;
         gr =  (1+sqrt(5))/2 -1 ; % golden ratio  0.618033988749895
-        multiscaleMethodCompare=1;% Implemented Coelho's method if this ==1
+        multiscaleMethodCompare=1;% Implemented 
         
         % ---------------------------
         % Meso Validation seetings
@@ -153,7 +152,7 @@ classdef Configuration
         % ---------------------------
         % Loading cases
         % ---------------------------
-                     loadingCase = [113]; % left clamped, load, middle right
+                    loadingCase = [113]; % left clamped, load, middle right
         %           loadingCase = [111 112 113]; % left clamped
         %            loadingCase = [111 112 ]; % left clamped
         %          loadingCase = [111 120 121]; % up, down, right in top right corrner, left clamp.
@@ -161,7 +160,7 @@ classdef Configuration
         %              loadingCase = [1];
         
         %  loadingCase = [300 301 302 303 304 305]; % shoe
-%           loadingCase = [400 401 402 403 404 405]; % bridge
+        %  loadingCase = [400 401 402 403 404 405]; % bridge
         %            loadingCase = [404]; % bridge
         %             loadingCase = [113]; % cantilever
         %                 loadingCase = [111]; % top right, force in Y direction
@@ -265,14 +264,6 @@ classdef Configuration
            
            obj.nelxMacro=obj.nelx;
            obj.nelyMacro=obj.nely;
-           
-           if(obj.multiscaleMethodCompare==1)
-               obj.penal=1; % make it into the homogenization method
-               obj.maxMasterLoops=1; % 1 macro step 
-               obj.maxNumPseudoStrainLoop=1;
-              % obj.mesoDesignInitalConditions=1;
-               obj.maxFEACalls=1;
-           end
         
         end
         

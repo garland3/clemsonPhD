@@ -726,18 +726,34 @@ classdef Optimizer
                 theta=reshape(theta,1,[]);
                 
                 X=[Exx;Eyy;theta];
-                [rhoValue,~,~] = annRhoOfExxEyyTheta_version2(X,[],[]);
+                
+                if(mesoVolumeUpdateMethod==2)
+                   [rhoValue,~,~] = annOutput_matUpdateV2(X,[],[]);
+                else
+                       [rhoValue,~,~] = annOutput_matUpdateV1(X,[],[]);
+                end
                 
                 deltaT=500;
                 XCopy = X;
                 XCopy(1,:)=XCopy(1,:)+deltaT;
-                [rhoValueXShift,~,~] = annRhoOfExxEyyTheta_version2(XCopy,[],[]);
+                
+                if(mesoVolumeUpdateMethod==2)
+                      [rhoValueXShift,~,~] = annOutput_matUpdateV2(XCopy,[],[]);
+                else
+                       [rhoValueXShift,~,~] = annOutput_matUpdateV1(XCopy,[],[]);
+                    
+                end
                 
                 ExxSensitivity=(rhoValueXShift-rhoValue)/deltaT;
                 
                 XCopy = X;
                 XCopy(2,:)=XCopy(2,:)+deltaT;
-                [rhoValueYShift,~,~] = annRhoOfExxEyyTheta_version2(X,[],[]);
+               
+                 if(mesoVolumeUpdateMethod==2)
+                      [rhoValueYShift,~,~] = annOutput_matUpdateV2(XCopy,[],[]);
+                else
+                       [rhoValueYShift,~,~] = annOutput_matUpdateV1(XCopy,[],[]);
+                end
                 
                 EyySensitivty=(rhoValueYShift-rhoValue)/deltaT;
                 
