@@ -35,8 +35,9 @@ classdef Configuration
         % Exx and Eyy Distribution
         useExxEyy=1;    % must be 0 for gradient material optimization       
         useTargetMesoDensity = 1; % 1 = yes, 0 = no and use target Eavg
-        targetExxEyyDensity = 0.2;
+        targetExxEyyDensity = 0.6;
         useThetaInSurfaceFit = 0;
+        rminExxEyy = 4; % smoothing radius for sensitivity smoothing.
         
         % rotation
         useRotation =1; % must be 0 for gradient material optimization
@@ -63,27 +64,28 @@ classdef Configuration
         % VOLUME Fraction SEttings.
         timestep = 0.001; % time step for the volume fraction update algorithm
         volFractionDamping = 10;
-        v1 = 0.2; % amount of material 1 to use. default to 10%
-        v2 = 0.4; % amount of material 2 to use. default to 30%, reduced so there is less meso structures to compute
+        v1 = 0.6; % amount of material 1 to use. default to 20%
+        v2 = 0.4; % amount of material 2 to use. default to 40%, reduced so there is less meso structures to compute
         totalVolume; % = v1+v2;
         
         % Meso Design settings
-        mesoVolumeUpdateMethod=1; % 1 = average, 2 = Target the larger
+        mesoVolumeUpdateMethod=2; % 1 = average, 2 = Target the larger
         maxMesoLoops = 100;
         maxNumPseudoStrainLoop=3;
         PseudoStrainEndCriteria = 0.1;  
         TargetECloseNess=0.03; % part of the termination criteria
         volumeUpdateInterval=12;
         coordinateMesoBoundaries = 0;
-        mesoDesignInitalConditions = 1; % 1 = randome, 2= square, 3 = circle
+        mesoDesignInitalConditions = 3; % 1 = randome, 2= square, 3 = circle
+        MesoMinimumDensity=0.00;
         
         
         % Plotting information
         plotSensitivityWhilerunning = 0;
-        mesoplotfrequency=1; % how often to plot the meso level design.
+        mesoplotfrequency=100; % how often to plot the meso level design.
         iterationsPerPlot = 5;
         doPlotVolFractionDesignVar = 0;
-        doPlotTopologyDesignVar = 1;
+        doPlotTopologyDesignVar = 0;
         doPlotHeat = 0;
         doPlotHeatSensitivityTopology = 0;
         doPlotStress = 0;
@@ -101,7 +103,7 @@ classdef Configuration
         doSysANDSubSysDiffValues = 0;
         
         % Exx ,Eyy , Theta (and Rho) Plot Data
-        doPlotCombinedExxEyyAndRotation = 0;
+        doPlotCombinedExxEyyAndRotation = 1;
         doIncludeRho=1;;
         doIncludeSubSystemValues=1;
         %-----------------
@@ -124,7 +126,7 @@ classdef Configuration
         useCommandLineArgs = 0;
         RunPalmetto =1;
         gr =  (1+sqrt(5))/2 -1 ; % golden ratio  0.618033988749895
-        multiscaleMethodCompare=1;% Implemented Coelho's method if this ==1
+        multiscaleMethodCompare=0;% Implemented Coelho's method if this ==1
         
         % ---------------------------
         % Meso Validation seetings
@@ -171,6 +173,9 @@ classdef Configuration
         %--------------
         numTilesX = 3;
         numTilesY = 3;
+        
+        % oTHER
+        generateCompleteStructureCSV=0;
         
     end
     
@@ -221,8 +226,8 @@ classdef Configuration
                 obj.nelyMeso =35; %35;
                 obj.terminationAverageCount = 10;
                 obj.terminationCriteria =0.001; % 0.0%
-                obj.maxFEACalls = 300;
-                obj.maxMasterLoops = 300;
+                obj.maxFEACalls = 100;
+                obj.maxMasterLoops = 100;
                 
             end
             

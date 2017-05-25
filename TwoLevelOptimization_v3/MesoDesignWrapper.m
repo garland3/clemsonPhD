@@ -1,6 +1,6 @@
 function  MesoDesignWrapper(config,e,ne,matProp)
 
-
+fprintf('PreRead Macro State for Meso Element %i\n',e)
 macroElementProperties = GetMacroElementPropertiesFromCSV(config,e);
 disp(['Meso Design #: ' sprintf('%4i',macroElementProperties.elementNumber  ) ' of ' sprintf('%4i',ne ) ...
     ' position X = '  sprintf('%4i',macroElementProperties.xPos) ' Y = ' sprintf('%4i',macroElementProperties.yPos) ...

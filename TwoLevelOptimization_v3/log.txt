@@ -1,3 +1,309 @@
-Got past the barrier as  work
+received a message from 0, tag 1
+received a message from 0, tag 2
+received a message from 0, tag 3
+received a message from 0, tag 5
+received a message from 0, tag 6
+received a message from 0, tag 7
+received a message from 0, tag 9
+received a message from 0, tag 10
+received a message from 0, tag 11
+received a message from 0, tag 13
+received a message from 0, tag 14
+received a message from 0, tag 15
+received a message from 0, tag 17
+received a message from 0, tag 18
+received a message from 0, tag 19
+received a message from 0, tag 21
+received a message from 0, tag 22
+received a message from 0, tag 23
+received a message from 0, tag 25
+received a message from 0, tag 26
+received a message from 0, tag 27
+received a message from 0, tag 29
+received a message from 0, tag 30
+received a message from 0, tag 31
+received a message from 0, tag 33
+received a message from 0, tag 34
+received a message from 0, tag 35
+received a message from 0, tag 37
+received a message from 0, tag 38
+received a message from 0, tag 39
+received a message from 0, tag 41
+received a message from 0, tag 42
+received a message from 0, tag 43
+received a message from 0, tag 45
+received a message from 0, tag 46
+received a message from 0, tag 47
+received a message from 0, tag 49
+received a message from 0, tag 50
+received a message from 0, tag 51
+received a message from 0, tag 53
+received a message from 0, tag 54
+received a message from 0, tag 55
+received a message from 0, tag 57
+received a message from 0, tag 58
+received a message from 0, tag 59
+received a message from 0, tag 61
+received a message from 0, tag 62
+received a message from 0, tag 63
+received a message from 0, tag 65
+received a message from 0, tag 66
+received a message from 0, tag 67
+received a message from 0, tag 69
+received a message from 0, tag 70
+received a message from 0, tag 71
+received a message from 0, tag 73
+received a message from 0, tag 74
+received a message from 0, tag 75
+received a message from 0, tag 77
+received a message from 0, tag 78
+received a message from 0, tag 79
+received a message from 0, tag 81
+received a message from 0, tag 82
+received a message from 0, tag 83
+received a message from 0, tag 85
+received a message from 0, tag 86
+received a message from 0, tag 87
+received a message from 0, tag 89
+received a message from 0, tag 90
+received a message from 0, tag 91
+received a message from 0, tag 93
+received a message from 0, tag 94
+received a message from 0, tag 95
+received a message from 0, tag 97
+received a message from 0, tag 98
+received a message from 0, tag 99
+
+received a message from 0, tag 101
+received a message from 0, tag 102
+received a message from 0, tag 103
+received a message from 0, tag 105
+received a message from 0, tag 106
+received a message from 0, tag 107
+received a message from 0, tag 109
+received a message from 0, tag 110
+received a message from 0, tag 111
+received a message from 0, tag 113
+received a message from 0, tag 114
 received a message from 0, tag 115
-56789
+received a message from 0, tag 117
+received a message from 0, tag 118
+received a message from 0, tag 119
+received a message from 0, tag 121
+received a message from 0, tag 122
+received a message from 0, tag 123
+received a message from 0, tag 125
+received a message from 0, tag 126
+received a message from 0, tag 127
+received a message from 0, tag 129
+received a message from 0, tag 130
+received a message from 0, tag 131
+received a message from 0, tag 133
+received a message from 0, tag 134
+received a message from 0, tag 135
+received a message from 0, tag 137
+received a message from 0, tag 138
+received a message from 0, tag 139
+received a message from 0, tag 141
+received a message from 0, tag 142
+received a message from 0, tag 143
+received a message from 0, tag 145
+received a message from 0, tag 146
+received a message from 0, tag 147
+received a message from 0, tag 149
+received a message from 0, tag 150
+received a message from 0, tag 151
+received a message from 0, tag 153
+received a message from 0, tag 154
+received a message from 0, tag 155
+received a message from 0, tag 157
+received a message from 0, tag 158
+received a message from 0, tag 160
+received a message from 0, tag 161
+received a message from 0, tag 162
+received a message from 0, tag 163
+received a message from 0, tag 165
+received a message from 0, tag 166
+received a message from 0, tag 167
+received a message from 0, tag 169
+received a message from 0, tag 170
+received a message from 0, tag 171
+received a message from 0, tag 173
+received a message from 0, tag 174
+received a message from 0, tag 175
+received a message from 0, tag 177
+received a message from 0, tag 178
+received a message from 0, tag 179
+received a message from 0, tag 181
+received a message from 0, tag 182
+received a message from 0, tag 183
+received a message from 0, tag 185
+received a message from 0, tag 186
+received a message from 0, tag 187
+received a message from 0, tag 189
+received a message from 0, tag 190
+received a message from 0, tag 191
+received a message from 0, tag 193
+received a message from 0, tag 194
+received a message from 0, tag 195
+received a message from 0, tag 197
+received a message from 0, tag 198
+received a message from 0, tag 199
+received a message from 0, tag 201
+received a message from 0, tag 202
+received a message from 0, tag 203
+received a message from 0, tag 205
+received a message from 0, tag 206
+received a message from 0, tag 207
+received a message from 0, tag 209
+received a message from 0, tag 210
+received a message from 0, tag 211
+received a message from 0, tag 213
+received a message from 0, tag 214
+received a message from 0, tag 215
+received a message from 0, tag 217
+received a message from 0, tag 218
+received a message from 0, tag 219
+received a message from 0, tag 221
+received a message from 0, tag 222
+received a message from 0, tag 223
+received a message from 0, tag 225
+received a message from 0, tag 123456789
+received a message from 0, tag 123456789
+received a message from 0, tag 123456789
+received a message from 0, tag 123456789
+received a message from 0, tag 123456789
+received a message from 0, tag 123456789
+received a message from 0, tag 123456789
+received a message from 0, tag 123456789
+received a message from 0, tag 123456789
+received a message from 0, tag 123456789
+received a message from 0, tag 123456789
+received a message from 0, tag 123456789
+received a message from 0, tag 123456789
+received a message from 0, tag 123456789
+received a message from 0, tag 123456789
+received a message from 0, tag 123456789
+received a message from 0, tag 123456789
+received a message from 0, tag 123456789
+received a message from 0, tag 123456789
+received a message from 0, tag 123456789
+received a message from 0, tag 123456789
+received a message from 0, tag 123456789
+received a message from 0, tag 123456789
+Finished Matlab Meso Structure Design. ElementNum = 114, MacroMesoIteration 1
+received a message from 0, tag 123456789
+nished Matlab Meso Structure Design. ElementNum = 20, MacroMesoIteration 1
+received a message from 0, tag 123456789Finished Matlab Meso Structure Design. ElementNum = 3, MacroMesoIteration 1
+received a message from 0, tag 123456789
+
+Finished Matlab Meso Structure Design. ElementNum = 22, MacroMesoIteration 1
+received a message from 0, tag 123456789
+Finished Matlab Meso Structure Design. ElementNum = 18, MacroMesoIteration 1
+received a message from 0, tag 123456789
+Finished Matlab Meso Structure Design. ElementNum = 16, MacroMesoIteration 1
+received a message from 0, tag 123456789
+inished Matlab Meso Structure Design. ElementNum = 4, MacroMesoIteration 1
+received a message from 0, tag 123456789
+Finished Matlab Meso Structure Design. ElementNum = 5, MacroMesoIteration 1
+received a message from 0, tag 123456789
+
+Finished Matlab Meso Structure Design. ElementNum = 33, MacroMesoIteration 1
+received a message from 0, tag 123456789
+Finished Matlab Meso Structure Design. ElementNum = 63, MacroMesoIteration 1
+received a message from 0, tag 123456789
+Finished Matlab Meso Structure Design. ElementNum = 56, MacroMesoIteration 1
+received a message from 0, tag 123456789
+Finished Matlab Meso Structure Design. ElementNum = 38, MacroMesoIteration 1
+received a message from 0, tag 123456789
+Finished Matlab Meso Structure Design. ElementNum = 55, MacroMesoIteration 1
+received a message from 0, tag 123456789
+Finished Matlab Meso Structure Design. ElementNum = 87, MacroMesoIteration 1
+received a message from 0, tag 123456789
+Finished Matlab Meso Structure Design. ElementNum = 81, MacroMesoIteration 1
+received a message from 0, tag 123456789
+Finished Matlab Meso Structure Design. ElementNum = 74, MacroMesoIteration 1
+received a message from 0, tag 123456789
+Finished Matlab Meso Structure Design. ElementNum = 26, MacroMesoIteration 1
+received a message from 0, tag 123456789
+Finished Matlab Meso Structure Design. ElementNum = 51, MacroMesoIteration 1
+received a message from 0, tag 123456789
+
+Finished Matlab Meso Structure Design. ElementNum = 89, MacroMesoIteration 1
+received a message from 0, tag 123456789
+
+Finished Matlab Meso Structure Design. ElementNum = 84, MacroMesoIteration 1
+received a message from 0, tag 123456789
+
+Finished Matlab Meso Structure Design. ElementNum = 162, MacroMesoIteration 1
+received a message from 0, tag 123456789
+Finished Matlab Meso Structure Design. ElementNum = 127, MacroMesoIteration 1
+received a message from 0, tag 123456789
+Finished Matlab Meso Structure Design. ElementNum = 166, MacroMesoIteration 1
+received a message from 0, tag 123456789
+Finished Matlab Meso Structure Design. ElementNum = 165, MacroMesoIteration 1
+received a message from 0, tag 123456789
+Finished Matlab Meso Structure Design. ElementNum = 132, MacroMesoIteration 1
+received a message from 0, tag 123456789
+Finished Matlab Meso Structure Design. ElementNum = 182, MacroMesoIteration 1
+received a message from 0, tag 123456789
+Finished Matlab Meso Structure Design. ElementNum = 145, MacroMesoIteration 1
+received a message from 0, tag 123456789
+Finished Matlab Meso Structure Design. ElementNum = 185, MacroMesoIteration 1
+received a message from 0, tag 123456789
+Finished Matlab Meso Structure Design. ElementNum = 140, MacroMesoIteration 1
+received a message from 0, tag 123456789
+Finished Matlab Meso Structure Design. ElementNum = 196, MacroMesoIteration 1
+received a message from 0, tag 123456789
+Finished Matlab Meso Structure Design. ElementNum = 216, MacroMesoIteration 1
+received a message from 0, tag 123456789
+Finished Matlab Meso Structure Design. ElementNum = 149, MacroMesoIteration 1
+received a message from 0, tag 123456789
+Finished Matlab Meso Structure Design. ElementNum = 158, MacroMesoIteration 1
+received a message from 0, tag 123456789
+Finished Matlab Meso Structure Design. ElementNum = 159, MacroMesoIteration 1
+received a message from 0, tag 123456789
+Finished Matlab Meso Structure Design. ElementNum = 110, MacroMesoIteration 1
+received a message from 0, tag 123456789
+Finished Matlab Meso Structure Design. ElementNum = 177, MacroMesoIteration 1
+received a message from 0, tag 123456789
+inished Matlab Meso Structure Design. ElementNum = 45, MacroMesoIteration 1
+received a message from 0, tag 123456789
+Finished Matlab Meso Structure Design. ElementNum = 190, MacroMesoIteration 1
+received a message from 0, tag 123456789Finished Matlab Meso Structure Design. ElementNum = 76, MacroMesoIteration 1
+received a message from 0, tag 123456789
+
+Finished Matlab Meso Structure Design. ElementNum = 44, MacroMesoIteration 1
+received a message from 0, tag 123456789
+
+Finished Matlab Meso Structure Design. ElementNum = 23, MacroMesoIteration 1
+received a message from 0, tag 123456789
+Finished Matlab Meso Structure Design. ElementNum = 48, MacroMesoIteration 1
+received a message from 0, tag 123456789
+
+Finished Matlab Meso Structure Design. ElementNum = 130, MacroMesoIteration 1
+received a message from 0, tag 123456789
+Finished Matlab Meso Structure Design. ElementNum = 191, MacroMesoIteration 1
+received a message from 0, tag 123456789
+Finished Matlab Meso Structure Design. ElementNum = 60, MacroMesoIteration 1
+received a message from 0, tag 123456789
+
+Finished Matlab Meso Structure Design. ElementNum = 96, MacroMesoIteration 1
+received a message from 0, tag 123456789
+Finished Matlab Meso Structure Design. ElementNum = 180, MacroMesoIteration 1
+received a message from 0, tag 123456789Finished Matlab Meso Structure Design. ElementNum = 28, MacroMesoIteration 1
+received a message from 0, tag 123456789
+Finished Matlab Meso Structure Design. ElementNum = 58, MacroMesoIteration 1
+received a message from 0, tag 123456789
+FFinished Matlab Meso Structure Design. ElementNum = 100, MacroMesoIteration 1
+received a message from 0, tag 123456789
+nished Matlab Meso Structure Design. ElementNum = 41, MacroMesoIteration 1
+received a message from 0, tag 123456789
+
+9
+inished Matlab Meso Structure Design. ElementNum = 62, MacroMesoIteration 1
+received a message from 0, tag 123456789
+Finished Matlab Meso Structure Design. ElementNum = 207, MacroMesoIteration 1
+received a message from 0, tag 123456789
+SUB_MASTER is now running Mode 202 Recombine everything into complete structure
+SUB_MASTER Finished

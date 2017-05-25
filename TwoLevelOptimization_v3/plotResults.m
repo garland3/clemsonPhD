@@ -142,6 +142,7 @@ classdef plotResults
                  subplot(plotDim1,plotDim2,plotcount); plotcount = plotcount + 1;
                 titleText = sprintf('Diff Theta Sys - Sub' );
                 obj.PlotArrayGeneric(DV.t - DV.thetaSub,titleText)
+                caxis([-pi/2 pi/2])
             
             end
             
@@ -196,7 +197,7 @@ classdef plotResults
             x = 1:loopNumb;
             % y1 = DV.storeOptimizationVar(1:loopNumb,1)';
             elasticObjective = DV.storeOptimizationVar(1:loopNumb,2)'; % Elastic Compliance
-            
+%             elasticObjective
             
             
             elasticObjective = elasticObjective/max(elasticObjective); % normalize to make plotting nice
@@ -254,22 +255,29 @@ classdef plotResults
                 actualAverageE = scaleForEvalues*actualAverageE;
                 
                 elasticObjective(elasticObjective<0)=0;
-                
-                if(config.useTargetMesoDensity==1)
-                      mesoAvgDensity = DV.storeOptimizationVar(1:loopNumb,9)'; %
-                     plot( x, elasticObjective, 'ko-',x, ExxSysAndSubDiffSummed, 'm+-', x, EyySysAndSubDiffSummed, 'c*-',x, ThetaSysAndSubDiffSummed, 'b*-',x, totalVolumeTarget, 'r.-',x, summedDensity, 'gx',x,mesoAvgDensity,'b-')
-                     legend('Elast Obj','ExxSysAndSubDiffSummed','EyySysAndSubDiffSummed','ThetaSysAndSubDiffSummed' ,'Vol Target', 'Actual Vol','AvgMesoDensity','Location','northoutside')
-                     
-                else
-                    if(config.doPlotConsistencyConstraintsInMetrics==1)
-                        plot( x, elasticObjective, 'ko-',x, ExxSysAndSubDiffSummed, 'm+-', x, EyySysAndSubDiffSummed, 'c*-',x, ThetaSysAndSubDiffSummed, 'b*-',x, targetAverageE, 'r.-', x, actualAverageE, 'gx',x, summedDensity, 'b-');%,x, summedDensity, 'gx')
-                        legend('Elast Obj','ExxSysAndSubDiffSummed','EyySysAndSubDiffSummed','ThetaSysAndSubDiffSummed' ,'targetAverageE', 'actualAverageE','totalVolume','Location','northoutside')
+                if(config.multiscaleMethodCompare~=1)
+                    if(config.useTargetMesoDensity==1)
+                          mesoAvgDensity = DV.storeOptimizationVar(1:loopNumb,9)'; %
+                         plot( x, elasticObjective, 'ko-',x, ExxSysAndSubDiffSummed, 'm+-', x, EyySysAndSubDiffSummed, 'c*-',x, ThetaSysAndSubDiffSummed, 'b*-',x, totalVolumeTarget, 'r.-',x, summedDensity, 'gx',x,mesoAvgDensity,'b-')
+                         legend('Elast Obj','ExxSysAndSubDiffSummed','EyySysAndSubDiffSummed','ThetaSysAndSubDiffSummed' ,'Vol Target', 'Actual Vol','AvgMesoDensity','Location','northoutside')
+
                     else
-                        plot( x, elasticObjective, 'ko-',x, targetAverageE, 'm+-', x, actualAverageE, 'c*-',x, totalVolumeTarget, 'r.-',x, summedDensity, 'gx')
-                        legend('Elast Obj','E target','E avg', 'Vol Target', 'Actual Vol')
+                        if(config.doPlotConsistencyConstraintsInMetrics==1)
+                            plot( x, elasticObjective, 'ko-',x, ExxSysAndSubDiffSummed, 'm+-', x, EyySysAndSubDiffSummed, 'c*-',x, ThetaSysAndSubDiffSummed, 'b*-',x, targetAverageE, 'r.-', x, actualAverageE, 'gx',x, summedDensity, 'b-');%,x, summedDensity, 'gx')
+                            legend('Elast Obj','ExxSysAndSubDiffSummed','EyySysAndSubDiffSummed','ThetaSysAndSubDiffSummed' ,'targetAverageE', 'actualAverageE','totalVolume','Location','northoutside')
+                        else
+                            plot( x, elasticObjective, 'ko-',x, targetAverageE, 'm+-', x, actualAverageE, 'c*-',x, totalVolumeTarget, 'r.-',x, summedDensity, 'gx')
+                            legend('Elast Obj','E target','E avg', 'Vol Target', 'Actual Vol')
+                        end
+
                     end
+                else
+                      plot( x, elasticObjective, 'ko-',x, totalVolumeTarget, 'r.-',x, summedDensity, 'gx')
+                      legend('Elast Obj', 'Vol Target', 'Actual Vol')
+                      
                     
                 end
+                    
                 
                 
             else
@@ -285,6 +293,8 @@ classdef plotResults
                 plot(x, y4,'y', x, y5, 'm', x, elasticObjective, 'c', x, y3, 'r');
                 legend('vol1', 'vol2','Elast Obj','Heat Obj');
             end
+            
+            ylim([0 1])
         end
         
         

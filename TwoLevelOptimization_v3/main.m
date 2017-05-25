@@ -16,8 +16,8 @@ close all
 % end
 
 % % iteration 2
-% combinedTopologyOptimization('1', '1', '2','60', 'na');
-% combinedTopologyOptimization('1', '1', '2','200', 'na');
+combinedTopologyOptimization('1', '1', '2','60', 'na');
+combinedTopologyOptimization('1', '1', '2','200', 'na');
 
 % % iteration 3
 %     combinedTopologyOptimization('1', '1', '3','60', 'na');
@@ -33,8 +33,8 @@ close all
 %       combinedTopologyOptimization('1', '1', '1','203', 'na'); % make Exx, Eyy, rho plot
 
 % test meso design for element 1, macro iteration 1
-%    combinedTopologyOptimization('1', '1', '1','100', '781');
-%          combinedTopologyOptimization('1', '1', '1','100', '10');
+%     combinedTopologyOptimization('1', '1', '1','100', '100');
+%           combinedTopologyOptimization('1', '1', '1','100', '10');
 %           combinedTopologyOptimization('1', '1', '1','100', '107');
 nelx= 15;
 nely = 15;
@@ -65,13 +65,13 @@ numloops = 5;
 % ---------------------------------
 % multiscale compare loop
 % ---------------------------------
-for i = 1:5
+for i = 20:20
 %      combinedTopologyOptimization('1', '1',int2str(i), '1','na' ); % macro homogenizattion    
 %   
 %     for j = 1:225      
 %         combinedTopologyOptimization('1', '1',int2str(i), '100',int2str(j)); % meso level 
 %     end
-       combinedTopologyOptimization('1', '1',int2str(i), '202','na' ); % make complete structure 
+%        combinedTopologyOptimization('1', '1',int2str(i), '200','na' ); % make complete structure 
 end
 % combinedTopologyOptimization('1', '1', int2str(i),'112', 'na'); % evalute meso design metrics.
 

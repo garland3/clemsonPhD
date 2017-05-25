@@ -36,6 +36,8 @@ classdef DesignVars
         EyySysAndSubDiffSummed=0;
         ThetaSysAndSubDiffSummed=0;
         
+        % Density off Set (Actual-Predicted)
+        densityOffsetArray=0;
         
         
         % Optimization vars (volume fraction optimization)
@@ -100,6 +102,7 @@ classdef DesignVars
         De33;
         
         mesoStructNTCmask;
+        mesoFEACalls=0;
         
         
         % When multiple elements are controlled by a single design var,
@@ -160,7 +163,7 @@ classdef DesignVars
                 obj.ExxSub=obj.Exx*0; % Sub system copies of design var
                 obj.EyySub=obj.Exx*0; % Sub system copies of design var
                 obj.thetaSub=obj.Exx*0; % Sub system copies of design var
-                
+                obj.densityOffsetArray=obj.Exx*0;
                 
                 
             end
@@ -185,7 +188,7 @@ classdef DesignVars
         %
         % Also, read Exx,Eyy,Theta, Lambdas and ExxSub, EyySub, ThetaSub
         % -----------------------------
-        function obj = GetMacroStateVarsFromCSVFiles(obj, config)
+        function obj = GetMacroStateVarsFromCSVFiles(obj, config,matProp)
             
             if(config.macro_meso_iteration>1)
                 
@@ -228,6 +231,7 @@ classdef DesignVars
                     outnameEyySubSysValues = sprintf('./out%i/EyySubSysValues%i.csv',folderNum,oldIteration);
 %                     outnameThetaSubSysValues = sprintf('./out%i/ThetaSubSysValues%i.csv',folderNum,oldIteration);
                     outnameThetaSubSysValues = sprintf('./out%i/ThetaSubSysValues%i.csv',folderNum,oldIteration);
+                     outnameMesoDensities = sprintf('./out%i/densityUsedSubSysValues%i.csv',folderNum,oldIteration);
                   
                     
                     
@@ -257,6 +261,24 @@ classdef DesignVars
                     obj.ExxSub=csvread(outnameExxSubSysValues); % Sub system copies of design var
                     obj.EyySub=csvread(outnameEyySubSysValues); % Sub system copies of design var
                     obj.thetaSub=csvread(outnameThetaSubSysValues); % Sub system copies of design var
+                    
+                      actualDensities=csvread(outnameMesoDensities); % Sub system copies of design var
+                      if(config.useTargetMesoDensity==1)
+                        o = Optimizer;          
+                        p = plotResults;
+                        figure
+                        [~, ~,predictedDensities] = o.CalculateDensitySensitivityandRho(obj.ExxSub/matProp.E_material1,obj.EyySub/matProp.E_material1,obj.thetaSub,obj.x ,obj.ResponseSurfaceCoefficents,config,matProp,obj.densityOffsetArray);
+                        subplot(3,1,1);
+                       p.PlotArrayGeneric(actualDensities,'Actual Meso Densities');
+                         subplot(3,1,2);
+                       p.PlotArrayGeneric(predictedDensities,'Predicted Meso Densities');
+                        subplot(3,1,3);
+                       p.PlotArrayGeneric(actualDensities-predictedDensities,'Actual - Predicted Meso Densities');
+                        nameGraph = sprintf('./PredictedVSActualMesoDensities%i.png', config.macro_meso_iteration);
+                         print(nameGraph,'-dpng');
+                         
+                          obj.densityOffsetArray=actualDensities-predictedDensities;
+                      end
                     
                     %
                     %                     if(config.macro_meso_iteration>1)
@@ -1075,7 +1097,11 @@ classdef DesignVars
             if(config.macro_meso_iteration>1)
                 obj.ExxSysAndSubDiffSummed=sum(sum(obj.x.*((obj.Exx-obj.ExxSub).^2).^(1/2))); % make sure it is absolute value, by square, then sqrt
                 obj.EyySysAndSubDiffSummed=sum(sum(obj.x.*((obj.Eyy-obj.EyySub).^2).^(1/2)));% sum(sum(sqrt(obj.x.*(obj.Eyy-obj.EyySub).^2)));
-                obj.ThetaSysAndSubDiffSummed=sum(sum(obj.x.*((obj.t-obj.thetaSub).^2).^(1/2)));%sum(sum(sqrt(obj.x.*(obj.t-obj.thetaSub).^2)));
+                
+                % if Exx = Eyy, then don't count in the  theta calcualtions
+                logicArray = abs(obj.Eyy-obj.Exx)./obj.Exx<=0.02;
+                logicArray=1-logicArray;
+                obj.ThetaSysAndSubDiffSummed=sum(sum(logicArray.*obj.x.*((obj.t-obj.thetaSub).^2).^(1/2)));%sum(sum(sqrt(obj.x.*(obj.t-obj.thetaSub).^2)));
             else
                 obj.ExxSysAndSubDiffSummed=0;
                 obj.EyySysAndSubDiffSummed  =0;
@@ -1092,7 +1118,7 @@ classdef DesignVars
 %                theta(logic3)=pi/4-theta(logic3);
 %                 theta(logic4)=-pi/4-theta(logic4);
                   
-                [~, ~,rhoValue] = o.CalculateDensitySensitivityandRho(obj.Exx/matProp.E_material1,obj.Eyy/matProp.E_material1,theta,obj.x ,obj.ResponseSurfaceCoefficents,config,matProp);
+                [~, ~,rhoValue] = o.CalculateDensitySensitivityandRho(obj.Exx/matProp.E_material1,obj.Eyy/matProp.E_material1,theta,obj.x ,obj.ResponseSurfaceCoefficents,config,matProp,obj.densityOffsetArray);
                 rhoValue=max(0,min(rhoValue,1));             
                 temp2 = sum(sum(rhoValue));
                 sumDensity=temp2/(config.nelx*config.nely*config.totalVolume);
@@ -1394,18 +1420,24 @@ classdef DesignVars
             
             for i = 1:config.nelx
                 for j = 1:config.nely
-                    if(obj.t(j,i)<0)
-                        temp1=obj.Exx(j,i);
+                       localTheta=obj.t(j,i);
+                    if(localTheta<0)
+                     
+                        Exxtemp1=obj.Exx(j,i);
+                        EyyTempSee= obj.Eyy(j,i);
+                        ThetaTempSee=obj.t(j,i);
                         obj.Exx(j,i)=obj.Eyy(j,i);
-                        obj.Eyy(j,i)=temp1;
+                        obj.Eyy(j,i)=Exxtemp1;
                         obj.t(j,i)=obj.t(j,i)+pi/2;
                         
                         % Also flip the meso level values or else the
                         % optimization will be crazy!
-                        %                         temp2 = obj.ExxSub(j,i);
-                        %                         obj.ExxSub(j,i)=obj.EyySub(j,i);   % Sub system copies of design var
-                        %                          obj.EyySub(j,i)=temp2;
-                        %                         obj.thetaSub(j,i)= obj.thetaSub(j,i)+pi/2;
+                        ExxSubtemp2 = obj.ExxSub(j,i);
+                         EyysubTempSee= obj.EyySub(j,i);
+                        ThetasubTempSee=obj.thetaSub(j,i);
+                        obj.ExxSub(j,i)=obj.EyySub(j,i);   % Sub system copies of design var
+                        obj.EyySub(j,i)=ExxSubtemp2;
+                        obj.thetaSub(j,i)= min(obj.thetaSub(j,i)+pi/2,pi/2);
                         
                         
                     end

@@ -151,7 +151,7 @@ elseif(config.validationModeOn==1)
     
     
 end
-
+%printf('Finished getting macro data from csv files');
 end
 
 % else

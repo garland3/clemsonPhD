@@ -98,7 +98,7 @@ pstrainOld=ones(3,1);
 counter = 1;
 % mesoConfig.totalVolume=0.5; % start at 50% density and go from there. 
 
-
+totalFEACount=1;
 diffEtargetVolume=1; % initilize this value. 
 % --------------------
 % Start pseudo strain loops
@@ -123,7 +123,8 @@ for mm = 1:mesoConfig.maxNumPseudoStrainLoop
      oldX=  DVmeso.x+10;
     for mesoLoop = 1:mesoConfig.maxMesoLoops   
         macroElemProps.psuedoStrain=pstrain;
-        [ DVmeso ,D_h, objective,muMatrix] = Homgenization(DVmeso, mesoConfig, matProp, macroElemProps,mesoLoop,old_muMatrix,penaltyValue);
+        [ DVmeso ,D_h, ~,~] = Homgenization(DVmeso, mesoConfig, matProp, macroElemProps,mesoLoop,old_muMatrix,penaltyValue);
+        totalFEACount=totalFEACount+1;
         macroElemProps.D_subSys=D_h;
         
         if(mesoConfig.multiscaleMethodCompare~=1)
@@ -176,9 +177,8 @@ for mm = 1:mesoConfig.maxNumPseudoStrainLoop
                 maxChange = 0.1;
                 temp = max(min(temp,maxChange),-maxChange);
                 oldVolume =    mesoConfig.totalVolume;
-                newVolume=mesoConfig.totalVolume+temp;
-                minimumDensity=0.1;
-                mesoConfig.totalVolume=min(max(newVolume,minimumDensity),1);
+                newVolume=mesoConfig.totalVolume+temp;             
+                mesoConfig.totalVolume=min(max(newVolume,mesoConfig.MesoMinimumDensity),1);
                 ttttt=1;
             end       
 
@@ -271,8 +271,8 @@ end
 % plot(densityArray)
 % densityArray(end)
 
-disp(['Meso Design #: ' sprintf('%4i',macroElemProps.elementNumber ) ' after '  sprintf('%4i',mesoLoop ) ' meso iterations: density= '  sprintf('%f',mesoConfig.totalVolume )]);
-
+disp(['Meso Design #: ' sprintf('%4i',macroElemProps.elementNumber ) ' after '  sprintf('%4i',totalFEACount ) ' meso iterations: density= '  sprintf('%f',mesoConfig.totalVolume )]);
+DVmeso.mesoFEACalls=totalFEACount;
 % --------------------------------------------
 %    CALCULATE Effective constitutive matrix of the meso structure. This is
 %    need for the macro optimization

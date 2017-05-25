@@ -186,7 +186,7 @@ DV.Eyy = DV.Exx ;
 % if iteration 2 or higher, then get saved problems state and calcualte
 % penalty function valeus. 
  if (49<config.mode && config.mode <100  )
-    DV=DV.GetMacroStateVarsFromCSVFiles( config);
+    DV=DV.GetMacroStateVarsFromCSVFiles( config,matProp);
     DV=DV.UpdatePenaltyAndLagrangianValues( config,matProp);
  end
 
@@ -293,16 +293,7 @@ if(macroDesignMode==1)
             ShowOptimizerProgress(DV,1,' E_xx and E_yy ',FEACalls,config, matProp);
         end % E_xx and E_yy Optimization
         
-        if(config.recvid==1)
-            [framedNumber, F]  = video.RecordFrame(config,framedNumber, F,vidObj);
-        end
-   
-     
-      
-     end % MASTER LOOP FOR MACRO LEVEL
-      nameGraph = sprintf('./gradTopOptimizationPReFlip%fNOhmesh%i.png', config.w1,config.macro_meso_iteration);
-         print(nameGraph,'-dpng');
-      % Flip orientation of Exx and Eyy so that theta is positive
+          % Flip orientation of Exx and Eyy so that theta is positive
         if(config.useRotation ==1)
             if ( config.mode==4 || config.mode ==55 || config.mode == 60)
                 DV = DV.FlipOrientation(config);
@@ -311,6 +302,17 @@ if(macroDesignMode==1)
 %                 print(nameGraph,'-dpng');
             end
         end
+        
+        if(config.recvid==1)
+            [framedNumber, F]  = video.RecordFrame(config,framedNumber, F,vidObj);
+        end
+   
+     
+      
+     end % MASTER LOOP FOR MACRO LEVEL
+   %  nameGraph = sprintf('./gradTopOptimizationPReFlip%fNOhmesh%i.png', config.w1,config.macro_meso_iteration);
+    % print(nameGraph,'-dpng');
+
     
 end % ENDIF FOR MACRO DESIGN
 
@@ -565,5 +567,7 @@ colormap(map)
 freezeColors
 nameGraph = sprintf('./completeStucture%f_macroIteration_%i.png', config.w1,config.macro_meso_iteration);
 print(nameGraph,'-dpng', '-r1200')
-outname = sprintf('./completeStucture%f_macroIteration_%i.csv', config.w1,config.macro_meso_iteration);
-csvwrite(outname,completeStruct);
+if (config.generateCompleteStructureCSV==1)
+    outname = sprintf('./completeStucture%f_macroIteration_%i.csv', config.w1,config.macro_meso_iteration);
+    csvwrite(outname,completeStruct);
+end

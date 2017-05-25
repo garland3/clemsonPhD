@@ -11,13 +11,13 @@
 #define MASTER_RANK 0
 #define SUB_MASTER_RANK 1
 #define SUB_SUB_MASTER_RANK 2
-#define NUM_MACRO_MESO_ITER 11 // 3,5,11
+#define NUM_MACRO_MESO_ITER 5 // 3,5,11
 #define START_MACRO_MESO_ITER 1 // 1
 
 //#define NELX_MACRO  15 // 30 // 1331 
 //#define NELY_MACRO 15 //15 // 1
 
-#define MODE 3 //1 = Multscale optimization 2. Meso Validation 3.  multiscaleMethodCompare
+#define MODE 1 //1 = Multscale optimization 2. Meso Validation 3.  multiscaleMethodCompare
 
 
 int callMatlab(int mode, int macro_meso_iteration, int element);
@@ -45,6 +45,9 @@ int main ( int argc, char **argv )
    // run the combine together version of the matlab code. 
    // Get the Exx, eyy, theta values extracted from the D_h sub systems
    
+   // Remove the log file before starting to append to it. 
+   remove("./log.txt"); 
+   
    MPI_Init(&argc, &argv);
    MPI_Comm_size(MPI_COMM_WORLD, &pool_size);
    MPI_Comm_rank(MPI_COMM_WORLD, &my_rank);   
@@ -53,10 +56,10 @@ int main ( int argc, char **argv )
    
      if (my_rank == MASTER_RANK){
 		i_am_the_master = TRUE;
-	}else {
+	}//else {
 		 
-	   log_file = fopen ("./log.txt", "w");
-	}
+	   log_file = fopen ("./log.txt", "a");
+	//}
     
     //------------
     // if Mode is validation, then only do 1 iteration. 
@@ -82,7 +85,10 @@ int main ( int argc, char **argv )
             }
             else if(MODE==2){
                  MesoValidationMasterNode(k,pool_size,my_rank);
-            }              
+            }     
+
+            fprintf(log_file, "\n--------\nNew Macro Meso Iteration %d\n-----------\n", k);
+            fflush(log_file);            
          }         
          else
         {           
@@ -103,8 +109,8 @@ int main ( int argc, char **argv )
                 //{
                     
                     //MPI_Bcast(b, COLS, MPI_INT, MASTER_RANK, MPI_COMM_WORLD);
-                    fprintf(log_file, "Got past the barrier as  work\n");
-                    fflush(log_file);
+                   // fprintf(log_file, "Got past the barrier as  work\n");
+                    //fflush(log_file);
                       
                     //-------------------------------------
                     // 2. Get a job from the master
@@ -121,15 +127,17 @@ int main ( int argc, char **argv )
                          
                         // Run matlab code for element = elementNumber
                         // callMatlab(int mode, int macro_meso_iteration, int element)
-                         callMatlab(100,k, elementNumber);
+                        callMatlab(100,k, elementNumber);
+                        fprintf(log_file, "Finished Matlab Meso Structure Design. ElementNum = %d, MacroMesoIteration %d\n", elementNumber, k);
+                        fflush(log_file);
                       //  printf("Finished Element Optimization for e = %d withstatus %d\n", elementNumber,status);
                          
                         MPI_Send (&okMessage, 1, MPI_INT, MASTER_RANK, elementNumber, MPI_COMM_WORLD);
                         // fprintf(log_file, "sent row %d to %d\n", row, MASTER_RANK);
                         // fflush(log_file);
                         MPI_Recv(&elementNumber, 1, MPI_INT, MASTER_RANK, MPI_ANY_TAG, MPI_COMM_WORLD, &status);
-                        //fprintf(log_file, "received a message from %d, tag %d\n", status.MPI_SOURCE, status.MPI_TAG);
-                        //fflush(log_file);
+                        fprintf(log_file, "received a message from %d, tag %d\n", status.MPI_SOURCE, status.MPI_TAG);
+                        fflush(log_file);
                     }
                     printf( "process with rank %d exiting on  tag %d\n", my_rank,status.MPI_TAG);
                     //fflush(log_file);
@@ -145,9 +153,14 @@ int main ( int argc, char **argv )
                      // --------------------------------------------
                     // 4. run the code to combine everything together
                     // --------------------------------------------
+                    fprintf(log_file, "SUB_MASTER is now running Mode 202 Recombine everything into complete structure\n");
+                    fflush(log_file);
                     printf("SUB_MASTER --> All elements done. Recombine the entire matrix");
                     // callMatlab(int mode, int macro_meso_iteration, int element)
                     callMatlab(202,k, 1);
+                    fprintf(log_file, "SUB_MASTER Finished");
+                    fflush(log_file);
+                    printf("SUB_MASTER --> Finished Recombine the entire matrix");
                 } 
               
         } // end if  (i_am_the_master)
@@ -176,9 +189,14 @@ int callMatlab(int mode, int macro_meso_iteration, int element){
 	//double w1 = 1;
 	int w1 = 1;
     int returnValue=0;
+    
+    char name[200];
+    int length;
+    
+    MPI_Get_processor_name(name, &length);
 
    sprintf(command, "./combinedTopologyOptimization %d %d %d %d %d ",useCommandLineArgs, w1, macro_meso_iteration, mode, element);
-   sprintf(commandHuman, "combinedTopologyOptimization , macroMeso =  %d , mode = %d, element =  %d ", macro_meso_iteration, mode, element);
+   sprintf(commandHuman, "combinedTopologyOptimization , macroMeso =  %d , mode = %d, element =  %d , Processor %s", macro_meso_iteration, mode, element,name);
    puts(commandHuman);
   // sleep(1);
   // Try 5 times to get the command right with a return of 0
@@ -206,7 +224,7 @@ int MultiscaleMasterNode(int macro_meso_iteration,int pool_size,int my_rank ){
     int  nelm ;//= NELX_MACRO*NELY_MACRO;	
     struct timespec tim, tim2;
     tim.tv_sec = 0;
-    tim.tv_nsec = 500000;
+    tim.tv_nsec = 100000000; // 0.1 second
     int sender, destination; 
      MPI_Status status;    
 
@@ -313,8 +331,9 @@ int MultiscaleMasterNode(int macro_meso_iteration,int pool_size,int my_rank ){
         // 5. Get all the Exx, Eyy, theta values from the D_sub matrixes. Save all in csv files. 
         // --------------------------------------------
         if( MODE==1){
-            printf("MASTER --> Get all the Exx, Eyy, theta values from the D_sub matrixes");			
+            printf("MASTER --> Get all the Exx, Eyy, theta values from the D_sub matrixes\n");			
             callMatlab(203,macro_meso_iteration, 1);   
+             printf("MASTER -->Finished extracting Macro Vars from D_sub values. Finished Mode 203\n");			
         }
         
         return 1;
