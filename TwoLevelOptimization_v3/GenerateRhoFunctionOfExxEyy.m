@@ -68,7 +68,7 @@ for e = 1:ne %ne:-1:1
         ActualThetaValue = ThetaMacro(macroElementProps.yPos,macroElementProps.xPos );
         ActualExx = ExxMacro(macroElementProps.yPos,macroElementProps.xPos );
         ActualEyy = EyyMacro(macroElementProps.yPos,macroElementProps.xPos );
-    else
+    elseif(config.validationModeOn==1)
         % ---------------
         %    Meso Validation Case
         % ---------------

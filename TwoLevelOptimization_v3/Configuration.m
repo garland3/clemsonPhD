@@ -31,18 +31,12 @@ classdef Configuration
         % Modeling settings
         referenceTemperature = 0; % for thermal expansion, assume that there is not strain when at this temperature.
         addThermalExpansion = 0; % Set to 1 to incorporate thermal expansion
-        
-        % Exx and Eyy Distribution
-        useExxEyy=1;    % must be 0 for gradient material optimization       
-        useTargetMesoDensity = 1; % 1 = yes, 0 = no and use target Eavg
-        targetExxEyyDensity = 0.6;
-        useThetaInSurfaceFit = 0;
-        rminExxEyy = 4; % smoothing radius for sensitivity smoothing.
+      
         
         % rotation
         useRotation =1; % must be 0 for gradient material optimization
         minRotation =-pi/2;
-        maxRotation = pi/2;
+        maxRotation = pi;
         rotationMoveLimit = pi/45;
         
         
@@ -63,44 +57,62 @@ classdef Configuration
         
         % VOLUME Fraction SEttings.
         timestep = 0.001; % time step for the volume fraction update algorithm
-        volFractionDamping = 10;
-        v1 = 0.6; % amount of material 1 to use. default to 20%
+        volFractionDamping = 1;
+        v1 = 0.2; % amount of material 1 to use. default to 20%
         v2 = 0.4; % amount of material 2 to use. default to 40%, reduced so there is less meso structures to compute
         totalVolume; % = v1+v2;
         
         % Meso Design settings
-        mesoVolumeUpdateMethod=2; % 1 = average, 2 = Target the larger
-        maxMesoLoops = 100;
+        mesoVolumeUpdateMethod=1; % 1 = average, 2 = Target the larger
+        maxMesoLoops = 200;
         maxNumPseudoStrainLoop=3;
         PseudoStrainEndCriteria = 0.1;  
         TargetECloseNess=0.03; % part of the termination criteria
         volumeUpdateInterval=12;
-        coordinateMesoBoundaries = 0;
+        coordinateMesoBoundaries = 1;
         mesoDesignInitalConditions = 3; % 1 = randome, 2= square, 3 = circle
-        MesoMinimumDensity=0.00;
+        MesoMinimumDensity=0.0001;
+        AddBorder=0; % Add border to complete structure. 
+        UseLookUpTableForPsuedoStrain=1; %0 = feedback loop, 1 = use look up. 
+        
+          
+        % Exx and Eyy Distribution
+        useExxEyy=1;    % must be 0 for gradient material optimization       
+        useTargetMesoDensity = 1; % 1 = yes, 0 = no and use target Eavg
+        targetAvgExxEyy=50000;
+        targetExxEyyDensity = 0.6;
+        useThetaInSurfaceFit = 0;
+          useANN=1;
+          useAnnForDensityNotDerivative = 0;
+        rminExxEyy = 4; % smoothing radius for sensitivity smoothing.
+        
+        % True anisotropic material
+        anisotropicMat=1;
+      
         
         
         % Plotting information
         plotSensitivityWhilerunning = 0;
-        mesoplotfrequency=100; % how often to plot the meso level design.
+        mesoplotfrequency=1; % how often to plot the meso level design.
         iterationsPerPlot = 5;
         doPlotVolFractionDesignVar = 0;
-        doPlotTopologyDesignVar = 0;
+        doPlotTopologyDesignVar = 1;
         doPlotHeat = 0;
         doPlotHeatSensitivityTopology = 0;
         doPlotStress = 0;
-        doPlotFinal =0;
+        doPlotFinal =0; % blue, green, empty space plot
         doPlotMetrics = 0;
-        doPlotConsistencyConstraintsInMetrics = 1;
+        doPlotConsistencyConstraintsInMetrics = 0;
         doSaveDesignVarsToCSVFile = 0; % set to 1 to write plotFinal csv file instead
         doPlotAppliedStrain = 0; % For debugging only
         doPlotOrthDistributionVar=0;
         doPlotExx = 0  ;
         doPlotEyy =  0 ;
-        doPlotEyyExxArrows =0;
+        doPlotEyyExxArrows =1;
         doPlotElasticSensitivity =  0  ;
         doPlotRotationValue =0;
         doSysANDSubSysDiffValues = 0;
+        doPlotAnIsotropicValues=1; % 4 plots
         
         % Exx ,Eyy , Theta (and Rho) Plot Data
         doPlotCombinedExxEyyAndRotation = 1;
@@ -130,10 +142,16 @@ classdef Configuration
         
         % ---------------------------
         % Meso Validation seetings
-        % mode = 111 or 112
+        % mode = 111 or 112, also 113
         % ---------------------------
-        validationGridSizeNelx = 11; % , This value cubed will be the number of sub problems, 320^2 about 100,000
+        validationGridSizeNelx = 11; % , This value cubed  will be the number of sub problems, 22^3 =10648
         validationModeOn=0; % 1 = yes. 
+        
+        % ANN target test or Loopkup data generator
+        strainAndTargetTest =0; % for mode 113
+        targetTestVectorLen=20; % 17 will be abou 100,000
+        
+       
         
         % -----------------
         % Use different mixture rules for effective elastic properteis
@@ -155,7 +173,7 @@ classdef Configuration
         % ---------------------------
         % Loading cases
         % ---------------------------
-                     loadingCase = [113]; % left clamped, load, middle right
+        loadingCase = [113]; % left clamped, load, middle right
         %           loadingCase = [111 112 113]; % left clamped
         %            loadingCase = [111 112 ]; % left clamped
         %          loadingCase = [111 120 121]; % up, down, right in top right corrner, left clamp.
@@ -163,7 +181,7 @@ classdef Configuration
         %              loadingCase = [1];
         
         %  loadingCase = [300 301 302 303 304 305]; % shoe
-%           loadingCase = [400 401 402 403 404 405]; % bridge
+        %           loadingCase = [400 401 402 403 404 405]; % bridge
         %            loadingCase = [404]; % bridge
         %             loadingCase = [113]; % cantilever
         %                 loadingCase = [111]; % top right, force in Y direction
@@ -220,14 +238,14 @@ classdef Configuration
                 % ------------
                 % Palmetto running case
                 % -------------------
-                obj.nelx = 15; %% 30
-                obj.nely = 15; %  15
+                obj.nelx = 40; %% 30
+                obj.nely = 20; %  15
                 obj.nelxMeso = 35; %35;
                 obj.nelyMeso =35; %35;
                 obj.terminationAverageCount = 10;
                 obj.terminationCriteria =0.001; % 0.0%
-                obj.maxFEACalls = 100;
-                obj.maxMasterLoops = 100;
+                obj.maxFEACalls = 160;
+                obj.maxMasterLoops = 120;
                 
             end
             
@@ -256,17 +274,24 @@ classdef Configuration
             
             % On the first macro iteration, limit the number of FEA calls. 
             % convergence is simple. 
-            if(obj.macro_meso_iteration ==1)
-                 obj.maxFEACalls=100;
-            end
+%             if(obj.macro_meso_iteration ==1)
+%                  obj.maxFEACalls=120;
+%             end
             
             
             % 111 = Validate Meso (generate Targets)
             % 112 = Read the meso design information and compute validation metrics
-           if(  obj.validationModeOn)
+            if(obj.mode == 111 || obj.mode==112)
+                obj.validationModeOn=1;          
                 obj.nelx = obj.validationGridSizeNelx; 
                 obj.nely = obj.validationGridSizeNelx;                
-           end
+            end
+           
+            if(obj.strainAndTargetTest==1)
+                obj.nelx = obj.targetTestVectorLen; 
+                obj.nely = obj.targetTestVectorLen; 
+               obj.maxNumPseudoStrainLoop=1;
+            end
            
            obj.nelxMacro=obj.nelx;
            obj.nelyMacro=obj.nely;
@@ -278,9 +303,33 @@ classdef Configuration
               % obj.mesoDesignInitalConditions=1;
                obj.maxFEACalls=1;
            end
+           
+           if(obj.multiscaleMethodCompare==1)
+               obj.DisplayImportantMessage('multiscaleMethodCompare is on. This is basically Coelhos method')
+           end
+           if(obj.strainAndTargetTest==1)
+               obj.DisplayImportantMessage('strainAndTargetTest is on. Generating or meeting systematic targets of psuedo strains and density targets. ')
+           end
+           
+           if(obj.validationModeOn==1)
+               obj.DisplayImportantMessage('Meso structure validation is on. Generating D_targets for meso design problem to try to meet. ')
+           end
+           
+           if(obj.validationModeOn==1 && obj.strainAndTargetTest==1)
+                obj.DisplayImportantMessage('Validation and Psuedo Strain targets can NOT be on at the same time. Exiting program.  ')
+                exit(0);
+           end
         
         end
         
+        
+        function [] = DisplayImportantMessage(obj, message)
+            
+            fprintf('----------------------------------------------\n\n');
+            fprintf('             %s\n',message);
+            fprintf('\n----------------------------------------------\n');
+            
+        end
         
         
         %         function obj = CalculateDesignVarsPerFEAelement(obj)

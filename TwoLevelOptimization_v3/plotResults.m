@@ -147,6 +147,29 @@ classdef plotResults
             end
             
             %  ----------------------------
+            % do anisotropic values. . 
+            %  ----------------------------
+            if(config.doPlotAnIsotropicValues ==1)
+                subplot(plotDim1,plotDim2,plotcount); plotcount = plotcount + 1;
+                titleText = sprintf('doPlotAnIsotropicValues Exx' );
+                obj.PlotArrayGeneric(DV.Exx,titleText)
+                
+              subplot(plotDim1,plotDim2,plotcount); plotcount = plotcount + 1;
+                titleText = sprintf('doPlotAnIsotropicValues Eyy' );
+                obj.PlotArrayGeneric(DV.Exx,titleText)
+                
+                subplot(plotDim1,plotDim2,plotcount); plotcount = plotcount + 1;
+                titleText = sprintf('doPlotAnIsotropicValues E12' );
+                obj.PlotArrayGeneric(DV.E12,titleText)
+                
+                subplot(plotDim1,plotDim2,plotcount); plotcount = plotcount + 1;
+                titleText = sprintf('doPlotAnIsotropicValues E33' );
+                obj.PlotArrayGeneric(DV.E33,titleText)               
+                
+            
+            end
+            
+            %  ----------------------------
             % Plot Final
             %  ----------------------------
             if(config.doPlotFinal == 1)
@@ -196,11 +219,13 @@ classdef plotResults
             %  DV.c, DV.cCompliance, DV.cHeat,vol1Fraction,vol2Fraction,fractionCurrent_V1Local,densitySum];
             x = 1:loopNumb;
             % y1 = DV.storeOptimizationVar(1:loopNumb,1)';
+            
             elasticObjective = DV.storeOptimizationVar(1:loopNumb,2)'; % Elastic Compliance
 %             elasticObjective
             
             
             elasticObjective = elasticObjective/max(elasticObjective); % normalize to make plotting nice
+            titleName='Metrics Plot';
             
             
             if(config.useExxEyy==1)
@@ -221,7 +246,7 @@ classdef plotResults
                 ThetaSysAndSubDiffSummed = DV.storeOptimizationVar(1:loopNumb,12)'; %
                 
                 smallest = 1000;
-                startValue=103; % avoid iteration 1
+                startValue=config.maxFEACalls+2; % avoid iteration 1
                 endValue=size(ThetaSysAndSubDiffSummed,2);
                 if(endValue>startValue)
                     position=0;
@@ -239,7 +264,7 @@ classdef plotResults
                     NumExxDiff = ExxSysAndSubDiffSummed(jjj)/matProp.E_material1;
                     NumEyyDiff = EyySysAndSubDiffSummed(jjj)/matProp.E_material1;
                     NumThetaDiff = ThetaSysAndSubDiffSummed(jjj)/(pi/2);
-                    fprintf('Smallest value at %d,NumExxDiff %.2f, NumEyyDiff %.2f, NumThetaDiff %.2f \n ', jjj,NumExxDiff,NumEyyDiff,NumThetaDiff);
+                    titleName = sprintf('Smallest value at %d,NumExxDiff %.2f, NumEyyDiff %.2f, NumThetaDiff %.2f \n ', jjj,NumExxDiff,NumEyyDiff,NumThetaDiff);
                 end
                 
                 %normalize
@@ -295,6 +320,7 @@ classdef plotResults
             end
             
             ylim([0 1])
+            title(titleName);
         end
         
         
@@ -362,7 +388,8 @@ classdef plotResults
                 config.doPlotRotationValue +...
                 config.doPlotCombinedExxEyyAndRotation +...
                 config.doSysANDSubSysDiffValues*3 +... % 3X for the 3 vars
-                config.doPlotEyyExxArrows;
+                config.doPlotEyyExxArrows +...
+                config.doPlotAnIsotropicValues*4;
             
             
             

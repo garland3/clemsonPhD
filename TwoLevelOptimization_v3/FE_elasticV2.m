@@ -200,6 +200,8 @@ end
 
 alldofs     = [1:ndof];
 Free    = setdiff(alldofs,Essential);
+E12 = 1;
+E33 = 1;
 
 % % loop over the elements
 for e = 1:ne    
@@ -247,7 +249,12 @@ for e = 1:ne
 %     K(NodeNumbers,NodeNumbers) = K(NodeNumbers,NodeNumbers) + DV.x(y,x)^config.penal*ke;
 
       % KE = matProp.getKMatrixUseTopGradOrthoDistrRotVars(config,DV.x(y,x),DV.w(y,x),DV.d(y,x),DV.t(y,x));
-      KE = matProp.getKMatrixTopExxYyyRotVars(config,DV.x(y,x),DV.Exx(y,x), DV.Eyy(y,x),DV.t(y,x),DV.w(y,x),e);
+      if(config.anisotropicMat==1)
+          E12=DV.E12(y,x);
+          E33=DV.E33(y,x);
+      end
+   
+      KE = matProp.getKMatrixTopExxYyyRotVars(config,DV.x(y,x),DV.Exx(y,x), DV.Eyy(y,x),DV.t(y,x),DV.w(y,x),E12, E33, e);
       K(NodeNumbers,NodeNumbers) = K(NodeNumbers,NodeNumbers) + KE;
     
 %     if(config.addThermalExpansion ==1)

@@ -25,6 +25,10 @@ EyyVector =0:matProp.E_material1/temp:matProp.E_material1;
 thetaVector = 0:(pi/2)/temp:pi/2;
 [ExxValues, EyyValues, ThetaValues] = meshgrid(ExxVector,EyyVector,thetaVector);
 
+[ t1 t2 t3]=size(ExxValues);
+ne = t1*t2*t3;
+simpDensity = ones(ne,1);
+
 % xValues
 % % save the density field
 % outname = sprintf('./out%i/SIMPdensityfield%i.csv',folderNum,mm_iteration);
@@ -48,7 +52,7 @@ outname = sprintf('./out%i/elementXYposition%i.csv',folderNum,mm_iteration);
 csvwrite(outname,[1 2]);
 
 outname = sprintf('./out%i/SIMPdensityfield%i.csv',folderNum,mm_iteration);
-csvwrite(outname,[1 2]);
+csvwrite(outname,simpDensity);
 
 %ExxValues=padarray(ExxValues,
 % ExxValues=reshape(ExxValues,1,[]);

@@ -27,6 +27,12 @@ if(configMeso.multiscaleMethodCompare~=1)
         %      outname = sprintf('./out%i/sensitivity%iforElement%i.csv',folderNum,macro_meso_iteration,elementNumber);
         %      csvwrite(outname,designVarsMeso.temp1);
     end
+elseif(configMeso.strainAndTargetTest==1)
+     % save the density field
+        outname = sprintf('./out%i/densityfield%iforElement%i.csv',folderNum,macro_meso_iteration,elementNumber);
+        x = DVmeso.x;
+        csvwrite(outname,x);
+    
 else
     % save the density field
     outname = sprintf('./out%i/densityfield%iforElement%i.csv',folderNum,macro_meso_iteration,elementNumber);

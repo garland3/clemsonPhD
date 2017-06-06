@@ -9,7 +9,7 @@
 #define FALSE 0
 #define TERMINATION_TAG 123456789 
 #define MASTER_RANK 0
-#define SUB_MASTER_RANK 1
+#define SUB_MASTER_RANK 8
 #define SUB_SUB_MASTER_RANK 2
 #define NUM_MACRO_MESO_ITER 5 // 3,5,11
 #define START_MACRO_MESO_ITER 1 // 1
@@ -17,7 +17,7 @@
 //#define NELX_MACRO  15 // 30 // 1331 
 //#define NELY_MACRO 15 //15 // 1
 
-#define MODE 1 //1 = Multscale optimization 2. Meso Validation 3.  multiscaleMethodCompare
+#define MODE 4 //1 =BOTT Multiscale optimization 2. Meso Validation 3.  multiscaleMethodCompareToCoelho 4. PseudoStrain and Density Target Test
 
 
 int callMatlab(int mode, int macro_meso_iteration, int element);
@@ -56,17 +56,17 @@ int main ( int argc, char **argv )
    
      if (my_rank == MASTER_RANK){
 		i_am_the_master = TRUE;
-	}//else {
+     }
 		 
 	   log_file = fopen ("./log.txt", "a");
-	//}
+	
     
     //------------
     // if Mode is validation, then only do 1 iteration. 
     //------------
     if(MODE==1 ){
         maxMacroMesoIterationCount=NUM_MACRO_MESO_ITER;
-    }else if(MODE==2){
+    }else if(MODE==2 || MODE==4){
          maxMacroMesoIterationCount=1;
     } else if( MODE==3){
         maxMacroMesoIterationCount=100;
@@ -83,12 +83,11 @@ int main ( int argc, char **argv )
             if(MODE==1 || MODE==3){
                 MultiscaleMasterNode(k,pool_size,my_rank);
             }
-            else if(MODE==2){
+            else if(MODE==2 || MODE==4){
                  MesoValidationMasterNode(k,pool_size,my_rank);
             }     
 
-            fprintf(log_file, "\n--------\nNew Macro Meso Iteration %d\n-----------\n", k);
-            fflush(log_file);            
+                  
          }         
          else
         {           
@@ -96,7 +95,11 @@ int main ( int argc, char **argv )
             //
             // Padawan code!! Obey the master
             //
-            // -------------------------------------------------------          
+            // -------------------------------------------------------  
+                if (my_rank == SUB_MASTER_RANK && (MODE==1 || MODE==3)){
+                    fprintf(log_file, "\n--------\nNew Macro Meso Iteration %d\n-----------\n", k);
+                    fflush(log_file);     
+                }            
                
                 // ------------------------
                 // 1. Pause till master code sends out a message that he is done with macro level
@@ -357,15 +360,22 @@ int MesoValidationMasterNode(int macro_meso_iteration,int pool_size ,int my_rank
    // int terminateTag;
      MPI_Status status;
     // terminateTag =nelm+10;
+    
       
     // ----------------------------------------------
     // 1. run macro level on master
     // ----------------------------------------------
     // callMatlab(int mode, int macro_meso_iteration, int element)
-    printf("Generate Targets for Meso Validation%d\n",k);
-    callMatlab(111,k, 1);
+    if(MODE ==2){
+        printf("Generate Targets for Meso Validation%d\n",k);
+        callMatlab(111,k, 1); // Manully upload the files. 
+    } else if (MODE ==4){
+         printf("Generate Targets Pseudo Strian and Density : mode = 113%d\n",k);
+        callMatlab(113,k, 1); // Manully upload the files. 
+    }
     
     nelm= DetermineNumberOfElements(macro_meso_iteration,0 );
+    //nelm=8000;
    
     
     
@@ -449,15 +459,20 @@ int MesoValidationMasterNode(int macro_meso_iteration,int pool_size ,int my_rank
         // --------------------------------------------
         // 5. REad validation results
         // --------------------------------------------
-        printf("MASTER --> Interprete the Meso validation results, ");			
-        callMatlab(112,k, 1);   
+        if(MODE ==2){
+            printf("MASTER --> Interprete the Meso validation results, ");			
+            callMatlab(112,k, 1);   
+        } else {
+            printf("MASTER --> Compile PSeudo strain and density information. MODE 114 ");			
+            callMatlab(114,k, 1);   
+        }
         
         return 1;
 
 }
 
 int DetermineNumberOfElements(int macro_meso_iteration,int folderNumber ){
-   int bufSize = 10000;
+   int bufSize = 1000000;
     char str[bufSize];
     FILE * file;
 
@@ -465,6 +480,7 @@ int DetermineNumberOfElements(int macro_meso_iteration,int folderNumber ){
    
   
     sprintf(outname,"./out%i/SIMPdensityfield%i.csv",folderNumber,macro_meso_iteration);
+     printf("Attempting to DetermineNumberOfElements from %s\n",outname);
    //  sprintf(outname,"../out%i/SIMPdensityfield%i.csv",folderNumber,macro_meso_iteration);
     file = fopen( outname, "r");
     int rowCount = 0;

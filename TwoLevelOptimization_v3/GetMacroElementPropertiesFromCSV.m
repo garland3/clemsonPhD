@@ -8,11 +8,11 @@ function  macroEleProps = GetMacroElementPropertiesFromCSV(config,e)
 % element.
 
 
-if(config.validationModeOn==0)    
-    % ----------------------------------------------    
+if(config.validationModeOn==0 && config.strainAndTargetTest==0)
+    % ----------------------------------------------
     %
-    %      Normal Multiscale optimization 
-    % 
+    %      Normal Multiscale optimization
+    %
     % ----------------------------------------------
     
     mm_iteration = config.macro_meso_iteration;
@@ -112,19 +112,20 @@ elseif(config.validationModeOn==1)
     mm_iteration=1;
     % read the Exx field
     outname = sprintf('./out%i/ExxValues%i.csv',folderNum,mm_iteration);
-    ExxValues= csvread(outname);
+    strain1= csvread(outname);
     
     % read the Eyy field
     outname = sprintf('./out%i/EyyValues%i.csv',folderNum,mm_iteration);
-    EyyValues= csvread(outname);
+    strain2= csvread(outname);
     
     % read the Theta field
     outname = sprintf('./out%i/ThetaValues%i.csv',folderNum,mm_iteration);
     ThetaValues=csvread(outname);
     
-    Exx=ExxValues(e);
-    Eyy=EyyValues(e);
+    Exx=strain1(e);
+    Eyy=strain2(e);
     theta=ThetaValues(e);
+    fprintf('Meso design Validation mode. Targets Exx %f Eyy %f Theta %f\n',Exx,Eyy,theta);
     
     macroEleProps = macroElementProp;
     macroEleProps.elementNumber = e;
@@ -150,10 +151,143 @@ elseif(config.validationModeOn==1)
     
     
     
-end
-%printf('Finished getting macro data from csv files');
+elseif(config.strainAndTargetTest==1)
+    % -----------------------------------
+    %
+    %      Psuedo Strain and target density test for ANN training data
+    %
+    % -----------------------------------
+    folderNum=0;
+    mm_iteration=1;
+    % pseudoStrain
+    outname = sprintf('./out%i/strain1%i.csv',folderNum,mm_iteration);
+    strain1= csvread(outname);
+    
+    % pseudoStrain
+    outname = sprintf('./out%i/strain2%i.csv',folderNum,mm_iteration);
+    strain2= csvread(outname);
+    
+    % pseudoStrain
+    outname = sprintf('./out%i/strain3%i.csv',folderNum,mm_iteration);
+    strain3=csvread(outname);
+    
+    % targetDensity
+    outname = sprintf('./out%i/densityTargets%i.csv',folderNum,mm_iteration);
+    densityTarget=csvread(outname);
+    
+    %     Exx=strain1(e);
+    %     Eyy=strain2(e);
+    %     theta=ThetaValues(e);
+    
+    macroEleProps = macroElementProp;
+    macroEleProps.elementNumber = e;
+    macroEleProps.yPos =1;
+    macroEleProps.xPos = e;
+    macroEleProps.material1Fraction=1;
+    macroEleProps.disp=ones(1,8);
+    
+    macroEleProps.psuedoStrain=[1; 1; 1];
+    macroEleProps.psuedoStrain(1) = strain1(e);
+    macroEleProps.psuedoStrain(2) = strain2(e);
+    macroEleProps.psuedoStrain(3) = strain3(e);
+    temp1 =densityTarget(e);
+    macroEleProps.targetDensity=temp1;
+    
+    
+    macroEleProps.densitySIMP = 1;
+    macroEleProps.Exx =1;
+    macroEleProps.Eyy =1;
+    macroEleProps.theta=1;
+    
+    
+    w=1;
+    matProp=MaterialProperties;
+    D= matProp.getDmatMatrixTopExxYyyRotVars(config,macroEleProps.densitySIMP ,macroEleProps.Exx, macroEleProps.Eyy,macroEleProps.theta ,w);
+    
+    % outname = sprintf('./out%i/DsystemIter%i_Element_%i.csv',folderNum,mm_iteration,e);
+    % D = csvread(outname);
+    macroEleProps.D_sys =D;
+    
+    %printf('Finished getting macro data from csv files');
 end
 
+if(config.UseLookUpTableForPsuedoStrain==1 && config.strainAndTargetTest~=1)
+    
+    % 1. REad in the data look up table.
+    % 2. (Done) find the D_h for the coorospnding Exx, Eyy, Theta values
+    % 3. Search the lookup table for the value that minimizes
+    % Save this min value as the psuedo strain to use.
+    macro_meso_iteration=1;
+    outname = sprintf('./data/D11%i_datat.data',macro_meso_iteration);
+    D11 =csvread(outname);
+    
+    %     outname = sprintf('./data/D12%i_datat.data',macro_meso_iteration);
+    %      D12 =csvread(outname);
+    
+    outname = sprintf('./data/D22%i_datat.data',macro_meso_iteration);
+    D22 =csvread(outname);
+    
+    outname = sprintf('./data/D33%i_datat.data',macro_meso_iteration);
+    D33 =csvread(outname);
+    
+    % write the targets
+    outname = sprintf('./data/pstrain1%i_datat.data',macro_meso_iteration);
+    pstrain1 =csvread(outname);
+    
+    outname = sprintf('./data/pstrain2%i_datat.data',macro_meso_iteration);
+    pstrain2 =csvread(outname);
+    
+    outname = sprintf('./data/pstrain3%i_datat.data',macro_meso_iteration);
+    pstrain3 =csvread(outname);
+    
+    outname = sprintf('./data/etaTarget%i_datat.data',macro_meso_iteration);
+    etaTarget =csvread(outname);
+    
+    
+    [t1 t2]=size(etaTarget);
+    
+    minValue=1e11;
+    indexOfMinValue = 1;
+    
+    D11sys = macroEleProps.D_sys(1,1) ;
+    D22sys = macroEleProps.D_sys(2,2) ;
+    D33sys = macroEleProps.D_sys(3,3) ;
+    for i = 1:t2
+        D11_table = D11(i);
+        D22_table = D22(i);
+        D33_table = D33(i);
+        
+          diffValue = (D11_table-D11sys)^2+(D22_table-D22sys)^2+(D33_table-D33sys)^2;
+%           diffValue = (D11_table-D11sys)^2+(D22_table-D22sys)^2+(D33_table-D33sys)^2;
+%               diffValue = (D11_table-D11sys)^2+(D22_table-D22sys)^2;
+        
+        if(diffValue<minValue)
+            minValue=diffValue;
+            indexOfMinValue=i;
+        end
+    end
+    
+    D11_table = D11(indexOfMinValue);
+    D22_table = D22(indexOfMinValue);
+    D33_table = D33(indexOfMinValue);
+    
+    diffValue = (D11_table-D11sys)^2+(D22_table-D22sys)^2;%+0.5*(D33_table-D33sys)^2;
+    
+    ps(1) = pstrain1(indexOfMinValue);
+   ps(2)= pstrain2(indexOfMinValue);
+   ps(3) = pstrain3(indexOfMinValue);
+   etaTargetLocal = etaTarget(indexOfMinValue);
+    
+    
+     macroEleProps.psuedoStrain(1) = ps(1) ;
+    macroEleProps.psuedoStrain(2) = ps(2);
+    macroEleProps.psuedoStrain(3) =  ps(3);
+    macroEleProps.targetDensity=etaTargetLocal;
+    
+    
+    
+    
+end
 % else
 %
 %     % -----------------------------------

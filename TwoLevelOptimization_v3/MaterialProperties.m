@@ -12,7 +12,7 @@ classdef MaterialProperties
         %         alpha2 = 2.4e-5; % thermal expansion coefficient for material 2
         
         E_material1 =100000;% 100000; %4 N/mm^2 The elastic mod of material 1
-        E_material2 = 0;% 25000E_material1/2; %4 The elastic mod of material 2
+        E_material2 = 25000;% 25000E_material1/2; %4 The elastic mod of material 2
         
         K_material1 = 0.02; %  W/ (mm*K)heat conduction of material 1
         K_material2 = 0.04; % heat conduction of material 2
@@ -68,9 +68,13 @@ classdef MaterialProperties
         %
         % ------------------------------------------------
         function obj =  ReadConstitutiveMatrixesFromFiles(obj,  config)
-            if(config.macro_meso_iteration>1)
+            if(config.macro_meso_iteration>1 || config.mode==90)
                 folderNum = config.iterationNum;
-                oldIteration = config.macro_meso_iteration-1; % minus 1, because we want to get the previous iterationdesign.
+                if(config.mode==90)
+                      oldIteration = config.macro_meso_iteration;
+                else
+                    oldIteration = config.macro_meso_iteration-1; % minus 1, because we want to get the previous iterationdesign.
+                end
                 
                 ne = config.nelx*config.nely;
                 obj.SavedDmatrix = zeros(ne,9);
@@ -134,18 +138,18 @@ classdef MaterialProperties
         %  HAVE SPECIAL CASES FOR OLD METHODS AS LEGACY CODE
         %  The material gradient is for legacy.
         % ---------------------------
-        function K = getKMatrixTopExxYyyRotVars(obj,config,topDensity,Exx, Eyy,rotation,material1Fraction,e)
+        function K = getKMatrixTopExxYyyRotVars(obj,config,topDensity,Exx, Eyy,rotation,material1Fraction,E12, E33,e)
             
             % For validation
-            if(config.validationModeOn==1)
-                if(config.macro_meso_iteration>1)
-                 D_out= obj.GetSavedDMatrix(e);
-                 
-                 if(config.multiscaleMethodCompare==1)
-                     D_out=D_out*topDensity;
-                 end
-                 
-                else
+            if(config.validationModeOn==1 || config.mode==90)
+                if(config.macro_meso_iteration>1 || config.mode==90)
+                     D_out= obj.GetSavedDMatrix(e);
+
+                     if(config.multiscaleMethodCompare==1)
+                         D_out=D_out*topDensity;
+                     end
+
+                 else
                       D_out = [ 1 obj.v 0;
                                 obj.v 1 0;
                                 0 0 1/2*(1-obj.v)]*obj.E_material1/(1-obj.v^2);
@@ -158,8 +162,8 @@ classdef MaterialProperties
             % -------------
             % New method
             % -------------
-            if(config.useExxEyy==1 || config.useRotation==1 )
-                D_out= obj.getDmatMatrixTopExxYyyRotVars(config,topDensity,Exx, Eyy,rotation,material1Fraction);
+            if(config.useExxEyy==1 || config.useRotation==1 || config.anisotropicMat)
+                D_out= obj.getDmatMatrixTopExxYyyRotVars(config,topDensity,Exx, Eyy,rotation,material1Fraction,E12, E33);
                 [K]=elK_elastic_v2(D_out);
                 return;
             else % END NEW METHOD
@@ -171,17 +175,23 @@ classdef MaterialProperties
             end% END OLD METHOD
         end
         
-        function D_out =  getDmatMatrixTopExxYyyRotVars(obj,config,topDensity,Exx, Eyy,rotation,material1Fraction)
+        function D_out =  getDmatMatrixTopExxYyyRotVars(obj,config,topDensity,Exx, Eyy,rotation,material1Fraction, E12, E33)
             % -------------
             % New method
             % -------------
             
-            if(config.useExxEyy==1 || config.useRotation==1 )
+            if((config.useExxEyy==1 || config.useRotation==1 ) && config.anisotropicMat ~=1) 
                 D_out = obj.getDmatrixForExxEyy(Exx, Eyy); % Exx and Eyy DISTRIBUTION
                 D_out=D_out*topDensity^(config.penal); % TOPOLOGY;
                 if(config.useRotation==1)  % ROTATION
                     D_out=obj.rotateDmatrix(config,rotation, D_out)  ;
                 end
+                
+                % - anisotropic Case
+            elseif(config.anisotropicMat ==1)
+                 D_out = obj.getDmatrixForAnisotropic(Exx, Eyy, E12, E33); 
+                D_out=D_out*topDensity^(config.penal); % TOPOLOGY;
+
             else % END NEW METHOD
                 
                 % -------------
@@ -299,6 +309,25 @@ classdef MaterialProperties
             D_out = [ Exx/(1-vv^2)        Q12                    0                   ;
                 Q12                 Eyy/(1-vv^2)           0                   ;
                 0                   0                      Q66  ] ;
+            
+        end
+        
+        
+        %---------------
+        % Get D matrix for anisotropic material
+        % -----------------------------------------------
+        function D_out = getDmatrixForAnisotropic(obj,Exx, Eyy,E12, E33)
+            
+            %             E0 = 1;%effectiveElasticProperties(obj, material1Fraction, config);
+            vv = obj.v;
+%             %             d = orthD;
+             E12_local = E12/(1-vv^2);   
+%             
+%             Q12 = vv*E12/(1-vv^2);
+%             Q66 =  0.5*(1-vv)*E12/(1-vv^2);
+            D_out = [ Exx/(1-vv^2)        E12_local            0                        ;
+                      E12_local           Eyy/(1-vv^2)         0                        ;
+                      0                   0                    0.5*(1-vv)*E33/(1-vv^2)] ;
             
         end
         

@@ -20,40 +20,33 @@ config.mode =65;
 % 3 = macro orthogonal Distribution (old method)
 % 4 = macro rotation
 % 5 = macro E_xx and E_yy optimization
+% 6 = anisotropic material
 
 
 % 50 = topology,  material gradient
 % 55 = topology, material gradient, ortho distribution, rotation
 % 60 = topology,  E_xx and E_yy, and rotation together
 % 65 = topology,  E_xx and E_yy
+% 70 = topology and anisotropicMat
 % 80 = testing response surface for Exx,Eyy, rho
+% 90,290, Calculate objective of macro using D sub system matrixes. 
 
 
 % 100 = Single meso design for MPI parallelization
 % 110 = TESTING MESO design methods
 % 111 = Validate Meso (generate Targets)
 % 112 = Read the meso design information and compute validation metrics
+% 113 = Generate Pseudo Strain and Density Targts for ANN map test
+% 114 = Read Psuedo strain and density target results. Save .csv file
+% 115 = Run ANN to interprete the psuedo strain and density target results
 
 % 200, Plot the objectives and constraints over several iteraions
 % 201, make an .stl file for an iteration.
 % 202, Combine meso and Macro designs into a single plot and csv file.
 % 203, Extract the Exx, Eyy, Theta, and density values from the meso D matrixes. 
-% 204, Calculate objective of macro using D sub system matrixes. 
-
-
-% 3 = both mateiral vol fraction and topology, ortho, rotation
-% 4 = meso testing only.
-% 5 = Run complete macro optimization, save results to .csv files.
-% 6.= Testing reading .csv files and designing each meso structure
-% 7= testing recombinging the meso structure designs.
-% 10 = macro and meso togehter.
-% 11 = single meso design, where "singleMeso_elementNumber" and
-% "macro_meso_iteration" specify which one
-% 12
 
 
 opt = Optimizer;
-
 
 matProp = MaterialProperties; % material properties Object
 config.RunPalmetto = 1;
@@ -100,13 +93,43 @@ end
 %        and compute validation metrics 
 % ---------------------------------------------
 if(config.mode ==112) 
-    DV = DesignVars(config);
-    fprintf('compute Meso Design Metrics... Not implemented\n');
+%     DV = DesignVars(config);
+    fprintf('compute Meso Design Metrics.\n');
       GenerateRhoFunctionOfExxEyy(config)
    % ComputeMesoDesignMetrics(DV,config,matProp);
     return;
 end
 
+
+%% ---------------------------------------------
+%        Generate Pseudo Strain and Density Targts for ANN map test
+% ---------------------------------------------
+if(config.mode ==113)     
+    fprintf('GeneratePsuedoStrainsAndDensityTargets\n');
+     DV = DesignVars(config);
+     step=1;
+    GeneratePsuedoStrainsAndDensityTargets(DV,config,matProp,step);
+    return; 
+end
+
+%% ---------------------------------------------
+%       Read the  Generated Pseudo Strain and Density Targts for ANN map test
+% ---------------------------------------------
+if(config.mode ==114 || config.mode ==115)     
+   
+     DV = DesignVars(config);
+     if(config.mode ==114)
+          fprintf('GeneratePsuedoStrainsAndDensityTargets STEP 2\n');
+        step=2;
+         GeneratePsuedoStrainsAndDensityTargets(DV,config,matProp,step);
+     elseif(config.mode ==115)
+          fprintf('GeneratePsuedoStrainsAndDensityTargets STEP 3\n');
+          step=3;
+         GeneratePsuedoStrainsAndDensityTargets(DV,config,matProp,step);
+         
+     end
+    return; 
+end
 %% ---------------------------------
 % Mode 200,
 % Plot the objectives and constraints over several iteraions
@@ -156,10 +179,10 @@ end
 % Mode 204
 % Calculate objective of macro using D sub system matrixes. 
 % -------------------------------
-if(config.mode ==204)
-    UseSubSystemDmatricesForMacroProblem(config,matProp)
-    return;
-end
+% if(config.mode ==204)
+%     UseSubSystemDmatricesForMacroProblem(config,matProp)
+%     return;
+% end
 
 if(config.recvid==1)
     video = VideoManager;
@@ -173,15 +196,10 @@ masterloop = 0; FEACalls = 0;
 % Macro Design
 % ---------------------------------------------------
 DV = DesignVars(config);
-%  DV.Exx = DV.Exx*config.v1*matProp.E_material1+config.v2*matProp.E_material2;
-% DV.Exx = ones(size(DV.Exx))*4.799014e+03;
-if(config.useTargetMesoDensity==1)
-    DV.Exx = ones(size(DV.Exx))*matProp.E_material1*config.targetExxEyyDensity;
-else
-    DV.Exx = ones(size(DV.Exx))*DV.targetAvgExxEyy;
+
+if(config.mode==90)
+    matProp= matProp.ReadConstitutiveMatrixesFromFiles(config);
 end
-DV.Eyy = DV.Exx ;
-% DV.w= ones(size(DV.Exx));
 
 % if iteration 2 or higher, then get saved problems state and calcualte
 % penalty function valeus. 
@@ -200,7 +218,8 @@ DV.Eyy = DV.Exx ;
      DV=DV.GetMacroStateVarsFromCSVFiles( config);
     matProp= matProp.ReadConstitutiveMatrixesFromFiles(config);
      % USe in FEA???
-  end
+ end
+
 % --------------------------------
 % Run FEA, to get started.
 % --------------------------------
@@ -208,7 +227,7 @@ DV = DV.RunFEAs(config, matProp, masterloop);
 DV =  DV.CalculateVolumeFractions(config,matProp);
 FEACalls = FEACalls+1;
 % START ITERATION
-if(macroDesignMode==1)
+if(macroDesignMode==1 &&  config.mode ~= 90)
     while  masterloop<=config.maxMasterLoops && FEACalls<=config.maxFEACalls
         masterloop = masterloop + 1;
         
@@ -223,11 +242,12 @@ if(macroDesignMode==1)
             if(config.multiscaleMethodCompare~=1)
                 DV = DV.RunFEAs(config, matProp, masterloop);               
             end
-            FEACalls = FEACalls+1;
+           
             DV= DV.CalculateObjectiveValue(config, matProp, masterloop,opt);
             DV = DV.CalculateVolumeFractions(config, matProp) ;
-            DV = AddDataToStoreOptimizationVarArray(DV);
+            DV = DV.AddDataToStoreOptimizationVarArray(config);
             ShowOptimizerProgress(DV,1,' topology',FEACalls,config, matProp);
+             FEACalls = FEACalls+1;
             if(TestForTermaination(DV, config,masterloop) ==1)
                 disp('break in topology');
                 break;
@@ -247,12 +267,31 @@ if(macroDesignMode==1)
             %             FEACalls = FEACalls+1;
             DV= DV.CalculateObjectiveValue(config, matProp, masterloop,opt);
             ShowOptimizerProgress(DV,1,' vol fraction',FEACalls,config, matProp);
-            DV = AddDataToStoreOptimizationVarArray(DV);
+            DV = DV.AddDataToStoreOptimizationVarArray(config);
             if( TestForTermaination(DV, config,masterloop) ==1)
                 disp('break in vol fraction');
                 break;
             end
         end % END VOLUME FRACTION OPTIMIZATION CODE
+        
+        % --------------------------------
+        % anisotropic material optimization
+        % --------------------------------
+        if ( config.mode == 6 ||  config.mode == 70)
+            DV= opt.OptimizeAnisotropicMaterial(DV, config, matProp,masterloop);
+            % --------------------------------
+            % Run FEA, again.
+            % --------------------------------
+            DV = DV.RunFEAs(config, matProp, masterloop);
+            FEACalls = FEACalls+1;
+            DV= DV.CalculateObjectiveValue(config, matProp, masterloop,opt);
+            ShowOptimizerProgress(DV,1,' anisotropic',FEACalls,config, matProp);
+            DV = DV.AddDataToStoreOptimizationVarArray(config);
+            if( TestForTermaination(DV, config,masterloop) ==1)
+                disp('break in anisotropic');
+                break;
+            end
+        end % END anisotropic OPTIMIZATION CODE
         
         % --------------------------------
         % Rotation of material Optimization
@@ -268,10 +307,11 @@ if(macroDesignMode==1)
                     % Run FEA,
                     % --------------------------------
                     DV = DV.RunFEAs(config, matProp, masterloop);
-                    FEACalls = FEACalls+1;
+                 
                     DV= DV.CalculateObjectiveValue(config, matProp, masterloop,opt);
-                    DV = AddDataToStoreOptimizationVarArray(DV);
+                    DV = DV.AddDataToStoreOptimizationVarArray(config);
                     ShowOptimizerProgress(DV,1,' rotation',FEACalls,config, matProp);
+                       FEACalls = FEACalls+1;
                     
 %                 end
             end %END ORTHOGONAL MATERIAL DISTRIBUTION OPTIMZATION
@@ -286,11 +326,12 @@ if(macroDesignMode==1)
             % Run FEA, calculate sensitivities
             % --------------------------------
                         DV = DV.RunFEAs(config, matProp, masterloop);
-                        FEACalls = FEACalls+1;
+                      
             DV = DV.CalculateVolumeFractions(config, matProp) ;
             DV= DV.CalculateObjectiveValue(config, matProp, masterloop,opt);
-            DV = AddDataToStoreOptimizationVarArray(DV);
+             DV = DV.AddDataToStoreOptimizationVarArray(config);
             ShowOptimizerProgress(DV,1,' E_xx and E_yy ',FEACalls,config, matProp);
+       
         end % E_xx and E_yy Optimization
         
           % Flip orientation of Exx and Eyy so that theta is positive
@@ -302,6 +343,7 @@ if(macroDesignMode==1)
 %                 print(nameGraph,'-dpng');
             end
         end
+               FEACalls = FEACalls+1;
         
         if(config.recvid==1)
             [framedNumber, F]  = video.RecordFrame(config,framedNumber, F,vidObj);
@@ -357,6 +399,15 @@ end
 if(config.recvid==1)
     video.CloseVideo( config, F,vidObj)
 end
+if(config.mode ==90)
+       DV= DV.CalculateObjectiveValue(config, matProp, masterloop,opt);
+            DV = DV.CalculateVolumeFractions(config, matProp) ;
+            DV = AddDataToStoreOptimizationVarArray(DV);
+         
+       ShowOptimizerProgress(DV,1,' MODE 90 ',FEACalls,config, matProp);
+       outname = sprintf('./out%i/mode90_objective%i.csv',folderNum,config.macro_meso_iteration);
+    csvwrite(outname,DV.c);
+end
 
 %% ---------------------------------------------
 %
@@ -366,7 +417,7 @@ end
 %
 % ---------------------------------------------
 
-if(config.mode <100)
+if(config.mode <100 && config.mode~=90)
     % write the displacement field to a .csv
     SaveMacroProblemStateToCSV(config,DV,matProp);
 end
@@ -431,7 +482,7 @@ function ShowOptimizerProgress(DV,doPlot,name,FEACalls,config, matProp)
 
 % PRINT RESULTS
 disp([' FEA calls.: ' sprintf('%4i',FEACalls) ' Obj.: ' sprintf('%10.4f',DV.c) ' Vol. 1: ' sprintf('%6.3f', DV.currentVol1Fraction)  ' Vol. 2: ' sprintf('%6.3f', DV.currentVol2Fraction) ...
-    ' Target E.: ' sprintf('%4i',DV.targetAvgExxEyy)    ' Current E.: ' sprintf('%4i',DV.actualAverageE) ' Avg Meso Density '  sprintf('%4i',DV.averageMesoDensity) name] );
+    ' Target E.: ' sprintf('%4i',config.targetAvgExxEyy)    ' Current E.: ' sprintf('%4i',DV.actualAverageE) ' Avg Meso Density '  sprintf('%4i',DV.averageMesoDensity) name] );
 
 if(doPlot==1)
     p = plotResults;

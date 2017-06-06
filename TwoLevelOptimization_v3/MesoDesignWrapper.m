@@ -8,6 +8,11 @@ disp(['Meso Design #: ' sprintf('%4i',macroElementProperties.elementNumber  ) ' 
 % scalePlot = 1;
 % coord(:,1) = [0 1 1 0];
 % coord(:,2)  = [0 0 1 1];
+ if(config.strainAndTargetTest==1 || config.UseLookUpTableForPsuedoStrain==1)
+     p=macroElementProperties.psuedoStrain;
+     fprintf('Meso design , pseudo strain %f %f %f density target %f\n',p(1),p(2),p(3),macroElementProperties.targetDensity);
+%           fprintf('Meso design as ANN training data, pseudo strain %f %f %f density target %f\n',p(1),p(2),p(3),macroElementProperties.targetDensity);
+ end
 
 % ----------------------------------------------
 % Check Density
@@ -56,36 +61,45 @@ if(macroElementProperties.densitySIMP>config.noNewMesoDesignDensityCutOff || con
     [DVmeso,macroElementProperties,configMeso.totalVolume]= MesoStructureDesignV2(matProp,configMeso,DVmeso,macroElementProperties,[]);
     
     if(configMeso.multiscaleMethodCompare~=1)
-        macroElementProperties.D_subSys  % Show the new D found by the design.
-        %   Diff_Sys_Sub =  (macroElementProperties.D_subSys- macroElementProperties.D_sys);
-        %     Diff_Sys_Sub
-        macroElementProperties.D_sys
-        %     determinDiff = det(Diff_Sys_Sub);
-        %     determinDiff
-        SysDividedbySubSysstem = macroElementProperties.D_sys./macroElementProperties.D_subSys;
-        SysDividedbySubSysstem
-        
-        %      systemDiff =  macroElementProperties.D_sys-macroElementProperties.D_subSys;
-        %     systemDiff
+        if(config.strainAndTargetTest~=1)
+            macroElementProperties.D_subSys  % Show the new D found by the design.
+            %   Diff_Sys_Sub =  (macroElementProperties.D_subSys- macroElementProperties.D_sys);
+            %     Diff_Sys_Sub
+            macroElementProperties.D_sys
+            %     determinDiff = det(Diff_Sys_Sub);
+            %     determinDiff
+            SysDividedbySubSysstem = macroElementProperties.D_sys./macroElementProperties.D_subSys;
+            SysDividedbySubSysstem
+
+            %      systemDiff =  macroElementProperties.D_sys-macroElementProperties.D_subSys;
+            %     systemDiff
+        end
     end
     
     newDesign = 1;
     if(plottingMesoDesign ==1)
         p = plotResults;
         figure(1)
-        
-        if(configMeso.coordinateMesoBoundaries==1 && configMeso.macro_meso_iteration>1)
-            subplot(1,2,1);
-            p.PlotArrayGeneric(DVmeso.mesoStructNTCmask,'NTC  sensitivity mask');
-            
+        if(configMeso.strainAndTargetTest~=1)
+            if(configMeso.coordinateMesoBoundaries==1 && configMeso.macro_meso_iteration>1)
+                subplot(1,2,1);
+                p.PlotArrayGeneric(DVmeso.mesoStructNTCmask,'NTC  sensitivity mask');
+            end
+            subplot(1,2,2);
+            outname = sprintf('meso structure for macro element %i density %f',e, configMeso.v1);
+            p.PlotArrayGeneric(DVmeso.x,outname);
+               caxis([0 1]);
+            %                 subplot(2,2,3);
+            %                 outname = sprintf('meso structure sensitivity %i density %f',e, configMeso.v1);
+            %                 p.PlotArrayGeneric(DVmeso.temp1,outname);
+        else
+            pStrain=macroElementProperties.psuedoStrain;
+            outname = sprintf('strainAndTargetTest %i density %f',e, configMeso.v1);
+            outname2 = sprintf('pseudo strain %f %f %f ',pStrain(1),pStrain(2),pStrain(3));
+            outname = [outname outname2];
+            p.PlotArrayGeneric(DVmeso.x,outname);
+               caxis([0 1]);
         end
-        
-        subplot(1,2,2);
-        outname = sprintf('meso structure for macro element %i density %f',e, configMeso.v1);
-        p.PlotArrayGeneric(DVmeso.x,outname);
-        %                 subplot(2,2,3);
-        %                 outname = sprintf('meso structure sensitivity %i density %f',e, configMeso.v1);
-        %                 p.PlotArrayGeneric(DVmeso.temp1,outname);
         drawnow
         nameGraph = sprintf('./out%i/elementpicture%i.png',configMeso.iterationNum, e);
         print(nameGraph,'-dpng')

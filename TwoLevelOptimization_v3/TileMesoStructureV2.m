@@ -241,7 +241,7 @@ elseif(step==2)
         % ----------------------------------------
         numrows =9;
         % -----------------------------------
-        if(macroElementProps.densitySIMP>macroSettings.voidMaterialDensityCutOff)
+        if(macroElementProps.densitySIMP>macroSettings.voidMaterialDensityCutOff && macroSettings.AddBorder==1)
             % if solid, and on the edge of design domain, then add material
             % -----------------------------------
             if(yCurrent==1) % then on the bottom row
