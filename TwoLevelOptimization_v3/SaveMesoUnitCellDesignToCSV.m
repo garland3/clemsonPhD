@@ -4,8 +4,12 @@ folderNum=configMeso.iterationNum;
 macro_meso_iteration=configMeso.macro_meso_iteration;
 elementNumber=macroElementProperties.elementNumber;
 
-
-if(configMeso.multiscaleMethodCompare~=1)
+if(configMeso.strainAndTargetTest==1)
+    % save the density field
+    outname = sprintf('./out%i/densityfield%iforElement%i.csv',folderNum,macro_meso_iteration,elementNumber);
+    x = DVmeso.x;
+    csvwrite(outname,x);
+elseif(configMeso.multiscaleMethodCompare~=1)
     if(newDesign ==1)
         % save the density field
         outname = sprintf('./out%i/densityfield%iforElement%i.csv',folderNum,macro_meso_iteration,elementNumber);
@@ -27,11 +31,8 @@ if(configMeso.multiscaleMethodCompare~=1)
         %      outname = sprintf('./out%i/sensitivity%iforElement%i.csv',folderNum,macro_meso_iteration,elementNumber);
         %      csvwrite(outname,designVarsMeso.temp1);
     end
-elseif(configMeso.strainAndTargetTest==1)
-     % save the density field
-        outname = sprintf('./out%i/densityfield%iforElement%i.csv',folderNum,macro_meso_iteration,elementNumber);
-        x = DVmeso.x;
-        csvwrite(outname,x);
+    
+    
     
 else
     % save the density field

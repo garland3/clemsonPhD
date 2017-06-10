@@ -58,36 +58,39 @@ classdef Configuration
         % VOLUME Fraction SEttings.
         timestep = 0.001; % time step for the volume fraction update algorithm
         volFractionDamping = 1;
-        v1 = 0.2; % amount of material 1 to use. default to 20%
+        v1 = 0.6; % amount of material 1 to use. default to 20%
         v2 = 0.4; % amount of material 2 to use. default to 40%, reduced so there is less meso structures to compute
         totalVolume; % = v1+v2;
         
         % Meso Design settings
         mesoVolumeUpdateMethod=1; % 1 = average, 2 = Target the larger
-        maxMesoLoops = 200;
+        maxMesoLoops = 120;
         maxNumPseudoStrainLoop=3;
         PseudoStrainEndCriteria = 0.1;  
         TargetECloseNess=0.03; % part of the termination criteria
         volumeUpdateInterval=12;
         coordinateMesoBoundaries = 1;
         mesoDesignInitalConditions = 3; % 1 = randome, 2= square, 3 = circle
-        MesoMinimumDensity=0.0001;
+        MesoMinimumDensity=0;
         AddBorder=0; % Add border to complete structure. 
         UseLookUpTableForPsuedoStrain=1; %0 = feedback loop, 1 = use look up. 
         
           
         % Exx and Eyy Distribution
-        useExxEyy=1;    % must be 0 for gradient material optimization       
+        useExxEyy=1;    % must be 0 for gradient material optimization
         useTargetMesoDensity = 1; % 1 = yes, 0 = no and use target Eavg
         targetAvgExxEyy=50000;
         targetExxEyyDensity = 0.6;
         useThetaInSurfaceFit = 0;
-          useANN=1;
-          useAnnForDensityNotDerivative = 0;
+        useANN=0;
+        useAnnForDensityNotDerivative = 1;
         rminExxEyy = 4; % smoothing radius for sensitivity smoothing.
         
         % True anisotropic material
-        anisotropicMat=1;
+        anisotropicMat=0;
+        
+         % Use R in Exx and Eyy material model for the shear component
+        useRinOrthMaterialModel=0;
       
         
         
@@ -96,7 +99,7 @@ classdef Configuration
         mesoplotfrequency=1; % how often to plot the meso level design.
         iterationsPerPlot = 5;
         doPlotVolFractionDesignVar = 0;
-        doPlotTopologyDesignVar = 1;
+        doPlotTopologyDesignVar = 0;
         doPlotHeat = 0;
         doPlotHeatSensitivityTopology = 0;
         doPlotStress = 0;
@@ -108,11 +111,11 @@ classdef Configuration
         doPlotOrthDistributionVar=0;
         doPlotExx = 0  ;
         doPlotEyy =  0 ;
-        doPlotEyyExxArrows =1;
+        doPlotEyyExxArrows =0;
         doPlotElasticSensitivity =  0  ;
         doPlotRotationValue =0;
         doSysANDSubSysDiffValues = 0;
-        doPlotAnIsotropicValues=1; % 4 plots
+        doPlotAnIsotropicValues=0; % 4 plots
         
         % Exx ,Eyy , Theta (and Rho) Plot Data
         doPlotCombinedExxEyyAndRotation = 1;
@@ -148,8 +151,8 @@ classdef Configuration
         validationModeOn=0; % 1 = yes. 
         
         % ANN target test or Loopkup data generator
-        strainAndTargetTest =0; % for mode 113
-        targetTestVectorLen=20; % 17 will be abou 100,000
+        strainAndTargetTest =1; % for mode 113
+        targetTestVectorLen=20; % 13 is reasonable
         
        
         
@@ -238,13 +241,13 @@ classdef Configuration
                 % ------------
                 % Palmetto running case
                 % -------------------
-                obj.nelx = 40; %% 30
-                obj.nely = 20; %  15
+                obj.nelx = 15; %% 30
+                obj.nely = 15; %  15
                 obj.nelxMeso = 35; %35;
                 obj.nelyMeso =35; %35;
                 obj.terminationAverageCount = 10;
                 obj.terminationCriteria =0.001; % 0.0%
-                obj.maxFEACalls = 160;
+                obj.maxFEACalls = 200;
                 obj.maxMasterLoops = 120;
                 
             end
@@ -309,10 +312,27 @@ classdef Configuration
            end
            if(obj.strainAndTargetTest==1)
                obj.DisplayImportantMessage('strainAndTargetTest is on. Generating or meeting systematic targets of psuedo strains and density targets. ')
+               if(113<=obj.mode && obj.mode<=115 || obj.mode ==100)
+               else
+                   fprintf('Wrong mode');
+                   error('wrong mode');
+               end
+           else
+                if(113<=obj.mode && obj.mode<=115)
+                    fprintf('Forgot to turn on strainAndTargetTest in config. ');
+                   error('strainAndTargetTest is not on. ');
+                end
            end
            
            if(obj.validationModeOn==1)
                obj.DisplayImportantMessage('Meso structure validation is on. Generating D_targets for meso design problem to try to meet. ')
+               if(obj.mode~=111 && obj.mode~=112 && obj.mode~=100)
+                   error('Wrong mode');
+               end
+           else
+               if(obj.mode==111 || obj.mode==112)
+                   error('Wrong mode. Forgot to turn on config.validationModeOn');
+               end
            end
            
            if(obj.validationModeOn==1 && obj.strainAndTargetTest==1)

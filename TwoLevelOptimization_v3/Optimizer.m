@@ -221,12 +221,18 @@ classdef Optimizer
                         diffT = abs(minTvalue-DV.t(ely,elx));
                         moveLimit=min(moveLimit,diffT*0.1);
                         
+                         tOld = DV.t(ely,elx);
                         if(minTvalue>DV.t(ely,elx)+moveLimit)
                             DV.t(ely,elx)= DV.t(ely,elx)+moveLimit;
                         elseif(minTvalue<DV.t(ely,elx)-moveLimit)
                             DV.t(ely,elx)= DV.t(ely,elx)-moveLimit;
                         else
                             DV.t(ely,elx)=minTvalue;
+                        end
+                        
+                        % Damp the changes
+                        if(tOld>0 &&   DV.t(ely,elx) >0)
+                        DV.t(ely,elx) = tOld*sqrt( DV.t(ely,elx)/tOld);
                         end
                     end
                 end
@@ -456,7 +462,7 @@ classdef Optimizer
             largest=1e8;
             
             move = matProp.E_material1*0.05;
-            minimum = matProp.E_material2*0.25;
+            minimum = matProp.E_material2;
             
             % ----------------
             % Exx
@@ -471,7 +477,7 @@ classdef Optimizer
             
             smallestLambdExx = min(min(DV.lambdaExx));
             smallestLambdEyy = min(min(DV.lambdaEyy));
-            smallestOfTwo = min(smallestLambdExx,smallestLambdEyy);
+            smallestOfTwo = min(smallestLambdExx,smallestLambdEyy)-1;
             
             term2Exx =( DV.lambdaExx-smallestOfTwo).*DV.penaltyExx;
             term2Eyy = (DV.lambdaEyy-smallestOfTwo).*DV.penaltyEyy;
@@ -521,8 +527,8 @@ classdef Optimizer
                 
                 % Determine if the consistency constraint is being under
                 % valued
-                ExxSysAndSubDiffSummed=sum(sum(DV.x.*(ExxNew-DV.ExxSub))); %
-                EyySysAndSubDiffSummed=sum(sum(DV.x.*(EyyNew-DV.EyySub)));%
+                ExxSysAndSubDiffSummed=sum(sum(abs(DV.x.*(ExxNew-DV.ExxSub)))); %
+                EyySysAndSubDiffSummed=sum(sum(abs(DV.x.*(EyyNew-DV.EyySub))));%
                 ConsistConstraintMag = ExxSysAndSubDiffSummed+EyySysAndSubDiffSummed;
                 ConsistConstraintMag=-ConsistConstraintMag;
                 ConsistConstraintMag = ConsistConstraintMag/(matProp.E_material1*totalMaterial);
@@ -624,6 +630,7 @@ classdef Optimizer
         function [EyySensitivty, ExxSensitivity,rhoValue] = CalculateDensitySensitivityandRho(obj,Exx,Eyy,theta,xSimp,Coefficents,config,matProp,OffSet)
            
             [EyySensitivty, ExxSensitivity,rhoValue] = CalculateDensitySensitivityandRho_OLD(obj,Exx,Eyy,theta,xSimp,Coefficents,config,matProp);
+%               rhoValue=max(config.MesoMinimumDensity,min(rhoValue,1));             
 %             rhoValue=rhoValue+OffSet;         
         end
         
@@ -932,6 +939,8 @@ classdef Optimizer
             %-----------------------
             largest=1e8;
             
+             E_target=config.targetAvgExxEyy;
+            
             move = matProp.E_material1*0.05;
             minimum = matProp.E_material2*0.25;
             
@@ -1008,12 +1017,7 @@ classdef Optimizer
                 E33New = max(0.1, max(DV.E33-move ,  min(  min(targetE33,DV.E33+move ),matProp.E_material1)));
                 
                 %                 sumDensity = sumDensity/(config.nelx*config.nely*config.totalVolume);
-                [~, ~,rhoValue] = obj.CalculateDensitySensitivityandRho(ExxNew/matProp.E_material1,EyyNew/matProp.E_material1,theta,DV.x,DV.ResponseSurfaceCoefficents,config,matProp,DV.densityOffsetArray);
-                rhoValue=max(0,min(rhoValue,1));
-                temp2 = sum(sum(rhoValue));
-                sumDensity=temp2/(config.nelx*config.nely*config.totalVolume);
-                
-                % Determine if the consistency constraint is being under
+                  % Determine if the consistency constraint is being under
                 % valued
                 % TODO, add consistency contraint for E12 and E33 values. 
                 ExxSysAndSubDiffSummed=sum(sum(DV.x.*(ExxNew-DV.ExxSub))); %
@@ -1022,7 +1026,25 @@ classdef Optimizer
                 ConsistConstraintMag=-ConsistConstraintMag;
                 ConsistConstraintMag = ConsistConstraintMag/(matProp.E_material1*totalMaterial);
                 
-                terms= w1*(config.targetExxEyyDensity- sumDensity)+w2*(ConsistConstraintMag);
+                if(config.useTargetMesoDensity==1)
+                    [~, ~,rhoValue] = obj.CalculateDensitySensitivityandRho(ExxNew/matProp.E_material1,EyyNew/matProp.E_material1,theta,DV.x,DV.ResponseSurfaceCoefficents,config,matProp,DV.densityOffsetArray);
+                    rhoValue=max(0,min(rhoValue,1));
+                    temp2 = sum(sum(rhoValue));
+                    sumDensity=temp2/(config.nelx*config.nely*config.totalVolume);
+                    terms= w1*(config.targetExxEyyDensity- sumDensity)+w2*(ConsistConstraintMag);
+                else
+                    
+                    totalExx =DV.x.*ExxNew;
+                    totalEyy = DV.x.* EyyNew;
+                    avgE = (totalExx+totalEyy)/2;
+                    averageElasticLocal= sum(sum(avgE))/totalMaterial;
+                    %               averageElasticLocal = (sum(sum(EyyNew.*Xtemp))+sum(sum(ExxNew.*Xtemp)))/neSolid;
+                    %               averageElasticLocal=averageElasticLocal/2; % Becuse Eyy and Exx are from one element, so to get the average divide by 2
+                    terms =  E_target- averageElasticLocal;
+                    
+                end
+                
+                
                 if (terms)<0
                     l1 = lambda1;                  
                 else

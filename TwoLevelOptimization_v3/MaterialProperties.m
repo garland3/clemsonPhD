@@ -12,7 +12,7 @@ classdef MaterialProperties
         %         alpha2 = 2.4e-5; % thermal expansion coefficient for material 2
         
         E_material1 =100000;% 100000; %4 N/mm^2 The elastic mod of material 1
-        E_material2 = 25000;% 25000E_material1/2; %4 The elastic mod of material 2
+        E_material2 = 1;% 25000E_material1/2; %4 The elastic mod of material 2
         
         K_material1 = 0.02; %  W/ (mm*K)heat conduction of material 1
         K_material2 = 0.04; % heat conduction of material 2
@@ -79,17 +79,46 @@ classdef MaterialProperties
                 ne = config.nelx*config.nely;
                 obj.SavedDmatrix = zeros(ne,9);
                 
+                % Get the density field
+                outname = sprintf('./out%i/SIMPdensityfield%i.csv',folderNum,oldIteration);
+                xxx = csvread(outname);
+                
+                outname = sprintf('./out%i/elementXYposition%i.csv',folderNum,oldIteration);
+                elementXYposition=csvread(outname);
+                
                 
                 for e = 1:ne
-                    % Read the D_h
-                    outname = sprintf('./out%i/Dmatrix_%i_forElement_%i.csv',folderNum,oldIteration,e);
-                    if exist(outname, 'file') == 2
-                        D_h= csvread(outname);
-                    else
-                        material1Fraction=1;
-                        D_h = obj.calculateEffectiveConstitutiveEquation(material1Fraction, config,[]);
-                    end
                     
+                    results = elementXYposition(e,:);
+                    yPos = results(1);
+                    xPos = results(2);
+                    densitySIMP =xxx(yPos,xPos);
+                    
+                    if(densitySIMP>config.voidMaterialDensityCutOff)
+                        % Read the D_h
+                        %                     outname = sprintf('./out%i/Dmatrix_%i_forElement_%i.csv',folderNum,macro_meso_iteration,elementNumber);
+                        outname = sprintf('./out%i/Dmatrix_%i_forElement_%i.csv',folderNum,oldIteration,e);
+                        if exist(outname, 'file') == 2
+                            try
+                            D_h= csvread(outname);
+                            catch
+                               fprintf('could not read, %s\n',outname);
+                               continue
+                            end
+                        else
+                            material1Fraction=1;
+                            D_h = obj.calculateEffectiveConstitutiveEquation(material1Fraction, config,[]);
+                        end
+                     else
+                          material1Fraction=1;
+                          topDensity=densitySIMP;
+                          Exx=1;
+                          Eyy=1;
+                          rotation=1;
+                          E12=1;
+                          E33=1;
+                            D_h = obj.getDmatMatrixTopExxYyyRotVars(config,topDensity,Exx, Eyy,rotation,material1Fraction, E12, E33);
+                     end
                     
                     % Read the D_old
 %                     outname = sprintf('./out%i/Dgiven_%i_forElement_%i.csv',folderNum,oldIteration,e);
@@ -181,7 +210,7 @@ classdef MaterialProperties
             % -------------
             
             if((config.useExxEyy==1 || config.useRotation==1 ) && config.anisotropicMat ~=1) 
-                D_out = obj.getDmatrixForExxEyy(Exx, Eyy); % Exx and Eyy DISTRIBUTION
+                D_out = obj.getDmatrixForExxEyy(Exx, Eyy,config); % Exx and Eyy DISTRIBUTION
                 D_out=D_out*topDensity^(config.penal); % TOPOLOGY;
                 if(config.useRotation==1)  % ROTATION
                     D_out=obj.rotateDmatrix(config,rotation, D_out)  ;
@@ -236,6 +265,58 @@ classdef MaterialProperties
         %                 end
         %             end% END OLD METHOD D = reshape(D_flat,3,3);
         %         end
+        
+        % ---------------------------
+        %
+        % CALCULATE K MATRIX FOR Exx,Eyy,theta, when using the R ratio to
+        % scale the shear components.
+        %
+        % Mode = 1, Exx sensitivity
+        % Mode = 2, Eyy sensitivity
+        %
+        % ---------------------------
+        function K = getKMatrixSensitivityTopExxYyyRotVarsWithRshear(obj,config,topDensity,Exx, Eyy,rotation,mode)
+            term1 = obj.v/(1-obj.v^2);
+            avgE = 0.5*(Exx+Eyy);
+            if(Exx>Eyy) % Case 1, where the Exx value is greater
+                if(mode==1) % Exx derivitive mode
+                    dE12_dExx = term1*(0.5*Eyy/Exx+avgE*Eyy*(-1)*Exx^-2);
+                    dE33_dExx=0.5*(1-obj.v)/(1-obj.v^2)*(-1*Eyy/Exx^2*avgE+0.5*Eyy/Exx);
+                else                    
+                    dE12_dEyy = term1*(0.5*Eyy/Exx+avgE*1/Exx);
+                    dE33_dEyy=0.5*(1-obj.v)/(1-obj.v^2)*(1/Exx*avgE+0.5*Eyy/Exx);
+                end
+                
+            else % Case 2, where the Eyy value is greater
+                if(mode==1) % Exx derivitive mode
+                    dE12_dExx = term1*(0.5*Eyy/Exx+avgE*1/Exx);
+                    dE33_dExx=0.5*(1-obj.v)/(1-obj.v^2)*(1/Eyy*avgE+0.5*Exx/Eyy);
+                else
+                     dE12_dEyy = term1*(0.5*Exx/Eyy+avgE*Exx*(-1)*Eyy^-2);
+                      dE33_dEyy=0.5*(1-obj.v)/(1-obj.v^2)*(-1*Exx/Eyy^2*avgE+0.5*Exx/Eyy);
+                end                
+            end
+            
+              if(mode==1) % Exx derivitive mode
+                  D_out = [ 1/(1-obj.v^2)   dE12_dExx     0;
+                            dE12_dExx       0             0;
+                            0               0             dE33_dExx];
+              else  % Eyy derivitive mode
+                   D_out = [ 0             dE12_dEyy      0;
+                            dE12_dEyy      1/(1-obj.v^2)  0;
+                            0               0             dE33_dEyy];
+              end
+              
+               if(config.useRotation==1)  % ROTATION
+                    D_out=obj.rotateDmatrix(config,rotation, D_out)  ;
+               end
+                D_out=D_out*topDensity^config.penal;
+            
+            
+            [K]=elK_elastic_v2(D_out);
+            
+        end
+            
         
         
         % ---------------------------
@@ -297,7 +378,7 @@ classdef MaterialProperties
         %---------------
         % Get D matrix for a particular Exx and Eyy
         % -----------------------------------------------
-        function D_out = getDmatrixForExxEyy(obj,Exx, Eyy)
+        function D_out = getDmatrixForExxEyy(obj,Exx, Eyy,config)
             
             %             E0 = 1;%effectiveElasticProperties(obj, material1Fraction, config);
             vv = obj.v;
@@ -306,9 +387,18 @@ classdef MaterialProperties
             
             Q12 = vv*E12/(1-vv^2);
             Q66 =  0.5*(1-vv)*E12/(1-vv^2);
-            D_out = [ Exx/(1-vv^2)        Q12                    0                   ;
-                Q12                 Eyy/(1-vv^2)           0                   ;
-                0                   0                      Q66  ] ;
+            
+            if(config.useRinOrthMaterialModel==0)
+                  r=1;
+            else
+              %  r=1-(Exx/obj.E_material1-Eyy/obj.E_material1)^2;
+              r = min(Exx/Eyy, Eyy/Exx);
+            end
+       
+            
+            D_out = [ Exx/(1-vv^2)        Q12*r                    0                   ;
+                      Q12*r                 Eyy/(1-vv^2)           0                   ;
+                      0                   0                      r*Q66  ] ;
             
         end
         

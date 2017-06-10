@@ -80,6 +80,8 @@ int main ( int argc, char **argv )
         //
         // -------------------------------------------------------
         if (i_am_the_master) {
+             fprintf(log_file, "\n--------\nMaster Node Starint Iteration%d\n-----------\n", k);
+             fflush(log_file);   
             if(MODE==1 || MODE==3){
                 MultiscaleMasterNode(k,pool_size,my_rank);
             }
@@ -214,6 +216,11 @@ int callMatlab(int mode, int macro_meso_iteration, int element){
             break;
         }
    }
+   
+     if(returnValue!=0){
+         exit(5);
+     }
+   
   return returnValue;		
 }
 
@@ -337,6 +344,9 @@ int MultiscaleMasterNode(int macro_meso_iteration,int pool_size,int my_rank ){
             printf("MASTER --> Get all the Exx, Eyy, theta values from the D_sub matrixes\n");			
             callMatlab(203,macro_meso_iteration, 1);   
              printf("MASTER -->Finished extracting Macro Vars from D_sub values. Finished Mode 203\n");			
+             
+            printf("MASTER --> Calculate Objective Using D_sub values\n");			
+            callMatlab(90,macro_meso_iteration, 1);   
         }
         
         return 1;
@@ -390,6 +400,7 @@ int MesoValidationMasterNode(int macro_meso_iteration,int pool_size ,int my_rank
     // --------------------------------------------
     //int count = 0;
     int elementNumber=1;
+    //int startJob=
    
     for (int destination = 0; destination < pool_size; destination++) {
          if (destination != my_rank) {

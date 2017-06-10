@@ -286,7 +286,7 @@ classdef DesignVars
                     obj.thetaSub=csvread(outnameThetaSubSysValues); % Sub system copies of design var
                     
                       actualDensities=csvread(outnameMesoDensities); % Sub system copies of design var
-                      if(config.useTargetMesoDensity==1)
+                      if(config.useTargetMesoDensity==1&& config.mode~=90)
                         o = Optimizer;          
                         p = plotResults;
                         figure
@@ -351,6 +351,10 @@ classdef DesignVars
         % -----------------------------
         function obj = UpdatePenaltyAndLagrangianValues(obj, config,matProp)
             
+            if(config.mode==90)
+                return
+            end
+            
             ne = config.nelx*config.nely;
             diffExx = obj.ExxSub-obj.Exx;
             diffEyy = obj.EyySub-obj.Eyy  ;
@@ -395,8 +399,9 @@ classdef DesignVars
                     % calculating the objectiv
                     NodeNumbers = [xNodes(1) yNodes(1) xNodes(2) yNodes(2) xNodes(3) yNodes(3) xNodes(4) yNodes(4)];
                     
-                    
-                    KE = matProp.getKMatrixTopExxYyyRotVars(config,obj.x(yPos,xPos),obj.Exx(yPos,xPos), obj.Eyy(yPos,xPos),obj.t(yPos,xPos),obj.w(yPos,xPos),e);
+                    E12_local = 1;
+                    E33_local = 1;
+                    KE = matProp.getKMatrixTopExxYyyRotVars(config,obj.x(yPos,xPos),obj.Exx(yPos,xPos), obj.Eyy(yPos,xPos),obj.t(yPos,xPos),obj.w(yPos,xPos),E12_local,E33_local,e);
                     
                     
                     % get the displacements and calculate the strain energy
@@ -489,7 +494,7 @@ classdef DesignVars
                 
                 smallestLambdExx = min(min(obj.lambdaExx));
                 smallestLambdEyy = min(min(obj.lambdaEyy));
-                smallestOfTwo = min(smallestLambdExx,smallestLambdEyy);
+                smallestOfTwo = min(smallestLambdExx,smallestLambdEyy)-1;
                 omegaLocal =config.Omega;
                 if(config.macro_meso_iteration>=3)
                     multiplier = 2*(config.macro_meso_iteration-2);
@@ -1145,7 +1150,7 @@ classdef DesignVars
 %                 theta(logic4)=-pi/4-theta(logic4);
                   
                 [~, ~,rhoValue] = o.CalculateDensitySensitivityandRho(obj.Exx/matProp.E_material1,obj.Eyy/matProp.E_material1,theta,obj.x ,obj.ResponseSurfaceCoefficents,config,matProp,obj.densityOffsetArray);
-                rhoValue=max(0,min(rhoValue,1));             
+              
                 temp2 = sum(sum(rhoValue));
                 sumDensity=temp2/(config.nelx*config.nely*config.totalVolume);
 %                 sumDensity = sumDensity/(config.nelx*config.nely*config.totalVolume);
@@ -1270,8 +1275,8 @@ classdef DesignVars
             
             %             for loadcaseIndex = 1:t2
             %                 UloadCase= obj.U(loadcaseIndex,:);
-               E12 = 1;
-                    E33 = 1;
+            E12_local = 1;
+            E33_local = 1;
             %  SENSITIVITY ANALYSIS
             for y = 1:config.nely
                 rowMultiplier = y-1;
@@ -1289,11 +1294,21 @@ classdef DesignVars
                     
                     % Get the sensitivity K matrix
                     % Set Exx = 1, Eyy = 0 to get sensitivity
-                  
-                    KExx = matProp.getKMatrixTopExxYyyRotVars(config,obj.x(y,xx),1, 0,obj.t(y,xx),E12, E33,[]);
-                    
-                    % Set Eyy= 1,  Eyy = 0,to get sensitivity
-                    KEyy = matProp.getKMatrixTopExxYyyRotVars(config,obj.x(y,xx),0, 1,obj.t(y,xx),E12, E33,[]);
+                    if(config.useRinOrthMaterialModel==0)                  
+                        KExx = matProp.getKMatrixTopExxYyyRotVars(config,obj.x(y,xx),1, 0,obj.t(y,xx),E12_local, E33_local,[]);                    
+                        % Set Eyy= 1,  Eyy = 0,to get sensitivity
+                        KEyy = matProp.getKMatrixTopExxYyyRotVars(config,obj.x(y,xx),0, 1,obj.t(y,xx),E12_local, E33_local,[]);
+                    else
+                        topDensity=obj.x(y,xx);
+                        Exx_local=obj.Exx(y,xx);
+                        Eyy_local=obj.Eyy(y,xx);
+                        rotation=obj.t(y,xx);
+                        
+                        mode =1;
+                        KExx = matProp.getKMatrixSensitivityTopExxYyyRotVarsWithRshear(config,topDensity,Exx_local, Eyy_local,rotation,mode)  ;
+                        mode =2;
+                        KEyy = matProp.getKMatrixSensitivityTopExxYyyRotVarsWithRshear(config,topDensity,Exx_local, Eyy_local,rotation,mode);
+                    end
                     
                     
                     % allow multiple loading cases.
@@ -1935,7 +1950,9 @@ classdef DesignVars
         function [newSensitivities]= AddCoordinationMaskToSensitivies(obj,mesoConfig,macroElementProperties)
             config = mesoConfig;
             if (config.coordinateMesoBoundaries==1 && config.macro_meso_iteration>1)
-                 offset =median(median(obj.dc));
+%                  offset =median(median(obj.dc));
+                   offset =min(min(obj.dc));
+                   offset=offset*0.5
                  offset=offset*(config.macro_meso_iteration-1); % INcrease the strength each time
 %                 offset =min(min(obj.dc));
                newSensitivities=obj.dc+ obj.mesoStructNTCmask*offset;

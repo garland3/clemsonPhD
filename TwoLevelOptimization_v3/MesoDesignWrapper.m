@@ -1,5 +1,6 @@
 function  MesoDesignWrapper(config,e,ne,matProp)
 
+
 fprintf('PreRead Macro State for Meso Element %i\n',e)
 macroElementProperties = GetMacroElementPropertiesFromCSV(config,e);
 disp(['Meso Design #: ' sprintf('%4i',macroElementProperties.elementNumber  ) ' of ' sprintf('%4i',ne ) ...
@@ -73,6 +74,8 @@ if(macroElementProperties.densitySIMP>config.noNewMesoDesignDensityCutOff || con
 
             %      systemDiff =  macroElementProperties.D_sys-macroElementProperties.D_subSys;
             %     systemDiff
+        else
+            macroElementProperties.D_subSys 
         end
     end
     
@@ -86,7 +89,7 @@ if(macroElementProperties.densitySIMP>config.noNewMesoDesignDensityCutOff || con
                 p.PlotArrayGeneric(DVmeso.mesoStructNTCmask,'NTC  sensitivity mask');
             end
             subplot(1,2,2);
-            outname = sprintf('meso structure for macro element %i density %f',e, configMeso.v1);
+            outname = sprintf('meso structure for macro element %i density %f',e, configMeso.totalVolume);
             p.PlotArrayGeneric(DVmeso.x,outname);
                caxis([0 1]);
             %                 subplot(2,2,3);

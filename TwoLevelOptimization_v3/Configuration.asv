@@ -64,7 +64,7 @@ classdef Configuration
         
         % Meso Design settings
         mesoVolumeUpdateMethod=1; % 1 = average, 2 = Target the larger
-        maxMesoLoops = 100;
+        maxMesoLoops = 200;
         maxNumPseudoStrainLoop=3;
         PseudoStrainEndCriteria = 0.1;  
         TargetECloseNess=0.03; % part of the termination criteria
@@ -73,17 +73,24 @@ classdef Configuration
         mesoDesignInitalConditions = 3; % 1 = randome, 2= square, 3 = circle
         MesoMinimumDensity=0.0001;
         AddBorder=0; % Add border to complete structure. 
+        UseLookUpTableForPsuedoStrain=1; %0 = feedback loop, 1 = use look up. 
         
           
         % Exx and Eyy Distribution
-        useExxEyy=1;    % must be 0 for gradient material optimization       
+        useExxEyy=1;    % must be 0 for gradient material optimization
         useTargetMesoDensity = 1; % 1 = yes, 0 = no and use target Eavg
         targetAvgExxEyy=50000;
         targetExxEyyDensity = 0.6;
         useThetaInSurfaceFit = 0;
-          useANN=1;
-          useAnnForDensityNotDerivative = 1;
+        useANN=1;
+        useAnnForDensityNotDerivative = 0;
         rminExxEyy = 4; % smoothing radius for sensitivity smoothing.
+        
+        % True anisotropic material
+        anisotropicMat=0;
+        
+         % Use R in Exx and Eyy material model for the shear component
+        useRinOrthMaterialModel=1;
       
         
         
@@ -108,6 +115,7 @@ classdef Configuration
         doPlotElasticSensitivity =  0  ;
         doPlotRotationValue =0;
         doSysANDSubSysDiffValues = 0;
+        doPlotAnIsotropicValues=0; % 4 plots
         
         % Exx ,Eyy , Theta (and Rho) Plot Data
         doPlotCombinedExxEyyAndRotation = 1;
@@ -139,12 +147,12 @@ classdef Configuration
         % Meso Validation seetings
         % mode = 111 or 112, also 113
         % ---------------------------
-        validationGridSizeNelx = 22; % , This value cubed  will be the number of sub problems, 22^3 =10648
+        validationGridSizeNelx = 11; % , This value cubed  will be the number of sub problems, 22^3 =10648
         validationModeOn=0; % 1 = yes. 
         
-        % ANN target test
+        % ANN target test or Loopkup data generator
         strainAndTargetTest =0; % for mode 113
-        targetTestVectorLen=10; % 17 will be abou 100,000
+        targetTestVectorLen=8; % 13 is reasonable
         
        
         
@@ -239,7 +247,7 @@ classdef Configuration
                 obj.nelyMeso =35; %35;
                 obj.terminationAverageCount = 10;
                 obj.terminationCriteria =0.001; % 0.0%
-                obj.maxFEACalls = 160;
+                obj.maxFEACalls = 100;
                 obj.maxMasterLoops = 120;
                 
             end
@@ -298,16 +306,49 @@ classdef Configuration
               % obj.mesoDesignInitalConditions=1;
                obj.maxFEACalls=1;
            end
+           
+           if(obj.multiscaleMethodCompare==1)
+               obj.DisplayImportantMessage('multiscaleMethodCompare is on. This is basically Coelhos method')
+           end
+           if(obj.strainAndTargetTest==1)
+               obj.DisplayImportantMessage('strainAndTargetTest is on. Generating or meeting systematic targets of psuedo strains and density targets. ')
+               if(113<=obj.mode && obj.mode<=115 || obj.mode ==100)
+               else
+                   fprintf('Wrong mode');
+                   error('wrong mode');
+               end
+           else
+                if(113<=obj.mode && obj.mode<=115)
+                    fprintf('Forgot to turn on strainAndTargetTest in config. ');
+                   error('strainAndTargetTest is not on. ');
+                end
+           end
+           
+           if(obj.validationModeOn==1)
+               obj.DisplayImportantMessage('Meso structure validation is on. Generating D_targets for meso design problem to try to meet. ')
+               if(obj.mode~=111 && obj.mode~=112 && obj.mode~=100)
+                   error('Wrong mode');
+               end
+           else
+               if(obj.mode==111 || obj.mode==112)
+                   error('Wrong mode. Forgot to turn on config.validationModeOn');
+               end
+           end
+           
+           if(obj.validationModeOn==1 && obj.strainAndTargetTest==1)
+                obj.DisplayImportantMessage('Validation and Psuedo Strain targets can NOT be on at the same time. Exiting program.  ')
+                exit(0);
+           end
         
         end
         
         
         function [] = DisplayImportantMessage(obj, message)
             
-            printf('----------------------------------------------\n\n');
-               printf('             %s\n',message);
-                printf('----------------------------------------------\n\n');
-         
+            fprintf('----------------------------------------------\n\n');
+            fprintf('             %s\n',message);
+            fprintf('\n----------------------------------------------\n');
+            
         end
         
         

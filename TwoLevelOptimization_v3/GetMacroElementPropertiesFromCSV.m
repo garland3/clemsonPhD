@@ -112,18 +112,18 @@ elseif(config.validationModeOn==1)
     mm_iteration=1;
     % read the Exx field
     outname = sprintf('./out%i/ExxValues%i.csv',folderNum,mm_iteration);
-    strain1= csvread(outname);
+    ExxSaved= csvread(outname);
     
     % read the Eyy field
     outname = sprintf('./out%i/EyyValues%i.csv',folderNum,mm_iteration);
-    strain2= csvread(outname);
+    EyySaved= csvread(outname);
     
     % read the Theta field
     outname = sprintf('./out%i/ThetaValues%i.csv',folderNum,mm_iteration);
     ThetaValues=csvread(outname);
     
-    Exx=strain1(e);
-    Eyy=strain2(e);
+    Exx=ExxSaved(e);
+    Eyy=EyySaved(e);
     theta=ThetaValues(e);
     fprintf('Meso design Validation mode. Targets Exx %f Eyy %f Theta %f\n',Exx,Eyy,theta);
     
@@ -221,8 +221,8 @@ if(config.UseLookUpTableForPsuedoStrain==1 && config.strainAndTargetTest~=1)
     outname = sprintf('./data/D11%i_datat.data',macro_meso_iteration);
     D11 =csvread(outname);
     
-    %     outname = sprintf('./data/D12%i_datat.data',macro_meso_iteration);
-    %      D12 =csvread(outname);
+    outname = sprintf('./data/D12%i_datat.data',macro_meso_iteration);
+    D12 =csvread(outname);
     
     outname = sprintf('./data/D22%i_datat.data',macro_meso_iteration);
     D22 =csvread(outname);
@@ -243,46 +243,144 @@ if(config.UseLookUpTableForPsuedoStrain==1 && config.strainAndTargetTest~=1)
     outname = sprintf('./data/etaTarget%i_datat.data',macro_meso_iteration);
     etaTarget =csvread(outname);
     
+    shearSign=0;
+    if(macroEleProps.Exx>macroEleProps.Eyy)
+        % if(shearStrainSum<0)
+        shearSign=1;
+    else
+        shearSign=-1;
+    end
+    
     
     [t1 t2]=size(etaTarget);
     
     minValue=1e11;
     indexOfMinValue = 1;
     
-    D11sys = macroEleProps.D_sys(1,1) ;
-    D22sys = macroEleProps.D_sys(2,2) ;
-    D33sys = macroEleProps.D_sys(3,3) ;
+    D11sys = max(macroEleProps.D_sys(1,1),0.001 );
+    D12sys = max(macroEleProps.D_sys(1,2),0.001 );
+    D22sys =max( macroEleProps.D_sys(2,2) ,0.001 );
+    D33sys = max(macroEleProps.D_sys(3,3),0.001 );
     for i = 1:t2
         D11_table = D11(i);
+        D12_table = D12(i);
         D22_table = D22(i);
         D33_table = D33(i);
         
-          diffValue = (D11_table-D11sys)^2+(D22_table-D22sys)^2+(D33_table-D33sys)^2;
-%           diffValue = (D11_table-D11sys)^2+(D22_table-D22sys)^2+(D33_table-D33sys)^2;
-%               diffValue = (D11_table-D11sys)^2+(D22_table-D22sys)^2;
+        %           diffValue = (D11_table-D11sys)^2+(D22_table-D22sys)^2+(D33_table-D33sys)^2;
+        diffValue = (D11_table-D11sys)^2+(D12_table-D12sys)^2+(D22_table-D22sys)^2+(D33_table-D33sys)^2;
+        %           diffValue = (D11_table-D11sys)^2+(D22_table-D22sys)^2+(D33_table-D33sys)^2;
+        %               diffValue = (D11_table-D11sys)^2+(D22_table-D22sys)^2;
+        etaLocal = etaTarget(i);
         
-        if(diffValue<minValue)
-            minValue=diffValue;
-            indexOfMinValue=i;
+        if(diffValue<minValue && etaLocal>config.MesoMinimumDensity)
+            ps(3) = pstrain3(i);
+            if(shearSign*ps(3)>0)
+                minValue=diffValue;
+                indexOfMinValue=i;
+            end
         end
     end
     
     D11_table = D11(indexOfMinValue);
+    D12_table = D12(indexOfMinValue);
     D22_table = D22(indexOfMinValue);
     D33_table = D33(indexOfMinValue);
     
-    diffValue = (D11_table-D11sys)^2+(D22_table-D22sys)^2;%+0.5*(D33_table-D33sys)^2;
+    matProp=MaterialProperties;
+    smallestDiff = minValue;
+    bestScale=0;
+    for scale = -0.9:0.001:0.9
+        
+        D11_table2=D11_table+(scale)*D11_table;
+%         D12_table2 = D12_table+(scale)*matProp. v*D12_table ;
+         D12_table2 = D12_table+(scale)*D12_table ;
+        D22_table2=D22_table+(scale)*D22_table;
+        
+        
+%         D33_table2=D33_table+(scale)*0.5*(1-matProp. v)*D33_table ;
+           D33_table2=D33_table+(scale)*D33_table ;
+        
+        
+        diffValue = (D11_table2-D11sys)^2+(D12_table2-D12sys)^2+(D22_table2-D22sys)^2+(D33_table2-D33sys)^2;
+        
+        if(diffValue<smallestDiff)
+            bestScale=scale;
+            smallestDiff=diffValue;
+        end
+    end
     
+
+    D11_table2=D11_table+(bestScale)*D11_table;
+    D12_table2 = D12_table+(bestScale)*D12_table ;
+    D22_table2=D22_table+(bestScale)*D22_table;
+    
+    
+    D33_table2=D33_table+(bestScale)*D33_table ;
+    
+    
+   
     ps(1) = pstrain1(indexOfMinValue);
-   ps(2)= pstrain2(indexOfMinValue);
-   ps(3) = pstrain3(indexOfMinValue);
-   etaTargetLocal = etaTarget(indexOfMinValue);
+    ps(2)= pstrain2(indexOfMinValue);
+    ps(3) = pstrain3(indexOfMinValue);
+    originalEta = etaTarget(indexOfMinValue);
+    etaTargetLocal = originalEta+bestScale*originalEta;
+    
+    etaTargetLocal=max(config.MesoMinimumDensity,min(etaTargetLocal,0.95));
+    
+     %       diffValue = (D11_table-D11sys)^2+(D12_table-D12sys)^2+(D22_table-D22sys)^2+(D33_table-D33sys)^2;
+       fprintf('Targets  D11 %f D22 %f D33 %f\n', D11sys,D22sys,D33sys);
+    fprintf('Expected D11 %f D22 %f D33 %f\nIndex is at %i\nbestscale %f\n%f\n', D11_table2,D22_table2,D33_table2,indexOfMinValue,bestScale,etaTargetLocal);
+   
     
     
-     macroEleProps.psuedoStrain(1) = ps(1) ;
-    macroEleProps.psuedoStrain(2) = ps(2);
-    macroEleProps.psuedoStrain(3) =  ps(3);
+    %     outname = sprintf('./out%i/Dmatrix_%i_forElement_%i.csv',0,1,indexOfMinValue);
+    %     d = csvread(outname)
+    
+    
+    %      macroEleProps.psuedoStrain(1) = ps(1) ;
+    %     macroEleProps.psuedoStrain(2) = ps(2);
+    %     macroEleProps.psuedoStrain(3) =  ps(3);
+    macroEleProps.psuedoStrain=[ps(1);ps(2);ps(3)];
     macroEleProps.targetDensity=etaTargetLocal;
+    
+    if 1==0
+        start = max(indexOfMinValue-500,1);
+        limit = min(indexOfMinValue+500,t2);
+        figure(1)
+        subplot(7,1,1);
+        plot(start:limit,D11(start:limit))
+        ylabel('d11');
+        
+        subplot(7,1,2);
+        plot(start:limit,D22(start:limit))
+        ylabel('d22');
+        
+        subplot(7,1,3);
+        plot(start:limit,D33(start:limit))
+        ylabel('d33');
+        
+        subplot(7,1,4);
+        plot(start:limit,pstrain1(start:limit))
+        ylabel('p1');
+        
+        subplot(7,1,5);
+        plot(start:limit,pstrain2(start:limit))
+        ylabel('p2');
+        
+        subplot(7,1,6);
+        plot(start:limit,pstrain3(start:limit))
+        ylabel('p3');
+        
+        subplot(7,1,7);
+        plot(start:limit,etaTarget(start:limit))
+        ylabel('eta');
+        hold on
+        stairs([start indexOfMinValue limit],[0 1 1] );
+        hold off
+        
+        
+    end
     
     
     

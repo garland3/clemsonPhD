@@ -48,7 +48,7 @@ RhoColumn=[];
   if(config.validationModeOn==1)
       ne= config. validationGridSizeNelx ^3;
   end
-
+ne
 
 for e = 1:ne %ne:-1:1
     strangeResultsFlag=0;
@@ -259,7 +259,7 @@ for e = 1:ne %ne:-1:1
                 Theta=pi/2-Theta;
             end
             
-            str = sprintf('Theta on wrong boundary. Switching values. ')
+%             str = sprintf('Theta on wrong boundary. Switching values. ')
             diffTheta = abs( ActualThetaValue-Theta); % The new Diff Theta
         end
         
@@ -272,7 +272,7 @@ for e = 1:ne %ne:-1:1
         if(abs(100*(Exx-Eyy)/Exx)<5)
 %            if(abs(100*(ActualExx-ActualEyy)/ActualEyy)<5)
             Theta=ActualThetaValue;
-            str = sprintf('Exx = Eyy, setting theta to sys theta')
+%             str = sprintf('Exx = Eyy, setting theta to sys theta')
         end
         
         
@@ -286,26 +286,29 @@ for e = 1:ne %ne:-1:1
         
         maxError = 0.1;
         LargeErroFlag = 0;
-        if(relativeErrorDiffExx>maxError)
-          fprintf('%i Exx Large Error: Target  = %f mesovalue = %f\n', e,ActualExx,Exx)
-             LargeErroFlag = 1;
-        end
-        if(relativeErrorDiffyy>maxError)
-            fprintf('%i Eyy Large Error: Target  = %f mesovalue = %f\n', e,ActualEyy,Eyy)
-             LargeErroFlag = 1;
-        end
-        if( relativeErrorDiffTheta>maxError)
-            fprintf('%i Theta Large Error: Target  = %f mesovalue = %f\n', e,ActualThetaValue,Theta)
-             LargeErroFlag = 1;
-        end
         
-        if( LargeErroFlag ==1)
-            fprintf('More Data: Target: Value: Relative Error\n')
-            fprintf('Exx %f %f %f\n',ActualExx,Exx,relativeErrorDiffExx)
-            fprintf('Eyy %f %f %f\n',ActualEyy,Eyy,relativeErrorDiffyy)
-            fprintf('Theta %f %f %f\n',ActualThetaValue,Theta,relativeErrorDiffTheta)
-            fprintf('rho = %f\n',v);
-            %: Targets %f %f %f, Meso %f %f %f, Rho=%f\n',ActualExx,ActualEyy,ActualThetaValue,Exx,Eyy,Theta,v)
+        if(1==0)
+            if(relativeErrorDiffExx>maxError)
+                fprintf('%i Exx Large Error: Target  = %f mesovalue = %f\n', e,ActualExx,Exx)
+                LargeErroFlag = 1;
+            end
+            if(relativeErrorDiffyy>maxError)
+                fprintf('%i Eyy Large Error: Target  = %f mesovalue = %f\n', e,ActualEyy,Eyy)
+                LargeErroFlag = 1;
+            end
+            if( relativeErrorDiffTheta>maxError)
+                fprintf('%i Theta Large Error: Target  = %f mesovalue = %f\n', e,ActualThetaValue,Theta)
+                LargeErroFlag = 1;
+            end
+            
+            if( LargeErroFlag ==1)
+                fprintf('More Data: Target: Value: Relative Error\n')
+                fprintf('Exx %f %f %f\n',ActualExx,Exx,relativeErrorDiffExx)
+                fprintf('Eyy %f %f %f\n',ActualEyy,Eyy,relativeErrorDiffyy)
+                fprintf('Theta %f %f %f\n',ActualThetaValue,Theta,relativeErrorDiffTheta)
+                fprintf('rho = %f\n',v);
+                %: Targets %f %f %f, Meso %f %f %f, Rho=%f\n',ActualExx,ActualEyy,ActualThetaValue,Exx,Eyy,Theta,v)
+            end
         end
         
         
@@ -489,6 +492,59 @@ if(config.validationModeOn==1)
     nameGraph2 = sprintf('./MesoValiation_combinedError%i.png', config.macro_meso_iteration);
     print(nameGraph2,'-dpng');
     
+end
+
+if(1==1)
+    MacroExxColumnTotal=[];
+    MacroEyyColumnTotal=[];
+    MacroThetaColumnTotal=[];
+    RhoColumnTotal=[];
+    for i = 1:macro_meso_iteration
+        %------------------------
+        % read the macro columns as well. This will help with future analysis
+        % ----------------------------
+        % save the MacroExxColumn
+        outname = sprintf('./out%i/MacroExxColumn%i.csv',folderNum,macro_meso_iteration);
+        MacroExxColumn=csvread(outname);
+        MacroExxColumnTotal=[MacroExxColumnTotal; MacroExxColumn];
+        
+        % save the MacroEyyColumn
+        outname = sprintf('./out%i/MacroEyyColumn%i.csv',folderNum,macro_meso_iteration);
+        temp=csvread(outname);
+        MacroEyyColumnTotal=[MacroEyyColumnTotal; temp];
+        
+        % save the MacroThetaColumn
+        outname = sprintf('./out%i/MacroThetaColumn%i.csv',folderNum,macro_meso_iteration);
+        temp=csvread(outname);
+        MacroThetaColumnTotal=[MacroThetaColumnTotal; temp];
+        
+        % save the RhoColumn
+        outname = sprintf('./out%i/RhoColumn%i.csv',folderNum,macro_meso_iteration);
+        temp=csvread(outname);
+        RhoColumnTotal=[RhoColumnTotal; temp];
+    end
+    
+    x=MacroExxColumnTotal/matProp.E_material1;
+    y = MacroEyyColumnTotal/matProp.E_material1;
+    
+    z=RhoColumnTotal;
+    f1 = fit([x y],z,'poly22');
+    % f2 = fit([x y],z,'poly23', 'Exclude', z > 1);
+    o=Optimizer;
+      [~, ~,annZ] = o.CalculateDensitySensitivityandRho(x,y,MacroThetaColumnTotal,ones(size(MacroEyyColumnTotal)),DV.ResponseSurfaceCoefficents,config,matProp,1);
+    
+    figure
+     plot(f1, [x y], z);
+    scatter3(x,y,z,'b')
+    hold on
+    scatter3(x,y,annZ,'r');
+    
+    title('Fit with data points. Red=Ann, Blue=Actual ')
+    xlabel('Exx');
+    ylabel('Eyy');
+    zlabel('rho');
+    zlim([0 1])
+    size(RhoColumnTotal)
 end
 
 

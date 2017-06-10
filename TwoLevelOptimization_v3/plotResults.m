@@ -217,36 +217,37 @@ classdef plotResults
         %---------------------------------------
         function PlotDesignMetrics(obj, DV, config, matProp, loopNumb)
             %  DV.c, DV.cCompliance, DV.cHeat,vol1Fraction,vol2Fraction,fractionCurrent_V1Local,densitySum];
-            x = 1:loopNumb;
+             start=1;
+              x = start:loopNumb;
             % y1 = DV.storeOptimizationVar(1:loopNumb,1)';
             
-            elasticObjective = DV.storeOptimizationVar(1:loopNumb,2)'; % Elastic Compliance
+            elasticObjective = DV.storeOptimizationVar(start:loopNumb,2)'; % Elastic Compliance
 %             elasticObjective
             
             
             elasticObjective = elasticObjective/max(elasticObjective); % normalize to make plotting nice
             titleName='Metrics Plot';
-            
-            
+          
             if(config.useExxEyy==1)
                 
                 % ------------------------
                 % Top, Exx, Eyy, rotation optimzation
                 % ------------------------
-                summedDensity = DV.storeOptimizationVar(1:loopNumb,6)'; %   sum(sum(DV.x))
+               
+                summedDensity = DV.storeOptimizationVar(start:loopNumb,6)'; %   sum(sum(DV.x))
                 summedDensity = summedDensity/(config.nelx*config.nely);
-                totalVolumeTarget= config.totalVolume*ones(loopNumb,1);
+                totalVolumeTarget= config.totalVolume*ones(loopNumb+1-start,1);
                 
-                targetAverageE = DV.storeOptimizationVar(1:loopNumb,7)'; %   DV.targetAverageE
-                actualAverageE = DV.storeOptimizationVar(1:loopNumb,8)'; % DV.actualAverageE
+                targetAverageE = DV.storeOptimizationVar(start:loopNumb,7)'; %   DV.targetAverageE
+                actualAverageE = DV.storeOptimizationVar(start:loopNumb,8)'; % DV.actualAverageE
                 
                 % Consistency Constraints
-                ExxSysAndSubDiffSummed = DV.storeOptimizationVar(1:loopNumb,10)'; %
-                EyySysAndSubDiffSummed = DV.storeOptimizationVar(1:loopNumb,11)'; %
-                ThetaSysAndSubDiffSummed = DV.storeOptimizationVar(1:loopNumb,12)'; %
+                ExxSysAndSubDiffSummed = DV.storeOptimizationVar(start:loopNumb,10)'; %
+                EyySysAndSubDiffSummed = DV.storeOptimizationVar(start:loopNumb,11)'; %
+                ThetaSysAndSubDiffSummed = DV.storeOptimizationVar(start:loopNumb,12)'; %
                 
                 smallest = 1000;
-                startValue=config.maxFEACalls+2; % avoid iteration 1
+                startValue=config.maxFEACalls+6; % avoid iteration 1
                 endValue=size(ThetaSysAndSubDiffSummed,2);
                 if(endValue>startValue)
                     position=0;
@@ -282,7 +283,7 @@ classdef plotResults
                 elasticObjective(elasticObjective<0)=0;
                 if(config.multiscaleMethodCompare~=1)
                     if(config.useTargetMesoDensity==1)
-                          mesoAvgDensity = DV.storeOptimizationVar(1:loopNumb,9)'; %
+                          mesoAvgDensity = DV.storeOptimizationVar(start:loopNumb,9)'; %
                          plot( x, elasticObjective, 'ko-',x, ExxSysAndSubDiffSummed, 'm+-', x, EyySysAndSubDiffSummed, 'c*-',x, ThetaSysAndSubDiffSummed, 'b*-',x, totalVolumeTarget, 'r.-',x, summedDensity, 'gx',x,mesoAvgDensity,'b-')
                          legend('Elast Obj','ExxSysAndSubDiffSummed','EyySysAndSubDiffSummed','ThetaSysAndSubDiffSummed' ,'Vol Target', 'Actual Vol','AvgMesoDensity','Location','northoutside')
 
@@ -310,11 +311,11 @@ classdef plotResults
                 % ------------------------
                 % Top and mat gradient optimization
                 % ------------------------
-                y3 = DV.storeOptimizationVar(1:loopNumb,3)'; % Heat Compliance
+                y3 = DV.storeOptimizationVar(start:loopNumb,3)'; % Heat Compliance
                 y3 = y3/max(y3); % normalize to make plotting nice
                 
-                y4 = DV.storeOptimizationVar(1:loopNumb,4)'; % volume fraction material 1
-                y5 = DV.storeOptimizationVar(1:loopNumb,5)'; % volume fraction material 2
+                y4 = DV.storeOptimizationVar(start:loopNumb,4)'; % volume fraction material 1
+                y5 = DV.storeOptimizationVar(start:loopNumb,5)'; % volume fraction material 2
                 plot(x, y4,'y', x, y5, 'm', x, elasticObjective, 'c', x, y3, 'r');
                 legend('vol1', 'vol2','Elast Obj','Heat Obj');
             end

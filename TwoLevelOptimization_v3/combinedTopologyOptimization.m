@@ -393,20 +393,22 @@ if ( config.mode <100)
         end
     end
     
-    outname = sprintf('./out%i/storeOptimizationVarMacroLoop%i.csv',folderNum,config.macro_meso_iteration);
-    csvwrite(outname,DV.storeOptimizationVar);
+    
 end
 if(config.recvid==1)
     video.CloseVideo( config, F,vidObj)
 end
 if(config.mode ==90)
-       DV= DV.CalculateObjectiveValue(config, matProp, masterloop,opt);
-            DV = DV.CalculateVolumeFractions(config, matProp) ;
-            DV = AddDataToStoreOptimizationVarArray(DV);
-         
-       ShowOptimizerProgress(DV,1,' MODE 90 ',FEACalls,config, matProp);
-       outname = sprintf('./out%i/mode90_objective%i.csv',folderNum,config.macro_meso_iteration);
+    DV= DV.CalculateObjectiveValue(config, matProp, masterloop,opt);
+    DV = DV.CalculateVolumeFractions(config, matProp) ;
+%     DV = AddDataToStoreOptimizationVarArray(DV,config);
+    %        ShowOptimizerProgress(DV,1,' MODE 90 ',FEACalls,config, matProp);
+    outname = sprintf('./mode90/mode90_objective%i.csv',config.macro_meso_iteration);
     csvwrite(outname,DV.c);
+     outname = sprintf('./out%i/storeOptimizationVarMacroLoop%i.csv',folderNum,config.macro_meso_iteration);
+    storeOptimizationVar=csvread(outname);
+    elasticObjectiveMacroModel = storeOptimizationVar(end,2); % Elastic Compliance
+    fprintf('Mode 90, final objective value uisng D_sub values %f, compared to %f using macro model\n',DV.c,elasticObjectiveMacroModel);
 end
 
 %% ---------------------------------------------
@@ -418,6 +420,8 @@ end
 % ---------------------------------------------
 
 if(config.mode <100 && config.mode~=90)
+    outname = sprintf('./out%i/storeOptimizationVarMacroLoop%i.csv',folderNum,config.macro_meso_iteration);
+    csvwrite(outname,DV.storeOptimizationVar);
     % write the displacement field to a .csv
     SaveMacroProblemStateToCSV(config,DV,matProp);
 end
@@ -599,8 +603,8 @@ end
     % set the max value to be 1
     completeStruct( completeStruct>1)=1;
     
-    completeStruct(completeStruct>config.voidMaterialDensityCutOff)=1;
-    completeStruct(completeStruct<config.voidMaterialDensityCutOff)=0;
+%     completeStruct(completeStruct>config.voidMaterialDensityCutOff)=1;
+%     completeStruct(completeStruct<config.voidMaterialDensityCutOff)=0;
 %end
 
 

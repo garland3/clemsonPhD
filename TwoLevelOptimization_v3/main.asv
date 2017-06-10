@@ -1,140 +1,72 @@
 function main()
 clear
 close all
-%  combinedTopologyOptimization('1', '1', '1','113', 'na'); % genrate psuedo strain and density targets
-%  combinedTopologyOptimization('1', '1', '1','114', 'na'); % save psuedo strain and density targets results in data files
 
-%      combinedTopologyOptimization('1', '1', '1','115', 'na'); % generate meso psuedo and density targets for ANN input data
-%      combinedTopologyOptimization('1', '1', '1','100', '1235'); % run the meso structure design to get the actual data
+% Target PseudoStrains and Density Modes
+%    combinedTopologyOptimization('1', '1', '1','113', 'na'); % genrate psuedo strain and density targets
+%    combinedTopologyOptimization('1', '1', '1','114', 'na'); % save psuedo strain and density targets results in data files
+%   combinedTopologyOptimization('1', '1', '1','115', 'na'); % plot psuedo strain and density targets results
 
-%    combinedTopologyOptimization('1', '1', '1','115', '1235'); %  READ generate meso psuedo and density targets for ANN input data
-% annTest(1)
-%         combinedTopologyOptimization('1', '1', '1','111', 'na'); % generate meso validation targets
-%        combinedTopologyOptimization('1', '1', '1','112', 'na'); % evalute meso design metrics. 
-%           annTest(1)
-% % %
-%  combinedTopologyOptimization('1', '1', '1','60', 'na');
-%  combinedTopologyOptimization('1', '1', '1','200', 'na');
-%                combinedTopologyOptimization('1', '1', '1','203', 'na'); % Extract Exx, Eyy, theta
-%                      combinedTopologyOptimization('1', '1', '1','202', 'na'); % Make complete structure from macro and meso
-% for i =1:10
-%                  combinedTopologyOptimization('1', '1', int2str(i),'203', 'na'); % make%        Exx, Eyy, vars from Dmatrixes
-% 
-% end
+
+
+
+% Anisotrpoic
+% combinedTopologyOptimization('1', '1', '1','6', 'na');
+% combinedTopologyOptimization('1', '1', '1','70', 'na');
+ 
+
+% Validation modes
+% combinedTopologyOptimization('1', '1', '1','111', 'na');
+% combinedTopologyOptimization('1', '1', '1','112', 'na');
+
+
+% Iteration 1 of topology, Exx, Eyy, rotation
+% combinedTopologyOptimization('1', '1', '1','60', 'na');
+% combinedTopologyOptimization('1', '1', '1','200', 'na');
+% combinedTopologyOptimization('1', '1', '1','202', 'na'); % make complete structure
+% combinedTopologyOptimization('1', '1', '1','90', 'na');
+%   combinedTopologyOptimization('1', '1', '1','203', 'na'); % extact macro values
+
 
 % % iteration 2
-% combinedTopologyOptimization('1', '1', '2','60', 'na');
-% combinedTopologyOptimization('1', '1', '2','200', 'na');
-% combinedTopologyOptimization('1', '1', '3','90', 'na');
-
-% % iteration 3
-%     combinedTopologyOptimization('1', '1', '3','60', 'na');
-%     combinedTopologyOptimization('1', '1', '10','200', 'na');
-    
-   % % iteration 4 
-%       combinedTopologyOptimization('1', '1', '7','60', 'na');
-%     combinedTopologyOptimization('1', '1', '7','200', 'na');
+combinedTopologyOptimization('1', '1', '2','60', 'na');
+combinedTopologyOptimization('1', '1', '2','200', 'na');
+% run meso design for iteration 2
+% combinedTopologyOptimization('1', '1', '2','202', 'na'); % make complete structure
+% combinedTopologyOptimization('1', '1', '2','203', 'na'); % extact macro values
+% combinedTopologyOptimization('1', '1', '2','90', 'na');
 
 
 
-%      combinedTopologyOptimization('1', '1', '1','202', 'na'); % make complete macro-meso  structure
-%       combinedTopologyOptimization('1', '1', '1','203', 'na'); % make Exx, Eyy, rho plot
-
-% test meso design for element 1, macro iteration 1
-%     combinedTopologyOptimization('1', '1', '1','100', '100');
-%           combinedTopologyOptimization('1', '1', '1','100', '10');
-%           combinedTopologyOptimization('1', '1', '1','100', '42');
 nelx= 15;
 nely = 15;
 totale=nelx*nely;
 
-% for i = 1:totale
-%  for i = 1:800
+% combinedTopologyOptimization('1', '1', '1','100', '1'); % run the meso structure design to get the actual data
+
+% % for i = 1:totale
+%  for i = 5:225
 %       combinedTopologyOptimization('1', '1', '1','100', int2str(i)); % run the meso structure design to get the actual data
-% end
+%  end
 
-%        combinedTopologyOptimization('1', '1', '1','100', '21');
-%            combinedTopologyOptimization('1', '1', '1','100', '8');
-
-%     combinedTopologyOptimization('1', '1', '10','200', '2');
-
-numloops = 2;
-for i =1:numloops
-% %     combinedTopologyOptimization('1', 'not used', 1,i)
-% %     combinedTopologyOptimization(useInputArgs, w1text, macro_meso_iteration,mode, singleMeso_elementNumber);
-%       combinedTopologyOptimization('no', 'NA', i,'na', 'na');
-% close all
- % combinedTopologyOptimization('1', '1', int2str(i),'90', 'na');
+if(1==0)
+    
+    poolobj = gcp('nocreate'); % If no pool,create new one.
+    if isempty(poolobj)
+        parpool('local', 3)
+        poolsize = 3;
+    else
+        poolsize = poolobj.NumWorkers;
+    end
+    poolsize
+    
+    
+    
+    parfor i = 1:225
+        combinedTopologyOptimization('1', '1', '','100', int2str(i)); % run the meso structure design to get the actual data
+    end
 end
-% combinedTopologyOptimization('1', '1', '5','200', 'na');
-% close all
-%
-%
-%   combinedTopologyOptimization('1', '1',numloops,'12', 'na');
-
-%  combinedTopologyOptimization('1', '1','1', '1','na' ); % macro homogenizattion   
-
-%  combinedTopologyOptimization('1', '1', '1','203', 'na');
-% ---------------------------------
-% multiscale complete loop
-% ---------------------------------
-% for i = 1:6
-%       combinedTopologyOptimization('1', '1', int2str(i),'60', 'na');
-%         combinedTopologyOptimization('1', '1', int2str(i),'200', 'na');
-%    
-%      for j = 1:225      
-%          combinedTopologyOptimization('1', '1',int2str(i), '100',int2str(j)); % meso level 
-%      end
-%      
-%            combinedTopologyOptimization('1', '1', int2str(i),'203', 'na'); % extract macro vars from meso designs
-%      combinedTopologyOptimization('1', '1',int2str(i), '202','na' ); % make complete structure 
-% end
-% combinedTopologyOptimization('1', '1', int2str(i),'112', 'na'); % evalute meso design metrics.
 
 
-% folderNum = 0;
-% all = [];
-% iterationDiff = [];
-% for i =1:numloops
-%     macro_meso_iteration = i;
-%     outname = sprintf('./out%i/storeOptimizationVarMacroLoop%i.csv',folderNum,macro_meso_iteration);
-%     storeOptimizationVar=  csvread(outname);
-%     all=[all;storeOptimizationVar];
-%     [rr,cc] = size (storeOptimizationVar);
-%     iterationDiff= [iterationDiff zeros(1,rr-1)];
-%     iterationDiff = [iterationDiff 1];
-% end
-% designVars = DesignVars;
-% designVars.storeOptimizationVar=all;
-% p = plotResults;
-% [r,c] = size (all);
-% loopNumb=r;
-%
-% % Get size of the grid
-% previousIterationNum=1;
-% outname = sprintf('./out%i/volfractionfield%i.csv',folderNum,previousIterationNum);
-% [gridrows, gridcolumns]=size(csvread(outname));
-% totalvolume = gridrows*gridcolumns;
-%
-% % normalize the volumes
-% %mtemp = max(designVars.storeOptimizationVar(1:loopNumb,4));
-% % designVars.storeOptimizationVar(1:loopNumb,4) = designVars.storeOptimizationVar(1:loopNumb,4)/totalvolume;
-% % %mtemp2 = max(designVars.storeOptimizationVar(1:loopNumb,5));
-% % designVars.storeOptimizationVar(1:loopNumb,5) = designVars.storeOptimizationVar(1:loopNumb,5)/totalvolume;
-%
-%
-%
-% settings = 0;
-% matProp = 0;
-% hold on
-% p.PlotDesignMetrics( designVars, settings, matProp, loopNumb)
-% xvalues = 1:loopNumb;
-% stairs(xvalues,iterationDiff);
-% hold off
-%
-% w1 = 0;
-%  nameGraph = sprintf('./optiParaViaIterations%i.png', w1);
-% print(nameGraph,'-dpng');
 
-% combinedTopologyOptimization('1', '1', '1','1', 'na');
 end

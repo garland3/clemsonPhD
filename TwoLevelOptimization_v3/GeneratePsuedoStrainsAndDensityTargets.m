@@ -11,7 +11,7 @@ temp=config.targetTestVectorLen-1;
 term1 =0:1/temp:1; % -1 to 1 is the domain
 term2 =0:1/temp:1;  % -1 to 1 is the domain
 term3 =-0.5:2/temp:0.5;  % -1 to 1 is the domain
-densityTargetsVector = 1/temp:1/temp:1-1/temp;  % 0 to 1 is the domain
+densityTargetsVector = 2/temp:1/temp:1-1/temp;  % 0 to 1 is the domain
 [strain1, strain2, strain3, densityTargets] = ndgrid(term1,term2,term3,densityTargetsVector);
 SIMPTemp = reshape(strain1,[],1);
 [ numProblems t1]=size(SIMPTemp)
@@ -60,6 +60,30 @@ elseif(step==2)
     macro_meso_iteration=1;
     ne=numProblems;
     
+    folderNum=0;
+    mm_iteration=1;
+    % pseudoStrain
+    outname = sprintf('./out%i/strain1%i.csv',folderNum,mm_iteration);
+    strain1FromCSV= csvread(outname);
+    
+    % pseudoStrain
+    outname = sprintf('./out%i/strain2%i.csv',folderNum,mm_iteration);
+    strain2FromCSV= csvread(outname);
+    
+    % pseudoStrain
+    outname = sprintf('./out%i/strain3%i.csv',folderNum,mm_iteration);
+    strain3FromCSV=csvread(outname);
+    
+    % targetDensity
+    outname = sprintf('./out%i/densityTargets%i.csv',folderNum,mm_iteration);
+    densityTargetFromCSV=csvread(outname);
+    
+    % The when saving the 4D array, it is converted into 2D. This
+    % conversion might changing the ordering of the elements, so to make
+    % sure they are correct, just reread the .csv files. 
+    p = plotResults;
+    
+    
     D11 = [];
     D12=[];
     D22=[];
@@ -75,7 +99,9 @@ elseif(step==2)
         outname = sprintf('./out%i/Dmatrix_%i_forElement_%i.csv',folderNum,macro_meso_iteration,e);
         
         if exist(outname, 'file') ~= 2
-            continue;
+            fprintf('File does not exist. Retry\n');
+            combinedTopologyOptimization('1', '1', '1','100', int2str(e));
+            %continue;
         end
         %          outname = sprintf('./out%i/DsystemIter%i_Element_%i.csv',folderNum,macro_meso_iteration,elementNumber);
         try
@@ -85,15 +111,40 @@ elseif(step==2)
             continue
         end
         
-        D11=[D11 Din(1,1)];
-        D12=[D12 Din(1,2)];
-        D22=[D22 Din(2,2)];
-        D33=[D33 Din(3,3)];
+        D11Local = Din(1,1);
+        D12Local = Din(1,2);
+        D22Local = Din(2,2);
+        D33Local = Din(3,3);
+        P1_local = strain1FromCSV(e);
+        p2_local =strain2FromCSV(e);
+        p3_local = strain3FromCSV(e);
+        etaLocal = densityTargetFromCSV(e);
         
-        pstrain1=[pstrain1 strain1(e)];
-        pstrain2=[pstrain2 strain2(e)];
-        pstrain3=[pstrain3 strain3(e)];
-        etaTarget=[etaTarget densityTargets(e)];
+        
+        %   fprintf('D11 \t\t%f, \nD22 \t\t%f\nD33 \t\t%f\npstrain \t%f %f %f\nDensity \t%f\n\n',D11Local,D11Local,D33Local,P1_local,p2_local,p3_local,etaLocal);
+        
+        outname = sprintf('./out%i/densityfield%iforElement%i.csv',folderNum,macro_meso_iteration,e);
+        etaArray = csvread(outname);
+        
+        if 1==0
+            p.PlotArrayGeneric(etaArray,'eta')
+            title({sprintf('pstrain %f %f %f',P1_local,p2_local,p3_local),sprintf('Density %f',etaLocal),sprintf('D11 %f, D22 %f,D33 %f',D11Local,D11Local,D33Local )  })
+            caxis([0 1])
+            drawnow
+            
+        end
+        
+        
+        
+        D11=[D11 D11Local];
+        D12=[D12 D12Local];
+        D22=[D22 D22Local];
+        D33=[D33 D33Local];
+        
+        pstrain1=[pstrain1 P1_local];
+        pstrain2=[pstrain2 p2_local];
+        pstrain3=[pstrain3 p3_local];
+        etaTarget=[etaTarget etaLocal];
         
         
     end
@@ -200,7 +251,7 @@ elseif(step==3)
         for i = 1:4
             count=1;
             for dd = densityTargetsVector
-                subplot(4,2,count)
+                subplot(5,4,count)
                 
                 targetDensity=dd ;
                 count=count+1;
@@ -221,12 +272,13 @@ elseif(step==3)
                 
                 
                 scatter3(pstrain1_temp,pstrain2_temp,pstrain3_temp,circleSize, RhoColumn,'filled','MarkerEdgeColor','k')
-                title(sprintf('%s plot as a function of e1 e2, e3, density = %f',char(names(i)),targetDensity));
+                title(sprintf('%s plot: density = %f',char(names(i)),targetDensity));
                 colorbar
                 xlabel('pstrain1');
                 ylabel('pstrain2');
                 zlabel('pstrain3');
                 colormap winter
+%                 caxis([0 matProp.E_material1 ]);
                 %colormap('gray')
                 % colormap(flipud(gray(256)));
                 % colormap('summer');
