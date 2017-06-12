@@ -609,8 +609,7 @@ end
     completeStruct(completeStruct<config.voidMaterialDensityCutOff)=0;
 %end
 density = sum(sum(completeStruct))/(totalX*totalY);
- outname = sprintf('./mode90/Density%i.csv',config.macro_meso_iteration);
-    csvwrite(outname,density);
+sprintf('complete structure %i with density %f',config.macro_meso_iteration,density);
 
 
 plotname = sprintf('complete structure %i with density %f',config.macro_meso_iteration,density);

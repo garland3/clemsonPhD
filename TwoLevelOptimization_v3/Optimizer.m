@@ -505,6 +505,9 @@ classdef Optimizer
                 EyyInput = EyyNew/matProp.E_material1;
                 [dDensityEyy, dDensityExx,~] = obj.CalculateDensitySensitivityandRho(ExxInput,EyyInput,theta,DV.x,DV.ResponseSurfaceCoefficents,config,matProp,DV.densityOffsetArray);
                 
+                dDensityEyy = DV.check( config.nelx, config.nely,config.rminExxEyy,DV.x,dDensityEyy);
+                dDensityExx = DV.check( config.nelx, config.nely,config.rminExxEyy,DV.x,dDensityExx);
+                
                 % testing. Set equal to one for now.
                 %                 dDensityExx=ones(size(term1Exx));
                 %                 dDensityEyy=ones(size(term1Exx));                
@@ -530,7 +533,7 @@ classdef Optimizer
                 ExxSysAndSubDiffSummed=sum(sum(abs(DV.x.*(ExxNew-DV.ExxSub)))); %
                 EyySysAndSubDiffSummed=sum(sum(abs(DV.x.*(EyyNew-DV.EyySub))));%
                 ConsistConstraintMag = ExxSysAndSubDiffSummed+EyySysAndSubDiffSummed;
-                ConsistConstraintMag=-ConsistConstraintMag;
+%                 ConsistConstraintMag=-ConsistConstraintMag;
                 ConsistConstraintMag = ConsistConstraintMag/(matProp.E_material1*totalMaterial);
                 
                 terms= w1*(config.targetExxEyyDensity- sumDensity)+w2*(ConsistConstraintMag);
@@ -631,14 +634,21 @@ classdef Optimizer
            
             [EyySensitivty, ExxSensitivity,rhoValue] = CalculateDensitySensitivityandRho_OLD(obj,Exx,Eyy,theta,xSimp,Coefficents,config,matProp);
 %               rhoValue=max(config.MesoMinimumDensity,min(rhoValue,1));             
-%             rhoValue=rhoValue+OffSet;         
+             rhoValue=rhoValue+OffSet;         
         end
         
         function [EyySensitivty, ExxSensitivity,rhoValue] = CalculateDensitySensitivityandRho_OLD(obj,Exx,Eyy,theta,xSimp, Coefficents,config,matProp)
             co = Coefficents;
             
+           
+            
             Exx=Exx.*(xSimp.^config.penal);
             Eyy=Eyy.*(xSimp.^config.penal);
+            
+             ExxOriginal = Exx;
+            EyyOriginal= Eyy;
+            thetaOriginal = theta;
+            
             if(config.useANN==1)
                 
                 % Make the inputs be so taht Exx > Eyy
@@ -755,11 +765,16 @@ classdef Optimizer
                 else
                     % obj. ResponseSurfaceCoefficents=[ 1.0000000000463e-05 9.99988184437107e-06 9.9998491550433e-06 -3.40115537230351e-11 -5.52110060132392e-12 -3.81038581303971e-11];
                     if(config.useAnnForDensityNotDerivative==1)
-                        minAllowed = 0.01;
-                        EyySensitivty=max(co(3)+co(5).*Exx+2*co(6).*Eyy,minAllowed);
-                        ExxSensitivity=max(co(2)+ 2*co(4).*Exx+co(5).*Eyy,minAllowed);
-
-
+                          minAllowed = 0.01;
+                        x = ExxOriginal;
+                        y = EyyOriginal;
+                        %                     rhoValue= co(1)  +  co(2) *x +  co(3) *y + co(4)*x^2 + co(5)*x*y + co(6)*y^2 + co(7)*x^3 + co(8)*x^2*y + co(9)*x*y^2 + co(10)*y^3;
+                        
+                        EyySensitivty= max(  co(3) *1 + co(5)*x*1 + 2*co(6)*y  + co(8)*x.^2*1 + 2*co(9)*x.*y +3* co(10)*y.^2,minAllowed);
+                        ExxSensitivity=max( co(2) *1 +  2* co(4)*x + co(5)*1*y + 3*co(7)*x.^2 + 2*co(8)*x.*y + co(9)*1*y.^2 ,minAllowed);
+                        
+                        
+                        
                         temp = Exx;
                         logic = Eyy>Exx;
                         Exx(logic)=Eyy(logic);
@@ -804,107 +819,116 @@ classdef Optimizer
                         return
                     end
                     minAllowed = 0.01;
-                    EyySensitivty=max(co(3)+co(5).*Exx+2*co(6).*Eyy,minAllowed);
-                    ExxSensitivity=max(co(2)+ 2*co(4).*Exx+co(5).*Eyy,minAllowed);
-                    rhoValue=   co(1) + co(2)*Exx + co(3)*Eyy + co(4)*Exx.^2 + co(5)*Exx.*Eyy + co(6)*Eyy.^2;
+                    % funciton from the values that I came up with as my
+                    % first esimate of best fit.
+                    %                     EyySensitivty=max(co(3)+co(5).*Exx+2*co(6).*Eyy,minAllowed);
+                    %                     ExxSensitivity=max(co(2)+ 2*co(4).*Exx+co(5).*Eyy,minAllowed);
+                    %                     rhoValue=   co(1) + co(2)*Exx + co(3)*Eyy + co(4)*Exx.^2 + co(5)*Exx.*Eyy + co(6)*Eyy.^2;
+                    
+                    x = ExxOriginal;
+                    y = EyyOriginal;
+                     rhoValue= co(1)  +  co(2) *x +  co(3) *y + co(4)*x^2 + co(5)*x*y + co(6)*y^2 + co(7)*x^3 + co(8)*x^2*y + co(9)*x*y^2 + co(10)*y^3;
+                    
+                    EyySensitivty= max(  co(3) *1 + co(5)*x*1 + 2*co(6)*y  + co(8)*x^2*1 + 2*co(9)*x*y +3* co(10)*y^2,minAllowed);
+                    ExxSensitivity=max( co(2) *1 +  2* co(4)*x + co(5)*1*y + 3*co(7)*x^2 + 2*co(8)*x*y + co(9)*1*y^2 ,minAllowed);
                 end
             end
             
         end
         
-        function [obj]=GenerateInterpolateANN(obj,Coefficents,config,matProp)
-            if(config.useTargetMesoDensity==1)
-                
-                
-                outname = sprintf('./out%i/ANN_interp_E_xx.csv',0);
-                obj.ExxInterp=csvread(outname);
-                outname = sprintf('./out%i/ANN_interp_E_yy.csv',0);
-                obj.EyyInterp=csvread(outname);
-                outname = sprintf('./out%i/ANN_interp_Theta.csv',0);
-                obj.thetaInterp=csvread(outname);
-                outname = sprintf('./out%i/ANN_interp_Rho.csv',0);
-                obj.rhoInterp=csvread(outname);
-                
-                obj.ExxInterp=reshape(obj.ExxInterp,21,21,21);
-                obj.EyyInterp=reshape(obj.EyyInterp,21,21,21);
-                obj.thetaInterp=reshape(obj.thetaInterp,21,21,21);
-                obj.rhoInterp=reshape(obj.rhoInterp,21,21,21);
-                %                 valuesPerDir=15;
-                %                 ExxRange = 0:(matProp.E_material1)/valuesPerDir:matProp.E_material1;
-                %                 EyyRange=0:matProp.E_material1/valuesPerDir:matProp.E_material1;
-                %                 thetaRange = 0:(pi/2)/valuesPerDir:pi/2;
-                %
-                %                 [Exx,Eyy,theta] = ndgrid(ExxRange,EyyRange,thetaRange);
-                %                 % Needs to be reshaped
-                %                 [~, ~,rhoValue]= CalculateDensitySensitivityandRho_OLD(obj,Exx,Eyy,theta,Coefficents,config,matProp);
-                %
-                %                 obj.ExxInterp=Exx;
-                %                 obj.EyyInterp=Eyy;
-                %                 obj. thetaInterp=theta;
-                %                 obj.rhoInterp=rhoValue;
-            end
-            
-        end
-        
-        %-----------------------------------
-        % Meso Optimization
-        %-----------------------------------
-        function [DVmeso] = MesoDensityOptimization(~,mesoConfig, DVmeso,old_muMatrix,penaltyValue,macroElemProps)
-            ne = mesoConfig.nelx*mesoConfig.nely; % number of elements
-            %               dH_total=[DVmeso.d11;
-            %                     DVmeso.d12;
-            %                     DVmeso.d22;
-            %                     DVmeso.d33];
-            Diff_Sys_Sub =  (macroElemProps.D_subSys- macroElemProps.D_sys);
-            localD = zeros(3,3);
-            for e = 1:ne
-                
-                [x,y]= DVmeso.GivenNodeNumberGetXY(e);
-                xx=DVmeso.x(y,x); % =min(optimalEta, designVars.x+move)
-                %                  term1 = 10*xx^9;
-                %                  power = 1/4;
-                %                  term1 = power*xx^(power-1);
-                term1=2*xx;
-                
-                
-                
-                rowIndex = [1,1,2,3];
-                columnIndex = [1,2,2,3];
-                
-                dH = zeros(3,3);
-                dH(1,1) = DVmeso.d11(y,x);
-                dH(1,2) = DVmeso.d12(y,x);
-                dH(2,2) = DVmeso.d22(y,x);
-                dH(3,3) = DVmeso.d33(y,x);
-                
-                localD(1,1) = DVmeso.De11(y,x);
-                localD(1,2) = DVmeso.De11(y,x);
-                localD(2,2) = DVmeso.De11(y,x);
-                localD(3,3) = DVmeso.De11(y,x);
-                
-                Diff_Sys_Sub =  (localD- macroElemProps.D_sys);
-                
-                constraintCount = 0;
-                term2=0;
-                %                 term1=0;
-                for k = [1 2 3 ]
-                    %                     term1=  dH(1,1)+  dH(1,2)+  dH(2,2)+  dH(3,3);
-                    i = rowIndex(k);
-                    j = columnIndex(k);
-                    Ctemp = dH(i,j)*(-old_muMatrix(i,j)-penaltyValue*Diff_Sys_Sub(i,j));
-                    term2 =term2 +Ctemp;
-                    constraintCount=constraintCount+1;
-                end
-                
-                dL = term1+term2;
-                delta = 0.1;
-                optimalEta=xx+delta*dL;
-                move = 0.02;
-                DVmeso.x(y,x)=  max(0.01,max(xx-move,min(1.,min(xx+move,optimalEta))));
-                
-                DVmeso.x([10:13],[10:13])=1;
-            end
-        end
+%         function [obj]=GenerateInterpolateANN(obj,Coefficents,config,matProp)
+%             if(config.useTargetMesoDensity==1)
+%                 
+%                 
+%                 outname = sprintf('./out%i/ANN_interp_E_xx.csv',0);
+%                 obj.ExxInterp=csvread(outname);
+%                 outname = sprintf('./out%i/ANN_interp_E_yy.csv',0);
+%                 obj.EyyInterp=csvread(outname);
+%                 outname = sprintf('./out%i/ANN_interp_Theta.csv',0);
+%                 obj.thetaInterp=csvread(outname);
+%                 outname = sprintf('./out%i/ANN_interp_Rho.csv',0);
+%                 obj.rhoInterp=csvread(outname);
+%                 
+%                 obj.ExxInterp=reshape(obj.ExxInterp,21,21,21);
+%                 obj.EyyInterp=reshape(obj.EyyInterp,21,21,21);
+%                 obj.thetaInterp=reshape(obj.thetaInterp,21,21,21);
+%                 obj.rhoInterp=reshape(obj.rhoInterp,21,21,21);
+%                 %                 valuesPerDir=15;
+%                 %                 ExxRange = 0:(matProp.E_material1)/valuesPerDir:matProp.E_material1;
+%                 %                 EyyRange=0:matProp.E_material1/valuesPerDir:matProp.E_material1;
+%                 %                 thetaRange = 0:(pi/2)/valuesPerDir:pi/2;
+%                 %
+%                 %                 [Exx,Eyy,theta] = ndgrid(ExxRange,EyyRange,thetaRange);
+%                 %                 % Needs to be reshaped
+%                 %                 [~, ~,rhoValue]= CalculateDensitySensitivityandRho_OLD(obj,Exx,Eyy,theta,Coefficents,config,matProp);
+%                 %
+%                 %                 obj.ExxInterp=Exx;
+%                 %                 obj.EyyInterp=Eyy;
+%                 %                 obj. thetaInterp=theta;
+%                 %                 obj.rhoInterp=rhoValue;
+%             end
+%             
+%         end
+%         
+%         %-----------------------------------
+%         % Meso Optimization
+%         %-----------------------------------
+%         function [DVmeso] = MesoDensityOptimization(~,mesoConfig, DVmeso,old_muMatrix,penaltyValue,macroElemProps)
+%             ne = mesoConfig.nelx*mesoConfig.nely; % number of elements
+%             %               dH_total=[DVmeso.d11;
+%             %                     DVmeso.d12;
+%             %                     DVmeso.d22;
+%             %                     DVmeso.d33];
+%             Diff_Sys_Sub =  (macroElemProps.D_subSys- macroElemProps.D_sys);
+%             localD = zeros(3,3);
+%             for e = 1:ne
+%                 
+%                 [x,y]= DVmeso.GivenNodeNumberGetXY(e);
+%                 xx=DVmeso.x(y,x); % =min(optimalEta, designVars.x+move)
+%                 %                  term1 = 10*xx^9;
+%                 %                  power = 1/4;
+%                 %                  term1 = power*xx^(power-1);
+%                 term1=2*xx;
+%                 
+%                 
+%                 
+%                 rowIndex = [1,1,2,3];
+%                 columnIndex = [1,2,2,3];
+%                 
+%                 dH = zeros(3,3);
+%                 dH(1,1) = DVmeso.d11(y,x);
+%                 dH(1,2) = DVmeso.d12(y,x);
+%                 dH(2,2) = DVmeso.d22(y,x);
+%                 dH(3,3) = DVmeso.d33(y,x);
+%                 
+%                 localD(1,1) = DVmeso.De11(y,x);
+%                 localD(1,2) = DVmeso.De11(y,x);
+%                 localD(2,2) = DVmeso.De11(y,x);
+%                 localD(3,3) = DVmeso.De11(y,x);
+%                 
+%                 Diff_Sys_Sub =  (localD- macroElemProps.D_sys);
+%                 
+%                 constraintCount = 0;
+%                 term2=0;
+%                 %                 term1=0;
+%                 for k = [1 2 3 ]
+%                     %                     term1=  dH(1,1)+  dH(1,2)+  dH(2,2)+  dH(3,3);
+%                     i = rowIndex(k);
+%                     j = columnIndex(k);
+%                     Ctemp = dH(i,j)*(-old_muMatrix(i,j)-penaltyValue*Diff_Sys_Sub(i,j));
+%                     term2 =term2 +Ctemp;
+%                     constraintCount=constraintCount+1;
+%                 end
+%                 
+%                 dL = term1+term2;
+%                 delta = 0.1;
+%                 optimalEta=xx+delta*dL;
+%                 move = 0.02;
+%                 DVmeso.x(y,x)=  max(0.01,max(xx-move,min(1.,min(xx+move,optimalEta))));
+%                 
+%                 DVmeso.x([10:13],[10:13])=1;
+%             end
+%         end
         
         % ----------------------------------
         % Optimize ANISOTROPIC Material

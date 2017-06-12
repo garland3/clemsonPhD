@@ -50,7 +50,7 @@ if(config.validationModeOn==1)
 end
 ne
 
-if 1==1
+if 1==0
     for e = 1:ne %ne:-1:1
         strangeResultsFlag=0;
         fprintf('element %i of %i\n',e,ne);
@@ -106,9 +106,7 @@ if 1==1
             %              v =    configMeso.totalVolume;
             %     csvwrite(outname,v);
             if exist(outname, 'file') ~= 2
-                 fprintf('File does not exist. Retry\n');
-                combinedTopologyOptimization('1', '1', '1','100', int2str(elementNumber));
-                
+                continue;
             end
             v =  csvread(outname);
             if(v>1)
@@ -508,85 +506,64 @@ if 1==1
         
     end
 end
-% -----------------------------------
-%
-%    Generate surface fit. 
-%   must be commented out for matlab to compile on cluster. 
-%
-% % -----------------------------------
-% if(1==1)
-%     MacroExxColumnTotal=[];
-%     MacroEyyColumnTotal=[];
-%     MacroThetaColumnTotal=[];
-%     RhoColumnTotal=[];
-%     folderName='data';
-%     for i = 1:macro_meso_iteration
-%         %------------------------
-%         % read the macro columns as well. This will help with future analysis
-%         % ----------------------------
-%         % save the MacroExxColumn
-% %         outname = sprintf('./out%i/MacroExxColumn%i.csv',folderNum,macro_meso_iteration);
-%          outname = sprintf('./%s/MacroExxColumn%i.csv',folderName,macro_meso_iteration);
-%         
-%         MacroExxColumn=csvread(outname);
-%         MacroExxColumnTotal=[MacroExxColumnTotal; MacroExxColumn];
-%         
-%         % save the MacroEyyColumn
-% %         outname = sprintf('./out%i/MacroEyyColumn%i.csv',folderNum,macro_meso_iteration);
-%            outname = sprintf('./%s/MacroEyyColumn%i.csv',folderName,macro_meso_iteration);
-%         temp=csvread(outname);
-%         MacroEyyColumnTotal=[MacroEyyColumnTotal; temp];
-%         
-%         % save the MacroThetaColumn
-% %         outname = sprintf('./out%i/MacroThetaColumn%i.csv',folderNum,macro_meso_iteration);
-%            outname = sprintf('./%s/MacroThetaColumn%i.csv',folderName,macro_meso_iteration);
-%         temp=csvread(outname);
-%         MacroThetaColumnTotal=[MacroThetaColumnTotal; temp];
-%         
-%         % save the RhoColumn
-% %         outname = sprintf('./out%i/RhoColumn%i.csv',folderNum,macro_meso_iteration);
-%           outname = sprintf('./%s/RhoColumn%i.csv',folderName,macro_meso_iteration);
-%         temp=csvread(outname);
-%         RhoColumnTotal=[RhoColumnTotal; temp];
-%     end
-%     
-%     for jjj=1:5
-%     % Add full dense case
-%       MacroExxColumnTotal=[MacroExxColumnTotal; max(MacroExxColumnTotal)];
-%       MacroEyyColumnTotal=[MacroEyyColumnTotal; max(MacroEyyColumnTotal)];
-%       MacroThetaColumnTotal=[MacroThetaColumnTotal; 0];
-%       RhoColumnTotal=[RhoColumnTotal;1];
-%     end
-%   
-%     
-%     x=MacroExxColumnTotal/matProp.E_material1;
-%     y = MacroEyyColumnTotal/matProp.E_material1;
-%     
-%     z=RhoColumnTotal;
-%     
-%    options= fitoptions;
-% %    options.Normalize ='on';
-% %    options.fittype='poly22';
-%      f1 = fit([x y],z,'poly33',options)
-% %      f2 = fit([x y],z,'poly23', 'Exclude', z > 1);
-%     o=Optimizer;
-%     [~, ~,annZ] = o.CalculateDensitySensitivityandRho(x,y,MacroThetaColumnTotal,ones(size(MacroEyyColumnTotal)),DV.ResponseSurfaceCoefficents,config,matProp,0);
-%     
-%     figure
-%     plot(f1, [x y], z);
-%     hold on
-%     scatter3(x,y,z,'b')
-%     hold on
-%     scatter3(x,y,annZ,'r');
-%     
-%     title('Fit with data points. Red=Ann, Blue=Actual ')
-%     xlabel('Exx');
-%     ylabel('Eyy');
-%     zlabel('rho');
-%     zlim([0 1])
-%     size(RhoColumnTotal)
-% end
-% 
+
+if(1==0)
+    MacroExxColumnTotal=[];
+    MacroEyyColumnTotal=[];
+    MacroThetaColumnTotal=[];
+    RhoColumnTotal=[];
+    folderName='data';
+    for i = 1:macro_meso_iteration
+        %------------------------
+        % read the macro columns as well. This will help with future analysis
+        % ----------------------------
+        % save the MacroExxColumn
+%         outname = sprintf('./out%i/MacroExxColumn%i.csv',folderNum,macro_meso_iteration);
+         outname = sprintf('./%s/MacroExxColumn%i.csv',folderName,macro_meso_iteration);
+        
+        MacroExxColumn=csvread(outname);
+        MacroExxColumnTotal=[MacroExxColumnTotal; MacroExxColumn];
+        
+        % save the MacroEyyColumn
+%         outname = sprintf('./out%i/MacroEyyColumn%i.csv',folderNum,macro_meso_iteration);
+           outname = sprintf('./%s/MacroEyyColumn%i.csv',folderName,macro_meso_iteration);
+        temp=csvread(outname);
+        MacroEyyColumnTotal=[MacroEyyColumnTotal; temp];
+        
+        % save the MacroThetaColumn
+        outname = sprintf('./out%i/MacroThetaColumn%i.csv',folderNum,macro_meso_iteration);
+        temp=csvread(outname);
+        MacroThetaColumnTotal=[MacroThetaColumnTotal; temp];
+        
+        % save the RhoColumn
+        outname = sprintf('./out%i/RhoColumn%i.csv',folderNum,macro_meso_iteration);
+        temp=csvread(outname);
+        RhoColumnTotal=[RhoColumnTotal; temp];
+    end
+    
+    x=MacroExxColumnTotal/matProp.E_material1;
+    y = MacroEyyColumnTotal/matProp.E_material1;
+    
+    z=RhoColumnTotal;
+    f1 = fit([x y],z,'poly22');
+    % f2 = fit([x y],z,'poly23', 'Exclude', z > 1);
+    o=Optimizer;
+    [~, ~,annZ] = o.CalculateDensitySensitivityandRho(x,y,MacroThetaColumnTotal,ones(size(MacroEyyColumnTotal)),DV.ResponseSurfaceCoefficents,config,matProp,1);
+    
+    figure
+    plot(f1, [x y], z);
+    scatter3(x,y,z,'b')
+    hold on
+    scatter3(x,y,annZ,'r');
+    
+    title('Fit with data points. Red=Ann, Blue=Actual ')
+    xlabel('Exx');
+    ylabel('Eyy');
+    zlabel('rho');
+    zlim([0 1])
+    size(RhoColumnTotal)
+end
+
 
 %annTest(macro_meso_iteration);
 
@@ -736,50 +713,50 @@ end
 %         % -------------------------------
 %         % Least squares fit
 %         % ------------------------------
-% %
-% x0=ones(1,10);
-% x0 = randi([-5,5],1,10);
-% A = [];
-% b = [];
-% 
-% 
-% % theta the same
-% % rho the same.
-% % scale down Exx, Eyy
-% 
-% X = ExxArray/scaleUp;
-% Y = EyyArray/scaleUp;
-% 
-% %         Z = thetaArray/(pi/4);
-% Z = thetaArray;
-% R = rhoArray;
-% 
-% 
-% ub = ones(6,1)*10000;
-% lb = -ub;
-% o=Optimizer;
-% [coefficients finalObjective]= fmincon(@(x) fitObjectiveV2(x,X,Y,Z,R,o,config,matProp),x0,A,b,[],[],lb,ub);
-% 
-% finalObjective
-% 
-% % use the scaled data
-% %         numPointsXandY = 20;
-% %tt  =1/numPointsXandY;
-% tt  =0.05;
-% 
-% [Xgrid, Ygrid, Zgrid]=meshgrid(0:tt:max(X),0:tt:max(Y),0:0.2:max(Z));
-% 
-% % Reshape into columns
-% E_xx=reshape(Xgrid,[],1);
-% E_yy=reshape(Ygrid,[],1);
-% theta=reshape(Zgrid,[],1);
-% 
-% x=coefficients;
-% 
-% %------------
-% % Calcualte the rho values using the fitting polynomial
-% %------------
-% [~, ~,rhoExperimental] = o.CalculateDensitySensitivityandRho(E_xx,E_yy,theta,coefficients,config,matProp);
+%
+x0=ones(1,10);
+x0 = randi([-5,5],1,10);
+A = [];
+b = [];
+
+
+% theta the same
+% rho the same.
+% scale down Exx, Eyy
+
+X = ExxArray/scaleUp;
+Y = EyyArray/scaleUp;
+
+%         Z = thetaArray/(pi/4);
+Z = thetaArray;
+R = rhoArray;
+
+
+ub = ones(6,1)*10000;
+lb = -ub;
+o=Optimizer;
+[coefficients finalObjective]= fmincon(@(x) fitObjectiveV2(x,X,Y,Z,R,o,config,matProp),x0,A,b,[],[],lb,ub);
+
+finalObjective
+
+% use the scaled data
+%         numPointsXandY = 20;
+%tt  =1/numPointsXandY;
+tt  =0.05;
+
+[Xgrid, Ygrid, Zgrid]=meshgrid(0:tt:max(X),0:tt:max(Y),0:0.2:max(Z));
+
+% Reshape into columns
+E_xx=reshape(Xgrid,[],1);
+E_yy=reshape(Ygrid,[],1);
+theta=reshape(Zgrid,[],1);
+
+x=coefficients;
+
+%------------
+% Calcualte the rho values using the fitting polynomial
+%------------
+[~, ~,rhoExperimental] = o.CalculateDensitySensitivityandRho(E_xx,E_yy,theta,coefficients,config,matProp);
 
 % -----------------------
 % Plot

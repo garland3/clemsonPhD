@@ -527,8 +527,8 @@ classdef Optimizer
                 
                 % Determine if the consistency constraint is being under
                 % valued
-                ExxSysAndSubDiffSummed=sum(sum(DV.x.*(ExxNew-DV.ExxSub))); %
-                EyySysAndSubDiffSummed=sum(sum(DV.x.*(EyyNew-DV.EyySub)));%
+                ExxSysAndSubDiffSummed=sum(sum(abs(DV.x.*(ExxNew-DV.ExxSub)))); %
+                EyySysAndSubDiffSummed=sum(sum(abs(DV.x.*(EyyNew-DV.EyySub))));%
                 ConsistConstraintMag = ExxSysAndSubDiffSummed+EyySysAndSubDiffSummed;
                 ConsistConstraintMag=-ConsistConstraintMag;
                 ConsistConstraintMag = ConsistConstraintMag/(matProp.E_material1*totalMaterial);
@@ -637,8 +637,15 @@ classdef Optimizer
         function [EyySensitivty, ExxSensitivity,rhoValue] = CalculateDensitySensitivityandRho_OLD(obj,Exx,Eyy,theta,xSimp, Coefficents,config,matProp)
             co = Coefficents;
             
+           
+            
             Exx=Exx.*(xSimp.^config.penal);
             Eyy=Eyy.*(xSimp.^config.penal);
+            
+             ExxOriginal = Exx;
+            EyyOriginal= Eyy;
+            thetaOriginal = theta;
+            
             if(config.useANN==1)
                 
                 % Make the inputs be so taht Exx > Eyy
@@ -804,9 +811,18 @@ classdef Optimizer
                         return
                     end
                     minAllowed = 0.01;
-                    EyySensitivty=max(co(3)+co(5).*Exx+2*co(6).*Eyy,minAllowed);
-                    ExxSensitivity=max(co(2)+ 2*co(4).*Exx+co(5).*Eyy,minAllowed);
-                    rhoValue=   co(1) + co(2)*Exx + co(3)*Eyy + co(4)*Exx.^2 + co(5)*Exx.*Eyy + co(6)*Eyy.^2;
+                    % funciton from the values that I came up with as my
+                    % first esimate of best fit.
+                    %                     EyySensitivty=max(co(3)+co(5).*Exx+2*co(6).*Eyy,minAllowed);
+                    %                     ExxSensitivity=max(co(2)+ 2*co(4).*Exx+co(5).*Eyy,minAllowed);
+                    %                     rhoValue=   co(1) + co(2)*Exx + co(3)*Eyy + co(4)*Exx.^2 + co(5)*Exx.*Eyy + co(6)*Eyy.^2;
+                    
+                   x = ExxOriginal;
+                   y = EyyOriginal;
+                    rhoValue= co(1)  +  co(2) *x +  co(3) *y + co(4)*x^2 + co(5)*x*y + co(6)*y^2 + co(7)*x^3 + co(8)*x^2*y + co(9)*x*y^2 + co(10)*y^3;
+                    
+                        EyySensitivty= max(  co(3) *1 + co(5)*x*1 + 2*co(6)*y  + co(8)*x^2*1 + 2*co(9)*x*y +3* co(10)*y^2,minAllowed);
+                       ExxSensitivity= co(2) *1 +  2* co(4)*x + co(5)*1*y + 3*co(7)*x^2 + 2*co(8)*x*y + co(9)*x*y^2 + co(10)*y^3;
                 end
             end
             

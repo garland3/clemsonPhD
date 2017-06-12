@@ -19,24 +19,28 @@ for ii = [0  ]
     for jjj= 1:iterations
         % nameArray = sprintf('./out%i/ExxArrayForFitting%i.csv',folderNum, jjj);
         macro_meso_iteration=jjj
-        nameArray = sprintf('./out%i/MacroExxColumn%i.csv',folderNum,macro_meso_iteration);
+                nameArray = sprintf('./out%i/MacroExxColumn%i.csv',folderNum,macro_meso_iteration);
+%         nameArray = sprintf('./data/MacroExxColumn%i.csv',folderNum,macro_meso_iteration);
         MacroExxColumnTemp =  csvread(nameArray);
         ExxArray=[ExxArray ;MacroExxColumnTemp];
-
+        
         %        nameArray = sprintf('./out%i/EyyArrayForFitting%i.csv',folderNum, jjj);
-        nameArray = sprintf('./out%i/MacroEyyColumn%i.csv',folderNum,macro_meso_iteration);
+                nameArray = sprintf('./out%i/MacroEyyColumn%i.csv',folderNum,macro_meso_iteration);
+%         nameArray = sprintf('./data/MacroEyyColumn%i.csv',folderNum,macro_meso_iteration);
         MacroEyyColumnTemp =  csvread(nameArray);
         EyyArray=[EyyArray; MacroEyyColumnTemp];
-
-
+        
+        
         %        nameArray = sprintf('./out%i/ThetaArrayForFitting%i.csv',folderNum, jjj);
-        nameArray = sprintf('./out%i/MacroThetaColumn%i.csv',folderNum,macro_meso_iteration);
+                nameArray = sprintf('./out%i/MacroThetaColumn%i.csv',folderNum,macro_meso_iteration);
+%         nameArray = sprintf('./data/MacroThetaColumn%i.csv',folderNum,macro_meso_iteration);
         thetaArrayTemp =  csvread(nameArray);
         thetaArray=[thetaArray; thetaArrayTemp];
-
-
-
+        
+        
+        
         %         nameArray = sprintf('./out%i/RhoArrayForFitting%i.csv',folderNum, jjj);
+        %         nameArray = sprintf('./out%i/RhoColumn%i.csv',folderNum,macro_meso_iteration);
         nameArray = sprintf('./out%i/RhoColumn%i.csv',folderNum,macro_meso_iteration);
         rhoArrayTemp =  csvread(nameArray);
         rhoArray=[rhoArray; rhoArrayTemp];

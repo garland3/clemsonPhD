@@ -166,6 +166,13 @@ int main ( int argc, char **argv )
                     fprintf(log_file, "SUB_MASTER Finished");
                     fflush(log_file);
                     printf("SUB_MASTER --> Finished Recombine the entire matrix");
+                    
+                    if(MODE==1){
+                          printf("SUBMASTER --> Calculate Objective Using D_sub values\n");			
+                          callMatlab(90,macro_meso_iteration, 1);   
+                            printf("SUBMASTER ---------> Finished\n");			
+                    }
+                   
                 } 
               
         } // end if  (i_am_the_master)
@@ -345,8 +352,7 @@ int MultiscaleMasterNode(int macro_meso_iteration,int pool_size,int my_rank ){
             callMatlab(203,macro_meso_iteration, 1);   
              printf("MASTER -->Finished extracting Macro Vars from D_sub values. Finished Mode 203\n");			
              
-            printf("MASTER --> Calculate Objective Using D_sub values\n");			
-            callMatlab(90,macro_meso_iteration, 1);   
+           
         }
         
         return 1;

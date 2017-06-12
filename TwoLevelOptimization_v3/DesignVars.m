@@ -196,7 +196,15 @@ classdef DesignVars
                 % obj. ResponseSurfaceCoefficents=[ 1.0000000000463e-05 9.99988184437107e-06 9.9998491550433e-06 -3.40115537230351e-11 -5.52110060132392e-12 -3.81038581303971e-11];
                 %  obj.ResponseSurfaceCoefficents=[    -0.0449   1.045e-05   1.045e-05   8.433e-26  -1.045e-10   1.789e-25];
                 
-                obj.ResponseSurfaceCoefficents=[     -0.0449    1.0449    1.0449    0.0000   -1.0449    0.0000];
+                %Data from the estimated values that I came up with 
+%                 obj.ResponseSurfaceCoefficents=[     -0.0449    1.0449    1.0449    0.0000   -1.0449    0.0000];
+
+            % from lookup table using the validation data
+            % fit is a funciton of Exx/matProp.E_material1 and Eyy/matProp.E_material1
+            % poly33 is the function. 
+             obj. ResponseSurfaceCoefficents=[    0.1137      1.376    1.353    -0.6908    -1.988      -0.6529      0.1601   0.6243      0.5984   0.1471 ];
+             
+          %   obj. ResponseSurfaceCoefficents=[     0.0847            1.478           1.452       -0.8023           -2.179           -0.7586            0.2135          0.6952            0.6678            0.1974 ];
             end
             
             
@@ -285,24 +293,28 @@ classdef DesignVars
                     obj.EyySub=csvread(outnameEyySubSysValues); % Sub system copies of design var
                     obj.thetaSub=csvread(outnameThetaSubSysValues); % Sub system copies of design var
                     
-                      actualDensities=csvread(outnameMesoDensities); % Sub system copies of design var
-                      if(config.useTargetMesoDensity==1&& config.mode~=90)
-                        o = Optimizer;          
+                    actualDensities=csvread(outnameMesoDensities); % Sub system copies of design var
+                    if(config.useTargetMesoDensity==1&& config.mode~=90)
+                        o = Optimizer;
                         p = plotResults;
                         figure
                         [~, ~,predictedDensities] = o.CalculateDensitySensitivityandRho(obj.ExxSub/matProp.E_material1,obj.EyySub/matProp.E_material1,obj.thetaSub,obj.x ,obj.ResponseSurfaceCoefficents,config,matProp,obj.densityOffsetArray);
                         subplot(3,1,1);
-                       p.PlotArrayGeneric(actualDensities,'Actual Meso Densities');
-                         subplot(3,1,2);
-                       p.PlotArrayGeneric(predictedDensities,'Predicted Meso Densities');
+                        p.PlotArrayGeneric(actualDensities,'Actual Meso Densities');
+                        subplot(3,1,2);
+                        p.PlotArrayGeneric(predictedDensities,'Predicted Meso Densities');
                         subplot(3,1,3);
-                       p.PlotArrayGeneric(actualDensities-predictedDensities,'Actual - Predicted Meso Densities');
+                        p.PlotArrayGeneric(actualDensities-predictedDensities,'Actual - Predicted Meso Densities');
                         nameGraph = sprintf('./PredictedVSActualMesoDensities%i.png', config.macro_meso_iteration);
-                         print(nameGraph,'-dpng');
-                         
-%                           obj.densityOffsetArray=actualDensities-predictedDensities;
-                            obj.densityOffsetArray=actualDensities*0;
-                      end
+                        print(nameGraph,'-dpng');
+                        
+                        obj.densityOffsetArray=(actualDensities-predictedDensities)*0.5;
+                        close all
+                        p.PlotArrayGeneric( obj.densityOffsetArray,'Offset Densities');
+                        nameGraph = sprintf('./Predicted_OffsetDensitiesForIteration%i.png', config.macro_meso_iteration);
+                        print(nameGraph,'-dpng');
+                        %                             obj.densityOffsetArray=actualDensities*0;
+                    end
                     
                     %
                     %                     if(config.macro_meso_iteration>1)
@@ -1521,20 +1533,22 @@ classdef DesignVars
         
         %%%%%%%%%% MESH-INDEPENDENCY FILTER %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         function [dcn]=check(obj, nelx,nely,rmin,x,dc)
-            dcn=zeros(nely,nelx);
-            for i = 1:nelx
-                for j = 1:nely
-                    sum=0.0;
-                    for k = max(i-floor(rmin),1):min(i+floor(rmin),nelx)
-                        for l = max(j-floor(rmin),1):min(j+floor(rmin),nely)
-                            fac = rmin-sqrt((i-k)^2+(j-l)^2);
-                            sum = sum+max(0,fac);
-                            dcn(j,i) = dcn(j,i) + max(0,fac)*x(l,k)*dc(l,k);
-                        end
-                    end
-                    dcn(j,i) = dcn(j,i)/(x(j,i)*sum);
-                end
-            end
+%             dcn=zeros(nely,nelx);
+%             for i = 1:nelx
+%                 for j = 1:nely
+%                     sum=0.0;
+%                     for k = max(i-floor(rmin),1):min(i+floor(rmin),nelx)
+%                         for l = max(j-floor(rmin),1):min(j+floor(rmin),nely)
+%                             fac = rmin-sqrt((i-k)^2+(j-l)^2);
+%                             sum = sum+max(0,fac);
+%                             dcn(j,i) = dcn(j,i) + max(0,fac)*x(l,k)*dc(l,k);
+%                         end
+%                     end
+%                     dcn(j,i) = dcn(j,i)/(x(j,i)*sum);
+%                 end
+%             end
+
+dcn=imgaussfilt(dc,rmin );
         end
         
         %  -----------------------------------
@@ -1561,7 +1575,8 @@ classdef DesignVars
                         ThetasubTempSee=obj.thetaSub(j,i);
                         obj.ExxSub(j,i)=obj.EyySub(j,i);   % Sub system copies of design var
                         obj.EyySub(j,i)=ExxSubtemp2;
-                        obj.thetaSub(j,i)= min(obj.thetaSub(j,i)+pi/2,pi/2);
+%                         obj.thetaSub(j,i)= min(obj.thetaSub(j,i)+pi/2,pi/2);
+                           obj.thetaSub(j,i)= obj.thetaSub(j,i)+pi/2;
                         
                         
                     end
@@ -1582,7 +1597,8 @@ classdef DesignVars
                         ThetasubTempSee=obj.thetaSub(j,i);
                         obj.ExxSub(j,i)=obj.EyySub(j,i);   % Sub system copies of design var
                         obj.EyySub(j,i)=ExxSubtemp2;
-                        obj.thetaSub(j,i)= min(obj.thetaSub(j,i)-pi/2,0);
+%                         obj.thetaSub(j,i)= min(obj.thetaSub(j,i)-pi/2,0);
+                          obj.thetaSub(j,i)= obj.thetaSub(j,i)-pi/2;
                         
                         
                     end

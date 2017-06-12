@@ -273,8 +273,17 @@ if(config.UseLookUpTableForPsuedoStrain==1 && config.strainAndTargetTest~=1)
         %               diffValue = (D11_table-D11sys)^2+(D22_table-D22sys)^2;
         etaLocal = etaTarget(i);
         
-        if(diffValue<minValue && etaLocal>config.MesoMinimumDensity)
-            ps(3) = pstrain3(i);
+        ps(1) = pstrain1(i);
+        ps(2)= pstrain2(i);
+        ps(3) = pstrain3(i);
+        ps2 = sum(abs( ps));
+        if(ps2<0.5 &&etaLocal<0.4)
+            continue
+        end
+        
+        %         if(diffValue<minValue && etaLocal>config.MesoMinimumDensity && ps2>0.2)
+        if(diffValue<minValue && etaLocal>config.MesoMinimumDensity )
+            
             if(shearSign*ps(3)>0)
                 minValue=diffValue;
                 indexOfMinValue=i;
@@ -286,20 +295,23 @@ if(config.UseLookUpTableForPsuedoStrain==1 && config.strainAndTargetTest~=1)
     D12_table = D12(indexOfMinValue);
     D22_table = D22(indexOfMinValue);
     D33_table = D33(indexOfMinValue);
+    originalEta = etaTarget(indexOfMinValue);
     
     matProp=MaterialProperties;
     smallestDiff = minValue;
     bestScale=0;
-    for scale = -0.9:0.001:0.9
+    for scale = -1:0.001:1
+        
+        
         
         D11_table2=D11_table+(scale)*D11_table;
-%         D12_table2 = D12_table+(scale)*matProp. v*D12_table ;
-         D12_table2 = D12_table+(scale)*D12_table ;
+        %         D12_table2 = D12_table+(scale)*matProp. v*D12_table ;
+        D12_table2 = D12_table+(scale)*D12_table ;
         D22_table2=D22_table+(scale)*D22_table;
         
         
-%         D33_table2=D33_table+(scale)*0.5*(1-matProp. v)*D33_table ;
-           D33_table2=D33_table+(scale)*D33_table ;
+        %         D33_table2=D33_table+(scale)*0.5*(1-matProp. v)*D33_table ;
+        D33_table2=D33_table+(scale)*D33_table ;
         
         
         diffValue = (D11_table2-D11sys)^2+(D12_table2-D12sys)^2+(D22_table2-D22sys)^2+(D33_table2-D33sys)^2;
@@ -323,15 +335,15 @@ if(config.UseLookUpTableForPsuedoStrain==1 && config.strainAndTargetTest~=1)
     ps(1) = pstrain1(indexOfMinValue);
     ps(2)= pstrain2(indexOfMinValue);
     ps(3) = pstrain3(indexOfMinValue);
-    originalEta = etaTarget(indexOfMinValue);
+   
     etaTargetLocal = originalEta+bestScale*originalEta;
     
-    etaTargetLocal=max(config.MesoMinimumDensity,min(etaTargetLocal,0.95));
+    etaTargetLocal=max(config.MesoMinimumDensity,min(etaTargetLocal,1));
     
-     %       diffValue = (D11_table-D11sys)^2+(D12_table-D12sys)^2+(D22_table-D22sys)^2+(D33_table-D33sys)^2;
-       fprintf('Targets  D11 %f D22 %f D33 %f\n', D11sys,D22sys,D33sys);
+    %       diffValue = (D11_table-D11sys)^2+(D12_table-D12sys)^2+(D22_table-D22sys)^2+(D33_table-D33sys)^2;
+    fprintf('Targets  D11 %f D22 %f D33 %f\n', D11sys,D22sys,D33sys);
     fprintf('Expected D11 %f D22 %f D33 %f\nIndex is at %i\nbestscale %f\n%f\n', D11_table2,D22_table2,D33_table2,indexOfMinValue,bestScale,etaTargetLocal);
-   
+    
     
     
     %     outname = sprintf('./out%i/Dmatrix_%i_forElement_%i.csv',0,1,indexOfMinValue);

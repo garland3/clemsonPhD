@@ -70,7 +70,7 @@ classdef Configuration
         TargetECloseNess=0.03; % part of the termination criteria
         volumeUpdateInterval=12;
         coordinateMesoBoundaries = 1;
-        mesoDesignInitalConditions = 3; % 1 = randome, 2= square, 3 = circle
+        mesoDesignInitalConditions = 1; % 1 = randome, 2= square, 3 = circle
         MesoMinimumDensity=0;
         AddBorder=0; % Add border to complete structure. 
         UseLookUpTableForPsuedoStrain=1; %0 = feedback loop, 1 = use look up. 
@@ -84,7 +84,7 @@ classdef Configuration
         useThetaInSurfaceFit = 0;
         useANN=0;
         useAnnForDensityNotDerivative = 1;
-        rminExxEyy = 4; % smoothing radius for sensitivity smoothing.
+        rminExxEyy = 1.2 % smoothing radius for sensitivity smoothing.
         
         % True anisotropic material
         anisotropicMat=0;
@@ -176,7 +176,7 @@ classdef Configuration
         % ---------------------------
         % Loading cases
         % ---------------------------
-        loadingCase = [113]; % left clamped, load, middle right
+%         loadingCase = [113]; % left clamped, load, middle right
         %           loadingCase = [111 112 113]; % left clamped
         %            loadingCase = [111 112 ]; % left clamped
         %          loadingCase = [111 120 121]; % up, down, right in top right corrner, left clamp.
@@ -184,7 +184,7 @@ classdef Configuration
         %              loadingCase = [1];
         
         %  loadingCase = [300 301 302 303 304 305]; % shoe
-        %           loadingCase = [400 401 402 403 404 405]; % bridge
+                   loadingCase = [400 401 402 403 404 405]; % bridge
         %            loadingCase = [404]; % bridge
         %             loadingCase = [113]; % cantilever
         %                 loadingCase = [111]; % top right, force in Y direction
@@ -241,14 +241,14 @@ classdef Configuration
                 % ------------
                 % Palmetto running case
                 % -------------------
-                obj.nelx = 15; %% 30
-                obj.nely = 15; %  15
+                obj.nelx = 45; %% 30
+                obj.nely = 45; %  15
                 obj.nelxMeso = 35; %35;
                 obj.nelyMeso =35; %35;
                 obj.terminationAverageCount = 10;
                 obj.terminationCriteria =0.001; % 0.0%
-                obj.maxFEACalls = 200;
-                obj.maxMasterLoops = 120;
+                obj.maxFEACalls = 180;
+                obj.maxMasterLoops = 300;
                 
             end
             
