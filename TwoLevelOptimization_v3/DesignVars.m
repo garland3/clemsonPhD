@@ -202,7 +202,17 @@ classdef DesignVars
             % from lookup table using the validation data
             % fit is a funciton of Exx/matProp.E_material1 and Eyy/matProp.E_material1
             % poly33 is the function. 
-             obj. ResponseSurfaceCoefficents=[    0.1137      1.376    1.353    -0.6908    -1.988      -0.6529      0.1601   0.6243      0.5984   0.1471 ];
+            if (config.mesoDesignInitalConditions==3)
+                % Circle initial conditions
+%                   obj. ResponseSurfaceCoefficents=[    0.1137      1.376
+%                   1.353    -0.6908    -1.988      -0.6529      0.1601
+%                   0.6243      0.5984   0.1471 ]; with scale up and down
+                     obj. ResponseSurfaceCoefficents=[    0.02597    1.376  1.36   -0.74      -1.642    -0.7102     0.139    0.5426   0.5483   0.1214  ]; % with fmincon
+            elseif(config.mesoDesignInitalConditions==1)
+                % Randome intial conditions
+                
+                 obj. ResponseSurfaceCoefficents=[    0.1404          1.375         1.358  -0.8548     -1.863     -0.8177   0.2838     0.5854       0.579        0.2637  ];
+            end
              
           %   obj. ResponseSurfaceCoefficents=[     0.0847            1.478           1.452       -0.8023           -2.179           -0.7586            0.2135          0.6952            0.6678            0.1974 ];
             end
@@ -1731,6 +1741,31 @@ dcn=imgaussfilt(dc,rmin );
                                 end
                             end
                             
+                        end
+                    end
+                end
+                
+                
+                % Single circle in middle and empty all around. 
+            elseif(method ==7)
+              
+                 % mcircle in the moddle that is filled, and empty all
+                 % around. 
+                obj.x(1:mesoConfig.nely,1:mesoConfig.nelx) = zeros(mesoConfig.nely,mesoConfig.nelx);
+                %            obj.x(1:mesoConfig.nely,1:mesoConfig.nelx) = randi([1, round(mesoConfig.totalVolume*100)],mesoConfig.nely,mesoConfig.nelx)/100; % artificial density of the elements, can not be unifrom or else sensitivity will be 0 everywhere.
+                
+                midY = round(mesoConfig.nely/2);
+                midX = round(mesoConfig.nelx/2);
+%                 mesoConfig.totalVolume=0.5;%*mesoConfig.nely*mesoConfig.nelx;
+                radius = sqrt((mesoConfig.totalVolume*mesoConfig.nelx*mesoConfig.nely)/(pi));
+                for i = 1:mesoConfig.nelx
+                    for j = 1:mesoConfig.nely
+                        %                 if sqrt((i-mesoConfig.nelx/2-0.5)^2+(j-mesoConfig.nely/2-0.5)*2) < min(mesoConfig.nelx,mesoConfig.nely)/3
+                        %                     obj.x(j,i) = mesoConfig.totalVolume/2;
+                        %                 end
+                        d = sqrt((i-midX)^2+(j-midY)^2);
+                        if(d<radius)
+                            obj.x(j,i)= 1;
                         end
                     end
                 end

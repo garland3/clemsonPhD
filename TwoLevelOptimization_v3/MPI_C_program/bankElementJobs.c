@@ -169,7 +169,7 @@ int main ( int argc, char **argv )
                     
                     if(MODE==1){
                           printf("SUBMASTER --> Calculate Objective Using D_sub values\n");			
-                          callMatlab(90,macro_meso_iteration, 1);   
+                          callMatlab(90,k, 1);   
                             printf("SUBMASTER ---------> Finished\n");			
                     }
                    
@@ -286,7 +286,7 @@ int MultiscaleMasterNode(int macro_meso_iteration,int pool_size,int my_rank ){
                 //MPI_Send(int_buffer, COLS, MPI_INT, destination, count,
                 //		 MPI_COMM_WORLD);
                 MPI_Send(&elementNumber, 1, MPI_INT, destination, elementNumber, MPI_COMM_WORLD);
-                printf("sent Element Job %d to %d\n", elementNumber, destination);
+                printf("sent Element Job %d of %d to %d\n", elementNumber, nelm,destination);
                 //count = count + 1;
                 elementNumber=elementNumber+1;
                 nanosleep(&tim , &tim2) ;// Matlab is giving me some weird Bus error. Maybe trying to read the same files all at the same time is
@@ -323,7 +323,7 @@ int MultiscaleMasterNode(int macro_meso_iteration,int pool_size,int my_rank ){
          if (elementNumber < nelm+1) {
             //for (j = 0; j < COLS; j++) int_buffer[j] = a[count][j];					
             MPI_Send(&elementNumber, 1, MPI_INT, destination, elementNumber, MPI_COMM_WORLD);
-            printf("sent Element Job %d to %d\n", elementNumber, destination);
+            printf("sent Element Job %d of %d to %d\n", elementNumber, nelm,destination);
             //count = count + 1;
             elementNumber=elementNumber+1;
             
@@ -333,7 +333,7 @@ int MultiscaleMasterNode(int macro_meso_iteration,int pool_size,int my_rank ){
               // If NO jobs, then send a termination messsage
               // ------------------------------------
             MPI_Send(NULL, 0, MPI_INT, destination, TERMINATION_TAG, MPI_COMM_WORLD);
-            printf("terminated process %d with tag %d, i value is %d\n", sender, TERMINATION_TAG, i);
+            printf("terminated process %d with tag %d, i value is %d of %i \n", sender, TERMINATION_TAG, i,nelm);
          }
       }
       
@@ -391,7 +391,7 @@ int MesoValidationMasterNode(int macro_meso_iteration,int pool_size ,int my_rank
     }
     
     nelm= DetermineNumberOfElements(macro_meso_iteration,0 );
-    //nelm=8000;
+   // nelm=8000;
    
     
     
@@ -416,7 +416,7 @@ int MesoValidationMasterNode(int macro_meso_iteration,int pool_size ,int my_rank
                 //MPI_Send(int_buffer, COLS, MPI_INT, destination, count,
                 //		 MPI_COMM_WORLD);
                 MPI_Send(&elementNumber, 1, MPI_INT, destination, elementNumber, MPI_COMM_WORLD);
-                printf("sent Element Job %d to %d\n", elementNumber, destination);
+                printf("sent Element Job %d of %d to %d\n", elementNumber, nelm,destination);
                 //count = count + 1;
                 elementNumber=elementNumber+1;
                 nanosleep(&tim , &tim2) ;// Matlab is giving me some weird Bus error. Maybe trying to read the same files all at the same time is
@@ -452,7 +452,7 @@ int MesoValidationMasterNode(int macro_meso_iteration,int pool_size ,int my_rank
          if (elementNumber < nelm+1) {
             //for (j = 0; j < COLS; j++) int_buffer[j] = a[count][j];					
             MPI_Send(&elementNumber, 1, MPI_INT, destination, elementNumber, MPI_COMM_WORLD);
-            printf("sent Element Job %d to %d\n", elementNumber, destination);
+            printf("sent Element Job %d of %d to %d\n", elementNumber, nelm,destination);
             //count = count + 1;
             elementNumber=elementNumber+1;
             
@@ -462,7 +462,7 @@ int MesoValidationMasterNode(int macro_meso_iteration,int pool_size ,int my_rank
               // If NO jobs, then send a termination messsage
               // ------------------------------------
             MPI_Send(NULL, 0, MPI_INT, destination, TERMINATION_TAG, MPI_COMM_WORLD);
-            printf("terminated process %d with tag %d, i value is %d\n", sender, TERMINATION_TAG, i);
+             printf("terminated process %d with tag %d, i value is %d of %i \n", sender, TERMINATION_TAG, i,nelm);
          }
       }
       

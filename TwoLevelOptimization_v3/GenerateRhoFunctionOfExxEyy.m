@@ -85,7 +85,7 @@ if 1==1
             DV.Eyy= ones(1,numValues);
             DV.t= ones(1,numValues);
             DV.w= ones(1,numValues);
-            DV.x =ones(1,numValues);;
+            DV.x =ones(1,numValues);
             
         end
         
@@ -350,9 +350,14 @@ if 1==1
         end
     end
     
-    folderCells = {sprintf('out%i',folderNum),'data'};
-    for i = 1:2
-        folderName = char(folderCells(i));
+%     folderCells = {sprintf('out%i',folderNum),'data'};
+    if(config.validationModeOn==1)
+        folderName='data';
+    else
+        folderName=sprintf('out%i',folderNum);
+    end
+%     for i = 1:2
+%         folderName = char(folderCells(i));
         % save the Exx field
         %     outname = sprintf('./out%i/ExxSubSysValues%i.csv',folderNum,macro_meso_iteration);
         outname = sprintf('./%s/ExxSubSysValues%i.csv',folderName,macro_meso_iteration);
@@ -395,7 +400,7 @@ if 1==1
         %     outname = sprintf('./out%i/RhoColumn%i.csv',folderNum,macro_meso_iteration);
         outname = sprintf('./%s/RhoColumn%i.csv',folderName,macro_meso_iteration);
         csvwrite( outname,  RhoColumn);
-    end
+%     end
     
     
     % --------------------------------------------------------
@@ -430,10 +435,11 @@ if 1==1
         figure
         diffExx = MacroExxColumn-ExxArray;
         diffExx=abs(diffExx);
+        diffExx=diffExx./MacroExxColumn; % Relative Error
         ColorColumn=diffExx; % color
         circleSize = ones(size(ColorColumn))*100; % circle size.
         scatter3(MacroExxColumn,MacroEyyColumn,MacroThetaColumn,circleSize,ColorColumn,'filled','MarkerEdgeColor','k')
-        title(sprintf('Exx Error as circles (Target - Actual)'));
+        title(sprintf('Exx Relative Error as circles (Target - Actual)'));
         colorbar
         xlabel('Exx');
         ylabel('Eyy');
@@ -450,6 +456,7 @@ if 1==1
         figure
         diffEyy = MacroEyyColumn-EyyArray;
         diffEyy=abs(diffEyy);
+        diffEyy=diffEyy./MacroEyyColumn; % Relative Error
         ColorColumn=diffEyy; % color
         circleSize = ones(size(ColorColumn))*100; % circle size.
         scatter3(MacroExxColumn,MacroEyyColumn,MacroThetaColumn,circleSize,ColorColumn,'filled','MarkerEdgeColor','k')
@@ -471,6 +478,7 @@ if 1==1
         figure
         diffTheta = MacroThetaColumn-thetaArray;
         diffTheta=abs(diffTheta);
+        diffTheta=diffTheta./MacroThetaColumn; % Relative Error
         ColorColumn=diffTheta; % color
         circleSize = ones(size(ColorColumn))*100; % circle size.
         scatter3(MacroExxColumn,MacroEyyColumn,MacroThetaColumn,circleSize,ColorColumn,'filled','MarkerEdgeColor','k')
@@ -573,7 +581,7 @@ end
 %     [~, ~,annZ] = o.CalculateDensitySensitivityandRho(x,y,MacroThetaColumnTotal,ones(size(MacroEyyColumnTotal)),DV.ResponseSurfaceCoefficents,config,matProp,0);
 %     
 %     figure
-%     plot(f1, [x y], z);
+%      plot(f1, [x y], z);
 %     hold on
 %     scatter3(x,y,z,'b')
 %     hold on
@@ -586,7 +594,7 @@ end
 %     zlim([0 1])
 %     size(RhoColumnTotal)
 % end
-% 
+
 
 %annTest(macro_meso_iteration);
 

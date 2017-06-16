@@ -58,7 +58,7 @@ classdef Configuration
         % VOLUME Fraction SEttings.
         timestep = 0.001; % time step for the volume fraction update algorithm
         volFractionDamping = 1;
-        v1 = 0.6; % amount of material 1 to use. default to 20%
+        v1 = 0.1; % amount of material 1 to use. default to 20%
         v2 = 0.4; % amount of material 2 to use. default to 40%, reduced so there is less meso structures to compute
         totalVolume; % = v1+v2;
         
@@ -70,7 +70,7 @@ classdef Configuration
         TargetECloseNess=0.03; % part of the termination criteria
         volumeUpdateInterval=12;
         coordinateMesoBoundaries = 1;
-        mesoDesignInitalConditions = 1; % 1 = randome, 2= square, 3 = circle
+        mesoDesignInitalConditions = 3; % 1 = randome, 2= square, 3 = circle empty, 7 =middle circle is solid. 
         MesoMinimumDensity=0;
         AddBorder=0; % Add border to complete structure. 
         UseLookUpTableForPsuedoStrain=1; %0 = feedback loop, 1 = use look up. 
@@ -80,7 +80,7 @@ classdef Configuration
         useExxEyy=1;    % must be 0 for gradient material optimization
         useTargetMesoDensity = 1; % 1 = yes, 0 = no and use target Eavg
         targetAvgExxEyy=50000;
-        targetExxEyyDensity = 0.6;
+        targetExxEyyDensity = 0.4;
         useThetaInSurfaceFit = 0;
         useANN=0;
         useAnnForDensityNotDerivative = 1;
@@ -148,11 +148,11 @@ classdef Configuration
         % mode = 111 or 112, also 113
         % ---------------------------
         validationGridSizeNelx = 11; % , This value cubed  will be the number of sub problems, 22^3 =10648
-        validationModeOn=0; % 1 = yes. 
+        validationModeOn=1; % 1 = yes. 
         
         % ANN target test or Loopkup data generator
-        strainAndTargetTest =1; % for mode 113
-        targetTestVectorLen=20; % 13 is reasonable
+        strainAndTargetTest =0; % for mode 113
+        targetTestVectorLen=40; % 40 is reasonable
         
        
         
@@ -176,7 +176,7 @@ classdef Configuration
         % ---------------------------
         % Loading cases
         % ---------------------------
-%         loadingCase = [113]; % left clamped, load, middle right
+         loadingCase = [113]; % left clamped, load, middle right
         %           loadingCase = [111 112 113]; % left clamped
         %            loadingCase = [111 112 ]; % left clamped
         %          loadingCase = [111 120 121]; % up, down, right in top right corrner, left clamp.
@@ -184,7 +184,7 @@ classdef Configuration
         %              loadingCase = [1];
         
         %  loadingCase = [300 301 302 303 304 305]; % shoe
-                   loadingCase = [400 401 402 403 404 405]; % bridge
+%                    loadingCase = [400 401 402 403 404 405]; % bridge
         %            loadingCase = [404]; % bridge
         %             loadingCase = [113]; % cantilever
         %                 loadingCase = [111]; % top right, force in Y direction
@@ -241,8 +241,8 @@ classdef Configuration
                 % ------------
                 % Palmetto running case
                 % -------------------
-                obj.nelx = 45; %% 30
-                obj.nely = 45; %  15
+                obj.nelx = 15; %% 30
+                obj.nely = 15; %  15
                 obj.nelxMeso = 35; %35;
                 obj.nelyMeso =35; %35;
                 obj.terminationAverageCount = 10;

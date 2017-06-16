@@ -8,11 +8,11 @@ classdef VideoManager
         % --------------------
         % Call 1 time at beginning. 
         % --------------------
-        function [vidObj, framedNumber] = InitializeVideo(obj, config)
+        function [vidObj, framedNumber] = InitializeVideo(obj, config,name)
             vidObj = 0;
             framedNumber= 1;
             if config.recvid==1
-                videoOut = './resultsOuts.avi';
+                videoOut =name;
                 vidObj = VideoWriter(videoOut);    %Prepare the new file for video
                 vidObj.FrameRate = 5;
                 vidObj.Quality = 100;

@@ -38,7 +38,7 @@ config.mode =65;
 % 112 = Read the meso design information and compute validation metrics
 % 113 = Generate Pseudo Strain and Density Targts for ANN map test
 % 114 = Read Psuedo strain and density target results. Save .csv file
-% 115 = Run ANN to interprete the psuedo strain and density target results
+% 115 = interprete the psuedo strain and density target results as graphs
 
 % 200, Plot the objectives and constraints over several iteraions
 % 201, make an .stl file for an iteration.

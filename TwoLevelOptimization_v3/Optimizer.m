@@ -683,8 +683,13 @@ classdef Optimizer
                 
                 X=[Exx;Eyy;theta];
                 
-                if(config.UseLookUpTableForPsuedoStrain==1)                    
-                    [rhoValue,~,~] = annOutput_LookUpTable(X,[],[]);
+                if(config.UseLookUpTableForPsuedoStrain==1)
+                    if config.mesoDesignInitalConditions==3
+%                         [rhoValue,~,~] = annOutput_LookUpTable(X,[],[]);
+                        [rhoValue,~,~] = annOutput_lookupTable_withFmincon(X,[],[]);
+                    elseif(config.mesoDesignInitalConditions==1)
+                        [rhoValue,~,~] = annOutput_RandomMesoInitialLookUpTable(X,[],[]);
+                    end
                 else
                     if(config.mesoVolumeUpdateMethod==2)
                         [rhoValue,~,~] = annOutput_matUpdateV2(X,[],[]);
@@ -698,7 +703,12 @@ classdef Optimizer
                 XCopy(1,:)=XCopy(1,:)+deltaT;
                 
                 if(config.UseLookUpTableForPsuedoStrain==1)                   
-                    [rhoValueXShift,~,~] = annOutput_LookUpTable(XCopy,[],[]);
+                    if config.mesoDesignInitalConditions==3
+%                         [rhoValue,~,~] = annOutput_LookUpTable(XCopy,[],[]);
+                         [rhoValue,~,~] = annOutput_lookupTable_withFmincon(XCopy,[],[]);
+                    elseif(config.mesoDesignInitalConditions==1)
+                        [rhoValue,~,~] = annOutput_RandomMesoInitialLookUpTable(XCopy,[],[]);
+                    end
                 else
                     if(config.mesoVolumeUpdateMethod==2)
                         [rhoValueXShift,~,~] = annOutput_matUpdateV2(XCopy,[],[]);
@@ -714,7 +724,12 @@ classdef Optimizer
                 XCopy(2,:)=XCopy(2,:)+deltaT;
                 
                 if(config.UseLookUpTableForPsuedoStrain==1)                    
-                    [rhoValueYShift,~,~] = annOutput_LookUpTable(XCopy,[],[]);
+                    if config.mesoDesignInitalConditions==3
+%                         [rhoValue,~,~] = annOutput_LookUpTable(XCopy,[],[]);
+                         [rhoValue,~,~] = annOutput_lookupTable_withFmincon(XCopy,[],[]);
+                    elseif(config.mesoDesignInitalConditions==1)
+                        [rhoValue,~,~] = annOutput_RandomMesoInitialLookUpTable(XCopy,[],[]);
+                    end
                 else
                     if(config.mesoVolumeUpdateMethod==2)
                         [rhoValueYShift,~,~] = annOutput_matUpdateV2(XCopy,[],[]);
@@ -804,8 +819,12 @@ classdef Optimizer
                         X=[Exx;Eyy;theta];
                         
                         if(config.UseLookUpTableForPsuedoStrain==1)
-                            %                             [rhoValueXShift,~,~] = annOutput_LookUpTable(XCopy,[],[]);
-                            [rhoValue,~,~] = annOutput_LookUpTable(X,[],[]);
+                            if config.mesoDesignInitalConditions==3
+%                                 [rhoValue,~,~] = annOutput_LookUpTable(X,[],[]);
+                                  [rhoValue,~,~] = annOutput_lookupTable_withFmincon(X,[],[]);
+                            elseif(config.mesoDesignInitalConditions==1)
+                                [rhoValue,~,~] = annOutput_RandomMesoInitialLookUpTable(X,[],[]);
+                            end
                         else
                             if(config.mesoVolumeUpdateMethod==2)
                                 [rhoValue,~,~] = annOutput_matUpdateV2(X,[],[]);

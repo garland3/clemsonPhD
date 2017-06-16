@@ -20,8 +20,9 @@ DV.lambda1=1;
 
 temp=config.validationGridSizeNelx-1;
 
-ExxVector =0:matProp.E_material1/temp:matProp.E_material1;
-EyyVector =0:matProp.E_material1/temp:matProp.E_material1;
+scale = 0.1;
+ExxVector =0:scale*matProp.E_material1/temp:matProp.E_material1*scale;
+EyyVector =0:scale*matProp.E_material1/temp:matProp.E_material1*scale;
 thetaVector = 0:(pi/2)/temp:pi/2;
 [ExxValues, EyyValues, ThetaValues] = meshgrid(ExxVector,EyyVector,thetaVector);
 
