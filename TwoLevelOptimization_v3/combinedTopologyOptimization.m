@@ -85,7 +85,8 @@ end
 % ---------------------------------------------
 if(config.mode ==111) 
     DV = DesignVars(config);
-    GenerateMesoValidationTargets(DV,config,matProp);
+    step=1;
+    GenerateMesoValidationTargets(DV,config,matProp,step);
     return;
 end
 
@@ -96,8 +97,11 @@ end
 if(config.mode ==112) 
 %     DV = DesignVars(config);
     fprintf('compute Meso Design Metrics.\n');
-      GenerateRhoFunctionOfExxEyy(config)
-   % ComputeMesoDesignMetrics(DV,config,matProp);
+       GenerateRhoFunctionOfExxEyy(config)
+       step=2;
+        DV = DesignVars(config);
+        GenerateMesoValidationTargets(DV,config,matProp,step);
+%    ComputeMesoDesignMetrics(DV,config,matProp);
     return;
 end
 

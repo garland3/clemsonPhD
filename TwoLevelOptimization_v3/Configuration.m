@@ -58,7 +58,7 @@ classdef Configuration
         % VOLUME Fraction SEttings.
         timestep = 0.001; % time step for the volume fraction update algorithm
         volFractionDamping = 1;
-        v1 = 0.1; % amount of material 1 to use. default to 20%
+        v1 = 0.6; % amount of material 1 to use. default to 20%
         v2 = 0.4; % amount of material 2 to use. default to 40%, reduced so there is less meso structures to compute
         totalVolume; % = v1+v2;
         
@@ -70,7 +70,7 @@ classdef Configuration
         TargetECloseNess=0.03; % part of the termination criteria
         volumeUpdateInterval=12;
         coordinateMesoBoundaries = 1;
-        mesoDesignInitalConditions = 3; % 1 = randome, 2= square, 3 = circle empty, 7 =middle circle is solid. 
+        mesoDesignInitalConditions = 7; % 1 = randome, 2= square, 3 = circle empty, 7 =middle circle is solid. 
         MesoMinimumDensity=0;
         AddBorder=0; % Add border to complete structure. 
         UseLookUpTableForPsuedoStrain=1; %0 = feedback loop, 1 = use look up. 
@@ -80,7 +80,7 @@ classdef Configuration
         useExxEyy=1;    % must be 0 for gradient material optimization
         useTargetMesoDensity = 1; % 1 = yes, 0 = no and use target Eavg
         targetAvgExxEyy=50000;
-        targetExxEyyDensity = 0.4;
+        targetExxEyyDensity = 0.2; % $$$$ DENSITY of MESO STRUCTURES $$$$
         useThetaInSurfaceFit = 0;
         useANN=0;
         useAnnForDensityNotDerivative = 1;
@@ -148,11 +148,11 @@ classdef Configuration
         % mode = 111 or 112, also 113
         % ---------------------------
         validationGridSizeNelx = 11; % , This value cubed  will be the number of sub problems, 22^3 =10648
-        validationModeOn=1; % 1 = yes. 
+        validationModeOn=0; % 1 = yes. 
         
         % ANN target test or Loopkup data generator
-        strainAndTargetTest =0; % for mode 113
-        targetTestVectorLen=40; % 40 is reasonable
+        strainAndTargetTest =1; % for mode 113
+        targetTestVectorLen=40; % 20 is reasonable
         
        
         

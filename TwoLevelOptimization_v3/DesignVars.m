@@ -1668,23 +1668,32 @@ dcn=imgaussfilt(dc,rmin );
                 
             elseif(method ==4)
                 % method 4, many circle holes
-                obj.x(1:mesoConfig.nely,1:mesoConfig.nelx) = ones(mesoConfig.nely,mesoConfig.nelx);
-                numHolesX = 7;
-                numHolesY =7;
+                 obj.x(1:mesoConfig.nely,1:mesoConfig.nelx) = ones(mesoConfig.nely,mesoConfig.nelx);
+%                  obj.x(1:mesoConfig.nely,1:mesoConfig.nelx) = randi([0, round(mesoConfig.totalVolume*100)],mesoConfig.nely,mesoConfig.nelx)/100; 
+                numHolesX = 10;
+                numHolesY =10;
                 totalHoles =numHolesX*numHolesY;
-                XholeCenters = 1:mesoConfig.nelx/(numHolesX+1):mesoConfig.nelx;
-                YholeCenters = 1:mesoConfig.nely/(numHolesY+1):mesoConfig.nely;
+                XholeCenters = 0:mesoConfig.nelx/(numHolesX-1):mesoConfig.nelx;
+                YholeCenters =0:mesoConfig.nely/(numHolesY-1):mesoConfig.nely;
+%                 p=plotResults;
+%                  XholeCenters = randi([0, mesoConfig.nelx],1,numHolesX);
+%                  YholeCenters =  randi([0, mesoConfig.nely],1,numHolesY);
                 
-                radius = sqrt((mesoConfig.totalVolume*mesoConfig.nelx*mesoConfig.nely-mesoConfig.nelx*mesoConfig.nely)/(-pi*totalHoles));
-                for i = 1:mesoConfig.nelx
-                    for j = 1:mesoConfig.nely
-                        %                 if sqrt((i-mesoConfig.nelx/2-0.5)^2+(j-mesoConfig.nely/2-0.5)*2) < min(mesoConfig.nelx,mesoConfig.nely)/3
-                        %                     obj.x(j,i) = mesoConfig.totalVolume/2;
-                        %                 end
-                        for mm = 1:(1+numHolesX)
-                            for nn = 1:(1+numHolesY)
-                                midX= XholeCenters(mm);
-                                midY= YholeCenters(nn);
+                targetV = mesoConfig.totalVolume*mesoConfig.nelx*mesoConfig.nely;
+                totalV = mesoConfig.nelx*mesoConfig.nely;
+                radius = sqrt((targetV-totalV)/(-pi*totalHoles));
+%                 radius= max(radius,1.5);
+                
+                %                 if sqrt((i-mesoConfig.nelx/2-0.5)^2+(j-mesoConfig.nely/2-0.5)*2) < min(mesoConfig.nelx,mesoConfig.nely)/3
+                %                     obj.x(j,i) = mesoConfig.totalVolume/2;
+                %                 end
+                for mm = 1:(0+numHolesX)
+                    for nn = 1:(0+numHolesY)
+                        midX= XholeCenters(mm);
+                        midY= YholeCenters(nn);
+                        
+                        for i = 1:mesoConfig.nelx
+                            for j = 1:mesoConfig.nely
                                 
                                 d = sqrt((i-midX)^2+(j-midY)^2);
                                 if(d<radius)
@@ -1692,8 +1701,13 @@ dcn=imgaussfilt(dc,rmin );
                                 end
                             end
                         end
+%                          p.PlotArrayGeneric(  obj.x, 'plot with holes')
+                        
                     end
                 end
+                
+               
+                
             elseif(method ==5)
                 % method 5, small hole in middle
                 obj.x(1:mesoConfig.nely,1:mesoConfig.nelx) = ones(mesoConfig.nely,mesoConfig.nelx);

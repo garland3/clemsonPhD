@@ -482,6 +482,8 @@ int MesoValidationMasterNode(int macro_meso_iteration,int pool_size ,int my_rank
         } else {
             printf("MASTER --> Compile PSeudo strain and density information. MODE 114 ");			
             callMatlab(114,k, 1);   
+            printf("MASTER --> Plot Results. MODE 115 ");			
+            callMatlab(115,k, 1);   
         }
         
         return 1;

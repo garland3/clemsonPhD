@@ -226,15 +226,16 @@ if(config.UseLookUpTableForPsuedoStrain==1 && config.strainAndTargetTest~=1)
     % 3. Search the lookup table for the value that minimizes
     % Save this min value as the psuedo strain to use.
     macro_meso_iteration=1;
-    if( config.mesoDesignInitalConditions==1)
-        folder = '_random';
-    elseif(config.mesoDesignInitalConditions==3)
-        folder = '3_circle';
-        folder='';
-    elseif(config.mesoDesignInitalConditions==7)
-        %              folder ='_circleSolid';
-        folder='';
-    end
+%     if( config.mesoDesignInitalConditions==1)
+%         folder = '_random';
+%     elseif(config.mesoDesignInitalConditions==3)
+%         folder = '3_circle';
+%         folder='';
+%     elseif(config.mesoDesignInitalConditions==7)
+%         %              folder ='_circleSolid';
+%         folder='';
+%     end
+    folder='';
     outname = sprintf('./data%s/D11%i_datat.data',folder,macro_meso_iteration);
     D11 =csvread(outname);
     
@@ -436,7 +437,9 @@ if(config.UseLookUpTableForPsuedoStrain==1 && config.strainAndTargetTest~=1)
                                     D11_table=temp;
                                 end
                                 
-                                diffValue = (D11_table-D11sys)^2+(D12_table-D12sys)^2+(D22_table-D22sys)^2+(D33_table-D33sys)^2;
+%                                 diffValue = (D11_table-D11sys)^2+(D12_table-D12sys)^2+(D22_table-D22sys)^2+(D33_table-D33sys)^2;
+                                
+                                       diffValue = (D11_table-D11sys)^2+(D22_table-D22sys)^2+(D33_table-D33sys)^2;
                                 
                                 
                                 if(diffValue<(minValue+minValue*errorOnMinAllowed)) % allow up to errorOnMinAllowed higher values.
@@ -503,7 +506,7 @@ if(config.UseLookUpTableForPsuedoStrain==1 && config.strainAndTargetTest~=1)
                 
                 scaleVersion=1;
                 if(scaleVersion==1)
-               
+                    
                     smallestDiff = minValue;
                     bestScale=0;
                     for scale = -1:0.001:1
@@ -511,7 +514,9 @@ if(config.UseLookUpTableForPsuedoStrain==1 && config.strainAndTargetTest~=1)
                         D12_table2 = D12_table+(scale)*D12_table ;
                         D22_table2=D22_table+(scale)*D22_table;
                         D33_table2=D33_table+(scale)*D33_table ;
-                        diffValue = (D11_table2-D11sys)^2+(D12_table2-D12sys)^2+(D22_table2-D22sys)^2+(D33_table2-D33sys)^2;
+                        %                         diffValue = (D11_table2-D11sys)^2+(D12_table2-D12sys)^2+(D22_table2-D22sys)^2+(D33_table2-D33sys)^2;
+                        
+                        diffValue = (D11_table2-D11sys)^2+(D22_table2-D22sys)^2+(D33_table2-D33sys)^2;
                         if(diffValue<smallestDiff)
                             bestScale=scale;
                             smallestDiff=diffValue;
