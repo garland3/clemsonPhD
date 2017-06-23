@@ -182,7 +182,7 @@ elseif(step==2)
         p.PlotArrayGeneric( completeStruct, plotname)
           xlabel('Eyy');
                 ylabel('Exx');
-                draw now
+                drawnow
         
         %     p.PlotArrayGeneric( completeStruct, plotname)
         %     rgbSteps = 100;  caxis([0,1]);

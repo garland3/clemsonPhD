@@ -14,8 +14,8 @@ column= config.nely+1;
 
 bottomFixed=0;
 
-bridgeStart = (row*(column-2)+1)*2; % (row*(floor(column/2))+1)*2;
-bridgeEnd=(row*(column-1))*2; % (row*(1+floor(column/2)))*2;
+bridgeStart = (row*(column-1)+1)*2; % (row*(floor(column/2))+1)*2;
+bridgeEnd=(row*(column-0))*2; % (row*(1+floor(column/2)))*2;
 
 loadMagnitude = 10000;%500
 % loading condition

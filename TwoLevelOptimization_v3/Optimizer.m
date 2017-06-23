@@ -316,7 +316,7 @@ classdef Optimizer
             %-----------------------
             largest=1e8;
             move = matProp.E_material1*0.05;
-            minimum = matProp.E_material2;
+             minimum =config.minEallowed;
             
             %              E_target =(config.v1*matProp.E_material1+config.v2*matProp.E_material2)/(config.v1+config.v2);
             %             DV.targetAverageE = E_target;
@@ -462,7 +462,7 @@ classdef Optimizer
             largest=1e8;
             
             move = matProp.E_material1*0.05;
-            minimum = matProp.E_material2;
+            minimum =config.minEallowed;
             
             % ----------------
             % Exx
@@ -503,7 +503,7 @@ classdef Optimizer
                 lambda1 = 0.5*(l2+l1);
                 ExxInput =ExxNew/matProp.E_material1; % % MOVED to the function scale down by the simp density, since the actual rho is a function of what is SIMP density and Exx or Eyy
                 EyyInput = EyyNew/matProp.E_material1;
-                [dDensityEyy, dDensityExx,~] = obj.CalculateDensitySensitivityandRho(ExxInput,EyyInput,theta,DV.x,DV.ResponseSurfaceCoefficents,config,matProp,DV.densityOffsetArray);
+                [dDensityEyy, dDensityExx,mesoDensity] = obj.CalculateDensitySensitivityandRho(ExxInput,EyyInput,theta,DV.x,DV.ResponseSurfaceCoefficents,config,matProp,DV.densityOffsetArray);
                 
                 dDensityEyy = DV.check( config.nelx, config.nely,config.rminExxEyy,DV.x,dDensityEyy);
                 dDensityExx = DV.check( config.nelx, config.nely,config.rminExxEyy,DV.x,dDensityExx);
@@ -519,8 +519,17 @@ classdef Optimizer
                 %                 targetEyy = EyyNew.*combinedTermsEyy;
                 targetExx = DV.Exx.*combinedTermsExx;
                 targetEyy = DV.Eyy.*combinedTermsEyy;
-                ExxNew = max(0.1,max( minimum - EyyNew,  max(DV.Exx-move ,  min(  min(targetExx,DV.Exx+move ),matProp.E_material1))));
-                EyyNew = max(0.1,max(minimum -  ExxNew,  max(DV.Eyy-move ,  min(  min(targetEyy,DV.Eyy+move ),matProp.E_material1))));
+%                 ExxNew = max(0.1,max( minimum - EyyNew,  max(DV.Exx-move ,  min(  min(targetExx,DV.Exx+move ),matProp.E_material1))));
+%                 EyyNew = max(0.1,max(minimum -  ExxNew,  max(DV.Eyy-move ,  min(  min(targetEyy,DV.Eyy+move ),matProp.E_material1))));
+                 logicTest1 = mesoDensity<config.minMesoDensityInOptimizer;
+                  logicTest2 =DV.x>config.voidMaterialDensityCutOff;
+                 logicTest=(logicTest1+logicTest2)>1.1;
+                 minE_allowed = ones(size(targetExx));
+                 minE_allowed(logicTest)=ExxNew(logicTest);
+                 ExxNew = max(minE_allowed,max( minimum - EyyNew,  max(DV.Exx-move ,  min(  min(targetExx,DV.Exx+move ),matProp.E_material1))));
+                 
+                  minE_allowed(logicTest)=EyyNew(logicTest);
+                EyyNew = max(minE_allowed,max(minimum -  ExxNew,  max(DV.Eyy-move ,  min(  min(targetEyy,DV.Eyy+move ),matProp.E_material1))));
                 
                 %                 sumDensity = sumDensity/(config.nelx*config.nely*config.totalVolume);
                 [~, ~,rhoValue] = obj.CalculateDensitySensitivityandRho(ExxNew/matProp.E_material1,EyyNew/matProp.E_material1,theta,DV.x,DV.ResponseSurfaceCoefficents,config,matProp,DV.densityOffsetArray);

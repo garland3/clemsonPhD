@@ -17,16 +17,16 @@ close all
 
 % Validation modes
 %        combinedTopologyOptimization('1', '1', '1','111', 'na');
-%         combinedTopologyOptimization('1', '1', '1','112', 'na');
+%           combinedTopologyOptimization('1', '1', '1','112', 'na');
 
 
 % Iteration 1 of topology, Exx, Eyy, rotation
 % combinedTopologyOptimization('1', '1', '1','60', 'na');
 % combinedTopologyOptimization('1', '1', '1','200', 'na');
-%  combinedTopologyOptimization('1', '1', '1','202', 'na'); % make complete structure
+%   combinedTopologyOptimization('1', '1', '1','202', 'na'); % make complete structure
 % combinedTopologyOptimization('1', '1', '1','90', 'na');
 %   combinedTopologyOptimization('1', '1', '1','203', 'na'); % extact macro values
-
+combinedTopologyOptimization('1', '1', '1','201', 'na'); % Make a .stl file from the .csv file
 
 % % iteration 2
 % combinedTopologyOptimization('1', '1', '2','60', 'na');
@@ -35,6 +35,7 @@ close all
 % combinedTopologyOptimization('1', '1', '2','202', 'na'); % make complete structure
 % combinedTopologyOptimization('1', '1', '2','203', 'na'); % extact macro values
 % combinedTopologyOptimization('1', '1', '2','90', 'na');
+% combinedTopologyOptimization('1', '1', '2','201', 'na'); % Make a .stl file from the .csv file
 
 % % iteration 3
 % combinedTopologyOptimization('1', '1', '3','60', 'na');
@@ -58,11 +59,16 @@ totale=nelx*nely;
 
 % combinedTopologyOptimization('1', '1', '1','100', '1'); % run the meso structure design to get the actual data
 
-% % % % for i = 1:totale
- for i = 8000:10000
-     
-      combinedTopologyOptimization('1', '1', '1','100', int2str(i)); % run the meso structure design to get the actual data
- end
+% [idum,hostname]= system('hostname');
+% 
+% hostname
+% 
+% idum
+% % % % % for i = 1:totale
+%  for i = 4 :10000
+%      
+%       combinedTopologyOptimization('1', '1', '1','100', int2str(i)); % run the meso structure design to get the actual data
+%  end
 
 if(1==0)
     

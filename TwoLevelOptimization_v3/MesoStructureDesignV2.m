@@ -100,6 +100,36 @@ pstrain=ones(3,1)/3;
 pstrain(3)=pstrain(3)*shearSign;
 pstrainOld=ones(3,1);
 
+% projectionMethod = 1;
+% if projectionMethod==1
+%     % generate the mask for each element
+%     
+%     mask = zeros(mesoConfig.nely,mesoConfig.nelx,mesoConfig.nelx*mesoConfig.nely);
+%     maskSum = zeros(mesoConfig.nely,mesoConfig.nelx);
+%     
+%     Rdist = 3;
+% %     DVmeso= DVmeso.GenerateStartingMesoDesign(mesoConfig,macroElemProps);
+%     xp=DVmeso.x;
+%     
+%     e=1;
+%     for i = 1:mesoConfig.nely
+%         for j = 1:mesoConfig.nelx
+%             sum = 0;
+%             for ii = 1:mesoConfig.nely
+%                 for jj = 1:mesoConfig.nelx
+%                     distance =-sqrt((i-ii)^2+(j-jj)^2)+Rdist;
+%                     temp=max(0,distance);
+%                     mask(ii,jj,e)=temp;
+%                     sum=sum+ temp;
+%                 end
+%             end
+%             e=e+1;
+%             maskSum(i,j)=sum;
+%         end
+%     end
+%     
+% end
+
 
 counter = 1;
 % mesoConfig.totalVolume=0.5; % start at 50% density and go from there.
@@ -124,6 +154,8 @@ for mm = 1:mesoConfig.maxNumPseudoStrainLoop
     % Generate the Design Vars for the Meso Optimization
     % ------------------------------------------------------
     DVmeso= DVmeso.GenerateStartingMesoDesign(mesoConfig,macroElemProps);
+    
+    
     D_system = macroElemProps.D_sys;
     pstrainOld=pstrain;
     oldX=  DVmeso.x+10;
@@ -133,10 +165,23 @@ for mm = 1:mesoConfig.maxNumPseudoStrainLoop
                  macroElemProps.psuedoStrain=pstrain;
             end
         end
-      
+        
         [ DVmeso ,D_h, ~,~] = Homgenization(DVmeso, mesoConfig, matProp, macroElemProps,mesoLoop,old_muMatrix,penaltyValue);
         totalFEACount=totalFEACount+1;
         macroElemProps.D_subSys=D_h;
+        
+        
+%         if projectionMethod==1
+%             e=1;
+%             for i = 1:mesoConfig.nely
+%                 for j = 1:mesoConfig.nelx
+%                     dcp(i,j)= DVmeso.dc*mask(:,:,e);
+%                     e=e+1;
+%                 end
+%             end
+%             
+%         end
+        
         
         if(mesoConfig.multiscaleMethodCompare~=1 && mesoConfig.strainAndTargetTest~=1 &&  mesoConfig.UseLookUpTableForPsuedoStrain~=1 )
             % ------------------------------
@@ -222,12 +267,16 @@ for mm = 1:mesoConfig.maxNumPseudoStrainLoop
             
             
             % FILTERING OF SENSITIVITIES
-            [DVmeso.dc]   = DVmeso.check(mesoConfig.nelx,mesoConfig.nely,mesoConfig.rmin,DVmeso.x,DVmeso.dc);
+            %             [DVmeso.dc]   = DVmeso.check(mesoConfig.nelx,mesoConfig.nely,mesoConfig.rmin,DVmeso.x,DVmeso.dc);
+            [DVmeso.dc]=  imgaussfilt(DVmeso.dc,mesoConfig.rmin);
             
             DVmeso.dc= DVmeso.AddCoordinationMaskToSensitivies(mesoConfig,macroElemProps);
             
             moveLimit=0.05;
             [DVmeso.x] = OC(mesoConfig.nelx,mesoConfig.nely,DVmeso.x,mesoConfig.totalVolume,DVmeso.dc, DVmeso, mesoConfig,moveLimit);
+            
+            %               [DVmeso.x]
+            
             
             
             
@@ -257,6 +306,7 @@ for mm = 1:mesoConfig.maxNumPseudoStrainLoop
             % ----------------------------------------------
             % Psuedo strain and density targets for ANN training data
             % ----------------------------------------------
+%             mesoConfig.rmin=4;
             [DVmeso.dc]   = DVmeso.check(mesoConfig.nelx,mesoConfig.nely,mesoConfig.rmin,DVmeso.x,DVmeso.dc);
             moveLimit=0.05;
             [DVmeso.x] = OC(mesoConfig.nelx,mesoConfig.nely,DVmeso.x,mesoConfig.totalVolume,DVmeso.dc, DVmeso, mesoConfig,moveLimit);
@@ -264,7 +314,8 @@ for mm = 1:mesoConfig.maxNumPseudoStrainLoop
             DiffX = oldX-DVmeso.x;
             changeLimit = mesoConfig.nelx*mesoConfig.nely*0.0005;
             sumOfDiffX = sum(sum(abs(DiffX)));
-            if(sumOfDiffX<changeLimit)
+            minIterationsBeforeTerminate = 15;
+            if(sumOfDiffX<changeLimit && mesoLoop>minIterationsBeforeTerminate)
                 if(verboseOutput==1)
                     fprintf('Break in Meso design. X values are not changing. \n');
                 end
@@ -337,8 +388,13 @@ for mm = 1:mesoConfig.maxNumPseudoStrainLoop
     end
 end
 % pstrain
+doPostProcess =1;
 
-
+if( doPostProcess==1)
+  
+    [DVmeso.x , numChanged] = CheckForConerElements(DVmeso.x, mesoConfig.nelx,mesoConfig. nely, mesoConfig.voidMaterialDensityCutOff);
+    [ DVmeso ,D_h, ~,~] = Homgenization(DVmeso, mesoConfig, matProp, macroElemProps,mesoLoop,old_muMatrix,penaltyValue);
+end
 
 if recvid==1
     close(vidObj);  %close video

@@ -339,7 +339,7 @@ elseif(step==3)
     %-----------------------------
     % Plot data
     %-----------------------------
-    plotting = 1;
+    plotting = 0;
     runANN=0;
     showAllDesigns =1;
     if plotting ==1

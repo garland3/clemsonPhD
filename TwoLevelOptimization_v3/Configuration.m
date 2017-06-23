@@ -59,7 +59,7 @@ classdef Configuration
         timestep = 0.001; % time step for the volume fraction update algorithm
         volFractionDamping = 1;
         v1 = 0.6; % amount of material 1 to use. default to 20%
-        v2 = 0.4; % amount of material 2 to use. default to 40%, reduced so there is less meso structures to compute
+        v2 = 0.2; % amount of material 2 to use. default to 40%, reduced so there is less meso structures to compute
         totalVolume; % = v1+v2;
         
         % Meso Design settings
@@ -70,7 +70,8 @@ classdef Configuration
         TargetECloseNess=0.03; % part of the termination criteria
         volumeUpdateInterval=12;
         coordinateMesoBoundaries = 1;
-        mesoDesignInitalConditions = 7; % 1 = randome, 2= square, 3 = circle empty, 7 =middle circle is solid. 
+        MaskRows=3;
+        mesoDesignInitalConditions = 3; % 1 = randome, 2= square, 3 = circle empty, 7 =middle circle is solid. 
         MesoMinimumDensity=0;
         AddBorder=0; % Add border to complete structure. 
         UseLookUpTableForPsuedoStrain=1; %0 = feedback loop, 1 = use look up. 
@@ -80,7 +81,9 @@ classdef Configuration
         useExxEyy=1;    % must be 0 for gradient material optimization
         useTargetMesoDensity = 1; % 1 = yes, 0 = no and use target Eavg
         targetAvgExxEyy=50000;
-        targetExxEyyDensity = 0.2; % $$$$ DENSITY of MESO STRUCTURES $$$$
+        minEallowed = 10000; % about 5% of max
+        targetExxEyyDensity =  0.3750; % $$$$ DENSITY of MESO STRUCTURES $$$$
+        minMesoDensityInOptimizer=0.22;
         useThetaInSurfaceFit = 0;
         useANN=0;
         useAnnForDensityNotDerivative = 1;
@@ -151,7 +154,7 @@ classdef Configuration
         validationModeOn=0; % 1 = yes. 
         
         % ANN target test or Loopkup data generator
-        strainAndTargetTest =1; % for mode 113
+        strainAndTargetTest =0; % for mode 113
         targetTestVectorLen=40; % 20 is reasonable
         
        
@@ -176,7 +179,7 @@ classdef Configuration
         % ---------------------------
         % Loading cases
         % ---------------------------
-         loadingCase = [113]; % left clamped, load, middle right
+%          loadingCase = [113]; % left clamped, load, middle right
         %           loadingCase = [111 112 113]; % left clamped
         %            loadingCase = [111 112 ]; % left clamped
         %          loadingCase = [111 120 121]; % up, down, right in top right corrner, left clamp.
@@ -184,7 +187,7 @@ classdef Configuration
         %              loadingCase = [1];
         
         %  loadingCase = [300 301 302 303 304 305]; % shoe
-%                    loadingCase = [400 401 402 403 404 405]; % bridge
+                    loadingCase = [400 401 402 403 404 405]; % bridge
         %            loadingCase = [404]; % bridge
         %             loadingCase = [113]; % cantilever
         %                 loadingCase = [111]; % top right, force in Y direction
@@ -196,7 +199,7 @@ classdef Configuration
         numTilesY = 3;
         
         % oTHER
-        generateCompleteStructureCSV=0;
+        generateCompleteStructureCSV=1;
         
     end
     
@@ -215,7 +218,15 @@ classdef Configuration
         % -------------------------------------
         function [obj]= UpdateRunTimeComputedSettings(obj, useInputArgs, w1text, macro_meso_iteration,mode, singleMeso_elementNumber)
             
+            [idum,hostname]= system('hostname');
+            hostname=strtrim(hostname);
+            mycomputerName = 'LAPTOP-KQHSCJB1';
             
+            if(strcmp(hostname,mycomputerName)~=1) % if NOT running on my laptop
+               obj. mesoplotfrequency=250;
+            end
+            
+           obj.MesoMinimumDensity= obj.minMesoDensityInOptimizer;
             % --------------------------------------
             % PALMETTO
             %
@@ -241,13 +252,13 @@ classdef Configuration
                 % ------------
                 % Palmetto running case
                 % -------------------
-                obj.nelx = 15; %% 30
-                obj.nely = 15; %  15
+                obj.nelx = 20; %% 30
+                obj.nely = 20; %  15
                 obj.nelxMeso = 35; %35;
                 obj.nelyMeso =35; %35;
                 obj.terminationAverageCount = 10;
                 obj.terminationCriteria =0.001; % 0.0%
-                obj.maxFEACalls = 180;
+                obj.maxFEACalls = 130;
                 obj.maxMasterLoops = 300;
                 
             end

@@ -196,29 +196,31 @@ classdef DesignVars
                 % obj. ResponseSurfaceCoefficents=[ 1.0000000000463e-05 9.99988184437107e-06 9.9998491550433e-06 -3.40115537230351e-11 -5.52110060132392e-12 -3.81038581303971e-11];
                 %  obj.ResponseSurfaceCoefficents=[    -0.0449   1.045e-05   1.045e-05   8.433e-26  -1.045e-10   1.789e-25];
                 
-                %Data from the estimated values that I came up with 
-%                 obj.ResponseSurfaceCoefficents=[     -0.0449    1.0449    1.0449    0.0000   -1.0449    0.0000];
-
-            % from lookup table using the validation data
-            % fit is a funciton of Exx/matProp.E_material1 and Eyy/matProp.E_material1
-            % poly33 is the function. 
-            if (config.mesoDesignInitalConditions==3)
-                % Circle initial conditions
-%                   obj. ResponseSurfaceCoefficents=[    0.1137      1.376
-%                   1.353    -0.6908    -1.988      -0.6529      0.1601
-%                   0.6243      0.5984   0.1471 ]; with scale up and down
-                     obj. ResponseSurfaceCoefficents=[    0.02597    1.376  1.36   -0.74      -1.642    -0.7102     0.139    0.5426   0.5483   0.1214  ]; % with fmincon
-            elseif(config.mesoDesignInitalConditions==1)
-                % Randome intial conditions
+                %Data from the estimated values that I came up with
+                %                 obj.ResponseSurfaceCoefficents=[     -0.0449    1.0449    1.0449    0.0000   -1.0449    0.0000];
                 
-                 obj. ResponseSurfaceCoefficents=[    0.1404          1.375         1.358  -0.8548     -1.863     -0.8177   0.2838     0.5854       0.579        0.2637  ];
+                % from lookup table using the validation data
+                % fit is a funciton of Exx/matProp.E_material1 and Eyy/matProp.E_material1
+                % poly33 is the function.
+                if (config.mesoDesignInitalConditions==3)
+                    % Circle initial conditions
+                    %                   obj. ResponseSurfaceCoefficents=[    0.1137      1.376
+                    %                   1.353    -0.6908    -1.988      -0.6529      0.1601
+                    %                   0.6243      0.5984   0.1471 ]; with scale up and down
+                    obj. ResponseSurfaceCoefficents=[    0.02597    1.376  1.36   -0.74      -1.642    -0.7102     0.139    0.5426   0.5483   0.1214  ]; % with fmincon
+                elseif(config.mesoDesignInitalConditions==1)
+                    % Randome intial conditions
+                    
+                    obj. ResponseSurfaceCoefficents=[   0.1225    1.3205    1.3205   -0.6744   -1.8021   -0.6744    0.1827    0.5255    0.5255    0.1827 ];
+                elseif(config.mesoDesignInitalConditions==7)
+                    obj. ResponseSurfaceCoefficents=[    0.1225    1.3205    1.3205   -0.6744   -1.8021   -0.6744    0.1827    0.5255    0.5255    0.1827];
+                    
+                    %   obj. ResponseSurfaceCoefficents=[     0.0847            1.478           1.452       -0.8023           -2.179           -0.7586            0.2135          0.6952            0.6678            0.1974 ];
+                end
+                
+                
+                
             end
-             
-          %   obj. ResponseSurfaceCoefficents=[     0.0847            1.478           1.452       -0.8023           -2.179           -0.7586            0.2135          0.6952            0.6678            0.1974 ];
-            end
-            
-            
-            
         end
         
         % -----------------------------
@@ -255,7 +257,7 @@ classdef DesignVars
                     folderNum = config.iterationNum;
                     oldIteration = config.macro_meso_iteration-1;
                     if(config.mode==90)
-                         oldIteration = config.macro_meso_iteration;
+                        oldIteration = config.macro_meso_iteration;
                     end
                     
                     outnameX = sprintf('./out%i/SIMPdensityfield%i.csv',folderNum,oldIteration);
@@ -270,10 +272,10 @@ classdef DesignVars
                     outnamepenaltyTheta = sprintf('./out%i/penaltyTheta%i.csv',folderNum,oldIteration);
                     outnameExxSubSysValues = sprintf('./out%i/ExxSubSysValues%i.csv',folderNum,oldIteration);
                     outnameEyySubSysValues = sprintf('./out%i/EyySubSysValues%i.csv',folderNum,oldIteration);
-%                     outnameThetaSubSysValues = sprintf('./out%i/ThetaSubSysValues%i.csv',folderNum,oldIteration);
+                    %                     outnameThetaSubSysValues = sprintf('./out%i/ThetaSubSysValues%i.csv',folderNum,oldIteration);
                     outnameThetaSubSysValues = sprintf('./out%i/ThetaSubSysValues%i.csv',folderNum,oldIteration);
-                     outnameMesoDensities = sprintf('./out%i/densityUsedSubSysValues%i.csv',folderNum,oldIteration);
-                  
+                    outnameMesoDensities = sprintf('./out%i/densityUsedSubSysValues%i.csv',folderNum,oldIteration);
+                    
                     
                     
                     obj.x = csvread(outnameX); % the "density" at each element
@@ -318,12 +320,14 @@ classdef DesignVars
                         nameGraph = sprintf('./PredictedVSActualMesoDensities%i.png', config.macro_meso_iteration);
                         print(nameGraph,'-dpng');
                         
-                        obj.densityOffsetArray=(actualDensities-predictedDensities)*0.5;
+%                         obj.densityOffsetArray=(actualDensities-predictedDensities)*0.5;
                         close all
                         p.PlotArrayGeneric( obj.densityOffsetArray,'Offset Densities');
                         nameGraph = sprintf('./Predicted_OffsetDensitiesForIteration%i.png', config.macro_meso_iteration);
                         print(nameGraph,'-dpng');
-                        %                             obj.densityOffsetArray=actualDensities*0;
+                        
+                        
+                                                     obj.densityOffsetArray=actualDensities*0;
                     end
                     
                     %
@@ -354,14 +358,14 @@ classdef DesignVars
                     outname = sprintf('./out%i/lambda%i.csv',folderNum,previousIterationNum);
                     obj.lambda1=csvread(outname);
                 elseif(config.mode==1 && config.multiscaleMethodCompare==1)
-                     folderNum = config.iterationNum;
-                    oldIteration = config.macro_meso_iteration-1;                    
+                    folderNum = config.iterationNum;
+                    oldIteration = config.macro_meso_iteration-1;
                     outnameX = sprintf('./out%i/SIMPdensityfield%i.csv',folderNum,oldIteration);
                     obj.x = csvread(outnameX); % the "density" at each element
                     
                     
                 else
-                   fprintf('First iteration, no macro state vars to read');
+                    fprintf('First iteration, no macro state vars to read');
                 end
             end
         end
@@ -403,8 +407,8 @@ classdef DesignVars
                 outname = sprintf('./out%i/sensitivityElasticPart2%i.csv',folderNum,oldIteration);
                 EyySensitivity = csvread(outname);
                 
-%             end
-%             if(config.macro_meso_iteration>=2)
+                %             end
+                %             if(config.macro_meso_iteration>=2)
                 
                 % loop over the elements.
                 
@@ -446,7 +450,7 @@ classdef DesignVars
                     if(config.macro_meso_iteration>=3)
                         multiplier = 4*(config.macro_meso_iteration-2);
                         omegaLocal=omegaLocal*multiplier;
-                             omegaLocal = min(omegaLocal,2);
+                        omegaLocal = min(omegaLocal,2);
                     end
                     %                     obj.penaltyExx(yPos,xPos)=min(2*omegaLocal*strainEnergy/ abs( diffExx(yPos,xPos)),strainEnergy);
                     %                     obj.penaltyEyy(yPos,xPos)=min(2*omegaLocal*strainEnergy/ abs (diffEyy(yPos,xPos)),strainEnergy);
@@ -473,17 +477,17 @@ classdef DesignVars
             % Calculate the penalty values!! if on iteration 3 or
             % greater
             % ---------------------------------------------
-%             if(config.macro_meso_iteration>2)
-%                 
-%                 updateMultiplier = 4;
-%                 for e = 1:ne
-%                     [xPos,yPos]= obj.GivenNodeNumberGetXY(e);
-%                     %                     obj.penaltyExx(yPos,xPos)=   obj.penaltyExx(yPos,xPos)*updateMultiplier;
-%                     %                     obj.penaltyEyy(yPos,xPos)= obj.penaltyEyy(yPos,xPos)*updateMultiplier;
-%                     obj.penaltyTheta(yPos,xPos)=  obj.penaltyTheta(yPos,xPos)*updateMultiplier;
-%                 end
-%                 
-%             end
+            %             if(config.macro_meso_iteration>2)
+            %
+            %                 updateMultiplier = 4;
+            %                 for e = 1:ne
+            %                     [xPos,yPos]= obj.GivenNodeNumberGetXY(e);
+            %                     %                     obj.penaltyExx(yPos,xPos)=   obj.penaltyExx(yPos,xPos)*updateMultiplier;
+            %                     %                     obj.penaltyEyy(yPos,xPos)= obj.penaltyEyy(yPos,xPos)*updateMultiplier;
+            %                     obj.penaltyTheta(yPos,xPos)=  obj.penaltyTheta(yPos,xPos)*updateMultiplier;
+            %                 end
+            %
+            %             end
             
             
             % ---------------------------------------------
@@ -520,9 +524,9 @@ classdef DesignVars
                 omegaLocal =config.Omega;
                 if(config.macro_meso_iteration>=3)
                     multiplier = 2*(config.macro_meso_iteration-2);
-                 
+                    
                     omegaLocal=omegaLocal*multiplier;
-                       omegaLocal = min(omegaLocal,2);
+                    omegaLocal = min(omegaLocal,2);
                 end
                 
                 obj.penaltyExx=abs(omegaLocal*ExxSensitivity./(obj.lambdaExx-smallestOfTwo));
@@ -869,7 +873,7 @@ classdef DesignVars
             ne = config.nelx*config.nely;
             %             neSolid = config.nelx*config.nely*(config.v1+config.v2);
             totalMaterial = sum(sum(obj.x));
-%             obj.targetAverageE=(config.v1*matProp.E_material1+config.v2*matProp.E_material2)/(config.v1+config.v2);
+            %             obj.targetAverageE=(config.v1*matProp.E_material1+config.v2*matProp.E_material2)/(config.v1+config.v2);
             
             if(config.useExxEyy==1)
                 %                    avg= 0.5*(obj.Exx+obj.Eyy);
@@ -914,7 +918,7 @@ classdef DesignVars
         end
         
         
-      
+        
         %%
         
         % --------------------------------------------
@@ -1011,8 +1015,8 @@ classdef DesignVars
                     end
                     
                     % Calculate generic KE with 1 as the SIMP density
-                     e = elx+(ely-1)*config.nely;
-                     if(config.anisotropicMat==1)
+                    e = elx+(ely-1)*config.nely;
+                    if(config.anisotropicMat==1)
                         E12_local=obj.E12(ely,elx);
                         E33_local=obj.E33(ely,elx);
                     end
@@ -1126,18 +1130,18 @@ classdef DesignVars
                         obj.maxElemStraniEnergy= elementCompliance;
                     end
                     
-%                     if(config.useTargetMesoDensity==1)
-%                         xxx=obj.Exx(ely,elx)/matProp.E_material1;
-%                         yyy=obj.Eyy(ely,elx)/matProp.E_material1;
-%                         theta =  obj.t(ely,elx);
-%                         
-%                         [~, ~,estimateElementDensity] = o.CalculateDensitySensitivityandRho(xxx,yyy,theta,obj.ResponseSurfaceCoefficents,config,matProp);
-%                         
-%                         estimateElementDensity= min(max(estimateElementDensity,0.05),1);%1 is max, 0.05 is min
-%                         eleDensity = obj.x(ely,elx)*estimateElementDensity;
-%                         sumDensity =sumDensity+eleDensity;
-%                         temp3(ely,elx) = eleDensity;
-%                     end
+                    %                     if(config.useTargetMesoDensity==1)
+                    %                         xxx=obj.Exx(ely,elx)/matProp.E_material1;
+                    %                         yyy=obj.Eyy(ely,elx)/matProp.E_material1;
+                    %                         theta =  obj.t(ely,elx);
+                    %
+                    %                         [~, ~,estimateElementDensity] = o.CalculateDensitySensitivityandRho(xxx,yyy,theta,obj.ResponseSurfaceCoefficents,config,matProp);
+                    %
+                    %                         estimateElementDensity= min(max(estimateElementDensity,0.05),1);%1 is max, 0.05 is min
+                    %                         eleDensity = obj.x(ely,elx)*estimateElementDensity;
+                    %                         sumDensity =sumDensity+eleDensity;
+                    %                         temp3(ely,elx) = eleDensity;
+                    %                     end
                     
                     
                     count=count+1;
@@ -1160,22 +1164,22 @@ classdef DesignVars
                 obj.EyySysAndSubDiffSummed  =0;
                 obj.ThetaSysAndSubDiffSummed=0;
             end
-          
+            
             
             if(config.useTargetMesoDensity==1)
-                 theta = obj.t;
-%                logic2 = theta>pi/4;
-%                logic3 = 0<theta<pi/4;
-%                  logic4 = theta<0;
-%                theta(logic2)=theta(logic2)-pi/4;
-%                theta(logic3)=pi/4-theta(logic3);
-%                 theta(logic4)=-pi/4-theta(logic4);
-                  
+                theta = obj.t;
+                %                logic2 = theta>pi/4;
+                %                logic3 = 0<theta<pi/4;
+                %                  logic4 = theta<0;
+                %                theta(logic2)=theta(logic2)-pi/4;
+                %                theta(logic3)=pi/4-theta(logic3);
+                %                 theta(logic4)=-pi/4-theta(logic4);
+                
                 [~, ~,rhoValue] = o.CalculateDensitySensitivityandRho(obj.Exx/matProp.E_material1,obj.Eyy/matProp.E_material1,theta,obj.x ,obj.ResponseSurfaceCoefficents,config,matProp,obj.densityOffsetArray);
-              
+                
                 temp2 = sum(sum(rhoValue));
                 sumDensity=temp2/(config.nelx*config.nely*config.totalVolume);
-%                 sumDensity = sumDensity/(config.nelx*config.nely*config.totalVolume);
+                %                 sumDensity = sumDensity/(config.nelx*config.nely*config.totalVolume);
             else
                 sumDensity=0;
             end
@@ -1316,8 +1320,8 @@ classdef DesignVars
                     
                     % Get the sensitivity K matrix
                     % Set Exx = 1, Eyy = 0 to get sensitivity
-                    if(config.useRinOrthMaterialModel==0)                  
-                        KExx = matProp.getKMatrixTopExxYyyRotVars(config,obj.x(y,xx),1, 0,obj.t(y,xx),E12_local, E33_local,[]);                    
+                    if(config.useRinOrthMaterialModel==0)
+                        KExx = matProp.getKMatrixTopExxYyyRotVars(config,obj.x(y,xx),1, 0,obj.t(y,xx),E12_local, E33_local,[]);
                         % Set Eyy= 1,  Eyy = 0,to get sensitivity
                         KEyy = matProp.getKMatrixTopExxYyyRotVars(config,obj.x(y,xx),0, 1,obj.t(y,xx),E12_local, E33_local,[]);
                     else
@@ -1371,17 +1375,17 @@ classdef DesignVars
             
             %             for loadcaseIndex = 1:t2
             %                 UloadCase= obj.U(loadcaseIndex,:);
-%             config,topDensity,Exx, Eyy,rotation,material1Fraction,E12, E33,e)
+            %             config,topDensity,Exx, Eyy,rotation,material1Fraction,E12, E33,e)
             thetaTemp = 1;
             wTemp = 1;
             simpTemp =1;
             eTemp=1;
-             KE_xx = matProp.getKMatrixTopExxYyyRotVars(config,simpTemp,1, 0,thetaTemp, wTemp,0,0,eTemp);
-             KE_yy = matProp.getKMatrixTopExxYyyRotVars(config,simpTemp,0, 1,thetaTemp, wTemp,0,0,eTemp);
-             KE_e12 = matProp.getKMatrixTopExxYyyRotVars(config,simpTemp,0, 0,thetaTemp, wTemp,1,0,eTemp);
-             KE_e33 = matProp.getKMatrixTopExxYyyRotVars(config,simpTemp,0, 0,thetaTemp, wTemp,0,1,eTemp);
-              
-              
+            KE_xx = matProp.getKMatrixTopExxYyyRotVars(config,simpTemp,1, 0,thetaTemp, wTemp,0,0,eTemp);
+            KE_yy = matProp.getKMatrixTopExxYyyRotVars(config,simpTemp,0, 1,thetaTemp, wTemp,0,0,eTemp);
+            KE_e12 = matProp.getKMatrixTopExxYyyRotVars(config,simpTemp,0, 0,thetaTemp, wTemp,1,0,eTemp);
+            KE_e33 = matProp.getKMatrixTopExxYyyRotVars(config,simpTemp,0, 0,thetaTemp, wTemp,0,1,eTemp);
+            
+            
             %  SENSITIVITY ANALYSIS
             for y = 1:config.nely
                 rowMultiplier = y-1;
@@ -1437,90 +1441,90 @@ classdef DesignVars
         % CalculateSensitiviesMesoStructure no periodic
         %
         % ------------------------------------------------------------
-%         function obj = CalculateSensitiviesMesoStructureNoPeriodic(obj, config, matProp, loop,macroElemProps, U)
-%             
-%             doplot = 0;
-%             doplotfinal = 0;
-%             if(doplot ==1 || doplotfinal==1)
-%                 
-%                 p = plotResults;
-%                 figure(1);
-%             end
-%             
-%             % OBJECTIVE FUNCTION AND SENSITIVITY ANALYSIS
-%             obj.c = 0.; % c is the objective. Total strain energy
-%             obj.cCompliance = 0;
-%             obj.cHeat = 0;
-%             
-%             [~, t2] = size(config.loadingCase);
-%             % allow multiple loading cases.
-%             
-%             
-%             
-%             for loadcaseIndex = 1:t2
-%                 Ucase = U(:,loadcaseIndex);
-%                 loadcase = config.loadingCase(loadcaseIndex);
-%                 ne = config.nelx*config.nely; % number of elements
-%                 for e = 1:ne
-%                     
-%                     % loop over local node numbers to get their node global node numbers
-%                     nodes1 = obj.IEN(e,:);
-%                     [elx,ely]= obj.GivenNodeNumberGetXY(e);
-%                     
-%                     xNodes = nodes1*2-1;
-%                     yNodes = nodes1*2;
-%                     dofNumbers = [xNodes(1) yNodes(1) xNodes(2) yNodes(2) xNodes(3) yNodes(3) xNodes(4) yNodes(4)];
-%                     
-%                     Ue = Ucase(dofNumbers);
-%                     
-%                     % U_heat = obj.U_heatColumn(nodes1,:);
-%                     %averageElementTemp = mean2(U_heat); % calculate the average temperature of the 4 nodes
-%                     
-%                     % Get the element K matrix for this partiular element
-%                     KE = matProp.effectiveElasticKEmatrix(  obj.w(ely,elx),config,[]);
-%                     
-%                     % KEHeat = matProp.effectiveHeatKEmatrix(  obj.w(ely,elx), config);
-%                     % Dmaterial = matProp.calculateEffectiveConstitutiveEquation( obj.w(ely,elx), config);
-%                     %                 config.nelx
-%                     % Find the elastic strain
-%                     elasticStrain = obj.B*Ue;
-%                     
-%                     % term1 = transpose(Ue)*KE*Ue*obj.x(ely,elx)^(config.penal-1)*config.penal;
-%                     
-%                     term1 = transpose(Ue)*KE*Ue*obj.x(ely,elx)^(config.penal-1)*config.penal;
-%                     
-%                     %                      term1_method2 = (eye(3)-elasticStrain);
-%                     %  term2 = 0;
-%                     % term3= 0;
-%                     
-%                     % Sum the elastic compliance terms.
-%                     % total = (term1 + term2 + term3);
-%                     obj.temp1(ely,elx) = term1+obj.temp1(ely,elx);
-%                     
-%                     if(doplot ==1)
-%                         %                     if(mod(e,10) ==0)
-%                         
-%                         p.PlotArrayGeneric(obj.temp1, 'plotting sensitivities while running. ')
-%                         drawnow
-%                         %                     end
-%                     end
-%                     % calculate the minim temp sensitivity
-%                     % obj.temp2(ely,elx) = -config.penal*obj.x(ely,elx)^(config.penal-1)*U_heat'*KEHeat*U_heat;
-%                 end
-%                 
-%                 % Do final plot
-%                 if(doplotfinal ==1)
-%                     subplot(2,2,3);
-%                     p.PlotArrayGeneric(obj.temp1, 'final plotting sensitivities after running. ')
-%                     drawnow
-%                 end
-%                 %             end
-%             end % end loading cases
-%             
-%             
-%             %                obj.temp1(ely,elx)  =    obj.temp1(ely,elx) /t2; % average the cases
-%             obj.temp1  =    obj.temp1 /t2; % average the cases
-%         end % end CalculateSensitiviesMesoStructureNoPeriodic
+        %         function obj = CalculateSensitiviesMesoStructureNoPeriodic(obj, config, matProp, loop,macroElemProps, U)
+        %
+        %             doplot = 0;
+        %             doplotfinal = 0;
+        %             if(doplot ==1 || doplotfinal==1)
+        %
+        %                 p = plotResults;
+        %                 figure(1);
+        %             end
+        %
+        %             % OBJECTIVE FUNCTION AND SENSITIVITY ANALYSIS
+        %             obj.c = 0.; % c is the objective. Total strain energy
+        %             obj.cCompliance = 0;
+        %             obj.cHeat = 0;
+        %
+        %             [~, t2] = size(config.loadingCase);
+        %             % allow multiple loading cases.
+        %
+        %
+        %
+        %             for loadcaseIndex = 1:t2
+        %                 Ucase = U(:,loadcaseIndex);
+        %                 loadcase = config.loadingCase(loadcaseIndex);
+        %                 ne = config.nelx*config.nely; % number of elements
+        %                 for e = 1:ne
+        %
+        %                     % loop over local node numbers to get their node global node numbers
+        %                     nodes1 = obj.IEN(e,:);
+        %                     [elx,ely]= obj.GivenNodeNumberGetXY(e);
+        %
+        %                     xNodes = nodes1*2-1;
+        %                     yNodes = nodes1*2;
+        %                     dofNumbers = [xNodes(1) yNodes(1) xNodes(2) yNodes(2) xNodes(3) yNodes(3) xNodes(4) yNodes(4)];
+        %
+        %                     Ue = Ucase(dofNumbers);
+        %
+        %                     % U_heat = obj.U_heatColumn(nodes1,:);
+        %                     %averageElementTemp = mean2(U_heat); % calculate the average temperature of the 4 nodes
+        %
+        %                     % Get the element K matrix for this partiular element
+        %                     KE = matProp.effectiveElasticKEmatrix(  obj.w(ely,elx),config,[]);
+        %
+        %                     % KEHeat = matProp.effectiveHeatKEmatrix(  obj.w(ely,elx), config);
+        %                     % Dmaterial = matProp.calculateEffectiveConstitutiveEquation( obj.w(ely,elx), config);
+        %                     %                 config.nelx
+        %                     % Find the elastic strain
+        %                     elasticStrain = obj.B*Ue;
+        %
+        %                     % term1 = transpose(Ue)*KE*Ue*obj.x(ely,elx)^(config.penal-1)*config.penal;
+        %
+        %                     term1 = transpose(Ue)*KE*Ue*obj.x(ely,elx)^(config.penal-1)*config.penal;
+        %
+        %                     %                      term1_method2 = (eye(3)-elasticStrain);
+        %                     %  term2 = 0;
+        %                     % term3= 0;
+        %
+        %                     % Sum the elastic compliance terms.
+        %                     % total = (term1 + term2 + term3);
+        %                     obj.temp1(ely,elx) = term1+obj.temp1(ely,elx);
+        %
+        %                     if(doplot ==1)
+        %                         %                     if(mod(e,10) ==0)
+        %
+        %                         p.PlotArrayGeneric(obj.temp1, 'plotting sensitivities while running. ')
+        %                         drawnow
+        %                         %                     end
+        %                     end
+        %                     % calculate the minim temp sensitivity
+        %                     % obj.temp2(ely,elx) = -config.penal*obj.x(ely,elx)^(config.penal-1)*U_heat'*KEHeat*U_heat;
+        %                 end
+        %
+        %                 % Do final plot
+        %                 if(doplotfinal ==1)
+        %                     subplot(2,2,3);
+        %                     p.PlotArrayGeneric(obj.temp1, 'final plotting sensitivities after running. ')
+        %                     drawnow
+        %                 end
+        %                 %             end
+        %             end % end loading cases
+        %
+        %
+        %             %                obj.temp1(ely,elx)  =    obj.temp1(ely,elx) /t2; % average the cases
+        %             obj.temp1  =    obj.temp1 /t2; % average the cases
+        %         end % end CalculateSensitiviesMesoStructureNoPeriodic
         
         
         
@@ -1543,22 +1547,22 @@ classdef DesignVars
         
         %%%%%%%%%% MESH-INDEPENDENCY FILTER %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         function [dcn]=check(obj, nelx,nely,rmin,x,dc)
-%             dcn=zeros(nely,nelx);
-%             for i = 1:nelx
-%                 for j = 1:nely
-%                     sum=0.0;
-%                     for k = max(i-floor(rmin),1):min(i+floor(rmin),nelx)
-%                         for l = max(j-floor(rmin),1):min(j+floor(rmin),nely)
-%                             fac = rmin-sqrt((i-k)^2+(j-l)^2);
-%                             sum = sum+max(0,fac);
-%                             dcn(j,i) = dcn(j,i) + max(0,fac)*x(l,k)*dc(l,k);
-%                         end
-%                     end
-%                     dcn(j,i) = dcn(j,i)/(x(j,i)*sum);
-%                 end
-%             end
-
-dcn=imgaussfilt(dc,rmin );
+            %             dcn=zeros(nely,nelx);
+            %             for i = 1:nelx
+            %                 for j = 1:nely
+            %                     sum=0.0;
+            %                     for k = max(i-floor(rmin),1):min(i+floor(rmin),nelx)
+            %                         for l = max(j-floor(rmin),1):min(j+floor(rmin),nely)
+            %                             fac = rmin-sqrt((i-k)^2+(j-l)^2);
+            %                             sum = sum+max(0,fac);
+            %                             dcn(j,i) = dcn(j,i) + max(0,fac)*x(l,k)*dc(l,k);
+            %                         end
+            %                     end
+            %                     dcn(j,i) = dcn(j,i)/(x(j,i)*sum);
+            %                 end
+            %             end
+            
+            dcn=imgaussfilt(dc,rmin );
         end
         
         %  -----------------------------------
@@ -1568,9 +1572,9 @@ dcn=imgaussfilt(dc,rmin );
             
             for i = 1:config.nelx
                 for j = 1:config.nely
-                       localTheta=obj.t(j,i);
+                    localTheta=obj.t(j,i);
                     if(localTheta<0)
-                     
+                        
                         Exxtemp1=obj.Exx(j,i);
                         EyyTempSee= obj.Eyy(j,i);
                         ThetaTempSee=obj.t(j,i);
@@ -1581,18 +1585,18 @@ dcn=imgaussfilt(dc,rmin );
                         % Also flip the meso level values or else the
                         % optimization will be crazy!
                         ExxSubtemp2 = obj.ExxSub(j,i);
-                         EyysubTempSee= obj.EyySub(j,i);
+                        EyysubTempSee= obj.EyySub(j,i);
                         ThetasubTempSee=obj.thetaSub(j,i);
                         obj.ExxSub(j,i)=obj.EyySub(j,i);   % Sub system copies of design var
                         obj.EyySub(j,i)=ExxSubtemp2;
-%                         obj.thetaSub(j,i)= min(obj.thetaSub(j,i)+pi/2,pi/2);
-                           obj.thetaSub(j,i)= obj.thetaSub(j,i)+pi/2;
+                        %                         obj.thetaSub(j,i)= min(obj.thetaSub(j,i)+pi/2,pi/2);
+                        obj.thetaSub(j,i)= obj.thetaSub(j,i)+pi/2;
                         
                         
                     end
                     
                     if(localTheta>pi/2)
-                     
+                        
                         Exxtemp1=obj.Exx(j,i);
                         EyyTempSee= obj.Eyy(j,i);
                         ThetaTempSee=obj.t(j,i);
@@ -1603,12 +1607,12 @@ dcn=imgaussfilt(dc,rmin );
                         % Also flip the meso level values or else the
                         % optimization will be crazy!
                         ExxSubtemp2 = obj.ExxSub(j,i);
-                         EyysubTempSee= obj.EyySub(j,i);
+                        EyysubTempSee= obj.EyySub(j,i);
                         ThetasubTempSee=obj.thetaSub(j,i);
                         obj.ExxSub(j,i)=obj.EyySub(j,i);   % Sub system copies of design var
                         obj.EyySub(j,i)=ExxSubtemp2;
-%                         obj.thetaSub(j,i)= min(obj.thetaSub(j,i)-pi/2,0);
-                          obj.thetaSub(j,i)= obj.thetaSub(j,i)-pi/2;
+                        %                         obj.thetaSub(j,i)= min(obj.thetaSub(j,i)-pi/2,0);
+                        obj.thetaSub(j,i)= obj.thetaSub(j,i)-pi/2;
                         
                         
                     end
@@ -1631,6 +1635,25 @@ dcn=imgaussfilt(dc,rmin );
                 obj.x(1:mesoConfig.nely,1:mesoConfig.nelx) = mesoConfig.totalVolume; % artificial density of the elements
                 % method 1, randome values. Does not seem to be working well.
                 obj.x(1:mesoConfig.nely,1:mesoConfig.nelx) = randi([0, round(mesoConfig.totalVolume*100)],mesoConfig.nely,mesoConfig.nelx)/100; % artificial density of the elements, can not be unifrom or else sensitivity will be 0 everywhere.
+                
+%                 % add a box in the middle. 
+%                 midY = round(mesoConfig.nely/2);
+%                 midX = round(mesoConfig.nelx/2);
+%                 
+%                 fractionOfBox=1/10;
+%                 dimY = floor(mesoConfig.nely*fractionOfBox);
+%                 yStart = midY-floor(dimY/2);
+%                 dimX = floor(mesoConfig.nelx*fractionOfBox);
+%                 xStart = midX-floor(dimX/2);
+%                 
+%                 
+%                 obj.x(yStart:yStart+dimY-1,xStart:xStart+dimX-1)= ones(dimY,dimX)*1;
+%                 % bottom left
+%                 obj.x(1:dimY,1:dimY)= 1;
+%                 obj.x(end-dimY:end,1:dimY)= 1;
+%                  obj.x(1:dimY,end-dimY:end)= 1;
+%                   obj.x(end-dimY:end,end-dimY:end)= 1;
+                
             elseif(method ==2)
                 % method 2, box of empty in the middle.
                 obj.x(1:mesoConfig.nely,1:mesoConfig.nelx) = ones(mesoConfig.nely,mesoConfig.nelx);
@@ -1652,7 +1675,7 @@ dcn=imgaussfilt(dc,rmin );
                 
                 midY = round(mesoConfig.nely/2);
                 midX = round(mesoConfig.nelx/2);
-%                 mesoConfig.totalVolume=0.5;%*mesoConfig.nely*mesoConfig.nelx;
+                %                 mesoConfig.totalVolume=0.5;%*mesoConfig.nely*mesoConfig.nelx;
                 radius = sqrt((mesoConfig.totalVolume*mesoConfig.nelx*mesoConfig.nely-mesoConfig.nelx*mesoConfig.nely)/(-pi));
                 for i = 1:mesoConfig.nelx
                     for j = 1:mesoConfig.nely
@@ -1668,21 +1691,21 @@ dcn=imgaussfilt(dc,rmin );
                 
             elseif(method ==4)
                 % method 4, many circle holes
-                 obj.x(1:mesoConfig.nely,1:mesoConfig.nelx) = ones(mesoConfig.nely,mesoConfig.nelx);
-%                  obj.x(1:mesoConfig.nely,1:mesoConfig.nelx) = randi([0, round(mesoConfig.totalVolume*100)],mesoConfig.nely,mesoConfig.nelx)/100; 
+                obj.x(1:mesoConfig.nely,1:mesoConfig.nelx) = ones(mesoConfig.nely,mesoConfig.nelx);
+                %                  obj.x(1:mesoConfig.nely,1:mesoConfig.nelx) = randi([0, round(mesoConfig.totalVolume*100)],mesoConfig.nely,mesoConfig.nelx)/100;
                 numHolesX = 10;
                 numHolesY =10;
                 totalHoles =numHolesX*numHolesY;
                 XholeCenters = 0:mesoConfig.nelx/(numHolesX-1):mesoConfig.nelx;
                 YholeCenters =0:mesoConfig.nely/(numHolesY-1):mesoConfig.nely;
-%                 p=plotResults;
-%                  XholeCenters = randi([0, mesoConfig.nelx],1,numHolesX);
-%                  YholeCenters =  randi([0, mesoConfig.nely],1,numHolesY);
+                %                 p=plotResults;
+                %                  XholeCenters = randi([0, mesoConfig.nelx],1,numHolesX);
+                %                  YholeCenters =  randi([0, mesoConfig.nely],1,numHolesY);
                 
                 targetV = mesoConfig.totalVolume*mesoConfig.nelx*mesoConfig.nely;
                 totalV = mesoConfig.nelx*mesoConfig.nely;
                 radius = sqrt((targetV-totalV)/(-pi*totalHoles));
-%                 radius= max(radius,1.5);
+                %                 radius= max(radius,1.5);
                 
                 %                 if sqrt((i-mesoConfig.nelx/2-0.5)^2+(j-mesoConfig.nely/2-0.5)*2) < min(mesoConfig.nelx,mesoConfig.nely)/3
                 %                     obj.x(j,i) = mesoConfig.totalVolume/2;
@@ -1701,12 +1724,12 @@ dcn=imgaussfilt(dc,rmin );
                                 end
                             end
                         end
-%                          p.PlotArrayGeneric(  obj.x, 'plot with holes')
+                        %                          p.PlotArrayGeneric(  obj.x, 'plot with holes')
                         
                     end
                 end
                 
-               
+                
                 
             elseif(method ==5)
                 % method 5, small hole in middle
@@ -1760,17 +1783,17 @@ dcn=imgaussfilt(dc,rmin );
                 end
                 
                 
-                % Single circle in middle and empty all around. 
+                % Single circle in middle and empty all around.
             elseif(method ==7)
-              
-                 % mcircle in the moddle that is filled, and empty all
-                 % around. 
+                
+                % mcircle in the moddle that is filled, and empty all
+                % around.
                 obj.x(1:mesoConfig.nely,1:mesoConfig.nelx) = zeros(mesoConfig.nely,mesoConfig.nelx);
                 %            obj.x(1:mesoConfig.nely,1:mesoConfig.nelx) = randi([1, round(mesoConfig.totalVolume*100)],mesoConfig.nely,mesoConfig.nelx)/100; % artificial density of the elements, can not be unifrom or else sensitivity will be 0 everywhere.
                 
                 midY = round(mesoConfig.nely/2);
                 midX = round(mesoConfig.nelx/2);
-%                 mesoConfig.totalVolume=0.5;%*mesoConfig.nely*mesoConfig.nelx;
+                %                 mesoConfig.totalVolume=0.5;%*mesoConfig.nely*mesoConfig.nelx;
                 radius = sqrt((mesoConfig.totalVolume*mesoConfig.nelx*mesoConfig.nely)/(pi));
                 for i = 1:mesoConfig.nelx
                     for j = 1:mesoConfig.nely
@@ -1794,14 +1817,14 @@ dcn=imgaussfilt(dc,rmin );
         % -----------------------------
         function [obj]= GenerateMesoStructureCoordinationMask(obj,mesoConfig,macroElementProps)
             config = mesoConfig;
-              obj.mesoStructNTCmask = zeros(config.nely,config.nelx);
+            obj.mesoStructNTCmask = zeros(config.nely,config.nelx);
             if (config.coordinateMesoBoundaries==1 && config.macro_meso_iteration>1)
-                   mm_iteration = config.macro_meso_iteration;
-                   
-                   % Get the density field
-                   outname = sprintf('./out%i/SIMPdensityfield%i.csv',config.iterationNum,mm_iteration);
-                   xx = csvread(outname);              
-                % preform the logic tests  to see if we need to add material     
+                mm_iteration = config.macro_meso_iteration;
+                
+                % Get the density field
+                outname = sprintf('./out%i/SIMPdensityfield%i.csv',config.iterationNum,mm_iteration);
+                xx = csvread(outname);
+                % preform the logic tests  to see if we need to add material
                 add_top=0;
                 add_bottom=0;
                 add_left=0;
@@ -1813,7 +1836,7 @@ dcn=imgaussfilt(dc,rmin );
                 
                 yCurrent=macroElementProps.yPos;
                 yUp=yCurrent+1;
-                yDown=yCurrent-1;    
+                yDown=yCurrent-1;
                 
                 % -----------------------------
                 % Check Right
@@ -1848,20 +1871,20 @@ dcn=imgaussfilt(dc,rmin );
                     if(density>config.voidMaterialDensityCutOff)
                         add_bottom=1;
                     else
-%                         % Check Right, then Check left; checking for empty
-%                         if(xRight<config.nelxMacro)
-%                             densityxRight= xx(yCurrent, xRight);
-%                             if(densityxRight<config.voidMaterialDensityCutOff)
-%                                 cut_bottomRight=1;
-%                             end
-%                         end
-%                         
-%                         if(xLeft>0)
-%                             densityxLeft= xx(yCurrent, xLeft);
-%                             if(densityxLeft<config.voidMaterialDensityCutOff)
-%                                 cut_bottomLeft=1;
-%                             end
-%                         end
+                        %                         % Check Right, then Check left; checking for empty
+                        %                         if(xRight<config.nelxMacro)
+                        %                             densityxRight= xx(yCurrent, xRight);
+                        %                             if(densityxRight<config.voidMaterialDensityCutOff)
+                        %                                 cut_bottomRight=1;
+                        %                             end
+                        %                         end
+                        %
+                        %                         if(xLeft>0)
+                        %                             densityxLeft= xx(yCurrent, xLeft);
+                        %                             if(densityxLeft<config.voidMaterialDensityCutOff)
+                        %                                 cut_bottomLeft=1;
+                        %                             end
+                        %                         end
                     end
                 end
                 
@@ -1875,20 +1898,20 @@ dcn=imgaussfilt(dc,rmin );
                     if(densityUp>config.voidMaterialDensityCutOff)
                         add_top=1;
                     else
-%                         % Check Right, then Check left; checking for empty
-%                         if(xRight<config.nelxMacro)
-%                             densityxRight= xx(yCurrent, xRight);
-%                             if(densityxRight<config.voidMaterialDensityCutOff)
-%                                 cut_topRight=1;
-%                             end
-%                         end
-%                         
-%                         if(xLeft>0)
-%                             densityxLeft= xx(yCurrent, xLeft);
-%                             if(densityxLeft<config.voidMaterialDensityCutOff)
-%                                 cut_topLeft=1;
-%                             end
-%                         end
+                        %                         % Check Right, then Check left; checking for empty
+                        %                         if(xRight<config.nelxMacro)
+                        %                             densityxRight= xx(yCurrent, xRight);
+                        %                             if(densityxRight<config.voidMaterialDensityCutOff)
+                        %                                 cut_topRight=1;
+                        %                             end
+                        %                         end
+                        %
+                        %                         if(xLeft>0)
+                        %                             densityxLeft= xx(yCurrent, xLeft);
+                        %                             if(densityxLeft<config.voidMaterialDensityCutOff)
+                        %                                 cut_topLeft=1;
+                        %                             end
+                        %                         end
                     end
                 end
                 
@@ -1899,73 +1922,73 @@ dcn=imgaussfilt(dc,rmin );
                 
                 
                 % GET the saved element to XY position map (needed for x and w vars retrival)
-%                 outname = sprintf('./out%i/elementXYposition%i.csv',config.iterationNum,config.macro_meso_iteration);
-%                 elementXYpositionMacro=csvread(outname);
-%                 results = elementXYpositionMacro(macroEleProps.elementNumber,:);
-%                 macroEleProps.yPos = results(1);
-%                 macroEleProps.xPos = results(2);
+                %                 outname = sprintf('./out%i/elementXYposition%i.csv',config.iterationNum,config.macro_meso_iteration);
+                %                 elementXYpositionMacro=csvread(outname);
+                %                 results = elementXYpositionMacro(macroEleProps.elementNumber,:);
+                %                 macroEleProps.yPos = results(1);
+                %                 macroEleProps.xPos = results(2);
                 settings=config;
                 settings.macro_meso_iteration =config.macro_meso_iteration-1;
                 settings.nelx = settings.nelxMacro;
                 settings.nely = settings.nelyMacro;
-
-                numrows=1;
+                
+                numrows=config.MaskRows;
                 sumIndex = xCurrent+yCurrent;
-
+                
                 doPlot =1;
                 if(doPlot ==1)
                     p = plotResults;
                 end
-
+                
                 % switch between even and odd ever macro, meso iteration
                 evenOddTarget = mod(config.macro_meso_iteration,2);
                 % pick ever other one.
                 if(mod(sumIndex,2)==evenOddTarget)
-
-
+                    
+                    
                     % Get the design above, and get the previous
                     % iteration's design
-
-
+                    
+                    
                     if (add_top==1)
                         elementNumber =obj. GetNodeNumberGivenXY(settings, xCurrent,yUp);
                         [xAdjacent]= GetMesoUnitCellDesignFromCSV(settings,elementNumber);
                         obj.mesoStructNTCmask(end-numrows+1:end,:)=xAdjacent(end-numrows+1:end,:);
-
+                        
                         if(doPlot ==1)
                             subplot(3,3,2);
                             p.PlotArrayGeneric(xAdjacent,'up');
                         end
                     end
-
-
+                    
+                    
                     if (add_bottom==1)
                         elementNumber = obj.GetNodeNumberGivenXY(settings, xCurrent,yDown);
                         [xAdjacent]= GetMesoUnitCellDesignFromCSV(settings,elementNumber);
                         obj.mesoStructNTCmask(1:numrows,:)=xAdjacent(1:numrows,:);
-
+                        
                         if(doPlot ==1)
                             subplot(3,3,8);
                             p.PlotArrayGeneric(xAdjacent,'down');
                         end
                     end
-
+                    
                     if (add_right==1)
                         elementNumber =obj. GetNodeNumberGivenXY(settings, xRight,yCurrent);
                         [xAdjacent]= GetMesoUnitCellDesignFromCSV(settings,elementNumber);
                         obj.mesoStructNTCmask(:,end-numrows+1:end)=xAdjacent(:,end-numrows+1:end);
-
+                        
                         if(doPlot ==1)
                             subplot(3,3,6);
                             p.PlotArrayGeneric(xAdjacent,'right');
                         end
                     end
-
+                    
                     if(add_left==1)
                         elementNumber =obj. GetNodeNumberGivenXY(settings, xLeft,yCurrent);
                         [xAdjacent]= GetMesoUnitCellDesignFromCSV(settings,elementNumber);
                         obj.mesoStructNTCmask(:,1:numrows)=xAdjacent(:,1:numrows);
-
+                        
                         if(doPlot ==1)
                             subplot(3,3,4);
                             p.PlotArrayGeneric(xAdjacent,'left');
@@ -1973,7 +1996,7 @@ dcn=imgaussfilt(dc,rmin );
                     end
                     
                     %obj.mesoStructNTCmask( obj.mesoStructNTCmask>config.voidMaterialDensityCutOff)=1;
-                     %obj.mesoStructNTCmask( obj.mesoStructNTCmask<config.voidMaterialDensityCutOff)=0;
+                    %obj.mesoStructNTCmask( obj.mesoStructNTCmask<config.voidMaterialDensityCutOff)=0;
                     if(doPlot ==1)
                         subplot(3,3,5);
                         p.PlotArrayGeneric(obj.mesoStructNTCmask,'mask');
@@ -1984,26 +2007,26 @@ dcn=imgaussfilt(dc,rmin );
                     %------------------------------
                     elementNumber =obj. GetNodeNumberGivenXY(settings, xCurrent,yCurrent);
                     [xAdjacent]= GetMesoUnitCellDesignFromCSV(settings,elementNumber);
-
+                    
                     % All the 4 sides combined
                     obj.mesoStructNTCmask(end-numrows+1:end,:)=xAdjacent(end-numrows+1:end,:);
                     obj.mesoStructNTCmask(1:numrows,:)=xAdjacent(1:numrows,:);
                     obj.mesoStructNTCmask(:,end-numrows+1:end)=xAdjacent(:,end-numrows+1:end);
                     obj.mesoStructNTCmask(:,1:numrows)=xAdjacent(:,1:numrows);
                     
-                      %obj.mesoStructNTCmask( obj.mesoStructNTCmask>config.voidMaterialDensityCutOff)=1;
-                %obj.mesoStructNTCmask( obj.mesoStructNTCmask<config.voidMaterialDensityCutOff)=0;
-
+                    %obj.mesoStructNTCmask( obj.mesoStructNTCmask>config.voidMaterialDensityCutOff)=1;
+                    %obj.mesoStructNTCmask( obj.mesoStructNTCmask<config.voidMaterialDensityCutOff)=0;
+                    
                     if(doPlot ==1)
                         subplot(2,1,1);
                         p.PlotArrayGeneric(obj.mesoStructNTCmask,'mask');
-
+                        
                         subplot(2,1,2);
                         p.PlotArrayGeneric(xAdjacent,'old');
                     end
-
+                    
                 end
-              
+                
                 
             end
         end
@@ -2015,12 +2038,12 @@ dcn=imgaussfilt(dc,rmin );
         function [newSensitivities]= AddCoordinationMaskToSensitivies(obj,mesoConfig,macroElementProperties)
             config = mesoConfig;
             if (config.coordinateMesoBoundaries==1 && config.macro_meso_iteration>1)
-%                  offset =median(median(obj.dc));
-                   offset =min(min(obj.dc));
-                   offset=offset*0.5
-                 offset=offset*(config.macro_meso_iteration-1); % INcrease the strength each time
-%                 offset =min(min(obj.dc));
-               newSensitivities=obj.dc+ obj.mesoStructNTCmask*offset;
+                %                  offset =median(median(obj.dc));
+                offset =min(min(obj.dc));
+                offset=offset*0.5
+                offset=offset*(config.macro_meso_iteration-1); % INcrease the strength each time
+                %                 offset =min(min(obj.dc));
+                newSensitivities=obj.dc+ obj.mesoStructNTCmask*offset;
             else
                 newSensitivities=obj.dc;
             end

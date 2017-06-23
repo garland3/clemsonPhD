@@ -226,16 +226,16 @@ if(config.UseLookUpTableForPsuedoStrain==1 && config.strainAndTargetTest~=1)
     % 3. Search the lookup table for the value that minimizes
     % Save this min value as the psuedo strain to use.
     macro_meso_iteration=1;
-%     if( config.mesoDesignInitalConditions==1)
-%         folder = '_random';
-%     elseif(config.mesoDesignInitalConditions==3)
-%         folder = '3_circle';
+    if( config.mesoDesignInitalConditions==1)
+        folder = '1_random';
+    elseif(config.mesoDesignInitalConditions==3)
+        folder = '3_circlehole';
+        
+    elseif(config.mesoDesignInitalConditions==7)
+        folder ='7_circlesolid';
 %         folder='';
-%     elseif(config.mesoDesignInitalConditions==7)
-%         %              folder ='_circleSolid';
-%         folder='';
-%     end
-    folder='';
+    end
+    %     folder='';
     outname = sprintf('./data%s/D11%i_datat.data',folder,macro_meso_iteration);
     D11 =csvread(outname);
     
@@ -261,10 +261,16 @@ if(config.UseLookUpTableForPsuedoStrain==1 && config.strainAndTargetTest~=1)
     outname = sprintf('./data%s/etaTarget%i_datat.data',folder,macro_meso_iteration);
     etaTarget =csvread(outname);
     
+    if( macroEleProps.densitySIMP<config.voidMaterialDensityCutOff)
+        macroEleProps.psuedoStrain=[1;1;1];
+        macroEleProps.targetDensity=0;
+        return
+    end
     
-    version=2;
+    
+    version=4;
     if(version==1)
-%         %%         % ------------------------------------
+        %         %%         % ------------------------------------
 %         %         %           Version 1
 %         %         % ------------------------------------
 %                 [~, t2]=size(etaTarget);
@@ -495,6 +501,9 @@ if(config.UseLookUpTableForPsuedoStrain==1 && config.strainAndTargetTest~=1)
                     ps(2)= ps(1);
                     ps(1)=temp;
                 end
+                
+                 ps=ps/(sum(ps)); % normalize
+%                   ps=ps/10; % normalize
         
         
                 if(macroEleProps.Exx>macroEleProps.Eyy)
@@ -528,7 +537,9 @@ if(config.UseLookUpTableForPsuedoStrain==1 && config.strainAndTargetTest~=1)
                     D33_table2=D33_table+(bestScale)*D33_table ;
                     
                     etaTargetLocal = originalEta+bestScale*originalEta;
-                    etaTargetLocal=max(config.MesoMinimumDensity,min(etaTargetLocal,1));
+%                     etaTargetLocal=max(config.MesoMinimumDensity,min(etaTargetLocal,1));
+                    
+                      etaTargetLocal=max(config.MesoMinimumDensity,min(etaTargetLocal,1));
                     
                 else
 %                     % --------------------
@@ -1041,15 +1052,26 @@ if(config.UseLookUpTableForPsuedoStrain==1 && config.strainAndTargetTest~=1)
                  x0=(ub+lb)/2;
 %         x0=[  ps_start(1)  ps_start(2)  ps_start(3) eta_start];
         
-        [x finalDiffValue]= fmincon(@(x) EvalutePseudoStrainAndDensityForFit(x,D11sys,D12sys,D22sys,D33sys, ...
+%         [x finalDiffValue]= fmincon(@(x) EvalutePseudoStrainAndDensityForFit(x,D11sys,D12sys,D22sys,D33sys, ...
+%             D11_table4D,D12_table4D,D22_table4D,D33_table4D,...
+%             ps1_table4D,ps2_table4D,ps3_table4D,eta_table4D)...
+%             ,x0,A,b,[],[],lb,ub);
+        
+%         [x finalDiffValue]= ga(@(x) EvalutePseudoStrainAndDensityForFit(x,D11sys,D12sys,D22sys,D33sys, ...
+%             D11_table4D,D12_table4D,D22_table4D,D33_table4D,...
+%             ps1_table4D,ps2_table4D,ps3_table4D,eta_table4D)...
+%             ,4,A,b,[],[],lb,ub);
+        
+         [x finalDiffValue]= particleswarm(@(x) EvalutePseudoStrainAndDensityForFit(x,D11sys,D12sys,D22sys,D33sys, ...
             D11_table4D,D12_table4D,D22_table4D,D33_table4D,...
             ps1_table4D,ps2_table4D,ps3_table4D,eta_table4D)...
-            ,x0,A,b,[],[],lb,ub);
+            ,4,lb,ub);
         
         ps(1)=x(1);
         ps(2)=x(2);
         ps(3)=x(3);
         etaTargetLocal=x(4);
+%         etaTargetLocal=etaTargetLocal+0.2;
         
         %         [D11_interp,D12_interp ,D22_interp,D33_interp]= InterpolatePseudoStrainsAndDensity(ps_new,eta_new, ...
         %     D11_table4D,D12_table4D,D22_table4D,D33_table4D,...

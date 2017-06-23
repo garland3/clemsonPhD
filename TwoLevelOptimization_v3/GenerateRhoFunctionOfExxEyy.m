@@ -528,47 +528,60 @@ end
 %     MacroThetaColumnTotal=[];
 %     RhoColumnTotal=[];
 %     folderName='data';
+%     
+%     useSubSysValues = 1;
+%     
+%     if(useSubSysValues==0)
+%         outnameExx = sprintf('./%s/MacroExxColumn%i.csv',folderName,macro_meso_iteration);
+%         outnameEyy = sprintf('./%s/MacroEyyColumn%i.csv',folderName,macro_meso_iteration);
+%         outnametheta = sprintf('./%s/MacroThetaColumn%i.csv',folderName,macro_meso_iteration);
+%         outnamerho = sprintf('./%s/RhoColumn%i.csv',folderName,macro_meso_iteration);
+%     else
+%         outnameExx = sprintf('./%s/ExxSubSysValues%i.csv',folderName,macro_meso_iteration);
+%         outnameEyy = sprintf('./%s/EyySubSysValues%i.csv',folderName,macro_meso_iteration);
+%         outnametheta = sprintf('./%s/ThetaSubSysValues%i.csv',folderName,macro_meso_iteration);
+% %         outnamerho = sprintf('./%s/densityUsedSubSysValues%i.csv',folderName,macro_meso_iteration);
+%          outnamerho = sprintf('./%s/RhoColumn%i.csv',folderName,macro_meso_iteration);
+%     end
+%     
 %     for i = 1:macro_meso_iteration
 %         %------------------------
 %         % read the macro columns as well. This will help with future analysis
 %         % ----------------------------
-%         % save the MacroExxColumn
-% %         outname = sprintf('./out%i/MacroExxColumn%i.csv',folderNum,macro_meso_iteration);
-%          outname = sprintf('./%s/MacroExxColumn%i.csv',folderName,macro_meso_iteration);
-%         
-%         MacroExxColumn=csvread(outname);
+%         % save the MacroExxColumn       
+%         MacroExxColumn=csvread(outnameExx);
 %         MacroExxColumnTotal=[MacroExxColumnTotal; MacroExxColumn];
 %         
-%         % save the MacroEyyColumn
-% %         outname = sprintf('./out%i/MacroEyyColumn%i.csv',folderNum,macro_meso_iteration);
-%            outname = sprintf('./%s/MacroEyyColumn%i.csv',folderName,macro_meso_iteration);
-%         temp=csvread(outname);
+%         % save the MacroEyyColumn    
+%         temp=csvread(outnameEyy);
 %         MacroEyyColumnTotal=[MacroEyyColumnTotal; temp];
 %         
-%         % save the MacroThetaColumn
-% %         outname = sprintf('./out%i/MacroThetaColumn%i.csv',folderNum,macro_meso_iteration);
-%            outname = sprintf('./%s/MacroThetaColumn%i.csv',folderName,macro_meso_iteration);
-%         temp=csvread(outname);
+%         % save the MacroThetaColumn%    
+%         temp=csvread(outnametheta);
 %         MacroThetaColumnTotal=[MacroThetaColumnTotal; temp];
 %         
-%         % save the RhoColumn
-% %         outname = sprintf('./out%i/RhoColumn%i.csv',folderNum,macro_meso_iteration);
-%           outname = sprintf('./%s/RhoColumn%i.csv',folderName,macro_meso_iteration);
-%         temp=csvread(outname);
+%         % save the RhoColumn          
+%         temp=csvread(outnamerho);
 %         RhoColumnTotal=[RhoColumnTotal; temp];
 %     end
 %     
-%     for jjj=1:5
-%     % Add full dense case
-%       MacroExxColumnTotal=[MacroExxColumnTotal; max(MacroExxColumnTotal)];
-%       MacroEyyColumnTotal=[MacroEyyColumnTotal; max(MacroEyyColumnTotal)];
-%       MacroThetaColumnTotal=[MacroThetaColumnTotal; 0];
-%       RhoColumnTotal=[RhoColumnTotal;1];
-%     end
+% %     for jjj=1:5
+% %     % Add full dense case
+% %       MacroExxColumnTotal=[MacroExxColumnTotal; max(MacroExxColumnTotal)];
+% %       MacroEyyColumnTotal=[MacroEyyColumnTotal; max(MacroEyyColumnTotal)];
+% %       MacroThetaColumnTotal=[MacroThetaColumnTotal; 0];
+% %       RhoColumnTotal=[RhoColumnTotal;1];
+% %     end
 %   
 %     
 %     x=MacroExxColumnTotal/matProp.E_material1;
 %     y = MacroEyyColumnTotal/matProp.E_material1;
+%     
+%      if(useSubSysValues==1)
+%         x=x';
+%         y = y';
+%         MacroThetaColumnTotal=MacroThetaColumnTotal';
+%      end
 %     
 %     z=RhoColumnTotal;
 %     
@@ -576,16 +589,17 @@ end
 % %    options.Normalize ='on';
 % %    options.fittype='poly22';
 %      f1 = fit([x y],z,'poly33',options)
+%      coeffvalues(f1)
 % %      f2 = fit([x y],z,'poly23', 'Exclude', z > 1);
-%     o=Optimizer;
-%     [~, ~,annZ] = o.CalculateDensitySensitivityandRho(x,y,MacroThetaColumnTotal,ones(size(MacroEyyColumnTotal)),DV.ResponseSurfaceCoefficents,config,matProp,0);
+% %     o=Optimizer;
+% %     [~, ~,annZ] = o.CalculateDensitySensitivityandRho(x,y,MacroThetaColumnTotal,ones(size(MacroEyyColumnTotal)),DV.ResponseSurfaceCoefficents,config,matProp,0);
 %     
 %     figure
 %      plot(f1, [x y], z);
-%     hold on
-%     scatter3(x,y,z,'b')
-%     hold on
-%     scatter3(x,y,annZ,'r');
+% %     hold on
+% %     scatter3(x,y,z,'b')
+% %     hold on
+% %     scatter3(x,y,annZ,'r');
 %     
 %     title('Fit with data points. Red=Ann, Blue=Actual ')
 %     xlabel('Exx');

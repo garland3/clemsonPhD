@@ -45,6 +45,7 @@ config.mode =65;
 % 202, Combine meso and Macro designs into a single plot and csv file.
 % 203, Extract the Exx, Eyy, Theta, and density values from the meso D matrixes. 
 % 204, ANN
+% 
 
 
 opt = Optimizer;
@@ -98,9 +99,9 @@ if(config.mode ==112)
 %     DV = DesignVars(config);
     fprintf('compute Meso Design Metrics.\n');
        GenerateRhoFunctionOfExxEyy(config)
-       step=2;
-        DV = DesignVars(config);
-        GenerateMesoValidationTargets(DV,config,matProp,step);
+%        step=2;
+%         DV = DesignVars(config);
+%         GenerateMesoValidationTargets(DV,config,matProp,step);
 %    ComputeMesoDesignMetrics(DV,config,matProp);
     return;
 end
@@ -153,8 +154,10 @@ end
 % ---------------------------------
 if(config.mode ==201)
     NumMacroMesoIteration= config.macro_meso_iteration;
-    p=plotResults;
-    p.PlotEverythingTogether(NumMacroMesoIteration);
+%     p=plotResults;
+%     p.PlotEverythingTogether(NumMacroMesoIteration);
+outname = sprintf('./completeStucture%f_macroIteration_%i.csv', config.w1,config.macro_meso_iteration);
+ ConvertCSVToSTL(outname)
     return
 end
 
@@ -432,206 +435,7 @@ if(config.mode <100 && config.mode~=90)
     SaveMacroProblemStateToCSV(config,DV,matProp);
 end
 
-% --------------------------------------------------------
-% --------------------------------------------------------
-%
-% test for termaination of the function.
-% normalize the objectives, compare to a moving average. If moving average
-% below target, then return 1
-% if not terminated, then return 0
-% --------------------------------------------------------
-% --------------------------------------------------------
-function status = TestForTermaination(DV, config,masterloop)
-
-if(masterloop<3)
-    status=0;
-    return;
-end
-status = 0;
-y2 = DV.storeOptimizationVar(:,2); % Elastic Compliance
-
-t = config.terminationAverageCount;
-if(size(y2)<(t+3))
-    return;
-end
-
-
-y3 = DV.storeOptimizationVar(:,3); % Heat Compliance
-y4 = DV.storeOptimizationVar(:,4); % material 1
-y5 = DV.storeOptimizationVar(:,5); % material 2
-
-avg_y2 = FindAvergeChangeOfLastValue(y2,config); % elastic objective
-avg_y3 = FindAvergeChangeOfLastValue(y3,config); % heat objective
-avg_y4 = FindAvergeChangeOfLastValue(y4,config); % material 1
-avg_y5 = FindAvergeChangeOfLastValue(y5,config); % material 2
 
 
 
 
-tt = config.terminationCriteria;
-if(        avg_y2<tt ...
-        && avg_y3<tt ...
-        && avg_y4<tt ...
-        && avg_y5<tt)
-    status=1;
-    % print the vars to screen
-    [avg_y2 avg_y3 avg_y4 avg_y5 ]
-end
-
-% --------------------------------------------------------
-% --------------------------------------------------------
-% -----------------------
-% SHOW STATUS OF OPTIMIZER
-% Print and Plot information.
-% Store data in the storeOptimizationVar
-% -----------------------
-% --------------------------------------------------------
-% --------------------------------------------------------
-function ShowOptimizerProgress(DV,doPlot,name,FEACalls,config, matProp)
-
-
-% PRINT RESULTS
-disp([' FEA calls.: ' sprintf('%4i',FEACalls) ' Obj.: ' sprintf('%10.4f',DV.c) ' Vol. 1: ' sprintf('%6.3f', DV.currentVol1Fraction)  ' Vol. 2: ' sprintf('%6.3f', DV.currentVol2Fraction) ...
-    ' Target E.: ' sprintf('%4i',config.targetAvgExxEyy)    ' Current E.: ' sprintf('%4i',DV.actualAverageE) ' Avg Meso Density '  sprintf('%4i',DV.averageMesoDensity) name] );
-
-if(doPlot==1)
-    p = plotResults;
-    p.plotTopAndFraction(DV,  config, matProp, FEACalls); % plot the results.
-end
-
-% --------------------------------------------------------
-% --------------------------------------------------------
-%
-%
-%           Genereate the complete macro-meso design!
-%
-%
-% --------------------------------------------------------
-% --------------------------------------------------------
-function []= GenerateCompleteStructureV2Improved(config)
-
-
-postProcess = 1;
-
-close all
-p = plotResults;
-
-
-temp = config.mesoAddAdjcentCellBoundaries;
-config.mesoAddAdjcentCellBoundaries=0;
-macroElementProps = macroElementProp;
-macroElementProps.targetDensity=0.5; % make up some value for now. 
-[DVMeso, mesoconfig] = GenerateDesignVarsForMesoProblem(config,1,macroElementProps);
-config.mesoAddAdjcentCellBoundaries=temp;
-
-mesoconfig.doUseMultiElePerDV =config.doUseMultiElePerDV;
-numTilesX=config.numTilesX;
-numTilesY = config.numTilesY;
-
-% Generate huge area
-totalX=config.nelx*mesoconfig.nelx*numTilesX
-totalY=config.nely*mesoconfig.nely*numTilesY
-
-completeStruct = zeros(totalY,totalX);
-ne = config.nelx*config.nely; % number of elements
-
-
-%--------------------------------------------
-% Get the density field
-%--------------------------------------------
-macro_meso_iteration = config.macro_meso_iteration;
-%macroElementProps = macroElementProp;
-% macroElementProps.elementNumber = e;
-folderNum = config.iterationNum;
-% GET the saved element to XY position map (needed for x and w vars retrival)
-outname = sprintf('./out%i/elementXYposition%i.csv',folderNum,macro_meso_iteration);
-elementXYposition=csvread(outname);
-% Get the density field
-outname = sprintf('./out%i/SIMPdensityfield%i.csv',folderNum,macro_meso_iteration);
-xxx = csvread(outname);
-
-
-
-
-for e = 1:ne
-    fprintf('element %i of %i\n',e,ne);
-    macroElementProps.elementNumber=e;
-    results = elementXYposition(macroElementProps.elementNumber,:);
-    macroElementProps.yPos = results(1);
-    macroElementProps.xPos = results(2);
-    macroElementProps.densitySIMP = xxx(macroElementProps.yPos,macroElementProps.xPos );
-    
-    % Check if void
-    if(macroElementProps.densitySIMP>config.voidMaterialDensityCutOff || config.multiscaleMethodCompare)
-        x=GetMesoUnitCellDesignFromCSV(config,e);
-        DVMeso.x = x;
-        % -------------------------------------
-        % No, post processing
-        % -------------------------------------
-        if(postProcess~=1)
-            yShift = (macroElementProps.yPos-1)*mesoconfig.nely*numTilesY+1;
-            xShift = (macroElementProps.xPos-1)*mesoconfig.nelx*numTilesX+1;
-            DVMeso=TileMesoStructure(mesoconfig, DVMeso);
-            completeStruct(yShift:(yShift+mesoconfig.nely*numTilesY-1),xShift:(xShift+mesoconfig.nelx*numTilesX-1))=DVMeso.xTile;
-        else
-            % -------------------------------------
-            % Yes, With, post processing
-            % -------------------------------------
-            step = 1;
-            completeStruct= TileMesoStructureV2(mesoconfig,config, DVMeso,macroElementProps,xxx,completeStruct,step);
-            
-        end
-        
-        
-    end
-end
-
-if(postProcess==1)
-    for e = 1:ne
-        fprintf('step 2element %i of %i\n',e,ne);
-        macroElementProps.elementNumber=e;
-        results = elementXYposition(macroElementProps.elementNumber,:);
-        macroElementProps.yPos = results(1);
-        macroElementProps.xPos = results(2);
-        macroElementProps.densitySIMP = xxx(macroElementProps.yPos,macroElementProps.xPos );
-        
-        % Check if void
-        %if(macroElementProps.densitySIMP>config.voidMaterialDensityCutOff)
-        step = 2;
-        completeStruct= TileMesoStructureV2(mesoconfig,config, DVMeso,macroElementProps,xxx,completeStruct,step);
-        %end
-    end
-end
-
-
-
-%if(config.multiscaleMethodCompare~=1)
-    % set the max value to be 1
-    completeStruct( completeStruct>1)=1;
-    
-    completeStruct(completeStruct>config.voidMaterialDensityCutOff)=1;
-    completeStruct(completeStruct<config.voidMaterialDensityCutOff)=0;
-%end
-density = sum(sum(completeStruct))/(totalX*totalY);
- outname = sprintf('./mode90/Density%i.csv',config.macro_meso_iteration);
-    csvwrite(outname,density);
-
-
-plotname = sprintf('complete structure %i with density %f',config.macro_meso_iteration,density);
-p.PlotArrayGeneric( completeStruct, plotname)
-rgbSteps = 100;  caxis([0,1]);
-map = colormap; % current colormap
-middPoint = floor(rgbSteps/4);
-map(1:middPoint,:) = [ones(middPoint,1),ones(middPoint,1),ones(middPoint,1)];
-for zz =    middPoint:rgbSteps
-    map(zz,:) = [0,               1- zz/rgbSteps, 0.5];
-end
-colormap(map)
-%     colorbar
-freezeColors
-nameGraph = sprintf('./completeStucture%f_macroIteration_%i.png', config.w1,config.macro_meso_iteration);
-print(nameGraph,'-dpng', '-r1200')
-if (config.generateCompleteStructureCSV==1)
-    outname = sprintf('./completeStucture%f_macroIteration_%i.csv', config.w1,config.macro_meso_iteration);
-    csvwrite(outname,completeStruct);
-end
