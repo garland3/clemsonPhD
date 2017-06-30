@@ -58,11 +58,40 @@ classdef Optimizer
             
             % Filter the g1 sensitivies
             [g1]   = DV.check( config.nelx, config.nely,config.rmin,DV.x,g1);
-            G1 = g1 - DV.lambda1 +1/(DV.mu1)*( targetFraction_v1-fractionCurrent_V1Local); % add in the lagrangian
-            DV.w = DV.w+config.timestep*G1; % update the volume fraction.
-            DV.w = max(min( DV.w,1),0);    % Don't allow the    vol fraction to go above 1 or below 0
-            DV.lambda1 =  DV.lambda1 -1/(DV.mu1)*(targetFraction_v1-fractionCurrent_V1Local)*config.volFractionDamping;
-            DV.lambda1
+            
+            if(config.volFractionOptiizationMethod==1)
+                G1 = g1 - DV.lambda1 +1/(DV.mu1)*( targetFraction_v1-fractionCurrent_V1Local); % add in the lagrangian
+                DV.w = DV.w+config.timestep*G1; % update the volume fraction.
+                DV.w = max(min( DV.w,1),0);    % Don't allow the    vol fraction to go above 1 or below 0
+                DV.lambda1 =  DV.lambda1 -1/(DV.mu1)*(targetFraction_v1-fractionCurrent_V1Local)*config.volFractionDamping;
+                DV.lambda1
+            else
+                l1 = 0; l2 = largest;% move = 0.2;
+                %             sumDensity =0;
+                totalMaterial = sum(sum(obj.x));
+                wProposed = DV.w;
+                g1Min = min(min(g1));
+                while (l2-l1 > 1e-4)
+                    lambda1 = 0.5*(l2+l1);
+                    wProposed=max(0,min(1,DV.w*(sqrt(-g1Min+g1/lambda1))));
+                    
+                    %                   totalMat1 =sum(sum( DV.x.*DV.w*matProp.E_material1));
+                    %                 totalMat2 =sum(sum( DV.x.*(1-DV.w)*matProp.E_material2));
+                    % obj.actualAverageE= obj.currentVol1Fraction*matProp.E_material1+  obj. currentVol2Fraction*matProp.E_material2;
+                    %                 obj.actualAverageE= (totalMat1+totalMat2)/totalMaterial;
+                    currentVol1Fraction =sum(sum( DV.x.*wProposed))/totalMaterial;
+                    %                 obj.   currentVol2Fraction =sum(sum( obj.x.*(1-obj.w)))/ne;
+%                     fractionCurrent_V1Local = currentVol1Fraction/totalVolLocal;
+                    
+                    
+                    if targetFraction_v1- currentVol1Fraction<0;
+                        l1 = lambda1;
+                    else
+                        l2 = lambda1;
+                    end
+                end
+                DV.w=wProposed;
+            end
         end
         
         % ----------------------------------

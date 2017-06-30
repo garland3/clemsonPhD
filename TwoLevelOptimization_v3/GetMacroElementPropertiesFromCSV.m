@@ -267,8 +267,8 @@ if(config.UseLookUpTableForPsuedoStrain==1 && config.strainAndTargetTest~=1)
         return
     end
     
-    
-    version=4;
+   
+    version=   config.lookupSearchScheme;
     if(version==1)
         %         %%         % ------------------------------------
 %         %         %           Version 1
@@ -1061,11 +1061,19 @@ if(config.UseLookUpTableForPsuedoStrain==1 && config.strainAndTargetTest~=1)
 %             D11_table4D,D12_table4D,D22_table4D,D33_table4D,...
 %             ps1_table4D,ps2_table4D,ps3_table4D,eta_table4D)...
 %             ,4,A,b,[],[],lb,ub);
+
+% ---------------
+% ----------------
+%
+%    COMMENT OUT SO OPTIMIZATION TOOL BOX NOT NEEDED. 
+%
+% ---------------
+% ---------------------
         
-         [x finalDiffValue]= particleswarm(@(x) EvalutePseudoStrainAndDensityForFit(x,D11sys,D12sys,D22sys,D33sys, ...
-            D11_table4D,D12_table4D,D22_table4D,D33_table4D,...
-            ps1_table4D,ps2_table4D,ps3_table4D,eta_table4D)...
-            ,4,lb,ub);
+%          [x finalDiffValue]= particleswarm(@(x) EvalutePseudoStrainAndDensityForFit(x,D11sys,D12sys,D22sys,D33sys, ...
+%             D11_table4D,D12_table4D,D22_table4D,D33_table4D,...
+%             ps1_table4D,ps2_table4D,ps3_table4D,eta_table4D)...
+%             ,4,lb,ub);
         
         ps(1)=x(1);
         ps(2)=x(2);

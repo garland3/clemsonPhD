@@ -61,20 +61,23 @@ classdef Configuration
         v1 = 0.6; % amount of material 1 to use. default to 20%
         v2 = 0.2; % amount of material 2 to use. default to 40%, reduced so there is less meso structures to compute
         totalVolume; % = v1+v2;
+        volFractionOptiizationMethod = 2;
         
         % Meso Design settings
-        mesoVolumeUpdateMethod=1; % 1 = average, 2 = Target the larger
+     
         maxMesoLoops = 120;
         maxNumPseudoStrainLoop=3;
         PseudoStrainEndCriteria = 0.1;  
         TargetECloseNess=0.03; % part of the termination criteria
-        volumeUpdateInterval=12;
+        volumeUpdateInterval=15;
         coordinateMesoBoundaries = 1;
         MaskRows=3;
         mesoDesignInitalConditions = 3; % 1 = randome, 2= square, 3 = circle empty, 7 =middle circle is solid. 
-        MesoMinimumDensity=0;
-        AddBorder=0; % Add border to complete structure. 
-        UseLookUpTableForPsuedoStrain=1; %0 = feedback loop, 1 = use look up. 
+        MesoMinimumDensity=0; % NOT Used, Seem  minMesoDensityInOptimizer instead
+        AddBorder=1; % Add border to complete structure. 
+        UseLookUpTableForPsuedoStrain=0; %0 = feedback loop, 1 = use look up. 
+           mesoVolumeUpdateMethod=2; % 1 = average, 2 = Target the larger
+        lookupSearchScheme=2; % 2 = search table and scale eta, 4 = linear interpolation with particle swarm
         
           
         % Exx and Eyy Distribution
@@ -83,7 +86,7 @@ classdef Configuration
         targetAvgExxEyy=50000;
         minEallowed = 10000; % about 5% of max
         targetExxEyyDensity =  0.3750; % $$$$ DENSITY of MESO STRUCTURES $$$$
-        minMesoDensityInOptimizer=0.22;
+        minMesoDensityInOptimizer=0.001; % 0.22
         useThetaInSurfaceFit = 0;
         useANN=0;
         useAnnForDensityNotDerivative = 1;
@@ -180,14 +183,14 @@ classdef Configuration
         % Loading cases
         % ---------------------------
 %          loadingCase = [113]; % left clamped, load, middle right
-        %           loadingCase = [111 112 113]; % left clamped
+                   loadingCase = [111 112 113]; % left clamped
         %            loadingCase = [111 112 ]; % left clamped
         %          loadingCase = [111 120 121]; % up, down, right in top right corrner, left clamp.
         %         loadingCase = [111 120]; % up, down, right in top right corrner, left clamp.
         %              loadingCase = [1];
         
         %  loadingCase = [300 301 302 303 304 305]; % shoe
-                    loadingCase = [400 401 402 403 404 405]; % bridge
+%                     loadingCase = [400 401 402 403 404 405]; % bridge
         %            loadingCase = [404]; % bridge
         %             loadingCase = [113]; % cantilever
         %                 loadingCase = [111]; % top right, force in Y direction
@@ -258,7 +261,7 @@ classdef Configuration
                 obj.nelyMeso =35; %35;
                 obj.terminationAverageCount = 10;
                 obj.terminationCriteria =0.001; % 0.0%
-                obj.maxFEACalls = 130;
+                obj.maxFEACalls = 150;
                 obj.maxMasterLoops = 300;
                 
             end

@@ -19,7 +19,7 @@ p = plotResults;
 temp = config.mesoAddAdjcentCellBoundaries;
 config.mesoAddAdjcentCellBoundaries=0;
 macroElementProps = macroElementProp;
-macroElementProps.targetDensity=0.5; % make up some value for now. 
+macroElementProps.targetDensity=0.5; % make up some value for now.
 [DVMeso, mesoconfig] = GenerateDesignVarsForMesoProblem(config,1,macroElementProps);
 config.mesoAddAdjcentCellBoundaries=temp;
 
@@ -49,6 +49,61 @@ elementXYposition=csvread(outname);
 outname = sprintf('./out%i/SIMPdensityfield%i.csv',folderNum,macro_meso_iteration);
 xxx = csvread(outname);
 
+addLineBetweeenDiverseMesoStructures = 0;
+
+if(addLineBetweeenDiverseMesoStructures==1)
+    folderName=sprintf('out%i',folderNum);
+    outnameExx = sprintf('./%s/ExxSubSysValues%i.csv',folderName,macro_meso_iteration);
+    outnameEyy = sprintf('./%s/EyySubSysValues%i.csv',folderName,macro_meso_iteration);
+    outnametheta = sprintf('./%s/ThetaSubSysValues%i.csv',folderName,macro_meso_iteration);
+    %  outnamerho = sprintf('./%s/densityUsedSubSysValues%i.csv',folderName,macro_meso_iteration);
+    outnamerho = sprintf('./%s/densityUsedSubSysValues%i.csv',folderName,macro_meso_iteration);
+    
+    %------------------------
+    % read the macro columns as well. This will help with future analysis
+    % ----------------------------
+    
+    MesoExx=csvread(outnameExx);
+    
+    
+    MesoEyy=csvread(outnameEyy);
+    
+    
+    MesoTheta=csvread(outnametheta);
+    
+    
+    MesoRho=csvread(outnamerho);
+    
+    [x,y] = meshgrid(1:config.nelx,1:config.nely);
+    %     div = divergence(U,V)
+    [px,py] = gradient(MesoExx);
+    figure
+    contour(x,y,MesoExx)
+    hold on
+    quiver(x,y,px,py)
+    hold off
+    nameGraph = sprintf('./GradientExxSub%i.png', config.macro_meso_iteration);
+    print(nameGraph,'-dpng');
+    
+    [px,py] = gradient(MesoEyy);
+    figure
+    contour(x,y,MesoEyy)
+    hold on
+    quiver(x,y,px,py)
+    hold off
+    nameGraph = sprintf('./GradientEyySub%i.png', config.macro_meso_iteration);
+    print(nameGraph,'-dpng');
+    
+    [px,py] = gradient(MesoTheta);
+    figure
+    contour(x,y,MesoTheta)
+    hold on
+    quiver(x,y,px,py)
+    hold off
+    nameGraph = sprintf('./GradientThetaSub%i.png', config.macro_meso_iteration);
+    print(nameGraph,'-dpng');
+    
+end
 
 
 
@@ -87,7 +142,7 @@ end
 
 if(postProcess==1)
     for e = 1:ne
-        fprintf('step 2element %i of %i\n',e,ne);
+        fprintf('step 2 element %i of %i\n',e,ne);
         macroElementProps.elementNumber=e;
         results = elementXYposition(macroElementProps.elementNumber,:);
         macroElementProps.yPos = results(1);
@@ -105,37 +160,44 @@ end
 
 
 %if(config.multiscaleMethodCompare~=1)
-    % set the max value to be 1
+% set the max value to be 1
 %      completeStruct=    imgaussfilt(completeStruct,2 );
-    completeStruct( completeStruct>1)=1;
-   
-    completeStruct(completeStruct>config.voidMaterialDensityCutOff)=1;
-    completeStruct(completeStruct<config.voidMaterialDensityCutOff)=0;
-    
-     [completeStruct , numChanged] = CheckForConerElements(completeStruct, totalX,totalY, config.voidMaterialDensityCutOff);
-      completeStruct(completeStruct<config.voidMaterialDensityCutOff)=0;
-      
-      [completeStruct ] = CheckRemoveOrphanedSegments(completeStruct, totalX,totalY, config.voidMaterialDensityCutOff);
-%end
-density = sum(sum(completeStruct))/(totalX*totalY);
- outname = sprintf('./mode90/Density%i.csv',config.macro_meso_iteration);
-    csvwrite(outname,density);
+completeStruct( completeStruct>1)=1;
 
+completeStruct(completeStruct>config.voidMaterialDensityCutOff)=1;
+completeStruct(completeStruct<config.voidMaterialDensityCutOff)=0;
+% p.PlotArrayGenericWithBlueWhiteColors( completeStruct, 'Before')
+
+ [completeStruct , numChanged] = CheckForConerElements(completeStruct, totalX,totalY, config.voidMaterialDensityCutOff);
+ completeStruct(completeStruct<config.voidMaterialDensityCutOff)=0;
+
+ completeStruct(completeStruct>config.voidMaterialDensityCutOff)=1;
+completeStruct(completeStruct<config.voidMaterialDensityCutOff)=0;
+ p.PlotArrayGenericWithBlueWhiteColors( completeStruct, 'After Corner Check')
+ 
+totalSize = size(completeStruct)
+totalX
+totalY
+ sumBefore = sum(sum(completeStruct));
+ [completeStruct ] = CheckRemoveOrphanedSegments(completeStruct, totalX,totalY, config.voidMaterialDensityCutOff);
+ sumAfter = sum(sum(completeStruct));
+ 
+%   p.PlotArrayGenericWithBlueWhiteColors( completeStruct, 'After Isolated Element Check')
+ 
+ fprintf('Change in density after removing elements is %f\n',sumBefore-sumAfter);
+% %end
+density = sum(sum(completeStruct))/(totalX*totalY);
+outname = sprintf('./mode90/Density%i.csv',config.macro_meso_iteration);
+csvwrite(outname,density);
+close all
 figure(1)
 plotname = sprintf('complete structure %i with density %f',config.macro_meso_iteration,density);
-p.PlotArrayGeneric( completeStruct, plotname)
-rgbSteps = 100;  caxis([0,1]);
-map = colormap; % current colormap
-middPoint = floor(rgbSteps/4);
-map(1:middPoint,:) = [ones(middPoint,1),ones(middPoint,1),ones(middPoint,1)];
-for zz =    middPoint:rgbSteps
-    map(zz,:) = [0,               1- zz/rgbSteps, 0.5];
-end
-colormap(map)
+p.PlotArrayGenericWithBlueWhiteColors( completeStruct, plotname)
+
 %     colorbar
 freezeColors
 nameGraph = sprintf('./completeStucture%f_macroIteration_%i.png', config.w1,config.macro_meso_iteration);
-print(nameGraph,'-dpng', '-r1200')
+print(nameGraph,'-dpng', '-r2000')
 if (config.generateCompleteStructureCSV==1)
     outname = sprintf('./completeStucture%f_macroIteration_%i.csv', config.w1,config.macro_meso_iteration);
     csvwrite(outname,completeStruct);

@@ -33,6 +33,11 @@ add_bottom=0;
 add_left=0;
 add_right=0;
 
+add_top_right=0;
+add_top_left=0;
+add_bottom_right=0;
+add_bottom_left=0;
+
 xCurrent=macroElementProps.xPos;
 xRight=xCurrent+1;
 xLeft=xCurrent-1;
@@ -110,20 +115,41 @@ if(yDown>0)
     
     density = xx(yDown, xCurrent);
     if(density>macroSettings.voidMaterialDensityCutOff)
-        add_bottom=1;
+         add_bottom=1;
+        % ----------------
+        % Down has material
+        % ----------------       
+        % Check Down Right for material
+        if(xRight<macroSettings.nelx)
+            densityxRight= xx(yDown, xRight);
+            if(densityxRight<macroSettings.voidMaterialDensityCutOff)
+                add_bottom_right=1;          
+            end
+        end
+        
+          % Check Down Left for material
+        if(xLeft>0)
+            densityxLeft= xx(yDown, xLeft);
+            if(densityxLeft<macroSettings.voidMaterialDensityCutOff)
+                add_bottom_left=1;           
+            end
+        end
     else
+         % ----------------
+        % Down does NOT have material
+        % ----------------
         % Check Right, then Check left; checking for empty
         if(xRight<macroSettings.nelx)
             densityxRight= xx(yCurrent, xRight);
             if(densityxRight<macroSettings.voidMaterialDensityCutOff)
-                cut_bottomRight=1;
+                cut_bottomRight=1;           
             end
         end
         
         if(xLeft>0)
             densityxLeft= xx(yCurrent, xLeft);
             if(densityxLeft<macroSettings.voidMaterialDensityCutOff)
-                cut_bottomLeft=1;
+                cut_bottomLeft=1;           
             end
         end
     end
@@ -138,12 +164,33 @@ if(yUp<=macroSettings.nely)
     densityUp = xx(yUp, xCurrent);
     if(densityUp>macroSettings.voidMaterialDensityCutOff)
         add_top=1;
+        % ------------------
+        % Up has material
+        % ------------------
+        % Check if Up And Right has material
+         if(xRight<macroSettings.nelx)
+            densityxRight= xx(yUp, xRight);
+            if(densityxRight<macroSettings.voidMaterialDensityCutOff)                
+               add_top_right=1;
+            end
+         end
+        
+          % Check if Up And Left has material
+        if(xLeft>0)
+            densityxLeft= xx(yUp, xLeft);
+            if(densityxLeft<macroSettings.voidMaterialDensityCutOff)               
+                add_top_left=1;
+            end
+        end
     else
+        % ------------------
+        % Up does NOT material
+        % ------------------
         % Check Right, then Check left; checking for empty
         if(xRight<macroSettings.nelx)
             densityxRight= xx(yCurrent, xRight);
             if(densityxRight<macroSettings.voidMaterialDensityCutOff)
-                cut_topRight=1;
+                cut_topRight=1;           
             end
         end
         
@@ -151,6 +198,7 @@ if(yUp<=macroSettings.nely)
             densityxLeft= xx(yCurrent, xLeft);
             if(densityxLeft<macroSettings.voidMaterialDensityCutOff)
                 cut_topLeft=1;
+            
             end
         end
     end
@@ -315,6 +363,29 @@ elseif(step==2)
                  end
             end
             
+            % ------------------
+            % Add somall corners. 
+            %--------------------
+            
+           
+             % ----------------------------------
+            if( add_top_left==1)
+                 temp(end-numrows:end,1:numrows)=1;
+            end
+            
+            if( add_bottom_left==1)
+                temp(1:numrows,1:numrows)=1;
+            end
+            
+            if( add_top_right==1)
+                temp(end-numrows:end,end-numrows:end)=1;
+            end
+            
+            if( add_bottom_right==1)
+                temp(1:numrows,end-numrows:end)=1;
+            end
+            
+
 
             
         end

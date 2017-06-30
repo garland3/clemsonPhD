@@ -2040,7 +2040,7 @@ classdef DesignVars
             if (config.coordinateMesoBoundaries==1 && config.macro_meso_iteration>1)
                 %                  offset =median(median(obj.dc));
                 offset =min(min(obj.dc));
-                offset=offset*0.5
+                offset=offset*0.5;
                 offset=offset*(config.macro_meso_iteration-1); % INcrease the strength each time
                 %                 offset =min(min(obj.dc));
                 newSensitivities=obj.dc+ obj.mesoStructNTCmask*offset;

@@ -334,6 +334,22 @@ classdef plotResults
             colorbar
         end
         
+        % Plots an array
+        function PlotArrayGenericWithBlueWhiteColors(obj, array, titleText)
+            imagesc(array); axis equal; axis tight; axis off;
+            % colormap winter
+            set(gca,'YDir','normal');
+            title(titleText);
+            rgbSteps = 100;  caxis([0,1]);
+            map = colormap; % current colormap
+            middPoint = floor(rgbSteps/4);
+            map(1:middPoint,:) = [ones(middPoint,1),ones(middPoint,1),ones(middPoint,1)];
+            for zz =    middPoint:rgbSteps
+                map(zz,:) = [0,               1- zz/rgbSteps, 0.5];
+            end
+            colormap(map)
+        end
+        
         % --------------------------------------------
         % Plots temperature countours
         % --------------------------------------------

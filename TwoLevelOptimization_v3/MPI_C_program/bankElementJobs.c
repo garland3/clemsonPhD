@@ -17,7 +17,7 @@
 //#define NELX_MACRO  15 // 30 // 1331 
 //#define NELY_MACRO 15 //15 // 1
 
-#define MODE 4 //1 =BOTT Multiscale optimization 2. Meso Validation 3.  multiscaleMethodCompareToCoelho 4. PseudoStrain and Density Target Test
+#define MODE 1 //1 =BOTT Multiscale optimization 2. Meso Validation 3.  multiscaleMethodCompareToCoelho 4. PseudoStrain and Density Target Test
 
 
 int callMatlab(int mode, int macro_meso_iteration, int element);
@@ -151,6 +151,8 @@ int main ( int argc, char **argv )
                 //}// end  if(my_rank<nel+1)
                   
                 MPI_Barrier(MPI_COMM_WORLD); // force all to wait till all elements are finished
+                
+                  MPI_Barrier(MPI_COMM_WORLD); // wait for master to finish extracting macro vars from D_h matrixes
                    
                    
                    
@@ -355,6 +357,8 @@ int MultiscaleMasterNode(int macro_meso_iteration,int pool_size,int my_rank ){
            
         }
         
+          MPI_Barrier(MPI_COMM_WORLD); // wait for master to finish extracting macro vars from D_h matrixes
+        
         return 1;
 
 }
@@ -471,6 +475,8 @@ int MesoValidationMasterNode(int macro_meso_iteration,int pool_size ,int my_rank
         // --------------------------------------------
         printf( "At position before Master Barrier\n");
          MPI_Barrier(MPI_COMM_WORLD); // force all to wait till all elements are finished
+         
+           MPI_Barrier(MPI_COMM_WORLD); // wait for master to finish extracting macro vars from D_h matrixes
          
         
         // --------------------------------------------

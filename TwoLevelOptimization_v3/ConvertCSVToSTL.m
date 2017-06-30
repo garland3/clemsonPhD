@@ -1,9 +1,9 @@
 function [] = ConvertCSVToSTL(filename)
 
-testing =2;
+testing =1;
 
 if(testing==1)
-    completeStructure = csvread('./completeStucture1.000000_macroIteration_1.csv');
+    completeStructure = csvread('./completeStucture1.000000_macroIteration_2.csv');
     disp('csv read');
 elseif(testing==2)
     Z = peaks(20); % Create grid height
@@ -21,7 +21,7 @@ config = csvToStlConfig;
 
 
 
-config.binary = 0;
+config.binary = 1;
 
 config.targetXDimension = 200;
 config.targetYDimension = 200;
@@ -46,11 +46,11 @@ else
     config.mode = 1; % find number of triangles we will need
     tricount=LoopOverArray(completeStructure,config);
     
-    config. outFile=fopen('structure.stl','wb');
+    config. outFile=fopen('structureBinary3.stl','wb');
     fprintf(config.outFile, '%-80s', 'structure');             % Title
     fwrite(config.outFile, tricount, 'uint32');           % Number of facets 1256
     tricount=0; % reset triangle count to 0
-    mode = 2; % find number of triangles we will need
+   config. mode = 2; % find number of triangles we will need
 end
 
 tricount=LoopOverArray(completeStructure,config); % write the data this time.
@@ -203,12 +203,13 @@ if(config.mode ==2)
 end
 tricount=tricount+1;
 
-function [topedge,bottomedge,leftedge,rightedge,alreadyInArray,xlimit,ylimit]=  GetEdgeInformationOfElement(x,y,completeStructure,alreadySearchedArray,config)
+function [topedge,bottomedge,leftedge,rightedge,alreadyInArray,xlimit,ylimit,hasMaterial]=  GetEdgeInformationOfElement(x,y,completeStructure,alreadySearchedArray,config)
 topedge = 0;
 bottomedge = 0;
 leftedge =0;
 rightedge =0;
 alreadyInArray=0;
+hasMaterial=0;
 % material here, add some top square, bottom square
 
 % -------------------------------------
@@ -231,6 +232,7 @@ end
 
 
 alreadyInArray=alreadySearchedArray(j,i);
+hasMaterial=completeStructure(j,i);
 
 % check if on bottom edge
 if(j==1)
@@ -290,7 +292,7 @@ else
     end
 end
 
-fprintf('Check Element x: %i y: %i Top: %i Bottom: %i Left: %i Right: %i AlreadyChecked: %i\n',x,y,topedge,bottomedge,leftedge,rightedge,alreadyInArray);
+% fprintf('Check Element x: %i y: %i Top: %i Bottom: %i Left: %i Right: %i AlreadyChecked: %i\n',x,y,topedge,bottomedge,leftedge,rightedge,alreadyInArray);
 
 function tricount= LoopOverArray(completeStructure,config)
 
@@ -311,7 +313,16 @@ tricount=0;
 
 alreadySearchedArray=completeStructure*0;
 
+updateOutputFrequency = 10000;
+updatePlotFrequnecy = updateOutputFrequency*100;
 
+
+% updateOutputFrequency = 1;
+% updatePlotFrequnecy = updateOutputFrequency*1;
+
+numOfColors=10;
+colorByRegionArray=1:numOfColors;
+regionCount=1;
 
 for j = 1:ysize
     for i = 1:xsize
@@ -319,25 +330,28 @@ for j = 1:ysize
         alreadySerached = alreadySearchedArray(j,i);
         value = completeStructure(j,i);
         
-%         if(mod(count,1)==1)
-            fprintf('\n\ncell %d  of %d, percent complete %0.01f with value %d alreadyCheck=%i\n',count,total,100*count/total,value,alreadySerached);
-%         end
+        if(mod(count,updateOutputFrequency)==1)
+            fprintf('\n\ncell %d  of %d, percent complete %0.01f with value %d alreadyCheck=%i tricount=%i\n',count,total,100*count/total,value,alreadySerached,tricount);
+        end
         
         count=count+1;
         
         
         
         if(value==1 &&alreadySerached==0 )
+            regionCount=regionCount+1;
+            elementsRight=0;
+            [topedge,bottomedge,leftedge,rightedge,alreadyInArray,xlimit,ylimit,hasMaterial]=  GetEdgeInformationOfElement(i,j,completeStructure,alreadySearchedArray,config);
             
-            [topedge,bottomedge,leftedge,rightedge,alreadyInArray,xlimit,ylimit]=  GetEdgeInformationOfElement(i,j,completeStructure,alreadySearchedArray,config);
-                       
             startRectX = i;
             startRectY=j;
+            %             newtopedge=1;
             
-            elementsRight=0;
+            %             newtopedge=topedge;
+            %             newbottomedge=
             
             elementsRight =elementsRight+1;
-            [newtopedge,newbottomedge,newleftedge,newrightedge,newalreadyInArray,xlimit,ylimit]=  GetEdgeInformationOfElement(i+elementsRight,j,completeStructure,alreadySearchedArray,config);
+            [newtopedge,newbottomedge,newleftedge,newrightedge,newalreadyInArray,xlimit,ylimit,hasMaterial]=  GetEdgeInformationOfElement(i+elementsRight,j,completeStructure,alreadySearchedArray,config);
             
             % Search going right
             while(topedge==newtopedge && ...
@@ -346,11 +360,12 @@ for j = 1:ysize
                     rightedge== newrightedge&& ...
                     alreadyInArray== newalreadyInArray && ...
                     xlimit==0 && ...
-                    ylimit==0 )
+                    ylimit==0  && ...
+                    hasMaterial==1)
                 
                 
-                elementsRight =elementsRight+1;             
-                [newtopedge,newbottomedge,newleftedge,newrightedge,newalreadyInArray,xlimit,ylimit]=  GetEdgeInformationOfElement(i+elementsRight,j,completeStructure,alreadySearchedArray,config);                
+                elementsRight =elementsRight+1;
+                [newtopedge,newbottomedge,newleftedge,newrightedge,newalreadyInArray,xlimit,ylimit,hasMaterial]=  GetEdgeInformationOfElement(i+elementsRight,j,completeStructure,alreadySearchedArray,config);
             end
             elementsRight=elementsRight-1; % the latest try was unsucessuful
             
@@ -360,26 +375,27 @@ for j = 1:ysize
             while(rowOk==1)
                 
                 for ii = startRectX:startRectX+elementsRight
-                       fprintf('row %i',j+elementUP);
-                    [newtopedge,newbottomedge,newleftedge,newrightedge,newalreadyInArray,xlimit,ylimit]=  GetEdgeInformationOfElement(ii,j+elementUP,completeStructure,alreadySearchedArray,config);
+                    %                     fprintf('row %i',j+elementUP);
+                    [newtopedge,newbottomedge,newleftedge,newrightedge,newalreadyInArray,xlimit,ylimit,hasMaterial]=  GetEdgeInformationOfElement(ii,j+elementUP,completeStructure,alreadySearchedArray,config);
                     if (topedge==newtopedge && ...
                             bottomedge==newbottomedge &&...
                             leftedge== newleftedge && ...
                             rightedge== newrightedge&& ...
                             alreadyInArray== newalreadyInArray && ...
                             xlimit==0 && ...
-                            ylimit==0 )
+                            ylimit==0  && ...
+                            hasMaterial==1)
                         % do nothing. All ok.
-                      
+                        
                     else
                         rowOk=0;
                         
-                         break
+                        break
                     end
-                     
+                    
                 end
                 if(rowOk==1)
-                 elementUP =elementUP+1;
+                    elementUP =elementUP+1;
                 end
                 
                 
@@ -393,7 +409,8 @@ for j = 1:ysize
             % Change the already seached array to show these are completed
             for jjj = startRectX:endRectX
                 for iii=startRectY:endRectY
-                    alreadySearchedArray(iii,jjj)=1;
+                    colorValue= 5+mod(regionCount,numOfColors);
+                    alreadySearchedArray(iii,jjj)=colorValue;
                 end
             end
             
@@ -428,13 +445,35 @@ for j = 1:ysize
                 tricount=     addRect_yzPlane(endRectX+1,startRectY,'na',endRectY+1,1,-1,0,0,config,tricount); % add right edge , x plus 1
             end
             
-            p = plotResults;
-            subplot(1,2,1)
-            p.PlotArrayGeneric(alreadySearchedArray,'alreadySearchedArray');
-             subplot(1,2,2)
-            p.PlotArrayGeneric(completeStructure,'completeStructure');
-            drawnow
+           
             
         end % void regions
+        
+         if(mod(count,updatePlotFrequnecy)==0)
+%                 fprintf('------------\nUpdating Plots\n ---------\n');
+                p = plotResults;
+                subplot(2,2,1)
+                p.PlotArrayGeneric(alreadySearchedArray,'alreadySearchedArray');
+                  map = colormap; % current colormap
+                    map(1,:) = [1,  1,1];
+                    colormap(map)
+                subplot(2,2,2)
+                p.PlotArrayGeneric(completeStructure,'completeStructure');
+%                 subplot(2,2,3)
+%                 p.PlotArrayGeneric(completeStructure-alreadySearchedArray,'diff');
+                drawnow
+            end
     end
 end
+
+p = plotResults;
+subplot(1,1,1)
+p.PlotArrayGeneric(alreadySearchedArray,'alreadySearchedArray');
+map = colormap; % current colormap
+map(1,:) = [1,  1,1];
+colormap(map)
+% subplot(2,2,2)
+% p.PlotArrayGeneric(completeStructure,'completeStructure');
+%                 subplot(2,2,3)
+%                 p.PlotArrayGeneric(completeStructure-alreadySearchedArray,'diff');
+drawnow

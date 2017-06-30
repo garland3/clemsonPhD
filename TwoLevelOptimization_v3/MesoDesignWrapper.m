@@ -104,10 +104,10 @@ if(macroElementProperties.densitySIMP>config.noNewMesoDesignDensityCutOff || con
             outname2 = sprintf('pseudo strain %f %f %f ',pStrain(1),pStrain(2),pStrain(3));
             outname = [outname outname2];
             p.PlotArrayGeneric(DVmeso.x,outname);
-               caxis([0 1]);
+               caxis([0 1]);ng
         end
         drawnow
-        nameGraph = sprintf('./out%i/elementpicture%i.png',configMeso.iterationNum, e);
+        nameGraph = sprintf('./out%i/elementpictureIteration%i_element%i.png',configMeso.iterationNum,configMeso.macro_meso_iteration, e);
         print(nameGraph,'-dpng')
     end
 else

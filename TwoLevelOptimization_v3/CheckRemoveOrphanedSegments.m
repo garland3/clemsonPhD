@@ -20,6 +20,7 @@ xold=x;
  futureSerachArray = x*0;
 AlreadySearchedArray=x*0;
 AllSearchesAlreadyComplete = x*0;
+count = 0;
 for elx = 1:nelx
     for ely = 1:nely
         InPreviousBody=AllSearchesAlreadyComplete(ely,elx);
@@ -115,7 +116,10 @@ for elx = 1:nelx
                 
                  totalAreaOfBody = sum(sum(AlreadySearchedArray));
                  MoreElementsToSearch=   sum(sum(futureSerachArray));
+                 if(mod(count,100)==1)
                  fprintf('searched %i %i, Number of more elements to search %i and body size %i of %i totalArea possible\n',xCurrent, yCurrent,MoreElementsToSearch,totalAreaOfBody,totalArea);
+                 end
+                 count=count+1;
             end
             
             p = plotResults;
