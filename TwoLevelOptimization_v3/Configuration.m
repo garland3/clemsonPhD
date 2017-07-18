@@ -26,19 +26,13 @@ classdef Configuration
         
         % For ATC optimization
         addConsistencyConstraints=1;      
-        Omega = 0.15;
+        Omega = 0.15;%0.15;
         
         % Modeling settings
         referenceTemperature = 0; % for thermal expansion, assume that there is not strain when at this temperature.
         addThermalExpansion = 0; % Set to 1 to incorporate thermal expansion
       
-        
-        % rotation
-        useRotation =1; % must be 0 for gradient material optimization
-        minRotation =-pi/2;
-        maxRotation = pi;
-        rotationMoveLimit = pi/45;
-        
+       
         
         % number of elements
         nelxMeso = 40;
@@ -56,12 +50,13 @@ classdef Configuration
         
         
         % VOLUME Fraction SEttings.
-        timestep = 0.001; % time step for the volume fraction update algorithm
-        volFractionDamping = 1;
-        v1 = 0.6; % amount of material 1 to use. default to 20%
-        v2 = 0.2; % amount of material 2 to use. default to 40%, reduced so there is less meso structures to compute
+        timestep = 0.05; % time step for the volume fraction update algorithm
+        volFractionDamping =0.5; % 0.1
+        v1 = 0.20; % 0.8 amount of material 1 to use. default to 20%
+        v2 =0.20; %  0.2 amount of material 2 to use. default to 40%, reduced so there is less meso structures to compute
         totalVolume; % = v1+v2;
         volFractionOptiizationMethod = 2;
+        minimizeTempOfMaterial1=0;
         
         % Meso Design settings
      
@@ -72,25 +67,32 @@ classdef Configuration
         volumeUpdateInterval=15;
         coordinateMesoBoundaries = 1;
         MaskRows=3;
-        mesoDesignInitalConditions = 3; % 1 = randome, 2= square, 3 = circle empty, 7 =middle circle is solid. 
+        mesoDesignInitalConditions = 3; % 1 = randome, 2= square, 3 = circle empty, 7 =middle circle is solid.
         MesoMinimumDensity=0; % NOT Used, Seem  minMesoDensityInOptimizer instead
-        AddBorder=1; % Add border to complete structure. 
-        UseLookUpTableForPsuedoStrain=0; %0 = feedback loop, 1 = use look up. 
-           mesoVolumeUpdateMethod=2; % 1 = average, 2 = Target the larger
+        AddBorder=1; % Add border to complete structure.
+        UseLookUpTableForPsuedoStrain=1; %0 = feedback loop, 1 = use look up.
+        mesoVolumeUpdateMethod=1; % 1 = average, 2 = Target the larger
         lookupSearchScheme=2; % 2 = search table and scale eta, 4 = linear interpolation with particle swarm
+        ScaleTheSubSystemValuesToMeetVolumeConstraint =1;
         
-          
+        
         % Exx and Eyy Distribution
-        useExxEyy=1;    % must be 0 for gradient material optimization
-        useTargetMesoDensity = 1; % 1 = yes, 0 = no and use target Eavg
-        targetAvgExxEyy=50000;
-        minEallowed = 10000; % about 5% of max
-        targetExxEyyDensity =  0.3750; % $$$$ DENSITY of MESO STRUCTURES $$$$
+        useExxEyy=0;    % must be 0 for gradient material optimization
+        useTargetMesoDensity = 0; % 1 = yes, 0 = no and use target Eavg
+        targetAvgExxEyy=50000 ;
+        minEallowed = 25000  ; % about 5% of max
+        targetExxEyyDensity =  0.3750; % 0.3750 $$$$ DENSITY of MESO STRUCTURES $$$$
         minMesoDensityInOptimizer=0.001; % 0.22
         useThetaInSurfaceFit = 0;
         useANN=0;
         useAnnForDensityNotDerivative = 1;
         rminExxEyy = 1.2 % smoothing radius for sensitivity smoothing.
+         
+        % rotation
+        useRotation =0; % must be 0 for gradient material optimization
+        minRotation =-pi/2;
+        maxRotation = pi;
+        rotationMoveLimit = pi/45;
         
         % True anisotropic material
         anisotropicMat=0;
@@ -109,9 +111,9 @@ classdef Configuration
         doPlotHeat = 0;
         doPlotHeatSensitivityTopology = 0;
         doPlotStress = 0;
-        doPlotFinal =0; % blue, green, empty space plot
+        doPlotFinal =1; % blue, green, empty space plot
         doPlotMetrics = 0;
-        doPlotConsistencyConstraintsInMetrics = 0;
+        doPlotConsistencyConstraintsInMetrics = 1;
         doSaveDesignVarsToCSVFile = 0; % set to 1 to write plotFinal csv file instead
         doPlotAppliedStrain = 0; % For debugging only
         doPlotOrthDistributionVar=0;
@@ -124,7 +126,7 @@ classdef Configuration
         doPlotAnIsotropicValues=0; % 4 plots
         
         % Exx ,Eyy , Theta (and Rho) Plot Data
-        doPlotCombinedExxEyyAndRotation = 1;
+        doPlotCombinedExxEyyAndRotation = 0;
         doIncludeRho=1;;
         doIncludeSubSystemValues=1;
         %-----------------
@@ -145,7 +147,7 @@ classdef Configuration
         parallel =0; % set to 1 to use parfor while preforming the meso design
         numWorkerProcess = 8;
         useCommandLineArgs = 0;
-        RunPalmetto =1;
+        RunPalmetto =0;
         gr =  (1+sqrt(5))/2 -1 ; % golden ratio  0.618033988749895
         multiscaleMethodCompare=0;% Implemented Coelho's method if this ==1
         
@@ -153,7 +155,7 @@ classdef Configuration
         % Meso Validation seetings
         % mode = 111 or 112, also 113
         % ---------------------------
-        validationGridSizeNelx = 11; % , This value cubed  will be the number of sub problems, 22^3 =10648
+        validationGridSizeNelx = 11; % , This value cubed  will be the number of sub problems, 11
         validationModeOn=0; % 1 = yes. 
         
         % ANN target test or Loopkup data generator
@@ -182,19 +184,24 @@ classdef Configuration
         % ---------------------------
         % Loading cases
         % ---------------------------
-%          loadingCase = [113]; % left clamped, load, middle right
-                   loadingCase = [111 112 113]; % left clamped
+%                loadingCase = [113]; % left clamped, load, middle right
+%                     loadingCase = [111 112 113]; % left clamped
         %            loadingCase = [111 112 ]; % left clamped
         %          loadingCase = [111 120 121]; % up, down, right in top right corrner, left clamp.
         %         loadingCase = [111 120]; % up, down, right in top right corrner, left clamp.
         %              loadingCase = [1];
         
         %  loadingCase = [300 301 302 303 304 305]; % shoe
-%                     loadingCase = [400 401 402 403 404 405]; % bridge
+%                        loadingCase = [400 401 402 403 404 405]; % bridge
         %            loadingCase = [404]; % bridge
         %             loadingCase = [113]; % cantilever
         %                 loadingCase = [111]; % top right, force in Y direction
-        
+%         loadingCase = [500]; % load everywhere. Fixed on the left.
+% loadingCase = [600]; % hook
+   loadingCase = [600 601 602 603 604 605]; % canyon bridge
+%   loadingCase=[800]; % pressure vessel 
+
+
         % --------------
         % Meso tiling info
         %--------------
@@ -225,8 +232,9 @@ classdef Configuration
             hostname=strtrim(hostname);
             mycomputerName = 'LAPTOP-KQHSCJB1';
             
-            if(strcmp(hostname,mycomputerName)~=1) % if NOT running on my laptop
+            if(strcmp(hostname,mycomputerName)~=1) % if NOT running on my laptop, then running on the Palmetto
                obj. mesoplotfrequency=250;
+               obj.RunPalmetto=1;
             end
             
            obj.MesoMinimumDensity= obj.minMesoDensityInOptimizer;
@@ -236,35 +244,35 @@ classdef Configuration
             % If running on the palmetto, then update for palmetto with
             % special settings.
             % --------------------------------------
-            if(obj.RunPalmetto==0)
-                % ------------
-                % Normal running case
-                % -------------------
-                obj.macro_meso_iteration = str2double(macro_meso_iteration);
-                obj.nelx = 20;
-                obj.nely = 20;
-              
-                obj.nelxMeso = 25; %35;
-                obj.nelyMeso =25; %35;
-                obj.w1 = 1; % do not set to zero, instead set to 0.0001. Else we will get NA for temp2
-                obj.iterationNum = 0;
-                obj.doSaveDesignVarsToCSVFile = 0;
-             
-                obj.numWorkerProcess = 3;
-            else
+%             if(obj.RunPalmetto==0)
+%                 % ------------
+%                 % Normal running case
+%                 % -------------------
+%                 obj.macro_meso_iteration = str2double(macro_meso_iteration);
+%                 obj.nelx = 50;
+%                 obj.nely = 25;
+%               
+%                 obj.nelxMeso = 25; %35;
+%                 obj.nelyMeso =25; %35;
+%                 obj.w1 = 1; % do not set to zero, instead set to 0.0001. Else we will get NA for temp2
+%                 obj.iterationNum = 0;
+%                 obj.doSaveDesignVarsToCSVFile = 0;
+%              
+%                 obj.numWorkerProcess = 3;
+%             else
                 % ------------
                 % Palmetto running case
                 % -------------------
-                obj.nelx = 20; %% 30
-                obj.nely = 20; %  15
+                obj.nelx = 40; %% 30
+                obj.nely = 40; %  15
                 obj.nelxMeso = 35; %35;
                 obj.nelyMeso =35; %35;
                 obj.terminationAverageCount = 10;
                 obj.terminationCriteria =0.001; % 0.0%
-                obj.maxFEACalls = 150;
+                obj.maxFEACalls = 60;
                 obj.maxMasterLoops = 300;
                 
-            end
+%             end
             
             % ----------------------------------------
             % INPUT ARGS
@@ -294,6 +302,12 @@ classdef Configuration
 %             if(obj.macro_meso_iteration ==1)
 %                  obj.maxFEACalls=120;
 %             end
+                if(obj.mode==50)
+                     obj.useExxEyy=0;
+                     obj.useRotation=0;
+                     obj.doPlotFinal =1;
+%                      obj.maxFEACalls=60
+                end
             
             
             % 111 = Validate Meso (generate Targets)

@@ -12,7 +12,7 @@ disp(['Meso Design #: ' sprintf('%4i',macroElementProperties.elementNumber  ) ' 
 % scalePlot = 1;
 % coord(:,1) = [0 1 1 0];
 % coord(:,2)  = [0 0 1 1];
- if(config.strainAndTargetTest==1 || config.UseLookUpTableForPsuedoStrain==1)
+ if(config.strainAndTargetTest==1 || config.UseLookUpTableForPsuedoStrain==1 && config.multiscaleMethodCompare~=1)
      p=macroElementProperties.psuedoStrain;
      fprintf('Meso design , pseudo strain %f %f %f density target %f\n',p(1),p(2),p(3),macroElementProperties.targetDensity);
 %           fprintf('Meso design as ANN training data, pseudo strain %f %f %f density target %f\n',p(1),p(2),p(3),macroElementProperties.targetDensity);

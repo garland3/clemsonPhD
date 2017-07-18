@@ -51,7 +51,6 @@ config.mode =65;
 opt = Optimizer;
 
 matProp = MaterialProperties; % material properties Object
-config.RunPalmetto = 1;
 config= config.UpdateRunTimeComputedSettings( useInputArgs, w1text, macro_meso_iteration,mode, singleMeso_elementNumber);
 
 
@@ -194,7 +193,7 @@ end
 
 if(config.recvid==1)
     video = VideoManager;
-    [vidObj, framedNumber] = video.InitializeVideo( config);
+    [vidObj, framedNumber] = video.InitializeVideo( config,'macroOptVide.avi');
     F=getframe();
 end
 

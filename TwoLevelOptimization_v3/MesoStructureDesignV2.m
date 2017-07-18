@@ -34,13 +34,33 @@ if(doPlot ==1)
     p = plotResults;
     figure(1)
     subplot(1,1,1);
+    
+       colormap gray
+        colorMapFlipped=    colormap(flipud(colormap));
 end
 
 
 
 if recvid==1
-    videoOut = './resultsOuts.avi';
-    vidObj = VideoWriter(videoOut);    %Prepare the new file for video
+    if(mesoConfig.UseLookUpTableForPsuedoStrain==1)
+        
+        
+        if(mesoConfig.lookupSearchScheme==2)
+            typeOF = 'searchTable_scaleEta';
+            
+        elseif(mesoConfig.lookupSearchScheme==4)
+            typeOF = 'interpolateTableFmincon';
+        end
+    else
+        if(mesoConfig.mesoVolumeUpdateMethod==1)
+            typeOF = 'feedbackloopWithAvergE';
+        else
+            typeOF = 'feedbackloopWithLargerE';
+        end
+    end
+    outname = sprintf('./MesoDesignVideo%sForElement%i.avi',typeOF,macroElemProps.elementNumber);
+   % videoOut = './mesoDesignVideo.avi';
+    vidObj = VideoWriter(outname);    %Prepare the new file for video
     vidObj.FrameRate = 5;
     vidObj.Quality = 100;
     open(vidObj);
@@ -81,14 +101,16 @@ if(mesoConfig.multiscaleMethodCompare==1)
     mesoConfig.penal=3; % macro level is 1, meso level is 3
 end
 
-if(mesoConfig.strainAndTargetTest==1 || mesoConfig.UseLookUpTableForPsuedoStrain==1)
-    mesoConfig.totalVolume= macroElemProps.targetDensity;
-    mesoConfig.penal=3; % macro level is 1, meso level is 3
-    mesoConfig.maxNumPseudoStrainLoop=1;
+if(mesoConfig.multiscaleMethodCompare~=1)
+    if(mesoConfig.strainAndTargetTest==1 || mesoConfig.UseLookUpTableForPsuedoStrain==1)
+        mesoConfig.totalVolume= macroElemProps.targetDensity;
+        mesoConfig.penal=3; % macro level is 1, meso level is 3
+        mesoConfig.maxNumPseudoStrainLoop=1;
+    end
 end
 
 
-densityArray = 100;
+densityArray = [];
 
 old_muMatrix = ones(3,3);
 penaltyValue=0.5;
@@ -99,6 +121,9 @@ macroElemProps.D_subSys = ones(3,3);
 pstrain=ones(3,1)/3;
 pstrain(3)=pstrain(3)*shearSign;
 pstrainOld=ones(3,1);
+pStrainArray=[];
+targetDensityArray=[];
+
 
 % projectionMethod = 1;
 % if projectionMethod==1
@@ -199,6 +224,8 @@ for mm = 1:mesoConfig.maxNumPseudoStrainLoop
             
             pstrain=pstrain/(sum(sum(abs(pstrain))));
             macroElemProps.psuedoStrain=pstrain;
+            pStrainArray=[pStrainArray pstrain];
+            
             
             % ------------------------------
             % Update the volume constraint
@@ -228,18 +255,28 @@ for mm = 1:mesoConfig.maxNumPseudoStrainLoop
                     end
                 end
                 
-                
+                 oldVolume =    mesoConfig.totalVolume;
                 damp=0.25;
-                temp = diffEtargetVolume*damp;
+                T3 = diffEtargetVolume*damp;
+                T4 = mesoConfig.totalVolume+T3;
+                
+                T4=max(T4,0.000001); % don't allow below zero, or else we get imagineary numbers. 
+                 T4=oldVolume*(T4/oldVolume)^(1/2);
+                
+                
                 maxChange = 0.1;
-                temp = max(min(temp,maxChange),-maxChange);
-                oldVolume =    mesoConfig.totalVolume;
-                newVolume=max(mesoConfig.totalVolume+temp,0); % don't allow below zero, or else we get imagineary numbers. 
-                newVolume=oldVolume*(newVolume/oldVolume)^(1/2);
+               newVolume=T4;
+                
+               
+                
+                newVolume=   max(min(newVolume,oldVolume+maxChange),oldVolume-maxChange);
+                
                 mesoConfig.totalVolume=min(max(newVolume,mesoConfig.MesoMinimumDensity),1);
+                
+             
                 ttttt=1;
             end
-            
+               targetDensityArray=[   targetDensityArray    mesoConfig.totalVolume];
             
             % ------------------------------
             % Test for a converged design that is not changing.
@@ -262,7 +299,7 @@ for mm = 1:mesoConfig.maxNumPseudoStrainLoop
             
             oldX=  DVmeso.x;
             
-            densityArray = [densityArray sum(sum(DVmeso.x))];
+            densityArray = [densityArray sum(sum(DVmeso.x))/(mesoConfig.nelx*mesoConfig.nely)];
             
             
             
@@ -366,14 +403,35 @@ for mm = 1:mesoConfig.maxNumPseudoStrainLoop
 %                 end
 %             end
             
+        else
+                  pStrainArray=[pStrainArray pstrain];
         end
         
         if(doPlot ==1)
             figure(1)
-            subplot(1,1,1)
+            
+            showPstrainAndDensity = 0;
+            if (showPstrainAndDensity==1)
+                numPlots = 2;
+            else
+                  numPlots = 1;
+            end
+            
+            subplot(numPlots,1,1)
             titleText = sprintf('meso design -> topology var Iter: %i ,density = %f',mesoLoop, mesoConfig.totalVolume);
             p.PlotArrayGeneric(DVmeso.x,titleText); % plot the results.
             caxis([0 1]);
+            colormap(colorMapFlipped);
+            
+               if (showPstrainAndDensity==1)
+            subplot(numPlots,1,2)
+            x=1:size(pStrainArray,2);
+            plot(x,pStrainArray(1,:),x,pStrainArray(2,:),x,pStrainArray(3,:),x,targetDensityArray);
+            legend('Pstrain 1','Pstrain 2','Pstrain 3', 'Eta Target','Location','northwest');
+%               legend('Pstrain 1','Pstrain 2','Pstrain 3', 'Eta Target', 'Actual Density');
+            
+               end
+         
             
             drawnow
         end

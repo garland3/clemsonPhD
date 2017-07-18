@@ -71,29 +71,29 @@ ne = config.nelx*config.nely;
 
 
 % % Write the D constituitive matrix to .csv files.
-% % Calculuate the target density 
+% % Calculuate the target density
 % for e = 1:ne
 %     outname = sprintf('./out%i/DsystemIter%i_Element_%i.csv',folderNum,mm_iteration,e);
 %     %  D_flat =  matProp.SavedDmatrix(e,:);
 %     
 %     
-%     results = designVars.elementXYposition(e,:);
+%     results = DV.elementXYposition(e,:);
 %     yPosition = results(1);
 %     xPosition = results(2);
 %     
 %     
-%    x=   designVars.x(yPosition,xPosition);
-% %      x=   1;
-%    Exx=   designVars.Exx(yPosition,xPosition);
-%    Eyy=   designVars.Eyy(yPosition,xPosition);
-%    w=   designVars.w(yPosition,xPosition);
-%    rotation=   designVars.t(yPosition,xPosition);
+%     x=   DV.x(yPosition,xPosition);
+%     %      x=   1;
+%     Exx=   DV.Exx(yPosition,xPosition);
+%     Eyy=   DV.Eyy(yPosition,xPosition);
+%     w=   DV.w(yPosition,xPosition);
+%     rotation=   DV.t(yPosition,xPosition);
 %     
-%    D_out= matProp.getDmatMatrixTopExxYyyRotVars(config,x,Exx, Eyy,rotation,w);
+%     D_out= matProp.getDmatMatrixTopExxYyyRotVars(config,x,Exx, Eyy,rotation,w);
 %     
 %     csvwrite(outname,D_out);
 %     
-%     targetMesoDensity(e) = matProp.CalculateDensityTargetforMeso(w,x,Exx,Eyy,config);
+%     %     targetMesoDensity(e) = matProp.CalculateDensityTargetforMeso(w,x,Exx,Eyy,config);
 % end
 % 
 % %write the target density

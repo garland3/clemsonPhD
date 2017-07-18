@@ -23,8 +23,8 @@ config = csvToStlConfig;
 
 config.binary = 1;
 
-config.targetXDimension = 200;
-config.targetYDimension = 200;
+config.targetXDimension = 220;
+config.targetYDimension = 110;
 config.targetZDimension = 20;
 
 config.xscale=config.targetXDimension/xsize;

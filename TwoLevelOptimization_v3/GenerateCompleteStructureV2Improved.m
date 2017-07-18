@@ -118,6 +118,7 @@ for e = 1:ne
     % Check if void
     if(macroElementProps.densitySIMP>config.voidMaterialDensityCutOff || config.multiscaleMethodCompare)
         x=GetMesoUnitCellDesignFromCSV(config,e);
+%         fprintf('density of element %f\n',sum(sum(x)));
         DVMeso.x = x;
         % -------------------------------------
         % No, post processing
@@ -162,29 +163,32 @@ end
 %if(config.multiscaleMethodCompare~=1)
 % set the max value to be 1
 %      completeStruct=    imgaussfilt(completeStruct,2 );
-completeStruct( completeStruct>1)=1;
 
-completeStruct(completeStruct>config.voidMaterialDensityCutOff)=1;
-completeStruct(completeStruct<config.voidMaterialDensityCutOff)=0;
-% p.PlotArrayGenericWithBlueWhiteColors( completeStruct, 'Before')
-
- [completeStruct , numChanged] = CheckForConerElements(completeStruct, totalX,totalY, config.voidMaterialDensityCutOff);
- completeStruct(completeStruct<config.voidMaterialDensityCutOff)=0;
-
- completeStruct(completeStruct>config.voidMaterialDensityCutOff)=1;
-completeStruct(completeStruct<config.voidMaterialDensityCutOff)=0;
- p.PlotArrayGenericWithBlueWhiteColors( completeStruct, 'After Corner Check')
- 
-totalSize = size(completeStruct)
-totalX
-totalY
- sumBefore = sum(sum(completeStruct));
- [completeStruct ] = CheckRemoveOrphanedSegments(completeStruct, totalX,totalY, config.voidMaterialDensityCutOff);
- sumAfter = sum(sum(completeStruct));
- 
-%   p.PlotArrayGenericWithBlueWhiteColors( completeStruct, 'After Isolated Element Check')
- 
- fprintf('Change in density after removing elements is %f\n',sumBefore-sumAfter);
+if(config.multiscaleMethodCompare~=1)
+    completeStruct( completeStruct>1)=1;
+    
+    completeStruct(completeStruct>config.voidMaterialDensityCutOff)=1;
+    completeStruct(completeStruct<config.voidMaterialDensityCutOff)=0;
+    % p.PlotArrayGenericWithBlueWhiteColors( completeStruct, 'Before')
+    
+    [completeStruct , numChanged] = CheckForConerElements(completeStruct, totalX,totalY, config.voidMaterialDensityCutOff);
+    completeStruct(completeStruct<config.voidMaterialDensityCutOff)=0;
+    
+    completeStruct(completeStruct>config.voidMaterialDensityCutOff)=1;
+    completeStruct(completeStruct<config.voidMaterialDensityCutOff)=0;
+    p.PlotArrayGenericWithBlueWhiteColors( completeStruct, 'After Corner Check')
+    
+%     totalSize = size(completeStruct)
+%     totalX
+%     totalY
+    sumBefore = sum(sum(completeStruct));
+     [completeStruct ] = CheckRemoveOrphanedSegments(completeStruct, totalX,totalY, config.voidMaterialDensityCutOff);
+    sumAfter = sum(sum(completeStruct));
+    
+    %   p.PlotArrayGenericWithBlueWhiteColors( completeStruct, 'After Isolated Element Check')
+    
+    fprintf('Change in density after removing elements is %f\n',sumBefore-sumAfter);
+end
 % %end
 density = sum(sum(completeStruct))/(totalX*totalY);
 outname = sprintf('./mode90/Density%i.csv',config.macro_meso_iteration);
@@ -197,7 +201,7 @@ p.PlotArrayGenericWithBlueWhiteColors( completeStruct, plotname)
 %     colorbar
 freezeColors
 nameGraph = sprintf('./completeStucture%f_macroIteration_%i.png', config.w1,config.macro_meso_iteration);
-print(nameGraph,'-dpng', '-r2000')
+print(nameGraph,'-dpng', '-r1200')
 if (config.generateCompleteStructureCSV==1)
     outname = sprintf('./completeStucture%f_macroIteration_%i.csv', config.w1,config.macro_meso_iteration);
     csvwrite(outname,completeStruct);

@@ -16,16 +16,16 @@ close all
  
 
 % Validation modes
-%         combinedTopologyOptimization('1', '1', '1','111', 'na');
-%           combinedTopologyOptimization('1', '1', '1','112', 'na');
+%          combinedTopologyOptimization('1', '1', '1','111', 'na');
+%            combinedTopologyOptimization('1', '1', '1','112', 'na');
 
 
-% Iteration 1 of topology, Exx, Eyy, rotation
-% combinedTopologyOptimization('1', '1', '1','60', 'na');
-% combinedTopologyOptimization('1', '1', '1','200', 'na');
-combinedTopologyOptimization('1', '1', '1','202', 'na'); % make complete structure
+% % Iteration 1 of topology, Exx, Eyy, rotation
+%   combinedTopologyOptimization('1', '1', '1','60', 'na');
+%  combinedTopologyOptimization('1', '1', '1','200', 'na');
+%     combinedTopologyOptimization('1', '1', '1','202', 'na'); % make complete structure
 % combinedTopologyOptimization('1', '1', '1','90', 'na');
-%   combinedTopologyOptimization('1', '1', '1','203', 'na'); % extact macro values
+%     combinedTopologyOptimization('1', '1', '1','203', 'na'); % extact macro values
 % combinedTopologyOptimization('1', '1', '1','201', 'na'); % Make a .stl file from the .csv file
 
 % % iteration 2
@@ -48,8 +48,12 @@ combinedTopologyOptimization('1', '1', '1','202', 'na'); % make complete structu
 
 % Comparing
 % Run just the topology case
-% combinedTopologyOptimization('1', '1', '1','1', 'na');
+%     combinedTopologyOptimization('1', '1', '1','1', 'na');
 % combinedTopologyOptimization('1', '1', '1','200', 'na');
+
+% Gradient isotropic material, Parts 1 and 2 of research
+   combinedTopologyOptimization('1', '1', '1','50', 'na');
+  combinedTopologyOptimization('1', '1', '1','200', 'na');
 
 
 % annTest(1);
@@ -63,12 +67,15 @@ totale=nelx*nely;
 % [idum,hostname]= system('hostname');
 % 
 % hostname
-% 
+% for i = 1:4
+%       combinedTopologyOptimization('1', '1', int2str(i),'203', 'na'); 
+% end
 % idum
-% % % % % for i = 1:totale
-%  for i =250 :400
-%      
-%       combinedTopologyOptimization('1', '1', '1','100', int2str(i)); % run the meso structure design to get the actual data
+% % % % % for i = 1:totale, 188
+listOfProblems=[364 758 838 839 918 997 998 1626];
+%   for i =listOfProblems 
+%       combinedTopologyOptimization('1', '1', '1','100', int2str(i)); %
+% %       run the meso structure design to get the actual data
 %  end
 
 if(1==0)

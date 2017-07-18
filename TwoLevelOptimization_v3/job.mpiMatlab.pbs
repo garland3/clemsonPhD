@@ -1,6 +1,6 @@
 #!/bin/bash
 #PBS -N mpi1
-#PBS -l select=64:ncpus=8:mpiprocs=4:mem=8gb:interconnect=10g,walltime=3:00:00  
+#PBS -l select=64:ncpus=8:mpiprocs=4:mem=8gb:interconnect=10g,walltime=3:00:00 
 #PBS -l place=scatter
 #PBS -j oe
 

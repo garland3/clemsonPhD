@@ -1,0 +1,861 @@
+rm: cannot remove ‘jobP*’: No such file or directory
+rm: cannot remove ‘jobweight*’: No such file or directory
+rm: cannot remove ‘*.stl’: No such file or directory
+dos2unix: converting file annOutput_LookUpTable.m to Unix format ...
+dos2unix: converting file annOutput_LookUpTable_Old.m to Unix format ...
+dos2unix: converting file annOutput_lookupTable_withFmincon.m to Unix format ...
+dos2unix: converting file annOutput_matUpdateV1.m to Unix format ...
+dos2unix: converting file annOutput_matUpdateV2.m to Unix format ...
+dos2unix: converting file annOutput_RandomMesoInitialLookUpTable.m to Unix format ...
+dos2unix: converting file annRhoOfExxEyyTheta.m to Unix format ...
+dos2unix: converting file annTest.m to Unix format ...
+dos2unix: converting file CheckForConerElements.m to Unix format ...
+dos2unix: converting file CheckRemoveOrphanedSegments.m to Unix format ...
+dos2unix: converting file combinedTopologyOptimization.m to Unix format ...
+dos2unix: converting file CompareAlgorithmsConvergence.m to Unix format ...
+dos2unix: converting file Configuration.m to Unix format ...
+dos2unix: converting file ConvertCSVToSTL.m to Unix format ...
+dos2unix: converting file ConvertCSVToSTL_old.m to Unix format ...
+dos2unix: converting file csvToStlConfig.m to Unix format ...
+dos2unix: converting file DesignVars.m to Unix format ...
+dos2unix: converting file elementK_heat.m to Unix format ...
+dos2unix: converting file elK_elastic.m to Unix format ...
+dos2unix: converting file elK_elastic_v2.m to Unix format ...
+dos2unix: converting file ErrorDataFit.m to Unix format ...
+dos2unix: converting file EvalutePseudoStrainAndDensityForFit.m to Unix format ...
+dos2unix: converting file FE_elasticV2.m to Unix format ...
+dos2unix: converting file FindAvergeChangeOfLastValue.m to Unix format ...
+dos2unix: converting file fitObjective.m to Unix format ...
+dos2unix: converting file fitObjectiveV2.m to Unix format ...
+dos2unix: converting file freezeColors.m to Unix format ...
+dos2unix: converting file GenerateCompleteStructureV2Improved.m to Unix format ...
+dos2unix: converting file GenerateDesignVarsForMesoProblem.m to Unix format ...
+dos2unix: converting file GenerateMesoValidationTargets.m to Unix format ...
+dos2unix: converting file GeneratePsuedoStrainsAndDensityTargets.m to Unix format ...
+dos2unix: converting file GenerateRhoFunctionOfExxEyy.m to Unix format ...
+dos2unix: converting file GetMacroElementPropertiesFromCSV.m to Unix format ...
+dos2unix: converting file GetMesoUnitCellDesignFromCSV.m to Unix format ...
+dos2unix: converting file Homgenization.m to Unix format ...
+dos2unix: converting file InterpolatePseudoStrainsAndDensity.m to Unix format ...
+dos2unix: converting file macroElementProp.m to Unix format ...
+dos2unix: converting file main.m to Unix format ...
+dos2unix: converting file MaterialProperties.m to Unix format ...
+dos2unix: converting file mesoAddAdjcentCellDataObject.m to Unix format ...
+dos2unix: converting file MesoDesignWrapper.m to Unix format ...
+dos2unix: converting file MesoStructureDesignV2.m to Unix format ...
+dos2unix: converting file ObjectiveCalculateEffectiveVars.m to Unix format ...
+dos2unix: converting file OC.m to Unix format ...
+dos2unix: converting file OC_meso.m to Unix format ...
+dos2unix: converting file Optimizer.m to Unix format ...
+dos2unix: converting file parfor_progress.m to Unix format ...
+dos2unix: converting file plotMode90Data.m to Unix format ...
+dos2unix: converting file plotResults.m to Unix format ...
+dos2unix: converting file plotSingleMatCompare.m to Unix format ...
+dos2unix: converting file plotStructGradFromCSVfile.m to Unix format ...
+dos2unix: converting file ResponseSurfaceTest.m to Unix format ...
+dos2unix: converting file SaveMacroProblemStateToCSV.m to Unix format ...
+dos2unix: converting file SaveMesoUnitCellDesignToCSV.m to Unix format ...
+dos2unix: converting file SaveSolidMesoDesignsToCSV.m to Unix format ...
+dos2unix: converting file ShowOptimizerProgress.m to Unix format ...
+dos2unix: converting file SingleMesoStuctureWrappe.m to Unix format ...
+dos2unix: converting file temperatureFEA_V3.m to Unix format ...
+dos2unix: converting file testCornercheck.m to Unix format ...
+dos2unix: converting file TestErrorFit.m to Unix format ...
+dos2unix: converting file TestForTermaination.m to Unix format ...
+dos2unix: converting file test.m to Unix format ...
+dos2unix: converting file TestMesoDesign.m to Unix format ...
+dos2unix: converting file TileMesoStructure.m to Unix format ...
+dos2unix: converting file TileMesoStructureV2.m to Unix format ...
+dos2unix: converting file unfreezeColors.m to Unix format ...
+dos2unix: converting file UseSubSystemDmatricesForMacroProblem.m to Unix format ...
+dos2unix: converting file VideoManager.m to Unix format ...
+dos2unix: converting file ./MPI_C_program/bankElementJobs.c to Unix format ...
+Finished compiling MPI program
+Finished compiling Matlab
+Master code running Macro Gradient Materail Optimization for Interation 1
+combinedTopologyOptimization , macroMeso =  1 , mode = 60, element =  1 , Processor node0507.palmetto.clemson.edu
+ FEA calls.:    1 Obj.: 120797.8613 Vol. 1:  0.097 Vol. 2:  0.703 Target E.: 50000 Current E.: 1.500000e+04 Avg Meso Density 2.424631e-01 topology
+ FEA calls.:    2 Obj.: 120797.8613 Vol. 1:  0.097 Vol. 2:  0.703 Target E.: 50000 Current E.: 1.500000e+04 Avg Meso Density 2.507306e-01 rotation
+
+ExxNew					[1,1   5,1      5,5],  10000.000000 ,10000.000000 10000.000000
+ExxSub					[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+Exx\t					[1,1   5,1      5,5],  15000.000000 ,15000.000000 15000.000000
+DiffXXNew 				[1,1   5,1      5,5],  10000.000000 ,10000.000000 10000.000000
+combinedTermsExx		[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+penaltyExx*10000		[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+lambdaExx				[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+dDensityExx				[1,1   5,1      5,5],  1.159303 ,1.159303 1.162555
+lambda1 and density		[  99999999.999909 ,0.168549
+ConsistConstraintMag and w2 		[  0.200000 ,0.000000
+
+ FEA calls.:    3 Obj.: 147946.5610 Vol. 1:  0.079 Vol. 2:  0.721 Target E.: 50000 Current E.: 1.224745e+04 Avg Meso Density 2.055810e-01 E_xx and E_yy 
+ FEA calls.:    3 Obj.: 147946.5610 Vol. 1:  0.079 Vol. 2:  0.721 Target E.: 50000 Current E.: 1.224745e+04 Avg Meso Density 2.055810e-01 Flipped theta 
+ FEA calls.:    4 Obj.: 144562.8550 Vol. 1:  0.080 Vol. 2:  0.720 Target E.: 50000 Current E.: 1.224745e+04 Avg Meso Density 2.098175e-01 topology
+ FEA calls.:    5 Obj.: 144562.8550 Vol. 1:  0.080 Vol. 2:  0.720 Target E.: 50000 Current E.: 1.224745e+04 Avg Meso Density 2.108151e-01 rotation
+
+ExxNew					[1,1   5,1      5,5],  13394.248540 ,7247.448714 7247.448714
+ExxSub					[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+Exx\t					[1,1   5,1      5,5],  12247.448714 ,12247.448714 12247.448714
+DiffXXNew 				[1,1   5,1      5,5],  13394.248540 ,7247.448714 7247.448714
+combinedTermsExx		[1,1   5,1      5,5],  1.093636 ,0.572185 0.454988
+penaltyExx*10000		[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+lambdaExx				[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+dDensityExx				[1,1   5,1      5,5],  0.949688 ,1.003399 1.104120
+lambda1 and density		[  0.008095 ,0.149046
+ConsistConstraintMag and w2 		[  0.161073 ,0.000000
+
+ FEA calls.:    6 Obj.: 174171.2093 Vol. 1:  0.065 Vol. 2:  0.735 Target E.: 50000 Current E.: 9.866066e+03 Avg Meso Density 1.756086e-01 E_xx and E_yy 
+ FEA calls.:    6 Obj.: 174171.2093 Vol. 1:  0.065 Vol. 2:  0.735 Target E.: 50000 Current E.: 9.866066e+03 Avg Meso Density 1.756086e-01 Flipped theta 
+ FEA calls.:    7 Obj.: 173089.3058 Vol. 1:  0.065 Vol. 2:  0.735 Target E.: 50000 Current E.: 9.866848e+03 Avg Meso Density 1.773957e-01 topology
+ FEA calls.:    8 Obj.: 173029.5014 Vol. 1:  0.065 Vol. 2:  0.735 Target E.: 50000 Current E.: 9.866848e+03 Avg Meso Density 1.781390e-01 rotation
+
+ExxNew					[1,1   5,1      5,5],  17019.187224 ,8068.587901 7524.590964
+ExxSub					[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+Exx\t					[1,1   5,1      5,5],  12808.019834 ,9421.398857 9421.398857
+DiffXXNew 				[1,1   5,1      5,5],  17019.187224 ,8068.587901 7524.590964
+combinedTermsExx		[1,1   5,1      5,5],  1.328791 ,0.856411 0.798670
+penaltyExx*10000		[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+lambdaExx				[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+dDensityExx				[1,1   5,1      5,5],  0.887305 ,0.938443 1.070294
+lambda1 and density		[  0.007913 ,0.150112
+ConsistConstraintMag and w2 		[  0.148972 ,0.000000
+
+ FEA calls.:    9 Obj.: 194316.3319 Vol. 1:  0.056 Vol. 2:  0.744 Target E.: 50000 Current E.: 8.454932e+03 Avg Meso Density 1.616184e-01 E_xx and E_yy 
+ FEA calls.:    9 Obj.: 194316.3319 Vol. 1:  0.056 Vol. 2:  0.744 Target E.: 50000 Current E.: 8.454932e+03 Avg Meso Density 1.616184e-01 Flipped theta 
+ FEA calls.:   10 Obj.: 192697.5592 Vol. 1:  0.056 Vol. 2:  0.744 Target E.: 50000 Current E.: 8.453806e+03 Avg Meso Density 1.611740e-01 topology
+ FEA calls.:   11 Obj.: 192442.2230 Vol. 1:  0.056 Vol. 2:  0.744 Target E.: 50000 Current E.: 8.453806e+03 Avg Meso Density 1.612931e-01 rotation
+
+ExxNew					[1,1   5,1      5,5],  19764.216455 ,6458.577142 7076.011818
+ExxSub					[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+Exx\t					[1,1   5,1      5,5],  14764.216455 ,8718.794918 8419.748970
+DiffXXNew 				[1,1   5,1      5,5],  19764.216455 ,6458.577142 7076.011818
+combinedTermsExx		[1,1   5,1      5,5],  1.840681 ,0.740765 0.840407
+penaltyExx*10000		[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+lambdaExx				[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+dDensityExx				[1,1   5,1      5,5],  0.830465 ,0.930023 1.100058
+lambda1 and density		[  0.008822 ,0.147730
+ConsistConstraintMag and w2 		[  0.146214 ,0.000000
+
+ FEA calls.:   12 Obj.: 203557.1011 Vol. 1:  0.052 Vol. 2:  0.748 Target E.: 50000 Current E.: 7.796432e+03 Avg Meso Density 1.533809e-01 E_xx and E_yy 
+ FEA calls.:   12 Obj.: 203557.1011 Vol. 1:  0.052 Vol. 2:  0.748 Target E.: 50000 Current E.: 7.796432e+03 Avg Meso Density 1.533809e-01 Flipped theta 
+ FEA calls.:   13 Obj.: 201139.1702 Vol. 1:  0.053 Vol. 2:  0.747 Target E.: 50000 Current E.: 7.812464e+03 Avg Meso Density 1.558416e-01 topology
+ FEA calls.:   14 Obj.: 200722.0967 Vol. 1:  0.053 Vol. 2:  0.747 Target E.: 50000 Current E.: 7.812464e+03 Avg Meso Density 1.557778e-01 rotation
+
+ExxNew					[1,1   5,1      5,5],  24187.365564 ,5895.468045 8270.252986
+ExxSub					[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+Exx\t					[1,1   5,1      5,5],  19187.365564 ,7504.066202 7718.694399
+DiffXXNew 				[1,1   5,1      5,5],  24187.365564 ,5895.468045 8270.252986
+combinedTermsExx		[1,1   5,1      5,5],  4.711548 ,0.785636 1.071457
+penaltyExx*10000		[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+lambdaExx				[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+dDensityExx				[1,1   5,1      5,5],  0.868664 ,0.903638 1.106612
+lambda1 and density		[  0.009368 ,0.150390
+ConsistConstraintMag and w2 		[  0.146179 ,0.000000
+
+ FEA calls.:   15 Obj.: 205325.5652 Vol. 1:  0.051 Vol. 2:  0.749 Target E.: 50000 Current E.: 7.526235e+03 Avg Meso Density 1.526313e-01 E_xx and E_yy 
+ FEA calls.:   15 Obj.: 205325.5652 Vol. 1:  0.051 Vol. 2:  0.749 Target E.: 50000 Current E.: 7.526235e+03 Avg Meso Density 1.526313e-01 Flipped theta 
+ FEA calls.:   16 Obj.: 201671.4807 Vol. 1:  0.051 Vol. 2:  0.749 Target E.: 50000 Current E.: 7.551808e+03 Avg Meso Density 1.566398e-01 topology
+ FEA calls.:   17 Obj.: 201095.0142 Vol. 1:  0.051 Vol. 2:  0.749 Target E.: 50000 Current E.: 7.551808e+03 Avg Meso Density 1.564141e-01 rotation
+
+ExxNew					[1,1   5,1      5,5],  26542.790559 ,4642.293649 9891.951830
+ExxSub					[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+Exx\t					[1,1   5,1      5,5],  21542.790559 ,6651.314344 7989.715602
+DiffXXNew 				[1,1   5,1      5,5],  26542.790559 ,4642.293649 9891.951830
+combinedTermsExx		[1,1   5,1      5,5],  3.973578 ,0.697951 1.238086
+penaltyExx*10000		[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+lambdaExx				[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+dDensityExx				[1,1   5,1      5,5],  0.871350 ,0.919275 1.133122
+lambda1 and density		[  0.010277 ,0.146262
+ConsistConstraintMag and w2 		[  0.137730 ,0.000000
+
+ FEA calls.:   18 Obj.: 208651.0138 Vol. 1:  0.049 Vol. 2:  0.751 Target E.: 50000 Current E.: 7.185633e+03 Avg Meso Density 1.508055e-01 E_xx and E_yy 
+ FEA calls.:   18 Obj.: 208651.0138 Vol. 1:  0.049 Vol. 2:  0.751 Target E.: 50000 Current E.: 7.185633e+03 Avg Meso Density 1.508055e-01 Flipped theta 
+ FEA calls.:   19 Obj.: 203374.7987 Vol. 1:  0.050 Vol. 2:  0.750 Target E.: 50000 Current E.: 7.218480e+03 Avg Meso Density 1.568643e-01 topology
+ FEA calls.:   20 Obj.: 202571.0433 Vol. 1:  0.050 Vol. 2:  0.750 Target E.: 50000 Current E.: 7.218480e+03 Avg Meso Density 1.565946e-01 rotation
+
+ExxNew					[1,1   5,1      5,5],  28912.460724 ,3725.385148 11708.190008
+ExxSub					[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+Exx\t					[1,1   5,1      5,5],  23912.460724 ,5556.739542 8890.100217
+DiffXXNew 				[1,1   5,1      5,5],  28912.460724 ,3725.385148 11708.190008
+combinedTermsExx		[1,1   5,1      5,5],  3.374566 ,0.670426 1.316992
+penaltyExx*10000		[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+lambdaExx				[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+dDensityExx				[1,1   5,1      5,5],  0.871625 ,0.933891 1.135412
+lambda1 and density		[  0.011005 ,0.149442
+ConsistConstraintMag and w2 		[  0.135058 ,0.000000
+
+ FEA calls.:   21 Obj.: 207752.5535 Vol. 1:  0.048 Vol. 2:  0.752 Target E.: 50000 Current E.: 6.956721e+03 Avg Meso Density 1.525270e-01 E_xx and E_yy 
+ FEA calls.:   21 Obj.: 207752.5535 Vol. 1:  0.048 Vol. 2:  0.752 Target E.: 50000 Current E.: 6.956721e+03 Avg Meso Density 1.525270e-01 Flipped theta 
+ FEA calls.:   22 Obj.: 200909.0159 Vol. 1:  0.050 Vol. 2:  0.750 Target E.: 50000 Current E.: 6.988638e+03 Avg Meso Density 1.597447e-01 topology
+ FEA calls.:   23 Obj.: 199948.2610 Vol. 1:  0.050 Vol. 2:  0.750 Target E.: 50000 Current E.: 6.988638e+03 Avg Meso Density 1.595762e-01 rotation
+
+ExxNew					[1,1   5,1      5,5],  31293.879164 ,3419.014173 12971.587423
+ExxSub					[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+Exx\t					[1,1   5,1      5,5],  26293.879164 ,4549.834608 10202.302805
+DiffXXNew 				[1,1   5,1      5,5],  31293.879164 ,3419.014173 12971.587423
+combinedTermsExx		[1,1   5,1      5,5],  2.910084 ,0.751459 1.271437
+penaltyExx*10000		[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+lambdaExx				[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+dDensityExx				[1,1   5,1      5,5],  0.867618 ,0.964396 1.131171
+lambda1 and density		[  0.011551 ,0.155095
+ConsistConstraintMag and w2 		[  0.133486 ,0.000000
+
+ FEA calls.:   24 Obj.: 202575.0414 Vol. 1:  0.048 Vol. 2:  0.752 Target E.: 50000 Current E.: 6.800401e+03 Avg Meso Density 1.567695e-01 E_xx and E_yy 
+ FEA calls.:   24 Obj.: 202575.0414 Vol. 1:  0.048 Vol. 2:  0.752 Target E.: 50000 Current E.: 6.800401e+03 Avg Meso Density 1.567695e-01 Flipped theta 
+ FEA calls.:   25 Obj.: 194673.7978 Vol. 1:  0.050 Vol. 2:  0.750 Target E.: 50000 Current E.: 6.827003e+03 Avg Meso Density 1.646443e-01 topology
+ FEA calls.:   26 Obj.: 193601.7096 Vol. 1:  0.050 Vol. 2:  0.750 Target E.: 50000 Current E.: 6.827003e+03 Avg Meso Density 1.642339e-01 rotation
+
+ExxNew					[1,1   5,1      5,5],  33685.143844 ,2363.734185 12004.540712
+ExxSub					[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+Exx\t					[1,1   5,1      5,5],  28685.143844 ,3944.103068 11503.915106
+DiffXXNew 				[1,1   5,1      5,5],  33685.143844 ,2363.734185 12004.540712
+combinedTermsExx		[1,1   5,1      5,5],  2.285959 ,0.599308 1.043518
+penaltyExx*10000		[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+lambdaExx				[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+dDensityExx				[1,1   5,1      5,5],  0.871214 ,1.033269 1.154589
+lambda1 and density		[  0.013006 ,0.150041
+ConsistConstraintMag and w2 		[  0.122952 ,0.000000
+
+ FEA calls.:   27 Obj.: 202420.5390 Vol. 1:  0.047 Vol. 2:  0.753 Target E.: 50000 Current E.: 6.456042e+03 Avg Meso Density 1.565342e-01 E_xx and E_yy 
+ FEA calls.:   27 Obj.: 202420.5390 Vol. 1:  0.047 Vol. 2:  0.753 Target E.: 50000 Current E.: 6.456042e+03 Avg Meso Density 1.565342e-01 Flipped theta 
+ FEA calls.:   28 Obj.: 195045.1426 Vol. 1:  0.048 Vol. 2:  0.752 Target E.: 50000 Current E.: 6.468219e+03 Avg Meso Density 1.633881e-01 topology
+ FEA calls.:   29 Obj.: 193917.7866 Vol. 1:  0.048 Vol. 2:  0.752 Target E.: 50000 Current E.: 6.468219e+03 Avg Meso Density 1.628069e-01 rotation
+
+ExxNew					[1,1   5,1      5,5],  36084.774353 ,1878.175048 11135.285192
+ExxSub					[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+Exx\t					[1,1   5,1      5,5],  31084.774353 ,3053.327898 11751.562332
+DiffXXNew 				[1,1   5,1      5,5],  36084.774353 ,1878.175048 11135.285192
+combinedTermsExx		[1,1   5,1      5,5],  1.860317 ,0.615124 0.947558
+penaltyExx*10000		[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+lambdaExx				[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+dDensityExx				[1,1   5,1      5,5],  0.870798 ,1.076979 1.166511
+lambda1 and density		[  0.014461 ,0.150624
+ConsistConstraintMag and w2 		[  0.118420 ,0.000000
+
+ FEA calls.:   30 Obj.: 201396.3346 Vol. 1:  0.046 Vol. 2:  0.754 Target E.: 50000 Current E.: 6.173272e+03 Avg Meso Density 1.562921e-01 E_xx and E_yy 
+ FEA calls.:   30 Obj.: 201396.3346 Vol. 1:  0.046 Vol. 2:  0.754 Target E.: 50000 Current E.: 6.173272e+03 Avg Meso Density 1.562921e-01 Flipped theta 
+ FEA calls.:   31 Obj.: 195900.6578 Vol. 1:  0.047 Vol. 2:  0.753 Target E.: 50000 Current E.: 6.175774e+03 Avg Meso Density 1.610656e-01 topology
+ FEA calls.:   32 Obj.: 194804.5738 Vol. 1:  0.047 Vol. 2:  0.753 Target E.: 50000 Current E.: 6.175774e+03 Avg Meso Density 1.603651e-01 rotation
+
+ExxNew					[1,1   5,1      5,5],  38491.596981 ,1582.524656 10003.466582
+ExxSub					[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+Exx\t					[1,1   5,1      5,5],  33491.596981 ,2394.720082 11439.274366
+DiffXXNew 				[1,1   5,1      5,5],  38491.596981 ,1582.524656 10003.466582
+combinedTermsExx		[1,1   5,1      5,5],  1.557967 ,0.660839 0.874484
+penaltyExx*10000		[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+lambdaExx				[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+dDensityExx				[1,1   5,1      5,5],  0.872601 ,1.108185 1.181198
+lambda1 and density		[  0.016098 ,0.150007
+ConsistConstraintMag and w2 		[  0.114521 ,0.000000
+
+ FEA calls.:   33 Obj.: 201610.8834 Vol. 1:  0.045 Vol. 2:  0.755 Target E.: 50000 Current E.: 5.935361e+03 Avg Meso Density 1.548688e-01 E_xx and E_yy 
+ FEA calls.:   33 Obj.: 201610.8834 Vol. 1:  0.045 Vol. 2:  0.755 Target E.: 50000 Current E.: 5.935361e+03 Avg Meso Density 1.548688e-01 Flipped theta 
+ FEA calls.:   34 Obj.: 197839.1654 Vol. 1:  0.045 Vol. 2:  0.755 Target E.: 50000 Current E.: 5.935740e+03 Avg Meso Density 1.579788e-01 topology
+ FEA calls.:   35 Obj.: 196820.7470 Vol. 1:  0.045 Vol. 2:  0.755 Target E.: 50000 Current E.: 5.935740e+03 Avg Meso Density 1.573048e-01 rotation
+
+ExxNew					[1,1   5,1      5,5],  40904.666176 ,1428.431460 9122.002392
+ExxSub					[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+Exx\t					[1,1   5,1      5,5],  35904.666176 ,1946.716100 10697.308018
+DiffXXNew 				[1,1   5,1      5,5],  40904.666176 ,1428.431460 9122.002392
+combinedTermsExx		[1,1   5,1      5,5],  1.351493 ,0.733765 0.852738
+penaltyExx*10000		[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+lambdaExx				[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+dDensityExx				[1,1   5,1      5,5],  0.878595 ,1.121758 1.186000
+lambda1 and density		[  0.017553 ,0.149618
+ConsistConstraintMag and w2 		[  0.112017 ,0.000000
+
+ FEA calls.:   36 Obj.: 202344.0086 Vol. 1:  0.044 Vol. 2:  0.756 Target E.: 50000 Current E.: 5.756720e+03 Avg Meso Density 1.532209e-01 E_xx and E_yy 
+ FEA calls.:   36 Obj.: 202344.0086 Vol. 1:  0.044 Vol. 2:  0.756 Target E.: 50000 Current E.: 5.756720e+03 Avg Meso Density 1.532209e-01 Flipped theta 
+ FEA calls.:   37 Obj.: 199646.7381 Vol. 1:  0.044 Vol. 2:  0.756 Target E.: 50000 Current E.: 5.756759e+03 Avg Meso Density 1.553728e-01 topology
+ FEA calls.:   38 Obj.: 198732.9660 Vol. 1:  0.044 Vol. 2:  0.756 Target E.: 50000 Current E.: 5.756759e+03 Avg Meso Density 1.547547e-01 rotation
+
+ExxNew					[1,1   5,1      5,5],  43323.209470 ,1545.841764 8568.211331
+ExxSub					[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+Exx\t					[1,1   5,1      5,5],  38323.209470 ,1667.558251 9878.302958
+DiffXXNew 				[1,1   5,1      5,5],  43323.209470 ,1545.841764 8568.211331
+combinedTermsExx		[1,1   5,1      5,5],  1.267503 ,0.927009 0.867377
+penaltyExx*10000		[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+lambdaExx				[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+dDensityExx				[1,1   5,1      5,5],  0.871555 ,1.130346 1.183254
+lambda1 and density		[  0.018463 ,0.150103
+ConsistConstraintMag and w2 		[  0.111020 ,0.000000
+
+ FEA calls.:   39 Obj.: 202201.0154 Vol. 1:  0.043 Vol. 2:  0.757 Target E.: 50000 Current E.: 5.647042e+03 Avg Meso Density 1.522875e-01 E_xx and E_yy 
+ FEA calls.:   39 Obj.: 202201.0154 Vol. 1:  0.043 Vol. 2:  0.757 Target E.: 50000 Current E.: 5.647042e+03 Avg Meso Density 1.522875e-01 Flipped theta 
+ FEA calls.:   40 Obj.: 200279.6358 Vol. 1:  0.044 Vol. 2:  0.756 Target E.: 50000 Current E.: 5.647032e+03 Avg Meso Density 1.538459e-01 topology
+ FEA calls.:   41 Obj.: 199503.4991 Vol. 1:  0.044 Vol. 2:  0.756 Target E.: 50000 Current E.: 5.647032e+03 Avg Meso Density 1.533450e-01 rotation
+
+ExxNew					[1,1   5,1      5,5],  45746.587973 ,12069.040071 8083.576119
+ExxSub					[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+Exx\t					[1,1   5,1      5,5],  40746.587973 ,12561.123542 9199.966703
+DiffXXNew 				[1,1   5,1      5,5],  45746.587973 ,12069.040071 8083.576119
+combinedTermsExx		[1,1   5,1      5,5],  1.182816 ,0.960825 0.868758
+penaltyExx*10000		[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+lambdaExx				[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+dDensityExx				[1,1   5,1      5,5],  0.871696 ,1.136829 1.185442
+lambda1 and density		[  0.019190 ,0.150204
+ConsistConstraintMag and w2 		[  0.110105 ,0.000000
+
+ FEA calls.:   42 Obj.: 201916.2637 Vol. 1:  0.043 Vol. 2:  0.757 Target E.: 50000 Current E.: 5.571549e+03 Avg Meso Density 1.516794e-01 E_xx and E_yy 
+ FEA calls.:   42 Obj.: 201916.2637 Vol. 1:  0.043 Vol. 2:  0.757 Target E.: 50000 Current E.: 5.571549e+03 Avg Meso Density 1.516794e-01 Flipped theta 
+ FEA calls.:   43 Obj.: 200555.0026 Vol. 1:  0.043 Vol. 2:  0.757 Target E.: 50000 Current E.: 5.571537e+03 Avg Meso Density 1.528019e-01 topology
+ FEA calls.:   44 Obj.: 199928.3094 Vol. 1:  0.043 Vol. 2:  0.757 Target E.: 50000 Current E.: 5.571537e+03 Avg Meso Density 1.524438e-01 rotation
+
+ExxNew					[1,1   5,1      5,5],  45693.622297 ,11133.322054 7855.270607
+ExxSub					[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+Exx\t					[1,1   5,1      5,5],  43174.267467 ,12312.623740 8623.724899
+DiffXXNew 				[1,1   5,1      5,5],  45693.622297 ,11133.322054 7855.270607
+combinedTermsExx		[1,1   5,1      5,5],  1.058353 ,0.904220 0.840642
+penaltyExx*10000		[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+lambdaExx				[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+dDensityExx				[1,1   5,1      5,5],  0.896516 ,1.153885 1.192408
+lambda1 and density		[  0.020464 ,0.149130
+ConsistConstraintMag and w2 		[  0.108485 ,0.000000
+
+ FEA calls.:   45 Obj.: 202669.2575 Vol. 1:  0.043 Vol. 2:  0.757 Target E.: 50000 Current E.: 5.493265e+03 Avg Meso Density 1.506957e-01 E_xx and E_yy 
+ FEA calls.:   45 Obj.: 202669.2575 Vol. 1:  0.043 Vol. 2:  0.757 Target E.: 50000 Current E.: 5.493265e+03 Avg Meso Density 1.506957e-01 Flipped theta 
+ FEA calls.:   46 Obj.: 201658.4734 Vol. 1:  0.043 Vol. 2:  0.757 Target E.: 50000 Current E.: 5.493257e+03 Avg Meso Density 1.515168e-01 topology
+ FEA calls.:   47 Obj.: 201129.3588 Vol. 1:  0.043 Vol. 2:  0.757 Target E.: 50000 Current E.: 5.493257e+03 Avg Meso Density 1.512532e-01 rotation
+
+ExxNew					[1,1   5,1      5,5],  49416.085719 ,11468.940188 7681.779301
+ExxSub					[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+Exx\t					[1,1   5,1      5,5],  44416.085719 ,11708.134156 8230.534170
+DiffXXNew 				[1,1   5,1      5,5],  49416.085719 ,11468.940188 7681.779301
+combinedTermsExx		[1,1   5,1      5,5],  1.119902 ,0.979570 0.885078
+penaltyExx*10000		[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+lambdaExx				[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+dDensityExx				[1,1   5,1      5,5],  0.875618 ,1.146136 1.189811
+lambda1 and density		[  0.020464 ,0.150054
+ConsistConstraintMag and w2 		[  0.108760 ,0.000000
+
+ FEA calls.:   48 Obj.: 201992.8017 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.462874e+03 Avg Meso Density 1.505952e-01 E_xx and E_yy 
+ FEA calls.:   48 Obj.: 201992.8017 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.462874e+03 Avg Meso Density 1.505952e-01 Flipped theta 
+ FEA calls.:   49 Obj.: 201252.2654 Vol. 1:  0.043 Vol. 2:  0.757 Target E.: 50000 Current E.: 5.462873e+03 Avg Meso Density 1.512385e-01 topology
+ FEA calls.:   50 Obj.: 200717.8083 Vol. 1:  0.043 Vol. 2:  0.757 Target E.: 50000 Current E.: 5.462873e+03 Avg Meso Density 1.510788e-01 rotation
+
+ExxNew					[1,1   5,1      5,5],  50656.820771 ,11457.748035 7739.166696
+ExxSub					[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+Exx\t					[1,1   5,1      5,5],  46849.430084 ,11587.920019 7951.424213
+DiffXXNew 				[1,1   5,1      5,5],  50656.820771 ,11457.748035 7739.166696
+combinedTermsExx		[1,1   5,1      5,5],  1.081269 ,0.988767 0.881826
+penaltyExx*10000		[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+lambdaExx				[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+dDensityExx				[1,1   5,1      5,5],  0.874819 ,1.145335 1.191729
+lambda1 and density		[  0.020827 ,0.150007
+ConsistConstraintMag and w2 		[  0.108236 ,0.000000
+
+ FEA calls.:   51 Obj.: 201579.6876 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.434857e+03 Avg Meso Density 1.504912e-01 E_xx and E_yy 
+ FEA calls.:   51 Obj.: 201579.6876 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.434857e+03 Avg Meso Density 1.504912e-01 Flipped theta 
+ FEA calls.:   52 Obj.: 200932.6419 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.434855e+03 Avg Meso Density 1.509977e-01 topology
+ FEA calls.:   53 Obj.: 200458.0868 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.434855e+03 Avg Meso Density 1.509027e-01 rotation
+
+ExxNew					[1,1   5,1      5,5],  51640.737127 ,11491.535934 7774.649146
+ExxSub					[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+Exx\t					[1,1   5,1      5,5],  48715.943827 ,11522.650209 7844.577583
+DiffXXNew 				[1,1   5,1      5,5],  51640.737127 ,11491.535934 7774.649146
+combinedTermsExx		[1,1   5,1      5,5],  1.060038 ,0.997300 0.874987
+penaltyExx*10000		[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+lambdaExx				[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+dDensityExx				[1,1   5,1      5,5],  0.875708 ,1.144971 1.194757
+lambda1 and density		[  0.021191 ,0.149929
+ConsistConstraintMag and w2 		[  0.107764 ,0.000000
+
+ FEA calls.:   54 Obj.: 201341.0811 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.409490e+03 Avg Meso Density 1.503731e-01 E_xx and E_yy 
+ FEA calls.:   54 Obj.: 201341.0811 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.409490e+03 Avg Meso Density 1.503731e-01 Flipped theta 
+ FEA calls.:   55 Obj.: 200746.0921 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.409488e+03 Avg Meso Density 1.507730e-01 topology
+ FEA calls.:   56 Obj.: 200265.9710 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.409488e+03 Avg Meso Density 1.507245e-01 rotation
+
+ExxNew					[1,1   5,1      5,5],  50640.332677 ,11288.902564 7804.780796
+ExxSub					[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+Exx\t					[1,1   5,1      5,5],  50157.025920 ,11507.082555 7809.535095
+DiffXXNew 				[1,1   5,1      5,5],  50640.332677 ,11288.902564 7804.780796
+combinedTermsExx		[1,1   5,1      5,5],  1.009636 ,0.981040 0.855451
+penaltyExx*10000		[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+lambdaExx				[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+dDensityExx				[1,1   5,1      5,5],  0.890048 ,1.149558 1.199990
+lambda1 and density		[  0.021919 ,0.149343
+ConsistConstraintMag and w2 		[  0.106917 ,0.000000
+
+ FEA calls.:   57 Obj.: 201640.0934 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.375622e+03 Avg Meso Density 1.499915e-01 E_xx and E_yy 
+ FEA calls.:   57 Obj.: 201640.0934 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.375622e+03 Avg Meso Density 1.499915e-01 Flipped theta 
+ FEA calls.:   58 Obj.: 201113.4963 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.375620e+03 Avg Meso Density 1.503158e-01 topology
+ FEA calls.:   59 Obj.: 200669.8467 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.375620e+03 Avg Meso Density 1.502857e-01 rotation
+
+ExxNew					[1,1   5,1      5,5],  51828.667784 ,11550.578920 7770.680449
+ExxSub					[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+Exx\t					[1,1   5,1      5,5],  50398.099951 ,11397.470498 7807.157584
+DiffXXNew 				[1,1   5,1      5,5],  51828.667784 ,11550.578920 7770.680449
+combinedTermsExx		[1,1   5,1      5,5],  1.028385 ,1.013434 0.884578
+penaltyExx*10000		[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+lambdaExx				[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+dDensityExx				[1,1   5,1      5,5],  0.887650 ,1.145526 1.200757
+lambda1 and density		[  0.021919 ,0.149637
+ConsistConstraintMag and w2 		[  0.106893 ,0.000000
+
+ FEA calls.:   60 Obj.: 201334.2550 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.358544e+03 Avg Meso Density 1.499264e-01 E_xx and E_yy 
+ FEA calls.:   60 Obj.: 201334.2550 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.358544e+03 Avg Meso Density 1.499264e-01 Flipped theta 
+ FEA calls.:   61 Obj.: 200890.4798 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.358542e+03 Avg Meso Density 1.502207e-01 topology
+ FEA calls.:   62 Obj.: 200470.0608 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.358542e+03 Avg Meso Density 1.501652e-01 rotation
+
+ExxNew					[1,1   5,1      5,5],  53760.317788 ,11637.695626 7794.572325
+ExxSub					[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+Exx\t					[1,1   5,1      5,5],  51108.378758 ,11473.769323 7788.897662
+DiffXXNew 				[1,1   5,1      5,5],  53760.317788 ,11637.695626 7794.572325
+combinedTermsExx		[1,1   5,1      5,5],  1.051889 ,1.014287 0.896084
+penaltyExx*10000		[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+lambdaExx				[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+dDensityExx				[1,1   5,1      5,5],  0.879389 ,1.143674 1.202214
+lambda1 and density		[  0.021919 ,0.149799
+ConsistConstraintMag and w2 		[  0.106836 ,0.000000
+
+ FEA calls.:   63 Obj.: 200851.4382 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.348914e+03 Avg Meso Density 1.499547e-01 E_xx and E_yy 
+ FEA calls.:   63 Obj.: 200851.4382 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.348914e+03 Avg Meso Density 1.499547e-01 Flipped theta 
+ FEA calls.:   64 Obj.: 200444.9743 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.348912e+03 Avg Meso Density 1.502082e-01 topology
+ FEA calls.:   65 Obj.: 200061.4115 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.348912e+03 Avg Meso Density 1.501678e-01 rotation
+
+ExxNew					[1,1   5,1      5,5],  55107.655958 ,11651.248241 7834.276695
+ExxSub					[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+Exx\t					[1,1   5,1      5,5],  52417.579911 ,11555.441794 7791.734477
+DiffXXNew 				[1,1   5,1      5,5],  55107.655958 ,11651.248241 7834.276695
+combinedTermsExx		[1,1   5,1      5,5],  1.051320 ,1.008291 0.906883
+penaltyExx*10000		[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+lambdaExx				[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+dDensityExx				[1,1   5,1      5,5],  0.874851 ,1.142941 1.203394
+lambda1 and density		[  0.021919 ,0.149899
+ConsistConstraintMag and w2 		[  0.106727 ,0.000000
+
+ FEA calls.:   66 Obj.: 200365.1559 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.341447e+03 Avg Meso Density 1.500068e-01 E_xx and E_yy 
+ FEA calls.:   66 Obj.: 200365.1559 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.341447e+03 Avg Meso Density 1.500068e-01 Flipped theta 
+ FEA calls.:   67 Obj.: 200026.1470 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.341446e+03 Avg Meso Density 1.502129e-01 topology
+ FEA calls.:   68 Obj.: 199622.8275 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.341446e+03 Avg Meso Density 1.502580e-01 rotation
+
+ExxNew					[1,1   5,1      5,5],  56532.446558 ,11692.979137 7912.400894
+ExxSub					[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+Exx\t					[1,1   5,1      5,5],  53745.790160 ,11603.246135 7812.976630
+DiffXXNew 				[1,1   5,1      5,5],  56532.446558 ,11692.979137 7912.400894
+combinedTermsExx		[1,1   5,1      5,5],  1.051849 ,1.007733 0.906066
+penaltyExx*10000		[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+lambdaExx				[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+dDensityExx				[1,1   5,1      5,5],  0.865657 ,1.141448 1.204286
+lambda1 and density		[  0.022101 ,0.149993
+ConsistConstraintMag and w2 		[  0.106572 ,0.000000
+
+ FEA calls.:   69 Obj.: 199909.1229 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.333846e+03 Avg Meso Density 1.500975e-01 E_xx and E_yy 
+ FEA calls.:   69 Obj.: 199909.1229 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.333846e+03 Avg Meso Density 1.500975e-01 Flipped theta 
+ FEA calls.:   70 Obj.: 199613.2760 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.333846e+03 Avg Meso Density 1.502824e-01 topology
+ FEA calls.:   71 Obj.: 199284.2029 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.333846e+03 Avg Meso Density 1.503751e-01 rotation
+
+ExxNew					[1,1   5,1      5,5],  56358.434922 ,11646.529146 8009.282526
+ExxSub					[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+Exx\t					[1,1   5,1      5,5],  55121.511317 ,11648.026227 7862.531607
+DiffXXNew 				[1,1   5,1      5,5],  56358.434922 ,11646.529146 8009.282526
+combinedTermsExx		[1,1   5,1      5,5],  1.022440 ,0.999871 0.902993
+penaltyExx*10000		[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+lambdaExx				[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+dDensityExx				[1,1   5,1      5,5],  0.870592 ,1.143115 1.206666
+lambda1 and density		[  0.022283 ,0.149955
+ConsistConstraintMag and w2 		[  0.106284 ,0.000000
+
+ FEA calls.:   72 Obj.: 199755.2932 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.322893e+03 Avg Meso Density 1.501382e-01 E_xx and E_yy 
+ FEA calls.:   72 Obj.: 199755.2932 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.322893e+03 Avg Meso Density 1.501382e-01 Flipped theta 
+ FEA calls.:   73 Obj.: 199489.8736 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.322891e+03 Avg Meso Density 1.503059e-01 topology
+ FEA calls.:   74 Obj.: 199129.9915 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.322891e+03 Avg Meso Density 1.503664e-01 rotation
+
+ExxNew					[1,1   5,1      5,5],  55557.478296 ,11571.573370 8171.178177
+ExxSub					[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+Exx\t					[1,1   5,1      5,5],  55736.541949 ,11647.277663 7935.567844
+DiffXXNew 				[1,1   5,1      5,5],  55557.478296 ,11571.573370 8171.178177
+combinedTermsExx		[1,1   5,1      5,5],  0.996787 ,0.993500 0.896959
+penaltyExx*10000		[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+lambdaExx				[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+dDensityExx				[1,1   5,1      5,5],  0.879505 ,1.146212 1.209113
+lambda1 and density		[  0.022646 ,0.149828
+ConsistConstraintMag and w2 		[  0.105962 ,0.000000
+
+ FEA calls.:   75 Obj.: 199733.6589 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.309409e+03 Avg Meso Density 1.500722e-01 E_xx and E_yy 
+ FEA calls.:   75 Obj.: 199733.6589 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.309409e+03 Avg Meso Density 1.500722e-01 Flipped theta 
+ FEA calls.:   76 Obj.: 199506.5849 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.309406e+03 Avg Meso Density 1.502418e-01 topology
+ FEA calls.:   77 Obj.: 199172.0992 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.309406e+03 Avg Meso Density 1.502654e-01 rotation
+
+ExxNew					[1,1   5,1      5,5],  56164.074574 ,12557.230851 8391.747344
+ExxSub					[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+Exx\t					[1,1   5,1      5,5],  55646.938097 ,11609.363808 8052.511335
+DiffXXNew 				[1,1   5,1      5,5],  56164.074574 ,12557.230851 8391.747344
+combinedTermsExx		[1,1   5,1      5,5],  1.009293 ,1.081647 0.905779
+penaltyExx*10000		[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+lambdaExx				[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+dDensityExx				[1,1   5,1      5,5],  0.874735 ,1.138522 1.208446
+lambda1 and density		[  0.022828 ,0.149963
+ConsistConstraintMag and w2 		[  0.105904 ,0.000000
+
+ FEA calls.:   78 Obj.: 199532.4402 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.301204e+03 Avg Meso Density 1.500889e-01 E_xx and E_yy 
+ FEA calls.:   78 Obj.: 199532.4402 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.301204e+03 Avg Meso Density 1.500889e-01 Flipped theta 
+ FEA calls.:   79 Obj.: 199356.0981 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.301202e+03 Avg Meso Density 1.502279e-01 topology
+ FEA calls.:   80 Obj.: 199044.6085 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.301202e+03 Avg Meso Density 1.501513e-01 rotation
+
+ExxNew					[1,1   5,1      5,5],  56841.825016 ,12415.785079 8514.468104
+ExxSub					[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+Exx\t					[1,1   5,1      5,5],  55904.908381 ,12073.999394 8220.379590
+DiffXXNew 				[1,1   5,1      5,5],  56841.825016 ,12415.785079 8514.468104
+combinedTermsExx		[1,1   5,1      5,5],  1.016759 ,1.028308 0.889716
+penaltyExx*10000		[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+lambdaExx				[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+dDensityExx				[1,1   5,1      5,5],  0.873575 ,1.141412 1.210493
+lambda1 and density		[  0.023010 ,0.149858
+ConsistConstraintMag and w2 		[  0.105759 ,0.000000
+
+ FEA calls.:   81 Obj.: 199404.5581 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.293666e+03 Avg Meso Density 1.499806e-01 E_xx and E_yy 
+ FEA calls.:   81 Obj.: 199404.5581 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.293666e+03 Avg Meso Density 1.499806e-01 Flipped theta 
+ FEA calls.:   82 Obj.: 199266.6948 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.293665e+03 Avg Meso Density 1.500961e-01 topology
+ FEA calls.:   83 Obj.: 198965.9453 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.293665e+03 Avg Meso Density 1.499560e-01 rotation
+
+ExxNew					[1,1   5,1      5,5],  59095.864018 ,12886.859684 8630.519669
+ExxSub					[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+Exx\t					[1,1   5,1      5,5],  56371.420239 ,12243.699667 8366.131712
+DiffXXNew 				[1,1   5,1      5,5],  59095.864018 ,12886.859684 8630.519669
+combinedTermsExx		[1,1   5,1      5,5],  1.048330 ,1.052530 0.909042
+penaltyExx*10000		[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+lambdaExx				[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+dDensityExx				[1,1   5,1      5,5],  0.858890 ,1.132586 1.209756
+lambda1 and density		[  0.022828 ,0.150001
+ConsistConstraintMag and w2 		[  0.105946 ,0.000000
+
+ FEA calls.:   84 Obj.: 198928.3705 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.294597e+03 Avg Meso Density 1.499585e-01 E_xx and E_yy 
+ FEA calls.:   84 Obj.: 198928.3705 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.294597e+03 Avg Meso Density 1.499585e-01 Flipped theta 
+ FEA calls.:   85 Obj.: 198798.2538 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.294596e+03 Avg Meso Density 1.500618e-01 topology
+ FEA calls.:   86 Obj.: 198545.3872 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.294596e+03 Avg Meso Density 1.499511e-01 rotation
+
+ExxNew					[1,1   5,1      5,5],  59192.172215 ,12766.109141 8747.882223
+ExxSub					[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+Exx\t					[1,1   5,1      5,5],  57717.569118 ,12561.163943 8497.297470
+DiffXXNew 				[1,1   5,1      5,5],  59192.172215 ,12766.109141 8747.882223
+combinedTermsExx		[1,1   5,1      5,5],  1.025549 ,1.016316 0.896514
+penaltyExx*10000		[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+lambdaExx				[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+dDensityExx				[1,1   5,1      5,5],  0.859177 ,1.136262 1.212383
+lambda1 and density		[  0.023010 ,0.149824
+ConsistConstraintMag and w2 		[  0.105784 ,0.000000
+
+ FEA calls.:   87 Obj.: 198713.2620 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.291075e+03 Avg Meso Density 1.498652e-01 E_xx and E_yy 
+ FEA calls.:   87 Obj.: 198713.2620 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.291075e+03 Avg Meso Density 1.498652e-01 Flipped theta 
+ FEA calls.:   88 Obj.: 198596.9992 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.291074e+03 Avg Meso Density 1.499646e-01 topology
+ FEA calls.:   89 Obj.: 198383.6893 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.291074e+03 Avg Meso Density 1.498354e-01 rotation
+
+ExxNew					[1,1   5,1      5,5],  61462.890435 ,13022.832074 8843.786199
+ExxSub					[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+Exx\t					[1,1   5,1      5,5],  58450.220625 ,12663.221938 8621.679505
+DiffXXNew 				[1,1   5,1      5,5],  61462.890435 ,13022.832074 8843.786199
+combinedTermsExx		[1,1   5,1      5,5],  1.051542 ,1.028398 0.920578
+penaltyExx*10000		[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+lambdaExx				[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+dDensityExx				[1,1   5,1      5,5],  0.847914 ,1.132634 1.212225
+lambda1 and density		[  0.022646 ,0.150065
+ConsistConstraintMag and w2 		[  0.106047 ,0.000000
+
+ FEA calls.:   90 Obj.: 198143.9448 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.295844e+03 Avg Meso Density 1.499253e-01 E_xx and E_yy 
+ FEA calls.:   90 Obj.: 198143.9448 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.295844e+03 Avg Meso Density 1.499253e-01 Flipped theta 
+ FEA calls.:   91 Obj.: 198039.5896 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.295843e+03 Avg Meso Density 1.500132e-01 topology
+ FEA calls.:   92 Obj.: 197851.5389 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.295843e+03 Avg Meso Density 1.499176e-01 rotation
+
+ExxNew					[1,1   5,1      5,5],  61223.582586 ,13319.878968 8941.792639
+ExxSub					[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+Exx\t					[1,1   5,1      5,5],  59937.630134 ,12841.768290 8732.026696
+DiffXXNew 				[1,1   5,1      5,5],  61223.582586 ,13319.878968 8941.792639
+combinedTermsExx		[1,1   5,1      5,5],  1.021455 ,1.037231 0.913136
+penaltyExx*10000		[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+lambdaExx				[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+dDensityExx				[1,1   5,1      5,5],  0.848520 ,1.128268 1.213187
+lambda1 and density		[  0.022646 ,0.150069
+ConsistConstraintMag and w2 		[  0.106009 ,0.000000
+
+ FEA calls.:   93 Obj.: 197780.2182 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.297197e+03 Avg Meso Density 1.499718e-01 E_xx and E_yy 
+ FEA calls.:   93 Obj.: 197780.2182 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.297197e+03 Avg Meso Density 1.499718e-01 Flipped theta 
+ FEA calls.:   94 Obj.: 197675.2311 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.297196e+03 Avg Meso Density 1.500515e-01 topology
+ FEA calls.:   95 Obj.: 197466.8830 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.297196e+03 Avg Meso Density 1.500164e-01 rotation
+
+ExxNew					[1,1   5,1      5,5],  62147.659704 ,13212.032059 9005.447471
+ExxSub					[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+Exx\t					[1,1   5,1      5,5],  60577.194129 ,13078.639048 8836.287231
+DiffXXNew 				[1,1   5,1      5,5],  62147.659704 ,13212.032059 9005.447471
+combinedTermsExx		[1,1   5,1      5,5],  1.025925 ,1.010199 0.913358
+penaltyExx*10000		[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+lambdaExx				[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+dDensityExx				[1,1   5,1      5,5],  0.847438 ,1.130375 1.214218
+lambda1 and density		[  0.022646 ,0.149971
+ConsistConstraintMag and w2 		[  0.105908 ,0.000000
+
+ FEA calls.:   96 Obj.: 197529.6980 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.295486e+03 Avg Meso Density 1.499748e-01 E_xx and E_yy 
+ FEA calls.:   96 Obj.: 197529.6980 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.295486e+03 Avg Meso Density 1.499748e-01 Flipped theta 
+ FEA calls.:   97 Obj.: 197431.8557 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.295486e+03 Avg Meso Density 1.500462e-01 topology
+ FEA calls.:   98 Obj.: 197296.8153 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.295486e+03 Avg Meso Density 1.500173e-01 rotation
+
+ExxNew					[1,1   5,1      5,5],  63422.003546 ,13302.694228 9064.534581
+ExxSub					[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+Exx\t					[1,1   5,1      5,5],  61357.402540 ,13145.166351 8920.466383
+DiffXXNew 				[1,1   5,1      5,5],  63422.003546 ,13302.694228 9064.534581
+combinedTermsExx		[1,1   5,1      5,5],  1.033649 ,1.011984 0.900350
+penaltyExx*10000		[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+lambdaExx				[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+dDensityExx				[1,1   5,1      5,5],  0.840162 ,1.128198 1.215761
+lambda1 and density		[  0.023010 ,0.149821
+ConsistConstraintMag and w2 		[  0.105753 ,0.000000
+
+ FEA calls.:   99 Obj.: 197550.1592 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.290789e+03 Avg Meso Density 1.499013e-01 E_xx and E_yy 
+ FEA calls.:   99 Obj.: 197550.1592 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.290789e+03 Avg Meso Density 1.499013e-01 Flipped theta 
+ FEA calls.:  100 Obj.: 197455.8175 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.290787e+03 Avg Meso Density 1.499650e-01 topology
+ FEA calls.:  101 Obj.: 197343.1021 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.290787e+03 Avg Meso Density 1.499256e-01 rotation
+
+ExxNew					[1,1   5,1      5,5],  65264.675382 ,13506.661636 9125.525616
+ExxSub					[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+Exx\t					[1,1   5,1      5,5],  62381.162232 ,13223.695722 8992.211964
+DiffXXNew 				[1,1   5,1      5,5],  65264.675382 ,13506.661636 9125.525616
+combinedTermsExx		[1,1   5,1      5,5],  1.046224 ,1.021398 0.916359
+penaltyExx*10000		[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+lambdaExx				[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+dDensityExx				[1,1   5,1      5,5],  0.828928 ,1.124669 1.215311
+lambda1 and density		[  0.022828 ,0.149997
+ConsistConstraintMag and w2 		[  0.105903 ,0.000000
+
+ FEA calls.:  102 Obj.: 197282.4743 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.292239e+03 Avg Meso Density 1.499441e-01 E_xx and E_yy 
+ FEA calls.:  102 Obj.: 197282.4743 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.292239e+03 Avg Meso Density 1.499441e-01 Flipped theta 
+ FEA calls.:  103 Obj.: 197196.1861 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.292237e+03 Avg Meso Density 1.500063e-01 topology
+ FEA calls.:  104 Obj.: 197037.3047 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.292237e+03 Avg Meso Density 1.500794e-01 rotation
+
+ExxNew					[1,1   5,1      5,5],  64842.194657 ,13688.498992 9175.647615
+ExxSub					[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+Exx\t					[1,1   5,1      5,5],  63806.632125 ,13364.429793 9058.623550
+DiffXXNew 				[1,1   5,1      5,5],  64842.194657 ,13688.498992 9175.647615
+combinedTermsExx		[1,1   5,1      5,5],  1.016230 ,1.024249 0.907687
+penaltyExx*10000		[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+lambdaExx				[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+dDensityExx				[1,1   5,1      5,5],  0.831631 ,1.123972 1.216977
+lambda1 and density		[  0.023010 ,0.149965
+ConsistConstraintMag and w2 		[  0.105740 ,0.000000
+
+ FEA calls.:  105 Obj.: 197231.5134 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.288934e+03 Avg Meso Density 1.500037e-01 E_xx and E_yy 
+ FEA calls.:  105 Obj.: 197231.5134 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.288934e+03 Avg Meso Density 1.500037e-01 Flipped theta 
+ FEA calls.:  106 Obj.: 197165.4062 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.288933e+03 Avg Meso Density 1.500642e-01 topology
+ FEA calls.:  107 Obj.: 197054.3747 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.288933e+03 Avg Meso Density 1.500889e-01 rotation
+
+ExxNew					[1,1   5,1      5,5],  65620.035232 ,13521.860648 9208.018324
+ExxSub					[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+Exx\t					[1,1   5,1      5,5],  64322.329409 ,13525.493845 9116.947821
+DiffXXNew 				[1,1   5,1      5,5],  65620.035232 ,13521.860648 9208.018324
+combinedTermsExx		[1,1   5,1      5,5],  1.020175 ,0.999731 0.901670
+penaltyExx*10000		[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+lambdaExx				[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+dDensityExx				[1,1   5,1      5,5],  0.824685 ,1.125165 1.217627
+lambda1 and density		[  0.023192 ,0.149903
+ConsistConstraintMag and w2 		[  0.105643 ,0.000000
+
+ FEA calls.:  108 Obj.: 197302.0897 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.284946e+03 Avg Meso Density 1.499799e-01 E_xx and E_yy 
+ FEA calls.:  108 Obj.: 197302.0897 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.284946e+03 Avg Meso Density 1.499799e-01 Flipped theta 
+ FEA calls.:  109 Obj.: 197240.9510 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.284944e+03 Avg Meso Density 1.500395e-01 topology
+ FEA calls.:  110 Obj.: 197101.3800 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.284944e+03 Avg Meso Density 1.501117e-01 rotation
+
+ExxNew					[1,1   5,1      5,5],  66526.605487 ,14163.014441 9235.967861
+ExxSub					[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+Exx\t					[1,1   5,1      5,5],  64967.942264 ,13523.677125 9162.369922
+DiffXXNew 				[1,1   5,1      5,5],  66526.605487 ,14163.014441 9235.967861
+combinedTermsExx		[1,1   5,1      5,5],  1.023991 ,1.047275 0.908118
+penaltyExx*10000		[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+lambdaExx				[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+dDensityExx				[1,1   5,1      5,5],  0.817805 ,1.116748 1.217739
+lambda1 and density		[  0.023192 ,0.150214
+ConsistConstraintMag and w2 		[  0.105772 ,0.000000
+
+ FEA calls.:  111 Obj.: 197111.3081 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.286021e+03 Avg Meso Density 1.501439e-01 E_xx and E_yy 
+ FEA calls.:  111 Obj.: 197111.3081 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.286021e+03 Avg Meso Density 1.501439e-01 Flipped theta 
+ FEA calls.:  112 Obj.: 197056.3254 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.286019e+03 Avg Meso Density 1.502046e-01 topology
+ FEA calls.:  113 Obj.: 196938.1712 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.286019e+03 Avg Meso Density 1.502358e-01 rotation
+
+ExxNew					[1,1   5,1      5,5],  67161.307036 ,13989.119580 9268.362810
+ExxSub					[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+Exx\t					[1,1   5,1      5,5],  65742.654832 ,13839.654418 9199.095289
+DiffXXNew 				[1,1   5,1      5,5],  67161.307036 ,13989.119580 9268.362810
+combinedTermsExx		[1,1   5,1      5,5],  1.021579 ,1.010800 0.907289
+penaltyExx*10000		[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+lambdaExx				[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+dDensityExx				[1,1   5,1      5,5],  0.814306 ,1.119644 1.218461
+lambda1 and density		[  0.023192 ,0.150219
+ConsistConstraintMag and w2 		[  0.105716 ,0.000000
+
+ FEA calls.:  114 Obj.: 197022.6556 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.285355e+03 Avg Meso Density 1.502107e-01 E_xx and E_yy 
+ FEA calls.:  114 Obj.: 197022.6556 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.285355e+03 Avg Meso Density 1.502107e-01 Flipped theta 
+ FEA calls.:  115 Obj.: 196983.1608 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.285355e+03 Avg Meso Density 1.502617e-01 topology
+ FEA calls.:  116 Obj.: 196864.9550 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.285355e+03 Avg Meso Density 1.503130e-01 rotation
+
+ExxNew					[1,1   5,1      5,5],  68700.666744 ,14517.784380 9294.759029
+ExxSub					[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+Exx\t					[1,1   5,1      5,5],  66448.195059 ,13914.186308 9233.664097
+DiffXXNew 				[1,1   5,1      5,5],  68700.666744 ,14517.784380 9294.759029
+combinedTermsExx		[1,1   5,1      5,5],  1.033898 ,1.043380 0.910478
+penaltyExx*10000		[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+lambdaExx				[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+dDensityExx				[1,1   5,1      5,5],  0.805767 ,1.113317 1.218636
+lambda1 and density		[  0.023192 ,0.150456
+ConsistConstraintMag and w2 		[  0.105824 ,0.000000
+
+ FEA calls.:  117 Obj.: 196816.9259 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.287748e+03 Avg Meso Density 1.503705e-01 E_xx and E_yy 
+ FEA calls.:  117 Obj.: 196816.9259 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.287748e+03 Avg Meso Density 1.503705e-01 Flipped theta 
+ FEA calls.:  118 Obj.: 196774.5663 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.287748e+03 Avg Meso Density 1.504213e-01 topology
+ FEA calls.:  119 Obj.: 196724.9502 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.287748e+03 Avg Meso Density 1.504712e-01 rotation
+
+ExxNew					[1,1   5,1      5,5],  69346.897640 ,14311.433801 9309.567746
+ExxSub					[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+Exx\t					[1,1   5,1      5,5],  67565.044990 ,14212.781453 9264.161200
+DiffXXNew 				[1,1   5,1      5,5],  69346.897640 ,14311.433801 9309.567746
+combinedTermsExx		[1,1   5,1      5,5],  1.026372 ,1.006941 0.903981
+penaltyExx*10000		[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+lambdaExx				[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+dDensityExx				[1,1   5,1      5,5],  0.802693 ,1.116593 1.219309
+lambda1 and density		[  0.023192 ,0.150507
+ConsistConstraintMag and w2 		[  0.105780 ,0.000000
+
+ FEA calls.:  120 Obj.: 196778.4178 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.287859e+03 Avg Meso Density 1.504764e-01 E_xx and E_yy 
+ FEA calls.:  120 Obj.: 196778.4178 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.287859e+03 Avg Meso Density 1.504764e-01 Flipped theta 
+ FEA calls.:  121 Obj.: 196745.7797 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.287859e+03 Avg Meso Density 1.505203e-01 topology
+ FEA calls.:  122 Obj.: 196719.1898 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.287859e+03 Avg Meso Density 1.505761e-01 rotation
+
+ExxNew					[1,1   5,1      5,5],  66492.609094 ,14086.871805 9288.051723
+ExxSub					[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+Exx\t					[1,1   5,1      5,5],  68450.173550 ,14262.022328 9286.836722
+DiffXXNew 				[1,1   5,1      5,5],  66492.609094 ,14086.871805 9288.051723
+combinedTermsExx		[1,1   5,1      5,5],  0.971402 ,0.987719 0.878703
+penaltyExx*10000		[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+lambdaExx				[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+dDensityExx				[1,1   5,1      5,5],  0.823322 ,1.122080 1.221440
+lambda1 and density		[  0.023920 ,0.150108
+ConsistConstraintMag and w2 		[  0.105331 ,0.000000
+
+ FEA calls.:  123 Obj.: 197256.2801 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.277028e+03 Avg Meso Density 1.503377e-01 E_xx and E_yy 
+ FEA calls.:  123 Obj.: 197256.2801 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.277028e+03 Avg Meso Density 1.503377e-01 Flipped theta 
+ FEA calls.:  124 Obj.: 197220.7621 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.277029e+03 Avg Meso Density 1.503707e-01 topology
+ FEA calls.:  125 Obj.: 197161.0620 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.277029e+03 Avg Meso Density 1.503640e-01 rotation
+
+ExxNew					[1,1   5,1      5,5],  66819.961347 ,14064.184185 9288.051723
+ExxSub					[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+Exx\t					[1,1   5,1      5,5],  67464.291534 ,14174.176527 9287.444203
+DiffXXNew 				[1,1   5,1      5,5],  66819.961347 ,14064.184185 9288.051723
+combinedTermsExx		[1,1   5,1      5,5],  0.990449 ,0.992240 0.894354
+penaltyExx*10000		[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+lambdaExx				[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+dDensityExx				[1,1   5,1      5,5],  0.821624 ,1.123566 1.221584
+lambda1 and density		[  0.023920 ,0.150190
+ConsistConstraintMag and w2 		[  0.105358 ,0.000000
+
+ FEA calls.:  126 Obj.: 197376.1413 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.272266e+03 Avg Meso Density 1.502721e-01 E_xx and E_yy 
+ FEA calls.:  126 Obj.: 197376.1413 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.272266e+03 Avg Meso Density 1.502721e-01 Flipped theta 
+ FEA calls.:  127 Obj.: 197353.4653 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.272266e+03 Avg Meso Density 1.503034e-01 topology
+ FEA calls.:  128 Obj.: 197295.8730 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.272266e+03 Avg Meso Density 1.503651e-01 rotation
+
+ExxNew					[1,1   5,1      5,5],  64868.655645 ,13922.283543 9288.051723
+ExxSub					[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+Exx\t					[1,1   5,1      5,5],  67141.353521 ,14119.073247 9287.747958
+DiffXXNew 				[1,1   5,1      5,5],  64868.655645 ,13922.283543 9288.051723
+combinedTermsExx		[1,1   5,1      5,5],  0.966151 ,0.986062 0.874620
+penaltyExx*10000		[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+lambdaExx				[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+dDensityExx				[1,1   5,1      5,5],  0.830170 ,1.125037 1.223333
+lambda1 and density		[  0.024647 ,0.149953
+ConsistConstraintMag and w2 		[  0.105065 ,0.000000
+
+ FEA calls.:  129 Obj.: 197782.9699 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.262581e+03 Avg Meso Density 1.501544e-01 E_xx and E_yy 
+ FEA calls.:  129 Obj.: 197782.9699 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.262581e+03 Avg Meso Density 1.501544e-01 Flipped theta 
+ FEA calls.:  130 Obj.: 197761.5786 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.262581e+03 Avg Meso Density 1.501702e-01 topology
+ FEA calls.:  131 Obj.: 197790.3625 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.262581e+03 Avg Meso Density 1.501439e-01 rotation
+
+ExxNew					[1,1   5,1      5,5],  66262.570219 ,13886.352798 9288.051723
+ExxSub					[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+Exx\t					[1,1   5,1      5,5],  65995.222108 ,14020.333131 9287.899839
+DiffXXNew 				[1,1   5,1      5,5],  66262.570219 ,13886.352798 9288.051723
+combinedTermsExx		[1,1   5,1      5,5],  1.004051 ,0.990444 0.901567
+penaltyExx*10000		[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+lambdaExx				[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+dDensityExx				[1,1   5,1      5,5],  0.825125 ,1.127709 1.223547
+lambda1 and density		[  0.024465 ,0.149996
+ConsistConstraintMag and w2 		[  0.105110 ,0.000000
+
+ FEA calls.:  132 Obj.: 197974.7073 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.258930e+03 Avg Meso Density 1.500667e-01 E_xx and E_yy 
+ FEA calls.:  132 Obj.: 197974.7073 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.258930e+03 Avg Meso Density 1.500667e-01 Flipped theta 
+ FEA calls.:  133 Obj.: 197956.2202 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.258930e+03 Avg Meso Density 1.500823e-01 topology
+ FEA calls.:  134 Obj.: 197908.7995 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.258930e+03 Avg Meso Density 1.501091e-01 rotation
+
+ExxNew					[1,1   5,1      5,5],  65464.559301 ,14069.932118 9288.051723
+ExxSub					[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+Exx\t					[1,1   5,1      5,5],  66128.761058 ,13953.182153 9287.975781
+DiffXXNew 				[1,1   5,1      5,5],  65464.559301 ,14069.932118 9288.051723
+combinedTermsExx		[1,1   5,1      5,5],  0.989956 ,1.008367 0.893953
+penaltyExx*10000		[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+lambdaExx				[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+dDensityExx				[1,1   5,1      5,5],  0.825504 ,1.123840 1.223622
+lambda1 and density		[  0.024647 ,0.150059
+ConsistConstraintMag and w2 		[  0.105122 ,0.000000
+
+ FEA calls.:  135 Obj.: 197975.1526 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.257409e+03 Avg Meso Density 1.500811e-01 E_xx and E_yy 
+ FEA calls.:  135 Obj.: 197975.1526 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.257409e+03 Avg Meso Density 1.500811e-01 Flipped theta 
+ FEA calls.:  136 Obj.: 197954.7972 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.257409e+03 Avg Meso Density 1.500908e-01 topology
+ FEA calls.:  137 Obj.: 198036.9924 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.257409e+03 Avg Meso Density 1.500693e-01 rotation
+
+ExxNew					[1,1   5,1      5,5],  65499.119492 ,14446.175089 9288.051723
+ExxSub					[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+Exx\t					[1,1   5,1      5,5],  65795.822054 ,14011.435534 9288.013752
+DiffXXNew 				[1,1   5,1      5,5],  65499.119492 ,14446.175089 9288.051723
+combinedTermsExx		[1,1   5,1      5,5],  0.995491 ,1.031027 0.906325
+penaltyExx*10000		[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+lambdaExx				[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+dDensityExx				[1,1   5,1      5,5],  0.823815 ,1.119472 1.223479
+lambda1 and density		[  0.024647 ,0.150028
+ConsistConstraintMag and w2 		[  0.105089 ,0.000000
+
+ FEA calls.:  138 Obj.: 198116.0191 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.255835e+03 Avg Meso Density 1.500453e-01 E_xx and E_yy 
+ FEA calls.:  138 Obj.: 198116.0191 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.255835e+03 Avg Meso Density 1.500453e-01 Flipped theta 
+ FEA calls.:  139 Obj.: 198099.8974 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.255835e+03 Avg Meso Density 1.500506e-01 topology
+ FEA calls.:  140 Obj.: 198041.8177 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.255835e+03 Avg Meso Density 1.500650e-01 rotation
+
+ExxNew					[1,1   5,1      5,5],  64626.180374 ,14127.565895 9288.051723
+ExxSub					[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+Exx\t					[1,1   5,1      5,5],  65647.303149 ,14227.144864 9288.032737
+DiffXXNew 				[1,1   5,1      5,5],  64626.180374 ,14127.565895 9288.051723
+combinedTermsExx		[1,1   5,1      5,5],  0.984445 ,0.993001 0.896023
+penaltyExx*10000		[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+lambdaExx				[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+dDensityExx				[1,1   5,1      5,5],  0.828183 ,1.122755 1.223878
+lambda1 and density		[  0.024647 ,0.150168
+ConsistConstraintMag and w2 		[  0.105185 ,0.000000
+
+ FEA calls.:  141 Obj.: 197958.7572 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.257410e+03 Avg Meso Density 1.501128e-01 E_xx and E_yy 
+ FEA calls.:  141 Obj.: 197958.7572 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.257410e+03 Avg Meso Density 1.501128e-01 Flipped theta 
+ FEA calls.:  142 Obj.: 197947.2458 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.257410e+03 Avg Meso Density 1.501176e-01 topology
+ FEA calls.:  143 Obj.: 198090.6000 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.257410e+03 Avg Meso Density 1.500566e-01 rotation
+
+ExxNew					[1,1   5,1      5,5],  65051.040820 ,14301.930973 9288.051723
+ExxSub					[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+Exx\t					[1,1   5,1      5,5],  65134.740764 ,14177.267951 9288.042230
+DiffXXNew 				[1,1   5,1      5,5],  65051.040820 ,14301.930973 9288.051723
+combinedTermsExx		[1,1   5,1      5,5],  0.998715 ,1.008793 0.908418
+penaltyExx*10000		[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+lambdaExx				[1,1   5,1      5,5],  0.000000 ,0.000000 0.000000
+dDensityExx				[1,1   5,1      5,5],  0.824600 ,1.119706 1.223958
+lambda1 and density		[  0.024647 ,0.150163
+ConsistConstraintMag and w2 		[  0.105221 ,0.000000
+
+ FEA calls.:  144 Obj.: 198012.6924 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.259075e+03 Avg Meso Density 1.501056e-01 E_xx and E_yy 
+ FEA calls.:  144 Obj.: 198012.6924 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.259075e+03 Avg Meso Density 1.501056e-01 Flipped theta 
+ FEA calls.:  145 Obj.: 198001.4538 Vol. 1:  0.042 Vol. 2:  0.758 Target E.: 50000 Current E.: 5.259075e+03 Avg Meso Density 1.501084e-01 topology
+ 
+ 
++------------------------------------------+ 
+| PALMETTO CLUSTER PBS RESOURCES REQUESTED | 
++------------------------------------------+ 
+ 
+mem=512gb,ncpus=512,walltime=03:00:00
+ 
+ 
++-------------------------------------+ 
+| PALMETTO CLUSTER PBS RESOURCES USED | 
++-------------------------------------+ 
+ 
+cpupercent=383,cput=01:15:57,mem=592860kb,ncpus=512,vmem=5699552kb,walltime=00:22:12
+ 
+ 

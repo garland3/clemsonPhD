@@ -150,7 +150,14 @@ D_base = [ 1 v 0;
     v 1 0;
     0 0 1/2*(1-v)]*E_base/(1-v^2);
     
-    
+
+if(config.multiscaleMethodCompare~=1)
+    % Normal case
+    mode =5;
+else
+    % Multiscale compare case.
+    mode =6;
+end
 
 for e = 1:ne
     [x,y]= designVars.GivenNodeNumberGetXY(e);
@@ -195,13 +202,7 @@ for e = 1:ne
     % maximize the stiffness in the y direciton
     % designVars.dc(y,x) = -dH(2,2);
     
-     if(config.multiscaleMethodCompare~=1)
-         % Normal case
-        mode =5;
-     else
-         % Multiscale compare case. 
-        mode =6;
-     end
+     
     
     % ----------------------------------
     % Update the sensitiviy

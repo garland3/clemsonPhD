@@ -223,7 +223,7 @@ while densityChangedLocal~=0
     
     
 end
-doPlot =1;
+doPlot =0;
 if(doPlot ==1)
    
     figure(2)

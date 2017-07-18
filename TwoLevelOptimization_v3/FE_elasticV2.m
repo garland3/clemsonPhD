@@ -13,16 +13,20 @@ row = config.nelx+1;
 column= config.nely+1;
 
 bottomFixed=0;
+canyonProblem=0;
 
-bridgeStart = (row*(column-1)+1)*2; % (row*(floor(column/2))+1)*2;
-bridgeEnd=(row*(column-0))*2; % (row*(1+floor(column/2)))*2;
+% bridgeStart = (row*(column-1)+1)*2; % (row*(floor(column/2))+1)*2;
+% bridgeEnd=(row*(column-0))*2; % (row*(1+floor(column/2)))*2;
 
-loadMagnitude = 10000;%500
+bridgeStart = (row*(floor(column/2)-1)+1)*2; % (row*(floor(column/2))+1)*2;
+bridgeEnd=(row*(floor(column/2)-0))*2; % (row*(1+floor(column/2)))*2;
+
+loadMagnitude = 1;%10000
 % loading condition
 if loadingCase == 111
     FappliedLoad = loadMagnitude;
     tt=   1:2*row :2*row*(column); % ... % left side
-    t2=tt+1;      
+    t2=tt+1;
     t3 = [];
     t4 = [];
     u3 = 0;
@@ -36,7 +40,7 @@ elseif loadingCase ==112
     tt=   1:2*row :2*row*(column); % ... % left side
     t2=tt+1;
     Essential=[tt t2];
-    Essential = unique(Essential);    
+    Essential = unique(Essential);
     % down on bottom right
     F(row*2) = FappliedLoad;
     
@@ -45,157 +49,330 @@ elseif loadingCase ==113
     tt=   1:2*row :2*row*(column); % ... % left side
     t2=tt+1;
     Essential=[tt t2];
-    Essential = unique(Essential);    
+    Essential = unique(Essential);
     if(mod(column,2)==0)
         % even number of column
-        F( (row*2)*floor(column/2)) = FappliedLoad/2; % middle to the right  
-         F( (row*2)*(floor(column/2)+1)) = FappliedLoad/2; % middle to the right  
+        F( (row*2)*floor(column/2)) = FappliedLoad/2; % middle to the right
+        F( (row*2)*(floor(column/2)+1)) = FappliedLoad/2; % middle to the right
     else
         % odd number of columns
-         F( (row*2)*floor(column/2)) = FappliedLoad; % middle to the right  
+        F( (row*2)*floor(column/2)) = FappliedLoad; % middle to the right
     end
     
-
+    
     % -------------------------------------------------
     %
-    % 300s are the shoe loading case. 
+    % 300s are the shoe loading case.
     %
     % -------------------------------------------------
 elseif loadingCase ==300
-      FappliedLoad = -loadMagnitude;   
-      bottomFixed = 1;
-     
-      fnodes =  (row*(column-1)+1)*2:2:(row*(column-1)+floor(row/4))*2; % top left quarter, y degrees of freedom, pointing down. 
-      count = size(fnodes,2);
-       F(fnodes) =FappliedLoad/count;
-      
+    FappliedLoad = -loadMagnitude;
+    bottomFixed = 1;
+    
+    fnodes =  (row*(column-1)+1)*2:2:(row*(column-1)+floor(row/4))*2; % top left quarter, y degrees of freedom, pointing down.
+    count = size(fnodes,2);
+    F(fnodes) =FappliedLoad/count;
+    
 elseif loadingCase ==301
-        FappliedLoad = -loadMagnitude;   
-      bottomFixed = 1;
-     
-      fnodes =   (row*(column-1)+1)*2:2:(row*(column-1)+floor(row/2))*2; % top left half, y degrees of freedom, pointing down. 
-      count = size(fnodes,2);
-       F(fnodes) =FappliedLoad/count;
+    FappliedLoad = -loadMagnitude;
+    bottomFixed = 1;
+    
+    fnodes =   (row*(column-1)+1)*2:2:(row*(column-1)+floor(row/2))*2; % top left half, y degrees of freedom, pointing down.
+    count = size(fnodes,2);
+    F(fnodes) =FappliedLoad/count;
 elseif loadingCase ==302
-      FappliedLoad = -loadMagnitude;   
-      bottomFixed = 1;
-     
-     fnodes= (row*(column-1)+1)*2:2:ndof; % whole top, y degrees of freedom, pointing down. 
-      count = size(fnodes,2);
-       F(fnodes) =FappliedLoad/count;
+    FappliedLoad = -loadMagnitude;
+    bottomFixed = 1;
+    
+    fnodes= (row*(column-1)+1)*2:2:ndof; % whole top, y degrees of freedom, pointing down.
+    count = size(fnodes,2);
+    F(fnodes) =FappliedLoad/count;
 elseif loadingCase ==303
-         FappliedLoad = -loadMagnitude;   
-      bottomFixed = 1;
-     
-      fnodes =  (row*(column-1)+1+floor(row/2))*2:2:ndof; % top right half, y degrees of freedom, pointing down. 
-      count = size(fnodes,2);
-       F(fnodes) =FappliedLoad/count;
+    FappliedLoad = -loadMagnitude;
+    bottomFixed = 1;
+    
+    fnodes =  (row*(column-1)+1+floor(row/2))*2:2:ndof; % top right half, y degrees of freedom, pointing down.
+    count = size(fnodes,2);
+    F(fnodes) =FappliedLoad/count;
 elseif loadingCase ==304
-     FappliedLoad = -loadMagnitude;   
-      bottomFixed = 1;
-     
-      fnodes =  (row*(column-1)+1+floor(3*row/4))*2:2:ndof; % top right quarter, x and y degrees of freedom, pointing down and left. 
-      count = size(fnodes,2);
-       F(fnodes) =FappliedLoad/count;
-       
+    FappliedLoad = -loadMagnitude;
+    bottomFixed = 1;
+    
+    fnodes =  (row*(column-1)+1+floor(3*row/4))*2:2:ndof; % top right quarter, x and y degrees of freedom, pointing down and left.
+    count = size(fnodes,2);
+    F(fnodes) =FappliedLoad/count;
+    
 elseif loadingCase ==305
-     FappliedLoad = -loadMagnitude;   
-      bottomFixed = 1;
-     
-      fnodes =  (row*(column-1)+floor(row/2))*2:2:ndof; % top right half, x  degree of freedome only, pushing off. 
-      count = size(fnodes,2);
-       F(fnodes) =FappliedLoad/count;
-       
+    FappliedLoad = -loadMagnitude;
+    bottomFixed = 1;
+    
+    fnodes =  (row*(column-1)+floor(row/2))*2:2:ndof; % top right half, x  degree of freedome only, pushing off.
+    count = size(fnodes,2);
+    F(fnodes) =FappliedLoad/count;
+    
     % -------------------------------------------------
     %
     % 400s are the BRIDGE
     %
     % -------------------------------------------------
 elseif loadingCase ==400
-       
-     FappliedLoad = -loadMagnitude;   
-     bottomFixed = 1;
-        
-     startOffset = 0;
-     endOfset = -(floor(3*row/4))*2;
-        
-     fnodes= bridgeStart+startOffset :2:bridgeEnd+endOfset ; % middle, 1/4 load down
-     count = size(fnodes,2);
-     F(fnodes) =FappliedLoad/count;
-
+    
+    FappliedLoad = -loadMagnitude;
+    bottomFixed = 1;
+    
+    startOffset = 0;
+    endOfset = -(floor(3*row/4))*2;
+    
+    fnodes= bridgeStart+startOffset :2:bridgeEnd+endOfset ; % middle, 1/4 load down
+    count = size(fnodes,2);
+    F(fnodes) =FappliedLoad/count;
+    
 elseif loadingCase ==401
-     
-     FappliedLoad = -loadMagnitude;   
-      bottomFixed = 1;
-      
-%         bridgeStart = (row*(floor(column/2))+1)*2;
-%         bridgeEnd=(row*(1+floor(column/2)))*2;
-        
-        startOffset =(floor(1*row/4))*2;
-        endOfset = -(floor(2*row/4))*2;
-        
-     fnodes= bridgeStart+startOffset :2:bridgeEnd+endOfset ; % middle, 1/4 load down
-     count = size(fnodes,2);
-     F(fnodes) =FappliedLoad/count;
+    
+    FappliedLoad = -loadMagnitude;
+    bottomFixed = 1;
+    
+    %         bridgeStart = (row*(floor(column/2))+1)*2;
+    %         bridgeEnd=(row*(1+floor(column/2)))*2;
+    
+    startOffset =(floor(1*row/4))*2;
+    endOfset = -(floor(2*row/4))*2;
+    
+    fnodes= bridgeStart+startOffset :2:bridgeEnd+endOfset ; % middle, 1/4 load down
+    count = size(fnodes,2);
+    F(fnodes) =FappliedLoad/count;
 elseif loadingCase ==402
-      FappliedLoad = -loadMagnitude;   
-      bottomFixed = 1;
-      
-%         bridgeStart = (row*(floor(column/2))+1)*2;
-%         bridgeEnd=(row*(1+floor(column/2)))*2;
-        
-        startOffset =(floor(2*row/4))*2;
-        endOfset = -(floor(1*row/4))*2;
-        
-     fnodes= bridgeStart+startOffset :2:bridgeEnd+endOfset ; % middle, 1/4 load down
-     count = size(fnodes,2);
-     F(fnodes) =FappliedLoad/count;
-      
+    FappliedLoad = -loadMagnitude;
+    bottomFixed = 1;
+    
+    %         bridgeStart = (row*(floor(column/2))+1)*2;
+    %         bridgeEnd=(row*(1+floor(column/2)))*2;
+    
+    startOffset =(floor(2*row/4))*2;
+    endOfset = -(floor(1*row/4))*2;
+    
+    fnodes= bridgeStart+startOffset :2:bridgeEnd+endOfset ; % middle, 1/4 load down
+    count = size(fnodes,2);
+    F(fnodes) =FappliedLoad/count;
+    
 elseif loadingCase ==403
-      FappliedLoad = -loadMagnitude;   
-      bottomFixed = 1;
-      
-%         bridgeStart = (row*(floor(column/2))+1)*2;
-%         bridgeEnd=(row*(1+floor(column/2)))*2;
-        
-        startOffset =(floor(3*row/4))*2;
-        endOfset = 0;
-        
-     fnodes= bridgeStart+startOffset :2:bridgeEnd+endOfset ; % middle, 1/4 load down
-     count = size(fnodes,2);
-     F(fnodes) =FappliedLoad/count;
-     
- elseif loadingCase ==404
-      FappliedLoad = -loadMagnitude;   
-      bottomFixed = 1;
-      
-%         bridgeStart = (row*(floor(column/2))+1)*2;
-%         bridgeEnd=(row*(1+floor(column/2)))*2;
-        
-        startOffset =-1;
-        endOfset = 0;
-        
-     fnodes= bridgeStart+startOffset :2:bridgeEnd+endOfset ; % middle, 1/4 load down
-     count = size(fnodes,2);
-     F(fnodes) =FappliedLoad/count;
-  elseif loadingCase ==405
-      FappliedLoad = loadMagnitude;   
-      bottomFixed = 1;
-      
-%         bridgeStart = (row*(floor(column/2))+1)*2;
-%         bridgeEnd=(row*(1+floor(column/2)))*2;
-        
-        startOffset =-1;
-        endOfset = 0;
-        
-     fnodes= bridgeStart+startOffset :2:bridgeEnd+endOfset ; % middle, 1/4 load down
-     count = size(fnodes,2);
-     F(fnodes) =FappliedLoad/count;
+    FappliedLoad = -loadMagnitude;
+    bottomFixed = 1;
+    
+    %         bridgeStart = (row*(floor(column/2))+1)*2;
+    %         bridgeEnd=(row*(1+floor(column/2)))*2;
+    
+    startOffset =(floor(3*row/4))*2;
+    endOfset = 0;
+    
+    fnodes= bridgeStart+startOffset :2:bridgeEnd+endOfset ; % middle, 1/4 load down
+    count = size(fnodes,2);
+    F(fnodes) =FappliedLoad/count;
+    
+elseif loadingCase ==404
+    FappliedLoad = -loadMagnitude;
+    bottomFixed = 1;
+    
+    %         bridgeStart = (row*(floor(column/2))+1)*2;
+    %         bridgeEnd=(row*(1+floor(column/2)))*2;
+    
+    startOffset =-1;
+    endOfset = 0;
+    
+    fnodes= bridgeStart+startOffset :2:bridgeEnd+endOfset ; % middle, 1/4 load down
+    count = size(fnodes,2);
+    F(fnodes) =FappliedLoad/count;
+elseif loadingCase ==405
+    FappliedLoad = loadMagnitude;
+    bottomFixed = 1;
+    
+    %         bridgeStart = (row*(floor(column/2))+1)*2;
+    %         bridgeEnd=(row*(1+floor(column/2)))*2;
+    
+    startOffset =-1;
+    endOfset = 0;
+    
+    fnodes= bridgeStart+startOffset :2:bridgeEnd+endOfset ; % middle, 1/4 load down
+    count = size(fnodes,2);
+    F(fnodes) =FappliedLoad/count;
+    
+elseif loadingCase ==500
+     FappliedLoad = 2*loadMagnitude/ndof;
+    tt=   1:2*row :2*row*(column); % ... % left side
+    t2=tt+1;
+    Essential=[tt t2];
+    Essential = unique(Essential);
+    F (2:2:ndof)=FappliedLoad;
+    
+ % -------------------------------------------------
+    %
+    % 600s are the canyon BRIDGE
+    %
+    % -------------------------------------------------
+elseif loadingCase ==600
+    
+    FappliedLoad = -loadMagnitude;
+    canyonProblem = 1;
+    
+    startOffset = 0;
+    endOfset = -(floor(3*row/4))*2;
+    
+    fnodes= bridgeStart+startOffset :2:bridgeEnd+endOfset ; % middle, 1/4 load down
+    count = size(fnodes,2);
+    F(fnodes) =FappliedLoad/count;
+    
+elseif loadingCase ==601
+    
+    FappliedLoad = -loadMagnitude;
+    canyonProblem = 1;
+    
+    %         bridgeStart = (row*(floor(column/2))+1)*2;
+    %         bridgeEnd=(row*(1+floor(column/2)))*2;
+    
+    startOffset =(floor(1*row/4))*2;
+    endOfset = -(floor(2*row/4))*2;
+    
+    fnodes= bridgeStart+startOffset :2:bridgeEnd+endOfset ; % middle, 1/4 load down
+    count = size(fnodes,2);
+    F(fnodes) =FappliedLoad/count;
+elseif loadingCase ==602
+    FappliedLoad = -loadMagnitude;
+    canyonProblem = 1;
+    
+    %         bridgeStart = (row*(floor(column/2))+1)*2;
+    %         bridgeEnd=(row*(1+floor(column/2)))*2;
+    
+    startOffset =(floor(2*row/4))*2;
+    endOfset = -(floor(1*row/4))*2;
+    
+    fnodes= bridgeStart+startOffset :2:bridgeEnd+endOfset ; % middle, 1/4 load down
+    count = size(fnodes,2);
+    F(fnodes) =FappliedLoad/count;
+    
+elseif loadingCase ==603
+    FappliedLoad = -loadMagnitude;
+    canyonProblem = 1;
+    
+    %         bridgeStart = (row*(floor(column/2))+1)*2;
+    %         bridgeEnd=(row*(1+floor(column/2)))*2;
+    
+    startOffset =(floor(3*row/4))*2;
+    endOfset = 0;
+    
+    fnodes= bridgeStart+startOffset :2:bridgeEnd+endOfset ; % middle, 1/4 load down
+    count = size(fnodes,2);
+    F(fnodes) =FappliedLoad/count;
+    
+elseif loadingCase ==604
+    FappliedLoad = -loadMagnitude;
+    canyonProblem = 1;
+    
+    %         bridgeStart = (row*(floor(column/2))+1)*2;
+    %         bridgeEnd=(row*(1+floor(column/2)))*2;
+    
+    startOffset =-1;
+    endOfset = 0;
+    
+    fnodes= bridgeStart+startOffset :2:bridgeEnd+endOfset ; % middle, 1/4 load down
+    count = size(fnodes,2);
+    F(fnodes) =FappliedLoad/count;
+elseif loadingCase ==605
+    FappliedLoad = loadMagnitude;
+    canyonProblem = 1;
+    
+    %         bridgeStart = (row*(floor(column/2))+1)*2;
+    %         bridgeEnd=(row*(1+floor(column/2)))*2;
+    
+    startOffset =-1;
+    endOfset = 0;
+    
+    fnodes= bridgeStart+startOffset :2:bridgeEnd+endOfset ; % middle, 1/4 load down
+    count = size(fnodes,2);
+    F(fnodes) =FappliedLoad/count;
+    
+elseif loadingCase ==800
+    % --------------------------
+    % Pressure Vessel 
+    % --------------------------
+    canyonProblem = 1;
+    FappliedLoad = loadMagnitude;
+    ForceValue = 10;
+    
+    middleX = config.nelx/2;
+    middleY = config.nely/2;
+    
+    radius = 10;
+    error=1;
+    
+    doPlotVectorsOfForce=0;
+    
+    if(doPlotVectorsOfForce==1)
+        xArrows = zeros(size(DV.x));
+        yArrows = zeros(size(DV.x));
+    end
+    
+    
+    for ii = 1:config.nelx
+        for jj = 1:config.nely
+            
+            distanceFromMiddle=sqrt((ii-middleX)^2+(jj-middleY)^2);
+            
+            if(distanceFromMiddle>radius-error && distanceFromMiddle<radius+error)
+                xPos =( ii-middleX);
+                yPos =(jj-middleY);
+                angle = atan(yPos/xPos);
+                
+                xNodeNum = (jj*row)*2+ii*2-1;
+                yNodeNum=xNodeNum+1;
+                
+                if(ii>=middleX)
+                    signOfForce=1;
+                else
+                    signOfForce=-1;
+                end
+                
+                F(xNodeNum)=ForceValue*cos(angle)*signOfForce;
+                 F(yNodeNum)=ForceValue*sin(angle)*signOfForce;
+                 
+                 xArrows(jj,ii)=F(xNodeNum);
+                 yArrows(jj,ii)=F(yNodeNum);
+                
+            end
+        end
+    end
+    
+     if(doPlotVectorsOfForce==1)
+         
+           [X,Y] = meshgrid(1:config.nelx,1:config.nely);
+         
+            quiver(X,Y,xArrows,yArrows);
+         
+     end
+    
+    
+%     fnodes=
+%     
+%      count = size(fnodes,2);
+%     F(fnodes) =FappliedLoad/count;
+    
+    
+    
 end
 
 if(bottomFixed==1)
     Essential = 1:row*2;
-       Essential = unique(Essential);  
+    Essential = unique(Essential);
+end
+
+if(canyonProblem==1)
+      tt=   1:2*row :2*row*(column); % ... % left side
+    t2=tt+1;
+    t3 =tt-1;
+    t4 =tt-2;
+    u3 = 0;
+    Essential=[tt t2 t3 t4];
+    Essential=Essential(Essential>0);
+    Essential = unique(Essential);
 end
 
 alldofs     = [1:ndof];
@@ -204,7 +381,7 @@ E12 = 1;
 E33 = 1;
 
 % % loop over the elements
-for e = 1:ne    
+for e = 1:ne
     % loop over local node numbers to get their node global node numbers
     for j = 1:4
         % Get the node number
@@ -214,21 +391,21 @@ for e = 1:ne
     end
     
     [x,y]= DV.GivenNodeNumberGetXY(e);
-  
+    
     
     % Get the element K matrix for this partiular element
-%     if(config.macro_meso_iteration>1)
-%         %e = count;
-%         Dgiven =matProp.GetSavedDMatrix(e);
-%     else
-%         Dgiven = [];
-%     end
-%     
-%      if(config.useOrthAndRot==1)
-%         Dgiven= matProp.calculateEffConsMatrixWithGradAndOrthDistrbution( DV.w(y,x), config, DV.d(y,x));
-%     end
+    %     if(config.macro_meso_iteration>1)
+    %         %e = count;
+    %         Dgiven =matProp.GetSavedDMatrix(e);
+    %     else
+    %         Dgiven = [];
+    %     end
+    %
+    %      if(config.useOrthAndRot==1)
+    %         Dgiven= matProp.calculateEffConsMatrixWithGradAndOrthDistrbution( DV.w(y,x), config, DV.d(y,x));
+    %     end
     
-%     [ke, KexpansionBar] = matProp.effectiveElasticKEmatrix(DV.w(y,x), config,Dgiven);
+    %     [ke, KexpansionBar] = matProp.effectiveElasticKEmatrix(DV.w(y,x), config,Dgiven);
     % [ke] = matProp.effectiveElasticKEmatrix(  DV.w(y,x), config);
     
     % Insert the element stiffness matrix into the global.
@@ -246,25 +423,25 @@ for e = 1:ne
     % for the x location
     % The first number is the row - "y value"
     % The second number is the column "x value"
-%     K(NodeNumbers,NodeNumbers) = K(NodeNumbers,NodeNumbers) + DV.x(y,x)^config.penal*ke;
-
-      % KE = matProp.getKMatrixUseTopGradOrthoDistrRotVars(config,DV.x(y,x),DV.w(y,x),DV.d(y,x),DV.t(y,x));
-      if(config.anisotropicMat==1)
-          E12=DV.E12(y,x);
-          E33=DV.E33(y,x);
-      end
-   
-      KE = matProp.getKMatrixTopExxYyyRotVars(config,DV.x(y,x),DV.Exx(y,x), DV.Eyy(y,x),DV.t(y,x),DV.w(y,x),E12, E33, e);
-      K(NodeNumbers,NodeNumbers) = K(NodeNumbers,NodeNumbers) + KE;
+    %     K(NodeNumbers,NodeNumbers) = K(NodeNumbers,NodeNumbers) + DV.x(y,x)^config.penal*ke;
     
-%     if(config.addThermalExpansion ==1)
-%         alpha = matProp.effectiveThermalExpansionCoefficient(DV.w(y,x))*DV.x(y,x)^config.penal;
-%         U_heat = DV.U_heatColumn(nodes1,:);
-%         averageElementTemp = mean2(U_heat); % calculate the average temperature of the 4 nodes
-%         deltaTemp = averageElementTemp- config.referenceTemperature;
-%         f_temperature = alpha*deltaTemp*KexpansionBar;
-%         F(NodeNumbers) = F(NodeNumbers) + f_temperature;
-%     end
+    % KE = matProp.getKMatrixUseTopGradOrthoDistrRotVars(config,DV.x(y,x),DV.w(y,x),DV.d(y,x),DV.t(y,x));
+    if(config.anisotropicMat==1)
+        E12=DV.E12(y,x);
+        E33=DV.E33(y,x);
+    end
+    
+    KE = matProp.getKMatrixTopExxYyyRotVars(config,DV.x(y,x),DV.Exx(y,x), DV.Eyy(y,x),DV.t(y,x),DV.w(y,x),E12, E33, e);
+    K(NodeNumbers,NodeNumbers) = K(NodeNumbers,NodeNumbers) + KE;
+    
+    %     if(config.addThermalExpansion ==1)
+    %         alpha = matProp.effectiveThermalExpansionCoefficient(DV.w(y,x))*DV.x(y,x)^config.penal;
+    %         U_heat = DV.U_heatColumn(nodes1,:);
+    %         averageElementTemp = mean2(U_heat); % calculate the average temperature of the 4 nodes
+    %         deltaTemp = averageElementTemp- config.referenceTemperature;
+    %         f_temperature = alpha*deltaTemp*KexpansionBar;
+    %         F(NodeNumbers) = F(NodeNumbers) + f_temperature;
+    %     end
     
     %        xLoc = xLoc+1;
     %        if(xLoc>config.nelx)
@@ -292,10 +469,10 @@ F_f = F(Free);
 %     T_gpu = K_ff_gpu\F_f_gpu;
 %     T(Free) = gather(T_gpu);
 % else
-    % normal matrix solve
-    
-    T(Free) = K_ff \ F_f;
-    
+% normal matrix solve
+
+T(Free) = K_ff \ F_f;
+
 % end
 
 maxF = full(max(abs(F)));

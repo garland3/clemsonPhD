@@ -1,9 +1,9 @@
-function [T]  = temperatureFEA_V3(designVars, settings, matProp,loop, loadcase)
+function [T]  = temperatureFEA_V3(DV, config, matProp,loop, loadcase)
 
 
 u0 =0; % value at essentail boundaries
-nn = (settings.nelx+1)*(settings.nely+1); % number of nodes
-ne = settings.nelx*settings.nely; % number of elements
+nn = (config.nelx+1)*(config.nely+1); % number of nodes
+ne = config.nelx*config.nely; % number of elements
 
 % ------------------------------------
 % -- Make a mapping between elements and global matrixes
@@ -53,10 +53,11 @@ ne = settings.nelx*settings.nely; % number of elements
 % conditions
 
 K = zeros(nn,nn);
-row = settings.nelx+1;
-column = settings.nely+1;
+row = config.nelx+1;
+column = config.nely+1;
 
-loadingScenario = 'sourceEverywhereSinkMiddle';
+  loadingScenario = 'sourceEverywhereSinkMiddle';
+%  loadingScenario = 'pressure';
 % 'topAndRightLoadsSinkBottomLeft'
 % 'sourceMiddleRightSinkMiddleLeft'
 
@@ -66,9 +67,79 @@ if strcmp(loadingScenario,'heatMiddleSinksCorners')
     F([ceil(row/2)+(ceil(column/2)*row) (ceil(row/2)+1)+(ceil(column/2)*row)]) =  20; % heat source in the middle
    
     % Set the 4 corners. 
-    quartY = ceil(settings.nely/4);
+    quartY = ceil(config.nely/4);
     Essential =   [1 row (column-1)*row+1 column*row] ; % the 4 corners
     
+    
+elseif (strcmp(loadingScenario,'pressure'))
+  
+    
+    middleX = config.nelx/2;
+    middleY = config.nely/2;
+    radius = 10;
+    error=1;
+    doPlotHeatPositions=0;
+    EssentialCold=[];
+    EssentialHot=[];
+    
+    if(doPlotHeatPositions==1)
+        heatPositions = zeros(size(DV.x));
+        sinkPositions = zeros(config.nely+1,config.nelx+1);
+    end
+    
+    ForceValue=0.01;
+      F = zeros(nn,1);
+    for ii = 1:config.nelx
+        for jj = 1:config.nely
+            distanceFromMiddle=sqrt((ii-middleX)^2+(jj-middleY)^2);
+            if(distanceFromMiddle<radius+error)
+                xNodeNum = (jj-1)*row+ii-1;
+                 F(xNodeNum)=ForceValue;
+% EssentialHot=[EssentialHot xNodeNum];
+                
+                heatPositions(jj,ii)=ForceValue;
+            end
+        end
+    end
+    
+    tt=   1:row :row*(column); % ... % left side
+    t2=tt-1;
+    EssentialCold=[tt t2 ];
+EssentialCold=[ EssentialCold 1: row (column-1)*row: nn];
+
+    EssentialCold=EssentialCold(EssentialCold>0);
+      EssentialCold=EssentialCold(EssentialCold<=nn);
+    EssentialCold = unique(EssentialCold);
+
+
+Essential=[ EssentialCold EssentialHot];
+%     Essential=Essential(Essential>0);
+%       Essential=Essential(Essential<=nn);
+    Essential = unique(Essential);
+
+
+
+
+    
+    if(doPlotHeatPositions==1)
+        subplot(1,2,1);
+        imagesc(heatPositions);
+        
+        for ii = 1:config.nelx+1
+            for jj = 1:config.nely+1
+                indexNumber = (jj-1)*row+ii;
+                if(  any(indexNumber==Essential)==1)
+                    sinkPositions(jj,ii)=1;
+                end
+            end
+        end
+      
+          subplot(1,2,2);
+         imagesc(sinkPositions);
+    end
+    
+    
+
 elseif (strcmp(loadingScenario,'topAndRightLoadsSinkBottomLeft'))
     
     
@@ -105,7 +176,8 @@ elseif (strcmp(loadingScenario,'sourceEverywhereSinkMiddle'))
     Essential=[ceil(row/2)+(ceil(column/2)*row) (ceil(row/2)+1)+(ceil(column/2)*row)]; % heat sink in the middle   
     
 elseif (strcmp(loadingScenario,'sourceEverywhereSinkBottomLeft'))  
-     F = ones(nn,1)*0.001;
+%      F = ones(nn,1)*0.001;
+        F = ones(nn,1)*0.1;
       Essential=[1 2 row+1];
 end
 
@@ -123,24 +195,24 @@ for e = 1:ne
     
       % Get the precalculated element stiffness matrix. 
      % ke = elementK_heat();
-      [elx,ely]= designVars.GivenNodeNumberGetXY(e);
+      [elx,ely]= DV.GivenNodeNumberGetXY(e);
       
         %xx= nelx; yy = nely;
-      if(settings.doUseMultiElePerDV==1) % if elements per design var. 
-         [elx,ely] = designVars.GetDesignVarPositionGivenXYElement(settings,elx,ely);
+      if(config.doUseMultiElePerDV==1) % if elements per design var. 
+         [elx,ely] = DV.GetDesignVarPositionGivenXYElement(config,elx,ely);
       end
       
-      ke = matProp.effectiveHeatKEmatrix(  designVars.w(ely,elx), settings);
+      ke = matProp.effectiveHeatKEmatrix(  DV.w(ely,elx), config);
 
       
       
       % Insert the element stiffness matrix into the global.    
-      node = designVars.IEN(e,:);
+      node = DV.IEN(e,:);
       
       % for the x location
       % The first number is the row - "y value"
       % The second number is the column "x value"
-       K(node,node) = K(node,node) + designVars.x(ely,elx)^settings.penal*ke;
+       K(node,node) = K(node,node) + DV.x(ely,elx)^config.penal*ke;
        
 %        xLoc = xLoc+1;
 %        if(xLoc>settings.nelx)
@@ -170,8 +242,14 @@ F_f = F(Free);
 % end
 
 
-
-T(Essential) = u0;
+% if (strcmp(loadingScenario,'pressure'))
+%     
+%     T(EssentialCold) = u0;
+%     T(EssentialHot) = 100;
+%     
+% else
+    T(Essential) = u0;
+% end
 
 
   
@@ -284,3 +362,4 @@ T(Essential) = u0;
 % 
 % diary off
 T = transpose(T);
+% T = transpose(T);

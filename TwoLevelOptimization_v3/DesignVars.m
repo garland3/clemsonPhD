@@ -43,8 +43,8 @@ classdef DesignVars
         
         
         % Optimization vars (volume fraction optimization)
-        lambda1 = 250;
-        mu1 = 1;
+        lambda1 = 1;
+        mu1 = 0.25;
         c = 0; % objective.
         cCompliance = 0;
         cHeat = 0;
@@ -115,6 +115,9 @@ classdef DesignVars
         % Give it a X,Y position and it will tell you the the rows are the
         % element numbers.
         elementToDesignVarMap;
+        
+        
+        startOverEachTime = 0;
     end
     
     methods
@@ -170,13 +173,14 @@ classdef DesignVars
                 obj.thetaSub=obj.Exx*0; % Sub system copies of design var
                 obj.densityOffsetArray=obj.Exx*0;
                 
-                if(config.useTargetMesoDensity==1)
-                    obj.Exx = ones(size(obj.Exx))*100000*config.targetExxEyyDensity;
-                    %      DV.Exx = ones(size(DV.Exx))*3.277340e+04;
-                else
-                    obj.Exx = ones(size(obj.Exx))*config.targetAvgExxEyy;
-                end
-                obj.Eyy = obj.Exx ;
+                %                 if(config.useTargetMesoDensity==1)
+                %                     obj.Exx = ones(size(obj.Exx))*100000*config.targetExxEyyDensity;
+                %                     %      DV.Exx = ones(size(DV.Exx))*3.277340e+04;
+                %                 else
+                %                     obj.Exx = ones(size(obj.Exx))*config.targetAvgExxEyy;
+                %                 end
+                
+                %                 obj.Eyy = obj.Exx ;
                 
                 
             end
@@ -221,6 +225,13 @@ classdef DesignVars
                 
                 
             end
+            
+            if ( macroDesignMode==1 && config.mode~=50)
+                o = Optimizer;
+                matProp=MaterialProperties;
+                masterloop=1;
+                obj= o.FindStartingExxEyy_V3(obj,config, matProp, masterloop);
+            end
         end
         
         % -----------------------------
@@ -229,6 +240,8 @@ classdef DesignVars
         % Also, read Exx,Eyy,Theta, Lambdas and ExxSub, EyySub, ThetaSub
         % -----------------------------
         function obj = GetMacroStateVarsFromCSVFiles(obj, config,matProp)
+            
+            
             
             if(config.macro_meso_iteration>1 ||config.mode==90)
                 
@@ -277,11 +290,13 @@ classdef DesignVars
                     outnameMesoDensities = sprintf('./out%i/densityUsedSubSysValues%i.csv',folderNum,oldIteration);
                     
                     
-                    
-                    obj.x = csvread(outnameX); % the "density" at each element
-                    obj.Exx = csvread(outnameExx); % the Exx of the orthogonal material
-                    obj.Eyy = csvread(outnameEyy); % the Eyy of the orthogonal material
-                    obj.t = csvread(outnameTheta); %theta, the rotation of the orthogonal material
+                    if(obj.startOverEachTime~=1)
+                        obj.x = csvread(outnameX); % the "density" at each element
+                        obj.Exx = csvread(outnameExx); % the Exx of the orthogonal material
+                        obj.Eyy = csvread(outnameEyy); % the Eyy of the orthogonal material
+                        obj.t = csvread(outnameTheta); %theta, the rotation of the orthogonal material
+                        
+                    end
                     
                     % Sub System Copies of design Vars and Lagrangian Multipliers
                     % starting on iteration 3, get the saved values.
@@ -320,15 +335,21 @@ classdef DesignVars
                         nameGraph = sprintf('./PredictedVSActualMesoDensities%i.png', config.macro_meso_iteration);
                         print(nameGraph,'-dpng');
                         
-%                         obj.densityOffsetArray=(actualDensities-predictedDensities)*0.5;
+                        %                         obj.densityOffsetArray=(actualDensities-predictedDensities)*0.5;
                         close all
                         p.PlotArrayGeneric( obj.densityOffsetArray,'Offset Densities');
                         nameGraph = sprintf('./Predicted_OffsetDensitiesForIteration%i.png', config.macro_meso_iteration);
                         print(nameGraph,'-dpng');
                         
                         
-                                                     obj.densityOffsetArray=actualDensities*0;
+                        obj.densityOffsetArray=actualDensities*0;
                     end
+                    
+                    %                     if 1==0
+                    %                         obj.Exx =obj.ExxSub; % the Exx of the orthogonal material
+                    %                         obj.Eyy = obj.EyySub; % the Eyy of the orthogonal material
+                    %                         obj.t = obj.thetaSub;
+                    %                     end
                     
                     %
                     %                     if(config.macro_meso_iteration>1)
@@ -905,7 +926,8 @@ classdef DesignVars
             else
                 
                 
-                
+                obj.Exx = obj.x.*(obj.w*matProp.E_material1+(1-obj.w)*matProp.E_material2);
+                obj.Eyy =  obj.Exx ;
                 totalMat1 =sum(sum( obj.x.*obj.w*matProp.E_material1));
                 totalMat2 =sum(sum( obj.x.*(1-obj.w)*matProp.E_material2));
                 % obj.actualAverageE= obj.currentVol1Fraction*matProp.E_material1+  obj. currentVol2Fraction*matProp.E_material2;
@@ -949,14 +971,18 @@ classdef DesignVars
         % --------------------------------
         function obj = RunFEAs(obj, config, matProp, loop)
             [~, t2] = size(config.loadingCase);
+            loadcaseIndex=1;
+            loadcase=1;
+            % FE-ANALYSIS
+            if (config.w1 ~= 1)
+                u_heat_loadcase  =temperatureFEA_V3(obj, config, matProp,loop,loadcase);
+                obj.U_heatColumn(loadcaseIndex,:)=u_heat_loadcase;
+            end
+            
             for loadcaseIndex = 1:t2
                 loadcase = config.loadingCase(loadcaseIndex);
                 
-                % FE-ANALYSIS
-                if (config.w1 ~= 1)
-                    u_heat_loadcase  =temperatureFEA_V3(obj, config, matProp,loop,loadcase);
-                    obj.U_heatColumn(loadcaseIndex,:)=u_heat_loadcase;
-                end
+                
                 [UloadCase, obj.maxF, obj.maxU]=FE_elasticV2(obj, config, matProp,loadcase);
                 obj.U(loadcaseIndex,:)=UloadCase;
             end
@@ -979,6 +1005,7 @@ classdef DesignVars
             obj.sensitivityHeat(:,:)=0;
             obj.sensitivityElastic(:,:)=0;
             obj.cCompliance=0;
+            obj.cHeat=0;
             
             % allow multiple loading cases.
             [~, t2] = size(config.loadingCase);
@@ -990,6 +1017,17 @@ classdef DesignVars
             
             % OBJECTIVE FUNCTION AND SENSITIVITY ANALYSIS
             count =1;
+            
+            doPlotTemperature =0;
+            
+            if config.minimizeTempOfMaterial1==1
+                thermalFluxEnergy=zeros(size( obj.sensitivityHeat));
+                
+            end
+            
+            if(doPlotTemperature==1)
+                tempPlot=zeros(size(obj.x));
+            end
             for ely = 1:config.nely
                 rowMultiplier = ely-1;
                 for elx = 1:config.nelx
@@ -1004,14 +1042,28 @@ classdef DesignVars
                     
                     % if heat objective!!!
                     if (config.w1 ~= 1)
-                        U_heat = obj.U_heatColumn(nodes1,:);
+                        %                         U_heat = obj.U_heatColumn(nodes1,:);
+                        U_heat = obj.U_heatColumn(:,nodes1);
+                        tt=1;
+                        U_heat = U_heat(tt,:)';
+                        
+                        if(doPlotTemperature==1)
+                            tempPlotelement=mean(U_heat);
+                            tempPlot(ely,elx)=tempPlotelement;
+                            
+                        end
+                        %                           U_heat = obj.U_heatColumn(:,nodes1)';
                         %                             averageElementTemp = mean2(U_heat); % calculate the average temperature of the 4 nodes
                         KEHeat = matProp.effectiveHeatKEmatrix(  obj.w(ely,elx), config);
-                        obj.cHeat =   obj.cHeat           + obj.x(ely,elx)^config.penal*U_heat'*KEHeat*U_heat;
+                        %                         obj.cHeat =   obj.cHeat           + obj.x(ely,elx)^config.penal*U_heat'*KEHeat*U_heat;
                         
                         % calculate the minim temp sensitivity
                         obj.sensitivityHeat(ely,elx) = -config.penal*obj.x(ely,elx)^(config.penal-1)*U_heat'*KEHeat*U_heat + obj.sensitivityHeat(ely,elx);
-                        % obj.g1heat(ely,elx) = obj.x(ely,elx)^(config.penal)*U_heat'*matProp.dKheat*U_heat + obj.g1heat(ely,elx) ;
+                        
+                        if config.minimizeTempOfMaterial1==1
+                            thermalFluxEnergy(ely,elx) =  obj.x(ely,elx)^(config.penal)*U_heat'*KEHeat*U_heat ;
+                            
+                        end
                     end
                     
                     % Calculate generic KE with 1 as the SIMP density
@@ -1040,6 +1092,21 @@ classdef DesignVars
                 end % end, loop over x
             end % end, for loop over nely
             %             end % end for loop over load cases.
+            if(doPlotTemperature==1)
+                figure(2)
+                p = plotResults;
+                p.PlotArrayGeneric(tempPlot,'temp')
+                drawnow
+            end
+            [ obj.sensitivityHeat]= obj.ApplyLoadSpecificEmptyRegions(config, obj.sensitivityHeat);
+            [ obj.sensitivityElastic]= obj.ApplyLoadSpecificEmptyRegions(config, obj.sensitivityElastic);
+            
+            if config.minimizeTempOfMaterial1==1
+                if (config.w1 ~= 1)
+                    obj.sensitivityHeat=obj.w.* thermalFluxEnergy+obj.x.*(obj.w.* obj.sensitivityHeat);
+                end
+                
+            end
             
             obj.c=obj.cCompliance*config.w1+obj.cHeat*config.w2;
         end % End Function, CalculateSenstivities
@@ -1058,6 +1125,7 @@ classdef DesignVars
             obj. ExxSysAndSubDiffSummed=0;
             obj. EyySysAndSubDiffSummed=0;
             obj.  ThetaSysAndSubDiffSummed=0;
+            obj.cHeat=0;
             
             % allow multiple loading cases.
             [~, t2] = size(config.loadingCase);
@@ -1090,13 +1158,20 @@ classdef DesignVars
                     
                     % if heat objective!!!
                     if (config.w1 ~= 1)
-                        U_heat = obj.U_heatColumn(nodes1,:);
+                        %                         U_heat = obj.U_heatColumn(nodes1,:);
+                        U_heat = obj.U_heatColumn(:,nodes1)';
                         %                             averageElementTemp = mean2(U_heat); % calculate the average temperature of the 4 nodes
                         KEHeat = matProp.effectiveHeatKEmatrix(  obj.w(ely,elx), config);
-                        obj.cHeat =   obj.cHeat           + obj.x(ely,elx)^config.penal*U_heat'*KEHeat*U_heat;
+                        
+                        if config.minimizeTempOfMaterial1==1
+                            obj.cHeat =   obj.cHeat           + obj.w(ely,elx)*obj.x(ely,elx)^config.penal*U_heat'*KEHeat*U_heat;
+                        else
+                            obj.cHeat =   obj.cHeat           + obj.x(ely,elx)^config.penal*U_heat'*KEHeat*U_heat;
+                            
+                        end
                         
                         % calculate the minim temp sensitivity
-                        obj.sensitivityHeat(ely,elx) = -config.penal*obj.x(ely,elx)^(config.penal-1)*U_heat'*KEHeat*U_heat + obj.sensitivityHeat(ely,elx);
+                        %                         obj.sensitivityHeat(ely,elx) = -config.penal*obj.x(ely,elx)^(config.penal-1)*U_heat'*KEHeat*U_heat + obj.sensitivityHeat(ely,elx);
                         % obj.g1heat(ely,elx) = obj.x(ely,elx)^(config.penal)*U_heat'*matProp.dKheat*U_heat + obj.g1heat(ely,elx) ;
                     end
                     
@@ -1227,6 +1302,11 @@ classdef DesignVars
             obj.sensitivityElastic(:,:)=0;
             
             
+            if config.minimizeTempOfMaterial1==1
+                thermalFluxEnergy=zeros(size( obj.sensitivityHeat));
+                
+            end
+            
             %             for loadcaseIndex = 1:t2
             %                 UloadCase=obj.U(loadcaseIndex,:);
             %                 count =1;
@@ -1263,7 +1343,8 @@ classdef DesignVars
                     
                     % if heat objective!!!
                     if (config.w1 ~= 1)
-                        U_heat = obj.U_heatColumn(nodes1,:);
+                        % %                         U_heat = obj.U_heatColumn(nodes1,:);
+                        U_heat = obj.U_heatColumn(:,nodes1)';
                         %                             averageElementTemp = mean2(U_heat); % calculate the average temperature of the 4 nodes
                         KEHeat = matProp.effectiveHeatKEmatrix(  obj.w(ely,elx), config);
                         obj.cHeat =   obj.cHeat  + obj.x(ely,elx)^config.penal*U_heat'*KEHeat*U_heat;
@@ -1271,6 +1352,12 @@ classdef DesignVars
                         % calculate the minim temp sensitivity
                         %                             obj.temp2(ely,elx) = -config.penal*obj.x(ely,elx)^(config.penal-1)*U_heat'*KEHeat*U_heat + obj.temp2(ely,elx);
                         obj.sensitivityHeat(ely,elx) = obj.x(ely,elx)^(config.penal)*U_heat'*matProp.dKheat*U_heat + obj.sensitivityHeat(ely,elx) ;
+                        
+                        
+                        if config.minimizeTempOfMaterial1==1
+                            thermalFluxEnergy(ely,elx) =  obj.x(ely,elx)^(config.penal)*U_heat'*KEHeat*U_heat ;
+                            
+                        end
                     end
                     
                     %                         count=count+1;
@@ -1278,6 +1365,29 @@ classdef DesignVars
             end % end, for loop over y
             
             %             end % end for loop over load cases.
+              if config.minimizeTempOfMaterial1==1
+                if (config.w1 ~= 1)
+                    subplot(1,2,1)
+                    colormap winter
+                    
+                    imagesc(obj.x.*thermalFluxEnergy)
+                    colorbar
+                    subplot(1,2,2)
+                    imagesc(obj.x.*(obj.w.* obj.sensitivityHeat));
+                    colorbar
+                    
+                    
+                    obj.sensitivityHeat=obj.x.*thermalFluxEnergy+obj.x.*(obj.w.* obj.sensitivityHeat);
+                    
+                end
+                
+              end
+            
+            [ obj.sensitivityHeat]= obj.ApplyLoadSpecificEmptyRegions(config, obj.sensitivityHeat);
+            [ obj.sensitivityElastic]= obj.ApplyLoadSpecificEmptyRegions(config, obj.sensitivityElastic);
+            
+          
+            
         end % End Function, CalculateMaterialGradientSensitivity
         
         
@@ -1636,23 +1746,23 @@ classdef DesignVars
                 % method 1, randome values. Does not seem to be working well.
                 obj.x(1:mesoConfig.nely,1:mesoConfig.nelx) = randi([0, round(mesoConfig.totalVolume*100)],mesoConfig.nely,mesoConfig.nelx)/100; % artificial density of the elements, can not be unifrom or else sensitivity will be 0 everywhere.
                 
-%                 % add a box in the middle. 
-%                 midY = round(mesoConfig.nely/2);
-%                 midX = round(mesoConfig.nelx/2);
-%                 
-%                 fractionOfBox=1/10;
-%                 dimY = floor(mesoConfig.nely*fractionOfBox);
-%                 yStart = midY-floor(dimY/2);
-%                 dimX = floor(mesoConfig.nelx*fractionOfBox);
-%                 xStart = midX-floor(dimX/2);
-%                 
-%                 
-%                 obj.x(yStart:yStart+dimY-1,xStart:xStart+dimX-1)= ones(dimY,dimX)*1;
-%                 % bottom left
-%                 obj.x(1:dimY,1:dimY)= 1;
-%                 obj.x(end-dimY:end,1:dimY)= 1;
-%                  obj.x(1:dimY,end-dimY:end)= 1;
-%                   obj.x(end-dimY:end,end-dimY:end)= 1;
+                %                 % add a box in the middle.
+                %                 midY = round(mesoConfig.nely/2);
+                %                 midX = round(mesoConfig.nelx/2);
+                %
+                %                 fractionOfBox=1/10;
+                %                 dimY = floor(mesoConfig.nely*fractionOfBox);
+                %                 yStart = midY-floor(dimY/2);
+                %                 dimX = floor(mesoConfig.nelx*fractionOfBox);
+                %                 xStart = midX-floor(dimX/2);
+                %
+                %
+                %                 obj.x(yStart:yStart+dimY-1,xStart:xStart+dimX-1)= ones(dimY,dimX)*1;
+                %                 % bottom left
+                %                 obj.x(1:dimY,1:dimY)= 1;
+                %                 obj.x(end-dimY:end,1:dimY)= 1;
+                %                  obj.x(1:dimY,end-dimY:end)= 1;
+                %                   obj.x(end-dimY:end,end-dimY:end)= 1;
                 
             elseif(method ==2)
                 % method 2, box of empty in the middle.
@@ -2047,6 +2157,30 @@ classdef DesignVars
             else
                 newSensitivities=obj.dc;
             end
+        end
+        
+        function [newSensitivities]= ApplyLoadSpecificEmptyRegions(obj,config,sensitivies)
+            newSensitivities=sensitivies;
+            if (config.loadingCase ==800)
+                middleX = config.nelx/2;
+                middleY = config.nely/2;
+                
+                %                 error=1;
+                radius=10;
+                for ii = 1:config.nelx
+                    for jj = 1:config.nely
+                        
+                        distanceFromMiddle=sqrt((ii-middleX)^2+(jj-middleY)^2);
+                        
+                        if(distanceFromMiddle<radius)
+                            newSensitivities(jj,ii)=0.001;
+                            
+                        end
+                    end
+                end
+                
+            end
+            
         end
         
     end % End Methods
