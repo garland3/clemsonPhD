@@ -17,7 +17,7 @@
 //#define NELX_MACRO  15 // 30 // 1331 
 //#define NELY_MACRO 15 //15 // 1
 
-#define MODE 2 //1 =BOTT Multiscale optimization 2. Meso Validation 3.  multiscaleMethodCompareToCoelho 4. PseudoStrain and Density Target Test
+#define MODE 1 //1 =BOTT Multiscale optimization 2. Meso Validation 3.  multiscaleMethodCompareToCoelho 4. PseudoStrain and Density Target Test
 
 
 int callMatlab(int mode, int macro_meso_iteration, int element);

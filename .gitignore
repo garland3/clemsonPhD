@@ -22,6 +22,11 @@ MultiObjective_top_gradMaterial_V2/out1/
 MultiObjective_top_gradMaterial_V2/out2/
 MultiObjective_top_gradMaterial_V2/out3/
 
+TwoLevelOptimization_v3/mpi1.*
+TwoLevelOptimization_v3/*.avi
+
 *.png
 *.stl
 *.csv
+*.avi
+*.asv

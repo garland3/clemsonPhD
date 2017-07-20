@@ -530,12 +530,13 @@ if(config.UseLookUpTableForPsuedoStrain==1 && config.strainAndTargetTest~=1 && c
     end
     
     
-    scaleVersion=3;
+    scaleVersion=1;
     if(scaleVersion==1)
         
         smallestDiff = minValue;
         bestScale=0;
-        for scale = -1:0.001:1
+        limits =1/ config.targetTestVectorLen;
+        for scale = -limits:0.001:limits
             D11_table2=D11_table+(scale)*D11_table;
             D12_table2 = D12_table+(scale)*D12_table ;
             D22_table2=D22_table+(scale)*D22_table;

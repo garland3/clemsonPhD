@@ -3,7 +3,7 @@ clear
 close all
 
 % Target PseudoStrains and Density Modes
-%   combinedTopologyOptimization('1', '1', '1','113', 'na'); % genrate psuedo strain and density targets
+%    combinedTopologyOptimization('1', '1', '1','113', 'na'); % genrate psuedo strain and density targets
 %    combinedTopologyOptimization('1', '1', '1','114', 'na'); % save psuedo strain and density targets results in data files
 %         combinedTopologyOptimization('1', '1', '1','115', 'na'); % plot psuedo strain and density targets results
 
@@ -21,8 +21,8 @@ close all
 
 
 % % Iteration 1 of topology, Exx, Eyy, rotation
-%   combinedTopologyOptimization('1', '1', '1','60', 'na');
-%  combinedTopologyOptimization('1', '1', '1','200', 'na');
+  combinedTopologyOptimization('1', '1', '1','60', 'na');
+ combinedTopologyOptimization('1', '1', '1','200', 'na');
 %     combinedTopologyOptimization('1', '1', '1','202', 'na'); % make complete structure
 % combinedTopologyOptimization('1', '1', '1','90', 'na');
 %     combinedTopologyOptimization('1', '1', '1','203', 'na'); % extact macro values
@@ -52,8 +52,8 @@ close all
 % combinedTopologyOptimization('1', '1', '1','200', 'na');
 
 % Gradient isotropic material, Parts 1 and 2 of research
-   combinedTopologyOptimization('1', '1', '1','50', 'na');
-  combinedTopologyOptimization('1', '1', '1','200', 'na');
+%     combinedTopologyOptimization('1', '1', '1','50', 'na');
+%   combinedTopologyOptimization('1', '1', '1','200', 'na');
 
 
 % annTest(1);
@@ -72,11 +72,12 @@ totale=nelx*nely;
 % end
 % idum
 % % % % % for i = 1:totale, 188
-listOfProblems=[364 758 838 839 918 997 998 1626];
-%   for i =listOfProblems 
-%       combinedTopologyOptimization('1', '1', '1','100', int2str(i)); %
-% %       run the meso structure design to get the actual data
-%  end
+%  listOfProblems=[364 758 838 839 918 997 998 1626];
+%    for i =listOfProblems
+% % for i =5001:6000
+%     combinedTopologyOptimization('1', '1', '1','100', int2str(i)); %
+%     %       run the meso structure design to get the actual data
+% end
 
 if(1==0)
     

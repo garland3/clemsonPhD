@@ -116,19 +116,19 @@ if 1==1
                 if exist(outname, 'file') ~= 2
                     fprintf('File does not exist. Retry\n');
                     combinedTopologyOptimization('1', '1', '1','100', int2str(elementNumber));
-
+                    
                 end
                 v =  csvread(outname);
                 if(v>1)
                     message = 'Volume is greater than 1???'
                     break
                 end
-
+                
                 if(v<0)
                     message = 'Volume is less than 0???'
                     break
                 end
-
+                
                 if(isreal(v)~=1)
                     message = 'Volume is imaginary???'
                     break
@@ -278,18 +278,18 @@ if 1==1
             
             
             % Also, there is some difficulty when actualTheta is 0 or pi/2
-              diffTheta = abs( ActualThetaValue-Theta);
+            diffTheta = abs( ActualThetaValue-Theta);
             
             if(diffTheta>(pi/2-epsilon))
                 if(Theta>pi/4)
                     Theta=pi/2-Theta;
                 else
-                     Theta=pi/2-Theta;
-%                       Theta=Theta-pi/2;
+                    Theta=pi/2-Theta;
+                    %                       Theta=Theta-pi/2;
                 end
                 
                 %             str = sprintf('Theta on wrong boundary. Switching values. ')
-%                 diffTheta = abs( ActualThetaValue-Theta); % The new Diff Theta
+                %                 diffTheta = abs( ActualThetaValue-Theta); % The new Diff Theta
             end
             
             
@@ -309,47 +309,47 @@ if 1==1
             
             diffX = ActualExx-Exx;
             diffY = ActualEyy-Eyy;
-             diffTheta =  ActualThetaValue-Theta;
+            diffTheta =  ActualThetaValue-Theta;
             
             
-%             relativeErrorDiffExx = abs(diffX)/max(ActualExx,5);
-%             relativeErrorDiffyy = abs(diffY)/max(ActualEyy,5);
-%             relativeErrorDiffTheta = abs(diffTheta)/max(ActualThetaValue,0.05);
+            %             relativeErrorDiffExx = abs(diffX)/max(ActualExx,5);
+            %             relativeErrorDiffyy = abs(diffY)/max(ActualEyy,5);
+            %             relativeErrorDiffTheta = abs(diffTheta)/max(ActualThetaValue,0.05);
             
-             relativeErrorDiffExx = abs(diffX)/mean([ActualExx Exx]);
+            relativeErrorDiffExx = abs(diffX)/mean([ActualExx Exx]);
             relativeErrorDiffyy = abs(diffY)/mean([ActualEyy Eyy]);
             relativeErrorDiffTheta = abs(diffTheta)/mean([ActualThetaValue Theta]);
             
             maxError = 1;
             LargeErroFlag = 0;
             
-            if(1==1)
+            if(1==0)
                 if(ActualExx<20000 && ActualEyy< 500 && ActualThetaValue>pi/4  ) % target the low densities
-%                     if(ActualThetaValue>pi/4  && ActualEyy*0.25>ActualExx )
-                        if(relativeErrorDiffExx>maxError)
-                            fprintf('%i Exx Large Error: Target  = %f mesovalue = %f\n', e,ActualExx,Exx)
-                            LargeErroFlag = 1;
-                        end
-                        if(relativeErrorDiffyy>maxError)
-                            fprintf('%i Eyy Large Error: Target  = %f mesovalue = %f\n', e,ActualEyy,Eyy)
-                            LargeErroFlag = 1;
-                        end
-                        if( relativeErrorDiffTheta>maxError)
-                            fprintf('%i Theta Large Error: Target  = %f mesovalue = %f\n', e,ActualThetaValue,Theta)
-                            LargeErroFlag = 1;
-                        end
-
-                        if( LargeErroFlag ==1)
-                            fprintf('More Data: Target: Value: Relative Error\n')
-                            fprintf('Exx %f %f %f\n',ActualExx,Exx,relativeErrorDiffExx)
-                            fprintf('Eyy %f %f %f\n',ActualEyy,Eyy,relativeErrorDiffyy)
-                            fprintf('Theta %f %f %f\n',ActualThetaValue,Theta,relativeErrorDiffTheta)
-                            fprintf('rho = %f\n\n',v);
-                            %: Targets %f %f %f, Meso %f %f %f, Rho=%f\n',ActualExx,ActualEyy,ActualThetaValue,Exx,Eyy,Theta,v)
-                             plotAnElement( config.macro_meso_iteration,e)
-                        end
+                    %                     if(ActualThetaValue>pi/4  && ActualEyy*0.25>ActualExx )
+                    if(relativeErrorDiffExx>maxError)
+                        fprintf('%i Exx Large Error: Target  = %f mesovalue = %f\n', e,ActualExx,Exx)
+                        LargeErroFlag = 1;
+                    end
+                    if(relativeErrorDiffyy>maxError)
+                        fprintf('%i Eyy Large Error: Target  = %f mesovalue = %f\n', e,ActualEyy,Eyy)
+                        LargeErroFlag = 1;
+                    end
+                    if( relativeErrorDiffTheta>maxError)
+                        fprintf('%i Theta Large Error: Target  = %f mesovalue = %f\n', e,ActualThetaValue,Theta)
+                        LargeErroFlag = 1;
+                    end
                     
-%                     end
+                    if( LargeErroFlag ==1)
+                        fprintf('More Data: Target: Value: Relative Error\n')
+                        fprintf('Exx %f %f %f\n',ActualExx,Exx,relativeErrorDiffExx)
+                        fprintf('Eyy %f %f %f\n',ActualEyy,Eyy,relativeErrorDiffyy)
+                        fprintf('Theta %f %f %f\n',ActualThetaValue,Theta,relativeErrorDiffTheta)
+                        fprintf('rho = %f\n\n',v);
+                        %: Targets %f %f %f, Meso %f %f %f, Rho=%f\n',ActualExx,ActualEyy,ActualThetaValue,Exx,Eyy,Theta,v)
+                        plotAnElement( config.macro_meso_iteration,e)
+                    end
+                    
+                    %                     end
                 end
             end
             
@@ -369,17 +369,17 @@ if 1==1
             if(strangeResultsFlag==0)
                 % The Exx and Eyy values here are already correct to take
                 % into account the SIMP, rho value. So, you do not need to
-                % scale the ActualExx or ActualEyy to compare the two. 
+                % scale the ActualExx or ActualEyy to compare the two.
                 
                 rhoArray = [rhoArray;v];
                 ExxArray=[ExxArray;Exx];
                 EyyArray=[EyyArray;Eyy];
                 thetaArray=[thetaArray;Theta];
                 
-%                 MacroExxColumn=[MacroExxColumn;ActualExx*macroElementProps.densitySIMP^(config.penal)];
-%                 MacroEyyColumn=[MacroEyyColumn;ActualEyy*macroElementProps.densitySIMP^(config.penal)];
+                %                 MacroExxColumn=[MacroExxColumn;ActualExx*macroElementProps.densitySIMP^(config.penal)];
+                %                 MacroEyyColumn=[MacroEyyColumn;ActualEyy*macroElementProps.densitySIMP^(config.penal)];
                 
-                  MacroExxColumn=[MacroExxColumn;ActualExx];
+                MacroExxColumn=[MacroExxColumn;ActualExx];
                 MacroEyyColumn=[MacroEyyColumn;ActualEyy];
                 MacroThetaColumn=[MacroThetaColumn;ActualThetaValue];
                 RhoColumn=[RhoColumn;v];
@@ -396,7 +396,7 @@ if 1==1
         end
     end
     
-      if(config.validationModeOn==1)
+    if(config.validationModeOn==1)
         PlotType = 'MesoValidation' ;
     else
         PlotType=sprintf('Results From Iter %i',config.macro_meso_iteration);
@@ -475,25 +475,25 @@ if 1==1
     print(nameGraph,'-dpng');
     close all
     
-%      Errorxx =abs( diffExx)./0.5*( ExxMacro+ DV.Exx);
-%     Erroryy =abs( diffEyy)./0.5*( EyyMacro+ DV.Eyy);% EyyMacro- DV.Eyy;
-%     ErrorTheta =abs( diffTheta)./0.5*( ThetaMacro+ DV.t);%  ThetaMacro- DV.t;
-%     
-%      xplots = 2;
-%     yplots = 2;
-%     c= 1;
-%     figure(1)
-%     subplot(xplots,yplots,c);c=c+1;
-%     
-%     p.PlotArrayGeneric( Errorxx, 'Error (diff)/avg, Exx')
-%     subplot(xplots,yplots,c);c=c+1;
-%     p.PlotArrayGeneric( Erroryy, 'Error (diff)/avg, Eyy')
-%     subplot(xplots,yplots,c);c=c+1;
-%     p.PlotArrayGeneric( ErrorTheta,  'Error (diff)/avg, Theta')
-%     nameGraph = sprintf('./%s_MesoDesignExxEyyThetaErrorINPositions%i.png',PlotType, config.macro_meso_iteration);
-%     print(nameGraph,'-dpng');
-%     close all
-%     
+    %      Errorxx =abs( diffExx)./0.5*( ExxMacro+ DV.Exx);
+    %     Erroryy =abs( diffEyy)./0.5*( EyyMacro+ DV.Eyy);% EyyMacro- DV.Eyy;
+    %     ErrorTheta =abs( diffTheta)./0.5*( ThetaMacro+ DV.t);%  ThetaMacro- DV.t;
+    %
+    %      xplots = 2;
+    %     yplots = 2;
+    %     c= 1;
+    %     figure(1)
+    %     subplot(xplots,yplots,c);c=c+1;
+    %
+    %     p.PlotArrayGeneric( Errorxx, 'Error (diff)/avg, Exx')
+    %     subplot(xplots,yplots,c);c=c+1;
+    %     p.PlotArrayGeneric( Erroryy, 'Error (diff)/avg, Eyy')
+    %     subplot(xplots,yplots,c);c=c+1;
+    %     p.PlotArrayGeneric( ErrorTheta,  'Error (diff)/avg, Theta')
+    %     nameGraph = sprintf('./%s_MesoDesignExxEyyThetaErrorINPositions%i.png',PlotType, config.macro_meso_iteration);
+    %     print(nameGraph,'-dpng');
+    %     close all
+    %
     
     % --------------------
     %
@@ -502,7 +502,7 @@ if 1==1
     % --------------------
     
     if(config.ScaleTheSubSystemValuesToMeetVolumeConstraint==1)
-    
+        
         l1 = 0; l2 = 3;% move = 0.2;
         %             sumDensity =0;
         o=Optimizer;
@@ -513,14 +513,14 @@ if 1==1
             target=config.targetAvgExxEyy;
             totalMaterial= sum(sum(DV.x));
         end
-    
+        
         fprintf('try scaling the Sub values\n');
-    
+        
         while (l2-l1 > 1e-6)
             lambda1 = 0.5*(l2+l1);
             ExxNew=DV.Exx*lambda1;
             EyyNew=DV.Eyy*lambda1;
-    
+            
             if(config.useTargetMesoDensity==1)
                 [~, ~,rhoValue] = o.CalculateDensitySensitivityandRho(ExxNew/matProp.E_material1,EyyNew/matProp.E_material1,theta,DV.x,DV.ResponseSurfaceCoefficents,config,matProp,0);
                 rhoValue=max(0,min(rhoValue,1));
@@ -528,17 +528,17 @@ if 1==1
                 sumDensity=temp2/(config.nelx*config.nely*config.totalVolume);
                 currentValue=sumDensity;
             else
-    
-    
+                
+                
                 totalExx =DV.x.*ExxNew;
                 totalEyy = DV.x.* EyyNew;
                 avgE = (totalExx+totalEyy)/2;
                 averageElasticLocal= sum(sum(avgE))/totalMaterial;
-    
+                
                 currentValue=averageElasticLocal;
             end
-    
-    
+            
+            
             fprintf('Target %f and current %f\n',target,currentValue);
             if target- currentValue<0;
                 l2 = lambda1;
@@ -546,10 +546,10 @@ if 1==1
                 l1 = lambda1;
             end
         end
-    
+        
         DV.Exx=    DV.Exx*lambda1;
         DV.Eyy=      DV.Eyy*lambda1;
-    
+        
         fprintf('Final Lambda = %f with final value of %f\n',lambda1,currentValue);
     end
     
@@ -631,7 +631,7 @@ if 1==1
     % p.PlotArrayGeneric(100* relativeErrorTheta, 'Percent Error Theta')
     % subplot(2,2,4)
     % p.PlotArrayGeneric(diffTheta, 'Diff Theta')
-  
+    
     
     % --------------------------------------------------------
     %
@@ -639,7 +639,7 @@ if 1==1
     %    Meso Validation Case
     %
     % --------------------------------------------------------
-  
+    
     
     % --------------------------
     % Plot the raw data showing the density as circles
@@ -696,13 +696,13 @@ if 1==1
         sumABSVAlues = abs(MacroExxColumn)+abs(ExxArray);
         diffExx=diffExx./(sumABSVAlues./2); %
         
-%         size(MacroExxColumn)
-%         size(diffExx)
+        %         size(MacroExxColumn)
+        %         size(diffExx)
         %         diffExx( MacroExxColumn==0)=0;
         
         % Eyy Relative Error
         diffEyy = MacroEyyColumn-EyyArray;
-         diffEyy=abs(diffEyy);
+        diffEyy=abs(diffEyy);
         sumABSVAlues = abs(MacroEyyColumn)+abs(EyyArray);
         diffEyy=diffEyy./(sumABSVAlues./2); %
         %
@@ -710,7 +710,7 @@ if 1==1
         
         % Theta Relative Error
         diffTheta = MacroThetaColumn-thetaArray;
-         diffTheta=abs(diffTheta);
+        diffTheta=abs(diffTheta);
         sumABSVAlues = abs(MacroThetaColumn)+abs(thetaArray);
         diffTheta=diffTheta./(sumABSVAlues./2); %
         
@@ -989,7 +989,7 @@ if 1==1
         %         size(MacroEyyColumnTotal)
         %         size(MacroThetaColumnTotal)
         %         size(ErrorTotal)
-    
+        
         
         
         % Save the combined Erorr Values
@@ -1012,7 +1012,7 @@ if 1==1
         outname = sprintf('./%s/ErrorTotal%i.csv',folderName,macro_meso_iteration);
         csvwrite( outname,  ErrorTotal);
         
-            % -----------------------------
+        % -----------------------------
         % -----------------------------
         % -----------------------------
         % Plot the Total error

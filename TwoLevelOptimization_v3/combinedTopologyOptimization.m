@@ -193,7 +193,7 @@ end
 
 if(config.recvid==1)
     video = VideoManager;
-    [vidObj, framedNumber] = video.InitializeVideo( config,'macroOptVide.avi');
+    [vidObj, framedNumber] = video.InitializeVideo( config,'macroOptVideoTopology.avi');
     F=getframe();
 end
 

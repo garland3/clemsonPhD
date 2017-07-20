@@ -430,7 +430,7 @@ classdef Optimizer
             %
             % Update design var.
             %-----------------------
-            largest=1e8;
+            largest=1e9;
             
             move = matProp.E_material1*0.05;
             minimum =config.minEallowed;

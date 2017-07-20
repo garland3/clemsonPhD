@@ -52,8 +52,8 @@ classdef Configuration
         % VOLUME Fraction SEttings.
         timestep = 0.05; % time step for the volume fraction update algorithm
         volFractionDamping =0.5; % 0.1
-        v1 = 0.20; % 0.8 amount of material 1 to use. default to 20%
-        v2 =0.20; %  0.2 amount of material 2 to use. default to 40%, reduced so there is less meso structures to compute
+        v1 = 0.2; % 0.8 amount of material 1 to use. default to 20%
+        v2 =0.2; %  0.2 amount of material 2 to use. default to 40%, reduced so there is less meso structures to compute
         totalVolume; % = v1+v2;
         volFractionOptiizationMethod = 2;
         minimizeTempOfMaterial1=0;
@@ -77,8 +77,8 @@ classdef Configuration
         
         
         % Exx and Eyy Distribution
-        useExxEyy=0;    % must be 0 for gradient material optimization
-        useTargetMesoDensity = 0; % 1 = yes, 0 = no and use target Eavg
+        useExxEyy=1;    % must be 0 for gradient material optimization
+        useTargetMesoDensity = 1; % 1 = yes, 0 = no and use target Eavg
         targetAvgExxEyy=50000 ;
         minEallowed = 25000  ; % about 5% of max
         targetExxEyyDensity =  0.3750; % 0.3750 $$$$ DENSITY of MESO STRUCTURES $$$$
@@ -89,7 +89,7 @@ classdef Configuration
         rminExxEyy = 1.2 % smoothing radius for sensitivity smoothing.
          
         % rotation
-        useRotation =0; % must be 0 for gradient material optimization
+        useRotation =1; % must be 0 for gradient material optimization
         minRotation =-pi/2;
         maxRotation = pi;
         rotationMoveLimit = pi/45;
@@ -111,7 +111,7 @@ classdef Configuration
         doPlotHeat = 0;
         doPlotHeatSensitivityTopology = 0;
         doPlotStress = 0;
-        doPlotFinal =1; % blue, green, empty space plot
+        doPlotFinal =0 % blue, green, empty space plot
         doPlotMetrics = 0;
         doPlotConsistencyConstraintsInMetrics = 1;
         doSaveDesignVarsToCSVFile = 0; % set to 1 to write plotFinal csv file instead
@@ -126,7 +126,7 @@ classdef Configuration
         doPlotAnIsotropicValues=0; % 4 plots
         
         % Exx ,Eyy , Theta (and Rho) Plot Data
-        doPlotCombinedExxEyyAndRotation = 0;
+        doPlotCombinedExxEyyAndRotation = 1;
         doIncludeRho=1;;
         doIncludeSubSystemValues=1;
         %-----------------
@@ -185,6 +185,9 @@ classdef Configuration
         % Loading cases
         % ---------------------------
 %                loadingCase = [113]; % left clamped, load, middle right
+%      loadingCase = [111 112 113]; % left clamped
+% loadingCase=[114]; %MMB beam 
+loadingCase=[115;]
 %                     loadingCase = [111 112 113]; % left clamped
         %            loadingCase = [111 112 ]; % left clamped
         %          loadingCase = [111 120 121]; % up, down, right in top right corrner, left clamp.
@@ -198,7 +201,7 @@ classdef Configuration
         %                 loadingCase = [111]; % top right, force in Y direction
 %         loadingCase = [500]; % load everywhere. Fixed on the left.
 % loadingCase = [600]; % hook
-   loadingCase = [600 601 602 603 604 605]; % canyon bridge
+%    loadingCase = [600 601 602 603 604 605]; % canyon bridge
 %   loadingCase=[800]; % pressure vessel 
 
 
@@ -263,13 +266,13 @@ classdef Configuration
                 % ------------
                 % Palmetto running case
                 % -------------------
-                obj.nelx = 40; %% 30
-                obj.nely = 40; %  15
+                obj.nelx = 105; %% 30
+                obj.nely = 30; %  15
                 obj.nelxMeso = 35; %35;
                 obj.nelyMeso =35; %35;
                 obj.terminationAverageCount = 10;
                 obj.terminationCriteria =0.001; % 0.0%
-                obj.maxFEACalls = 60;
+                obj.maxFEACalls = 200;
                 obj.maxMasterLoops = 300;
                 
 %             end

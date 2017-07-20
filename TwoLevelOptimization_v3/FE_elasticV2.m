@@ -22,6 +22,13 @@ bridgeStart = (row*(floor(column/2)-1)+1)*2; % (row*(floor(column/2))+1)*2;
 bridgeEnd=(row*(floor(column/2)-0))*2; % (row*(1+floor(column/2)))*2;
 
 loadMagnitude = 1;%10000
+
+doPlotVectorsOfForce=0;
+if(doPlotVectorsOfForce==1)
+    xArrows = zeros(size(DV.x));
+    yArrows = zeros(size(DV.x));
+end
+
 % loading condition
 if loadingCase == 111
     FappliedLoad = loadMagnitude;
@@ -59,6 +66,36 @@ elseif loadingCase ==113
         F( (row*2)*floor(column/2)) = FappliedLoad; % middle to the right
     end
     
+elseif loadingCase ==114
+    % MMB beam problem. Classic topology optimization
+    FappliedLoad = loadMagnitude;
+    tt=   1:2*row :2*row*(column); % ... % left side x-direction
+    t2=[];
+    t3 = [row*2 ];
+    t4 = [];
+    u3 = 0;
+    Essential=[tt t2 t3 t4];
+    Essential = unique(Essential);
+    % Down in the top right corner
+    forceNode = (column-1)*row*2+2;
+    F(forceNode) = -FappliedLoad*100;    
+    
+elseif loadingCase ==115
+    % beam supported on left and right. Load down in the middel
+    FappliedLoad = loadMagnitude;
+%     tt=   1:2*row :2*row*(column); % ... % left side x-direction
+
+    tt=[1 2];
+    t2=[];
+    t3 = [row*2 row*2-1];
+    t4 = [];
+    u3 = 0;
+    Essential=[tt t2 t3 t4];
+    Essential = unique(Essential);
+    % Down in the top right corner
+%     forceNode = (column-1)*row*2+floor(row/2)*2+2;
+    forceNode=(column-1)*row*2:2:(column)*row*2;
+    F(forceNode) = -FappliedLoad*100;
     
     % -------------------------------------------------
     %
@@ -197,14 +234,14 @@ elseif loadingCase ==405
     F(fnodes) =FappliedLoad/count;
     
 elseif loadingCase ==500
-     FappliedLoad = 2*loadMagnitude/ndof;
+    FappliedLoad = 2*loadMagnitude/ndof;
     tt=   1:2*row :2*row*(column); % ... % left side
     t2=tt+1;
     Essential=[tt t2];
     Essential = unique(Essential);
     F (2:2:ndof)=FappliedLoad;
     
- % -------------------------------------------------
+    % -------------------------------------------------
     %
     % 600s are the canyon BRIDGE
     %
@@ -292,7 +329,7 @@ elseif loadingCase ==605
     
 elseif loadingCase ==800
     % --------------------------
-    % Pressure Vessel 
+    % Pressure Vessel
     % --------------------------
     canyonProblem = 1;
     FappliedLoad = loadMagnitude;
@@ -304,12 +341,9 @@ elseif loadingCase ==800
     radius = 10;
     error=1;
     
-    doPlotVectorsOfForce=0;
     
-    if(doPlotVectorsOfForce==1)
-        xArrows = zeros(size(DV.x));
-        yArrows = zeros(size(DV.x));
-    end
+    
+    
     
     
     for ii = 1:config.nelx
@@ -332,30 +366,38 @@ elseif loadingCase ==800
                 end
                 
                 F(xNodeNum)=ForceValue*cos(angle)*signOfForce;
-                 F(yNodeNum)=ForceValue*sin(angle)*signOfForce;
-                 
-                 xArrows(jj,ii)=F(xNodeNum);
-                 yArrows(jj,ii)=F(yNodeNum);
+                F(yNodeNum)=ForceValue*sin(angle)*signOfForce;
+                
+                xArrows(jj,ii)=F(xNodeNum);
+                yArrows(jj,ii)=F(yNodeNum);
                 
             end
         end
     end
     
-     if(doPlotVectorsOfForce==1)
-         
-           [X,Y] = meshgrid(1:config.nelx,1:config.nely);
-         
-            quiver(X,Y,xArrows,yArrows);
-         
-     end
     
     
-%     fnodes=
-%     
-%      count = size(fnodes,2);
-%     F(fnodes) =FappliedLoad/count;
+    
+    %     fnodes=
+    %
+    %      count = size(fnodes,2);
+    %     F(fnodes) =FappliedLoad/count;
     
     
+    
+end
+
+if(doPlotVectorsOfForce==1)
+    
+      for ii = 1:config.nelx+1
+        for jj = 1:config.nely+1
+            
+        end
+      end
+    
+    [X,Y] = meshgrid(1:config.nelx,1:config.nely);
+    
+    quiver(X,Y,xArrows,yArrows);
     
 end
 
@@ -365,7 +407,7 @@ if(bottomFixed==1)
 end
 
 if(canyonProblem==1)
-      tt=   1:2*row :2*row*(column); % ... % left side
+    tt=   1:2*row :2*row*(column); % ... % left side
     t2=tt+1;
     t3 =tt-1;
     t4 =tt-2;
