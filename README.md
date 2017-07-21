@@ -59,13 +59,97 @@ For running the topology and gradient material optimization code on a desktop wi
 #### Run Just topology optimization
 Configure Configuration.m so that v1=Target density . In MaterialProperties.m specify the elastic modulus of the base material. IN temperatureFEA_V3.m and FE_elasticV2.m setup the boundary conditions and loading conditions. This must be done manually using the node numbers. 
 
-The second arg to the  combinedTopologyOptimization specifies the weight of the dual objective weighing function. 
+The second arg to the  combinedTopologyOptimization specifies the weight of the dual objective weighing function.
+
+The 4th argument is the mode number. Mode 1 is only topology optimization. Mode 200 plots the output design metrics.  
 
 Run the code
 ```
-combinedTopologyOptimization('1', '0.5', '1','50', 'na');
+combinedTopologyOptimization('1', '0.5', '1','1', 'na');
 combinedTopologyOptimization('1', '0.5', '1','200', 'na');
 ```
+
+#### Run Topology optimization and Gradient material optimization
+1. Specify the target density of each material by setting v1=density of mateiral 1 and v2= density of material 2 in the Configuration.m file. 
+2. Set useExxEyy=0 and useRotation=0 in the Configuation file. 
+
+Run the code
+
+```
+combinedTopologyOptimization('1', '0.5', '1','1', 'na');
+combinedTopologyOptimization('1', '0.5', '1','200', 'na');
+```
+
+
+#### Run Topology optimization and Gradeint Orthotropic material (BOTT macro optimization)
+1. Specify the target total topology density be setting v1=target density. v2=0
+2. Set useExxEyy=1 and useRotation=1 in the Configuation file. 
+3. Specify to use a target average mesostructure density or a target avg elastic modulus useTargetMesoDensity in the Configuation.m file. 
+    1. Target avg E is targetAvgExxEyy
+    2. Target density is targetExxEyyDensity
+4. Specify the minimum summed elastic modulus at each location (Exx+Eyy>Emin), minEallowed=
+
+Run the code
+
+```
+ combinedTopologyOptimization('1', '1', '1','60', 'na');
+ combinedTopologyOptimization('1', '1', '1','200', 'na');
+ ```
+ 
+ 
+ #### Run Meosstructure Optimization
+ 1. Make sure you have design targets for the mesostructure optimization by running the macro optimization first. 
+ 2. Select the method of mesostructure design that you want. 
+ 
+ ```
+UseLookUpTableForPsuedoStrain=1; %0 = feedback loop, 1 = use look up.
+mesoVolumeUpdateMethod=1; % 1 = average, 2 = Target the larger
+lookupSearchScheme=2; % 2 = search table and scale eta, 4 = linear interpolation with particle swarm
+ ```
+ 
+ Then run the code for all the mesostructures. N is the number of macro elements
+ 
+ ```
+for i =1:N
+    combinedTopologyOptimization('1', '1', '1','100', int2str(i)); 
+end
+ ```
+ 
+ #### Run Pseudo strain and density target Experiment
+ 1. Turn on the test configuration. strainAndTargetTest=1;
+ 2. Specify the length of the vector of combinations (step=1/targetTestVectorLen)
+
+ The code generates the targets, then runs the mesostructure optimization. 
+ 
+ ```
+combinedTopologyOptimization('1', '1', '1','113', 'na'); % genrate psuedo strain and density targets
+for i =1:N
+    combinedTopologyOptimization('1', '1', '1','100', int2str(i)); 
+end
+combinedTopologyOptimization('1', '1', '1','114', 'na'); % save psuedo strain and density targets results in data files
+combinedTopologyOptimization('1', '1', '1','115', 'na'); % plot psuedo strain and density targets results
+```
+
+In the C program, you specify mode 4 to run the same code, but the mesostructure designs are run in parallel. 
+
+#### Run the mesostructure validation test
+1. Turn on the validation mode validationModeOn=1
+2. Specify the number of problems to run validationGridSizeNelx^3 is the number of problems. 
+
+The code systematially changes Exx, Eyy, and theta targets for the mesostructure design problem. 
+
+```
+combinedTopologyOptimization('1', '1', '1','111', 'na');
+for i =1:N
+    combinedTopologyOptimization('1', '1', '1','100', int2str(i)); 
+end
+combinedTopologyOptimization('1', '1', '1','112', 'na');
+```
+
+
+In the C program, you specify mode 2
+
+
 
 
 

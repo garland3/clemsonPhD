@@ -52,7 +52,7 @@ close all
 % combinedTopologyOptimization('1', '1', '1','200', 'na');
 
 % Gradient isotropic material, Parts 1 and 2 of research
-     combinedTopologyOptimization('1', '0.5', '1','50', 'na');
+%      combinedTopologyOptimization('1', '0.5', '1','50', 'na');
 %   combinedTopologyOptimization('1', '1', '1','200', 'na');
 
 
