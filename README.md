@@ -50,8 +50,22 @@ For running the topology and gradient material optimization code on a desktop wi
 7. On a desktop computer it might be hard to run the whole BOTT algorithm, but you can easily run the macro and individual mesostructure optimization algorithms by specifiying the mode and/or the element number. 
 8.  Monitor progress on the cluster computer with 
     1.  qstat -u username
-   2.    qpeek jobid | tail -n 100
+    2.    qpeek jobid | tail -n 100
+    
+ 
 
+### Examples
+
+#### Run Just topology optimization
+Configure Configuration.m so that v1=Target density . In MaterialProperties.m specify the elastic modulus of the base material. IN temperatureFEA_V3.m and FE_elasticV2.m setup the boundary conditions and loading conditions. This must be done manually using the node numbers. 
+
+The second arg to the  combinedTopologyOptimization specifies the weight of the dual objective weighing function. 
+
+Run the code
+```
+combinedTopologyOptimization('1', '0.5', '1','50', 'na');
+combinedTopologyOptimization('1', '0.5', '1','200', 'na');
+```
 
 
 
