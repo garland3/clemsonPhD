@@ -112,7 +112,7 @@ classdef Configuration
         doPlotHeatSensitivityTopology = 0;
         doPlotStress = 0;
         doPlotFinal =0 % blue, green, empty space plot
-        doPlotMetrics = 0;
+        doPlotMetrics = 1;
         doPlotConsistencyConstraintsInMetrics = 1;
         doSaveDesignVarsToCSVFile = 0; % set to 1 to write plotFinal csv file instead
         doPlotAppliedStrain = 0; % For debugging only
@@ -126,13 +126,13 @@ classdef Configuration
         doPlotAnIsotropicValues=0; % 4 plots
         
         % Exx ,Eyy , Theta (and Rho) Plot Data
-        doPlotCombinedExxEyyAndRotation = 1;
+        doPlotCombinedExxEyyAndRotation = 0;
         doIncludeRho=1;;
         doIncludeSubSystemValues=1;
         %-----------------
         
-        recvid = 0; % record video
-        maximizePlots= 0;
+        recvid = 1; % record video
+        maximizePlots= 1;
         
         % ----------------
         % Computational settings
@@ -184,10 +184,10 @@ classdef Configuration
         % ---------------------------
         % Loading cases
         % ---------------------------
-%                loadingCase = [113]; % left clamped, load, middle right
+                loadingCase = [113]; % left clamped, load, middle right
 %      loadingCase = [111 112 113]; % left clamped
 % loadingCase=[114]; %MMB beam 
-loadingCase=[115;]
+% loadingCase=[115;] bridge load. Forces down on deck and held fixed at left and right base. 
 %                     loadingCase = [111 112 113]; % left clamped
         %            loadingCase = [111 112 ]; % left clamped
         %          loadingCase = [111 120 121]; % up, down, right in top right corrner, left clamp.
@@ -266,13 +266,13 @@ loadingCase=[115;]
                 % ------------
                 % Palmetto running case
                 % -------------------
-                obj.nelx = 105; %% 30
-                obj.nely = 30; %  15
+                obj.nelx = 80; %% 30
+                obj.nely = 40; %  15
                 obj.nelxMeso = 35; %35;
                 obj.nelyMeso =35; %35;
                 obj.terminationAverageCount = 10;
                 obj.terminationCriteria =0.001; % 0.0%
-                obj.maxFEACalls = 200;
+                obj.maxFEACalls = 60;
                 obj.maxMasterLoops = 300;
                 
 %             end

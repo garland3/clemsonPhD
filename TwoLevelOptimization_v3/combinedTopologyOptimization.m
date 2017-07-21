@@ -273,8 +273,9 @@ if(macroDesignMode==1 &&  config.mode ~= 90)
             %             DV = DV.RunFEAs(config, matProp, masterloop);
             %             FEACalls = FEACalls+1;
             DV= DV.CalculateObjectiveValue(config, matProp, masterloop,opt);
+             DV = DV.AddDataToStoreOptimizationVarArray(config);
             ShowOptimizerProgress(DV,1,' vol fraction',FEACalls,config, matProp);
-            DV = DV.AddDataToStoreOptimizationVarArray(config);
+           
             if( TestForTermaination(DV, config,masterloop) ==1)
                 disp('break in vol fraction');
                 break;
@@ -338,7 +339,7 @@ if(macroDesignMode==1 &&  config.mode ~= 90)
             DV= DV.CalculateObjectiveValue(config, matProp, masterloop,opt);
              DV = DV.AddDataToStoreOptimizationVarArray(config);
             ShowOptimizerProgress(DV,1,' E_xx and E_yy ',FEACalls,config, matProp);
-       
+           FEACalls = FEACalls+1;s
         end % E_xx and E_yy Optimization
         
           % Flip orientation of Exx and Eyy so that theta is positive
@@ -350,7 +351,7 @@ if(macroDesignMode==1 &&  config.mode ~= 90)
 %                 print(nameGraph,'-dpng');
             end
         end
-               FEACalls = FEACalls+1;
+              
         
         if(config.recvid==1)
             [framedNumber, F]  = video.RecordFrame(config,framedNumber, F,vidObj);

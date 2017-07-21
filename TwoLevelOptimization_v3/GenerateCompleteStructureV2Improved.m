@@ -181,13 +181,15 @@ if(config.multiscaleMethodCompare~=1)
 %     totalSize = size(completeStruct)
 %     totalX
 %     totalY
+if 1==0
     sumBefore = sum(sum(completeStruct));
      [completeStruct ] = CheckRemoveOrphanedSegments(completeStruct, totalX,totalY, config.voidMaterialDensityCutOff);
     sumAfter = sum(sum(completeStruct));
-    
+
     %   p.PlotArrayGenericWithBlueWhiteColors( completeStruct, 'After Isolated Element Check')
     
     fprintf('Change in density after removing elements is %f\n',sumBefore-sumAfter);
+    end
 end
 % %end
 density = sum(sum(completeStruct))/(totalX*totalY);
