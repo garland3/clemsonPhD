@@ -280,6 +280,10 @@ if(macroDesignMode==1 &&  config.mode ~= 90)
                 disp('break in vol fraction');
                 break;
             end
+            
+            if(config.   useExxEyy==1|| config.useRotation==1)
+                 error('wrong mode for useExxEyy or Rotation for isotropic gradient');
+            end
         end % END VOLUME FRACTION OPTIMIZATION CODE
         
         % --------------------------------
@@ -339,7 +343,7 @@ if(macroDesignMode==1 &&  config.mode ~= 90)
             DV= DV.CalculateObjectiveValue(config, matProp, masterloop,opt);
              DV = DV.AddDataToStoreOptimizationVarArray(config);
             ShowOptimizerProgress(DV,1,' E_xx and E_yy ',FEACalls,config, matProp);
-           FEACalls = FEACalls+1;s
+           FEACalls = FEACalls+1;
         end % E_xx and E_yy Optimization
         
           % Flip orientation of Exx and Eyy so that theta is positive

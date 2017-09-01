@@ -898,24 +898,26 @@ classdef DesignVars
             
             if(config.useExxEyy==1)
                 %                    avg= 0.5*(obj.Exx+obj.Eyy);
-                totalExx =obj.x.*obj.Exx;
-                totalEyy = obj.x.* obj.Eyy;
-                avgE = (totalExx+totalEyy)/2;
-                if(config.testingVerGradMaterail ==1)
-                    minE = matProp.E_material2;
-                else
-                    minE = matProp.E_material2/2;
-                end
-                obj.w = avgE/(matProp.E_material1-minE);
-                %                   for i = 1:config.nelx
-                %                       for j = 1:config.nely
-                %                            obj.w(j,i) =max(obj.Exx(j,i),obj.Eyy(j,i))/(matProp.E_material1-minE);
-                %                       end
-                %                   end
-                %                   obj.w =max(obj.Exx,obj.Eyy)/matProp.E_material1;
+%                 totalExx =obj.x.*obj.Exx;
+%                 totalEyy = obj.x.* obj.Eyy;
+%                 avgE = (totalExx+totalEyy)/2;
+%                 if(config.testingVerGradMaterail ==1)
+%                     minE = matProp.E_material2;
+%                 else
+%                     minE = matProp.E_material2/2;
+%                 end
+%                 obj.w = avgE/(matProp.E_material1-minE);
+ 
+                % use the material 2 as the lower bounds because, we are
+                % trying to find the equivalent w case. 
+                obj.w=(((obj.Exx+obj.Eyy)/2)-matProp.E_material2)/(matProp.E_material1-matProp.E_material2);
+               
+                 totalExx =obj.x.*obj.Exx;
+                    totalEyy = obj.x.* obj.Eyy;
+                    avgE = (totalExx+totalEyy)/2;
+                     obj.actualAverageE = sum(sum(avgE))/totalMaterial;
                 
-                
-                obj.actualAverageE= sum(sum(avgE))/totalMaterial;
+             
                 
                 % volume fraction is over the domain, while target E
                 obj.  currentVol1Fraction =sum(sum( obj.x.*obj.w))/ne;

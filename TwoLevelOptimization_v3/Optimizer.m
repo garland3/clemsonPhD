@@ -3,10 +3,10 @@ classdef Optimizer
     %
     
     properties
-        ExxInterp=1;
-        EyyInterp=1;
-        thetaInterp=1;
-        rhoInterp=1;
+%         ExxInterp=1;
+%         EyyInterp=1;
+%         thetaInterp=1;
+%         rhoInterp=1;
     end
     
     methods
@@ -106,14 +106,14 @@ classdef Optimizer
                     %                     fractionCurrent_V1Local = currentVol1Fraction/totalVolLocal;
                     
                     
-                    if(1==1)      
+                    if(1==0)      
                          currentVol1Fraction =sum(sum( DV.x.*wProposed))/totalMaterial;
                         if(targetRatioMethod==1)
                              % ------------------------
                             % Target ratio v1/(v1+v2))
                             % ------------------------
                              
-                            if targetFraction_v1- currentVol1Fraction<0;
+                            if targetFraction_v1- currentVol1Fraction<0
                                 l1 = lambda1;                               
                             else
                                 l2 = lambda1;                              
@@ -126,7 +126,7 @@ classdef Optimizer
                             currentV1 = sum(sum( DV.x.*wProposed));
                             currentV2 = sum(sum((DV.x).*(1-wProposed)));
                             currentRatio = currentV1/currentV2;
-                             if 100*targetRatio- 100*currentRatio<0;
+                             if 100*targetRatio- 100*currentRatio<0
                                 l1 = lambda1;
                                 %                          l2 = lambda1;
                             else
@@ -147,7 +147,7 @@ classdef Optimizer
                             
                             targetRatio=   config.v1;
                            
-                             if targetRatio- v1RatioToTotal<0;
+                             if targetRatio- v1RatioToTotal<0
                                 l1 = lambda1;
                                 %                          l2 = lambda1;
                             else
@@ -163,14 +163,20 @@ classdef Optimizer
                         % ------------------------
                         % Target an Elastic Modulus
                         % ------------------------
-                        totalMat1 =sum(sum( DV.x.*wProposed*matProp.E_material1));
-                        totalMat2 =sum(sum( DV.x.*(1-wProposed)*matProp.E_material2));
+                        % Version 1 
+                        % totalMat1 =sum(sum( DV.x.*wProposed*matProp.E_material1));
+                        % totalMat2 =sum(sum( DV.x.*(1-wProposed)*matProp.E_material2));
                         % obj.actualAverageE= obj.currentVol1Fraction*matProp.E_material1+  obj. currentVol2Fraction*matProp.E_material2;
-                        averageElasticLocal= (totalMat1+totalMat2)/totalMaterial;
+                        % averageElasticLocal= (totalMat1+totalMat2)/totalMaterial;
                         %               averageElasticLocal = (sum(sum(EyyNew.*Xtemp))+sum(sum(ExxNew.*Xtemp)))/neSolid;
                         %               averageElasticLocal=averageElasticLocal/2; % Becuse Eyy and Exx are from one element, so to get the average divide by 2
+                        
+                        % version 2
+                        
+                        averageElasticLocal=1/totalMaterial*sum(sum( (DV.x.*((wProposed*matProp.E_material1)+(1-wProposed)*matProp.E_material2))));
+                        
                         E_target=config.targetAvgExxEyy;
-                        if E_target- averageElasticLocal<0;
+                        if E_target- averageElasticLocal<0
                             l1 = lambda1;
                         else
                             l2 = lambda1;
@@ -412,6 +418,13 @@ classdef Optimizer
             DV.sensitivityElasticPart2 = DV.check( config.nelx, config.nely,config.rminExxEyy,DV.x,DV.sensitivityElasticPart2);
             
             
+            testingIsoTropicRedution=0;
+            if(testingIsoTropicRedution==1)
+                combinedSensitivity = DV.sensitivityElastic+ DV.sensitivityElasticPart2;
+                 DV.sensitivityElasticPart2=combinedSensitivity;
+                 DV.sensitivityElastic=combinedSensitivity;
+            end
+            
             % if(config.macro_meso_iteration>=2 && mod(masterloop,3)==1)
             if(config.macro_meso_iteration>=2 )
                 deltaT=0.2;
@@ -470,7 +483,7 @@ classdef Optimizer
             % ---------------------------------------------------
             l1 = 0; l2 = largest;% move = 0.2;
             sumDensity =0;
-            while (l2-l1 > 1e-4)
+            while (l2-l1 > 1e-5)
                 lambda1 = 0.5*(l2+l1);
                 
                 if(config.useTargetMesoDensity==1)
@@ -539,7 +552,7 @@ classdef Optimizer
                     %               averageElasticLocal = (sum(sum(EyyNew.*Xtemp))+sum(sum(ExxNew.*Xtemp)))/neSolid;
                     %               averageElasticLocal=averageElasticLocal/2; % Becuse Eyy and Exx are from one element, so to get the average divide by 2
                     E_target=config.targetAvgExxEyy;
-                    if E_target- averageElasticLocal<0;
+                    if E_target- averageElasticLocal<0
                         l1 = lambda1;
                     else
                         l2 = lambda1;
@@ -621,6 +634,11 @@ classdef Optimizer
             DV.Exx =DV.Exx.*sqrt( ExxNew./  DV.Exx);
             DV.Eyy = DV.Eyy.*sqrt( EyyNew./  DV.Eyy );
             
+             if(testingIsoTropicRedution==1)
+                  E_combined =( DV.Exx+DV.Eyy)./2;
+                    DV.Exx =E_combined;
+                    DV.Eyy =E_combined;
+             end
             
             
         end
