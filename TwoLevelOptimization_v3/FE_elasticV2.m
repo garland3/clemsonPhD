@@ -18,8 +18,8 @@ canyonProblem=0;
 % bridgeStart = (row*(column-1)+1)*2; % (row*(floor(column/2))+1)*2;
 % bridgeEnd=(row*(column-0))*2; % (row*(1+floor(column/2)))*2;
 
-bridgeStart = (row*(floor(column/2)-1)+1)*2; % (row*(floor(column/2))+1)*2;
-bridgeEnd=(row*(floor(column/2)-0))*2; % (row*(1+floor(column/2)))*2;
+bridgeStart = (row*(floor(column)-1)+1)*2; % (row*(floor(column/2))+1)*2;
+bridgeEnd=(row*(floor(column)-0))*2; % (row*(1+floor(column/2)))*2;
 
 loadMagnitude = 10000;%10000
 

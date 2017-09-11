@@ -280,6 +280,10 @@ if(macroDesignMode==1 &&  config.mode ~= 90)
                 disp('break in vol fraction');
                 break;
             end
+            
+            if(config.   useExxEyy==1|| config.useRotation==1)
+                 error('wrong mode for useExxEyy or Rotation for isotropic gradient');
+            end
         end % END VOLUME FRACTION OPTIMIZATION CODE
         
         % --------------------------------

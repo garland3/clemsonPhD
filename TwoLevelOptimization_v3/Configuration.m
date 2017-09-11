@@ -52,10 +52,11 @@ classdef Configuration
         % VOLUME Fraction SEttings.
         timestep = 0.05; % time step for the volume fraction update algorithm
         volFractionDamping =0.5; % 0.1
-        v1 = 0.3; % 0.8 amount of material 1 to use. default to 20%
-        v2 =0.3; %  0.2 amount of material 2 to use. default to 40%, reduced so there is less meso structures to compute
+
+        v1 = 0.6; % 0.8 amount of material 1 to use. default to 20%
+        v2 =0.0; %  0.2 amount of material 2 to use. default to 40%, reduced so there is less meso structures to compute
         totalVolume; % = v1+v2;
-        volFractionOptiizationMethod = 2;
+        volFractionOptiizationMethod = 2; % 1 is augmented lagrangian, 2 is Optimal Criteria
         minimizeTempOfMaterial1=0;
         
         % Meso Design settings
@@ -78,8 +79,8 @@ classdef Configuration
         
         % Exx and Eyy Distribution
         useExxEyy=1;    % must be 0 for gradient material optimization
-        useTargetMesoDensity = 1; % 1 = yes, 0 = no and use target Eavg
-        targetAvgExxEyy=50000 ;
+        useTargetMesoDensity = 0; % 1 = yes, 0 = no and use target Eavg
+        targetAvgExxEyy=62500 ;
         minEallowed = 25000  ; % about 5% of max
         targetExxEyyDensity =  0.3750; % 0.3750 $$$$ DENSITY of MESO STRUCTURES $$$$
         minMesoDensityInOptimizer=0.001; % 0.22
@@ -100,6 +101,10 @@ classdef Configuration
         
          % Use R in Exx and Eyy material model for the shear component
         useRinOrthMaterialModel=0;
+        
+        % Paretto Constant For generating Paretto frontier
+        ParettoConstant = 1e4;
+       
       
         
         
@@ -114,7 +119,8 @@ classdef Configuration
         doPlotStress = 0;
         doPlotFinal =0 % blue, green, empty space plot
         doPlotMetrics = 0;
-        doPlotConsistencyConstraintsInMetrics = 1;
+
+        doPlotConsistencyConstraintsInMetrics = 0;
         doSaveDesignVarsToCSVFile = 0; % set to 1 to write plotFinal csv file instead
         doPlotAppliedStrain = 0; % For debugging only
         doPlotOrthDistributionVar=0;
@@ -195,8 +201,10 @@ classdef Configuration
         %         loadingCase = [111 120]; % up, down, right in top right corrner, left clamp.
         %              loadingCase = [1];
         
-        %  loadingCase = [300 301 302 303 304 305]; % shoe
-%                         loadingCase = [400 401 402 403 404 405]; % bridge
+
+
+%          loadingCase = [300 301 302 303 304 305]; % shoe
+%                        loadingCase = [400 401 402 403 404 405]; % bridge
         %            loadingCase = [404]; % bridge
         %             loadingCase = [113]; % cantilever
         %                 loadingCase = [111]; % top right, force in Y direction
@@ -234,7 +242,9 @@ classdef Configuration
             
             [idum,hostname]= system('hostname');
             hostname=strtrim(hostname);
-            mycomputerName = 'LAPTOP-KQHSCJB1';
+%             mycomputerName = 'LAPTOP-KQHSCJB1';
+              mycomputerName = 'GE-SPARE-T3';
+           
             
             if(strcmp(hostname,mycomputerName)~=1) % if NOT running on my laptop, then running on the Palmetto
                obj. mesoplotfrequency=250;
@@ -267,13 +277,16 @@ classdef Configuration
                 % ------------
                 % Palmetto running case
                 % -------------------
-                obj.nelx = 40; %% 30
-                obj.nely = 20; %  15
+
+                obj.nelx = 50; %% 30
+                obj.nely = 25; %  15
+
                 obj.nelxMeso = 35; %35;
                 obj.nelyMeso =35; %35;
                 obj.terminationAverageCount = 10;
                 obj.terminationCriteria =0.001; % 0.0%
-                obj.maxFEACalls = 200;
+
+                obj.maxFEACalls = 150;
                 obj.maxMasterLoops = 300;
                 
 %             end
@@ -290,6 +303,19 @@ classdef Configuration
                 obj.w1 =str2double(w1text);
                 
             end
+            
+            % -----------------
+            % Use the w1 as the density target
+            % ----------------
+           if(1==1)
+              obj. v1= obj.w1;
+                obj.targetAvgExxEyy=obj.ParettoConstant/obj.v1;              
+               obj.minEallowed =  obj.ParettoConstant/2; % about 10% of avg
+               
+               fprintf('-----------\nTargetE = %f and target Density = %f.\n------------- \n',obj.targetAvgExxEyy);
+               
+           end
+            
             
             % --------------------------------------
             % Update the volume fraction targets and total volume.
@@ -309,7 +335,7 @@ classdef Configuration
                 if(obj.mode==50)
                      obj.useExxEyy=0;
                      obj.useRotation=0;
-                     obj.doPlotFinal =1;
+%                      obj.doPlotFinal =1;
 %                      obj.maxFEACalls=60
                 end
             

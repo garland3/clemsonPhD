@@ -21,8 +21,8 @@ close all
 
 
 % % Iteration 1 of topology, Exx, Eyy, rotation
-%   combinedTopologyOptimization('1', '1', '1','60', 'na');
-%  combinedTopologyOptimization('1', '1', '1','200', 'na');
+  combinedTopologyOptimization('1', '1', '1','60', 'na');
+ combinedTopologyOptimization('1', '1', '1','200', 'na');
 % %     combinedTopologyOptimization('1', '1', '1','202', 'na'); % make complete structure
 % combinedTopologyOptimization('1', '1', '1','90', 'na');
 %     combinedTopologyOptimization('1', '1', '1','203', 'na'); % extact macro values
@@ -52,7 +52,9 @@ close all
 % combinedTopologyOptimization('1', '1', '1','200', 'na');
 
 % Gradient isotropic material, Parts 1 and 2 of research
+
 %       combinedTopologyOptimization('1', '0.4', '1','50', 'na');
+%      combinedTopologyOptimization('1', '1', '1','50', 'na');
 %   combinedTopologyOptimization('1', '1', '1','200', 'na');
 
 
