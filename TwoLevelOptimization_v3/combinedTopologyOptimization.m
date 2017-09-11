@@ -36,7 +36,7 @@ config.mode =65;
 % 110 = TESTING MESO design methods
 % 111 = Validate Meso (generate Targets)
 % 112 = Read the meso design information and compute validation metrics
-% 113 = Generate Pseudo Strain and Density Targts for ANN map test
+% 113 = Generate Pseudo Strain and Density Targts Experimentt
 % 114 = Read Psuedo strain and density target results. Save .csv file
 % 115 = interprete the psuedo strain and density target results as graphs
 
@@ -305,6 +305,7 @@ if(macroDesignMode==1 &&  config.mode ~= 90)
         % Rotation of material Optimization
         % --------------------------------
         if(config.useRotation ==1)
+            if(config.simplifiedOrth_noRotation==0)
             if ( config.mode==4 || config.mode ==55 || config.mode == 60)
                 
 %                 if(mod(masterloop,5)==1 || config.macro_meso_iteration==1)
@@ -323,6 +324,7 @@ if(macroDesignMode==1 &&  config.mode ~= 90)
                     
 %                 end
             end %END ORTHOGONAL MATERIAL DISTRIBUTION OPTIMZATION
+            end
         end
         
         % --------------------------------
@@ -339,14 +341,14 @@ if(macroDesignMode==1 &&  config.mode ~= 90)
             DV= DV.CalculateObjectiveValue(config, matProp, masterloop,opt);
              DV = DV.AddDataToStoreOptimizationVarArray(config);
             ShowOptimizerProgress(DV,1,' E_xx and E_yy ',FEACalls,config, matProp);
-           FEACalls = FEACalls+1;s
+           FEACalls = FEACalls+1;
         end % E_xx and E_yy Optimization
         
           % Flip orientation of Exx and Eyy so that theta is positive
         if(config.useRotation ==1)
             if ( config.mode==4 || config.mode ==55 || config.mode == 60)
                 DV = DV.FlipOrientation(config);
-                ShowOptimizerProgress(DV,1,' Flipped theta ',FEACalls,config, matProp);
+%                 ShowOptimizerProgress(DV,1,' Flipped theta ',FEACalls,config, matProp);
 %                 nameGraph = sprintf('./FinalWithFlip%f__%i.png', config.w1,config.macro_meso_iteration);
 %                 print(nameGraph,'-dpng');
             end

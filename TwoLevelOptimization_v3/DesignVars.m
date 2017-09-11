@@ -145,7 +145,7 @@ classdef DesignVars
                 %                 obj.d(1:config.nely,1:config.nelx)  =ones(config.nely,config.nelx)*0.8; % orthotropic masterial distribution
                 obj.Exx(1:config.nely,1:config.nelx)  =ones(config.nely,config.nelx);
                 obj.Eyy(1:config.nely,1:config.nelx)  =ones(config.nely,config.nelx);
-                obj.t(1:config.nely,1:config.nelx)  =ones(config.nely,config.nelx)*0; % rotation of the orthotropic material
+                obj.t(1:config.nely,1:config.nelx)  =zeros(config.nely,config.nelx)*0; % rotation of the orthotropic material
                 
                 obj.sensitivityElastic(1:config.nely,1:config.nelx) = 0;
                 obj.sensitivityElasticPart2 (1:config.nely,1:config.nelx) = 0;

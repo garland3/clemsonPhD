@@ -1,6 +1,6 @@
 #!/bin/bash
 #PBS -N mpi1
-#PBS -l select=64:ncpus=8:mpiprocs=4:mem=8gb:interconnect=10g,walltime=3:00:00 
+#PBS -l select=16:ncpus=8:mpiprocs=4:mem=8gb:interconnect=10g,walltime=3:00:00
 #PBS -l place=scatter
 #PBS -j oe
 
@@ -36,7 +36,7 @@ mcc -R -nodisplay -C  -m  combinedTopologyOptimization.m    Configuration.m Desi
 #rm -R combinedTopologyOptimization_mcr
 
 echo 'Finished compiling Matlab'
-mpirun -np 256 --mca mpi_cuda_support 0 ./bank
+mpirun -np 64 --mca mpi_cuda_support 0 ./bank
 
 echo 'Finished mpirun'
 #./bank

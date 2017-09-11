@@ -52,28 +52,31 @@ close all
 % combinedTopologyOptimization('1', '1', '1','200', 'na');
 
 % Gradient isotropic material, Parts 1 and 2 of research
-%      combinedTopologyOptimization('1', '0.5', '1','50', 'na');
+%       combinedTopologyOptimization('1', '0.4', '1','50', 'na');
 %   combinedTopologyOptimization('1', '1', '1','200', 'na');
 
 
 % annTest(1);
-
-nelx= 15;
-nely = 15;
-totale=nelx*nely;
-
-% combinedTopologyOptimization('1', '1', '1','100', '1'); % run the meso structure design to get the actual data
-
-% [idum,hostname]= system('hostname');
 % 
-% hostname
-% for i = 1:4
-%       combinedTopologyOptimization('1', '1', int2str(i),'203', 'na'); 
-% end
-% idum
-% % % % % for i = 1:totale, 188
-%  listOfProblems=[364 758 838 839 918 997 998 1626];
-% %    for i =listOfProblems
+% nelx= 15;
+% nely = 15;
+% totale=nelx*nely;
+% 
+% % combinedTopologyOptimization('1', '1', '1','100', '1'); % run the meso structure design to get the actual data
+% 
+% % [idum,hostname]= system('hostname');
+% % 
+% % hostname
+diary('./outputOfRhoFunctionOfExxEyy.txt')
+diary on
+for i = 1:5
+      combinedTopologyOptimization('1', '1', int2str(i),'203', 'na'); 
+end
+diary off
+% % idum
+% % % % % % for i = 1:totale, 188
+% %  listOfProblems=[364 758 838 839 918 997 998 1626];
+% % %    for i =listOfProblems
 %  for i =1:6000
 %     combinedTopologyOptimization('1', '1', '1','100', int2str(i)); %
 % %     %       run the meso structure design to get the actual data

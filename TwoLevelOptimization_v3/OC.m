@@ -3,8 +3,8 @@ function [xnew]=OC(nelx,nely,x,volfrac,dc ,DV, config,moveLimit)
 
 % Make sure that dc is negative. 
 absL =  max(max(dc));
-if(absL>-1)
-    dc = dc-absL-1;
+if(absL>0)
+    dc = dc-absL;
 end
 
 

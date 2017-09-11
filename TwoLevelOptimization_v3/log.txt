@@ -1,8 +1,7 @@
 
 --------
-New Macro Meso Iteration 1
+Master Node Starint Iteration1
 -----------
----
 received a message from 0, tag 1
 received a message from 0, tag 2
 received a message from 0, tag 3
@@ -50,1608 +49,1387 @@ received a message from 0, tag 58
 received a message from 0, tag 59
 received a message from 0, tag 61
 received a message from 0, tag 62
-received a message from 0, tag 63
+Finished Matlab Meso Structure DesFinished Matlab Meso Structure Design. ElementNum = 40, MacroMesoIteration 1
+received a message from 0, tag 68
+ign. ElementNum = 29, MacroMesoIteration 1
 received a message from 0, tag 65
+Finished Matlab Meso Structure Design. ElementNum = 28, MacroMesoIteration 1
+Finished Matlab Meso Structure Design. ElementNum = 30, MacroMesoIteration 1
 received a message from 0, tag 66
 received a message from 0, tag 67
+ign. ElementNum = 39, MacroMesoIteration 1
 received a message from 0, tag 69
+Finished Matlab Meso Structure Design. ElementNum = 37, MacroMesoIteration 1
 received a message from 0, tag 70
+Finished Matlab Meso Structure Design. ElementNum = 38, MacroMesoIteration 1
 received a message from 0, tag 71
-received a message from 0, tag 73
+Finished Matlab Meso Structure Design. ElementNum = 36, MacroMesoIteration 1
+received a message from 0, tag 72
+Finished Matlab Meso Structure Design. ElementNum = 3, MacroMesoIteration 1
 received a message from 0, tag 74
+sign. ElementNum = 71, MacroMesoIteration 1
 received a message from 0, tag 75
+received a message from 0, tag 76
+Finished Matlab Meso Structure Design. ElementNum = 70, MacroMesoIteration 1
 received a message from 0, tag 77
-received a message from 0, tag 78
-received a message from 0, tag 79
-received a message from 0, tag 81
-received a message from 0, tag 82
-received a message from 0, tag 83
-received a message from 0, tag 85
-received a message from 0, tag 86
-received a message from 0, tag 87
-received a message from 0, tag 89
-received a message from 0, tag 90
-received a message from 0, tag 91
-received a message from 0, tag 93
-received a message from 0, tag 94
-received a message from 0, tag 95
-received a message from 0, tag 97
-received a message from 0, tag 98
-received a message from 0, tag 99
-
-received a message from 0, tag 101
-received a message from 0, tag 102
-received a message from 0, tag 103
-received a message from 0, tag 105
-received a message from 0, tag 106
-received a message from 0, tag 107
-received a message from 0, tag 109
-received a message from 0, tag 110
-received a message from 0, tag 111
-received a message from 0, tag 113
-received a message from 0, tag 114
-received a message from 0, tag 115
-received a message from 0, tag 117
-received a message from 0, tag 118
-received a message from 0, tag 119
-received a message from 0, tag 121
-received a message from 0, tag 122
-received a message from 0, tag 123
-received a message from 0, tag 125
-received a message from 0, tag 126
-received a message from 0, tag 127
-received a message from 0, tag 129
-received a message from 0, tag 130
-received a message from 0, tag 131
-received a message from 0, tag 133
-received a message from 0, tag 134
-received a message from 0, tag 135
-received a message from 0, tag 137
-received a message from 0, tag 138
-received a message from 0, tag 139
-received a message from 0, tag 141
-received a message from 0, tag 142
-received a message from 0, tag 143
-received a message from 0, tag 145
-received a message from 0, tag 146
-received a message from 0, tag 147
-Finished Matlab Meso Structure Design. ElementNum = 7, MacroMesoIteration 1
-ed a message from 0, tag 151
-gn. ElementNum = 28, MacroMesoIteraFinished Matlab Meso Structure Desireceived a message from 0, tag 155
-Finished Matlab Meso Structurg 157
-received a message from 0, tag 158
-received a message from 0, tag 159
-re Design. ElementNum = 40, MacroMesoIteration 1
-sage from 0, tag 162
-received a message from 0, tag 163
-gn. ElementNum = 46, MacroMesoIteration 1
-d a message from 0, tag 166
-received a message from 0, tag 167
-Finished Matlab Meso Structure Design. ElementNum = 52, MacroMesoIterareceived a message from 0, tag 171
-gn. ElementNum = 15, MacroMesoIteration 1
-inished Matlab Meso Structure Design. ElementNum = 9, MacroMesoIteration 1
-Finished Matlab Meso Structure Design. ElementNum = 11, MacroMesoIteration 1
-Finished Matlab Meso Structure Design. ElementNum = 18, MacroMesoIteration 1
-Finished Matlab Meso Structure Design. ElementNum = 20, MacroMesoIteration 1
-Finished Matlab Meso Structure Design. ElementNum = 22, MacroMesoIteration 1
-mentNum = 31, MacroMesoIteration 1
-Finished Matlab Meso Structure Desireceived a message from 0, tag 175
-tion 1
-mentNum = 34, MacroMesoIteration 1
-Finished Matlab Meso Structure Design. ElementNum = 32, MacroMesoIteration 1
-Finished Matlab Meso Structure Design. ElementNum = 33, MacroMesoIteration 1
-Finished Matlab Meso Structure Design. ElementNum = 39, MacroMesoIteration 1
-d a message from 0, tag 179
-tion 1
-Finished Matlab Meso Structure Design. ElementNum = 41, MacroMesoIteration 1
-Finished Matlab Meso Structureceived a message from 0, tag 183
-soIteration 1
- = 47, MacroMesoIteration 1
-Finished Matlab Meso Structure Design. ElementNum = 45, MacroMesoIteration 1
-Finished Matlab Meso Structure Design. ElementNum = 44, MacroMesoIteration 1
-d a message from 0, tag 187
-Finished Matlab Meso Structure Design. ElementNum = 70, MacroMesoIterareceived a message from 0, tag 191
-gn. ElementNum = 73, MacroMesoIteration 1
-Finished Matlab Meso Structure Design. ElementNum = 53, MacroMesoIteration 1
-Finished Matlab Meso Structure Design. ElementNum = 55, MacroMesoIteration 1
-d a message from 0, tag 194
-gn. ElementNum = 50, MacroMesoIteration 1
-Finished Matlab Meso Structure Design. ElementNum = 51, MacroMesoIteration 1
-Finished Matlab Meso Structure Design. ElementNum = 49, MacroMesoIteration 1
-Finished Matlab Meso Structure Design. ElementNum = 57, MacroMesoIteration 1
-Finished Matlab Meso Structure Design. ElementNum = 58, MacroMesoIteration 1
-d a message from 0, tag 198
-received a message from 0, tag 199
-gn. ElementNum = 86, MacroMesoIteration 1
-mentNum = 60, MacroMesoIteration 1
-Finished Matlab Meso Structure Design. ElementNum = 61, MacroMesoIteration 1
-Finished Matlab Meso Structure Design. ElementNum = 62, MacroMesoIteration 1
-Finished Matlab Meso Structure Design. ElementNum = 64, MacroMesoIteration 1
-d Matlab Meso Structure Design. ElementNum = 91, MacroMesoIterareceived a message from 0, tag 207
-gn. ElementNum = 95, MacroMesoIteration 1
-d a message from 0, tag 210
-gn. ElementNum = 68, MacroMesoIteration 1
 Finished Matlab Meso Structure Design. ElementNum = 69, MacroMesoIteration 1
-Finished Matlab Meso Structure Design. ElementNum = 71, MacroMesoIteration 1
-Finished Matlab Meso Structure Design. ElementNum = 72, MacroMesoIteration 1
-Finished Matlab Meso Structure Design. ElementNum = 74, MacroMesoIterareceived a message from 0, tag 215
-tion 1
-d Matlab Meso Structure Desireceived a message from 0, tag 218
-tion 1
-Finished Matlab Meso Structure Design. ElementNum = 77, MacroMesoIteration 1
+received a message from 0, tag 78
+Finished Matlab Meso Structure Design. ElementNum = 32, MacroMesoIteration 1
+received a message from 0, tag 80
+Finished Matlab Meso Structure Design. ElementNum = 33, MacroMesoIteration 1
+received a message from 0, tag 81
+Finished Matlab Meso Structure Design. ElementNum = 23, MacroMesoIteration 1
+received a message from 0, tag 85
+inished Matlab Meso Structure Design. ElementNum = 4, MacroMesoIteration 1
+received a message from 0, tag 86
+Finished Matlab Meso Structure Design. ElementNum = 7, MacroMesoIteration 1
+received a message from 0, tag 87
+Finished Matlab Meso Structure Design. ElementNum = 58, MacroMesoIteration 1
+received a message from 0, tag 98
+Finished Matlab Meso Structure Design. ElementNum = 41, MacroMesoIteration 1
+received a message from 0, tag 92
+inished Matlab Meso Structure Design. ElementNum = 77, MacroMesoIteration 1
+received a message from 0, tag 95
+Finished Matlab Meso Structure Design. ElementNum = 75, MacroMesoIteration 1
+received a message from 0, tag 96
+Finished Matlab Meso Structure Design. ElementNum = 48, MacroMesoIteration 1
+received a message from 0, tag 101
 Finished Matlab Meso Structure Design. ElementNum = 79, MacroMesoIteration 1
-Finished Matlab Meso Structure Design. ElementNum = 81, MacroMesoIteration 1
+received a message from 0, tag 103
+Finished Matlab Meso Structure Design. ElementNum = 65, MacroMesoIteration 1
+received a message from 0, tag 107
+Finished Matlab Meso Structure Design. ElementNum = 55, MacroMesoIteration 1
+received a message from 0, tag 110
+Finished Matlab Meso Structure Design. ElementNum = 82, MacroMesoIteration 1
+received a message from 0, tag 115
+
+nished Matlab Meso Structure Design. ElementNum = 9, MacroMesoIteration 1
+received a message from 0, tag 116
 Finished Matlab Meso Structure Design. ElementNum = 83, MacroMesoIteration 1
+received a message from 0, tag 119
 Finished Matlab Meso Structure Design. ElementNum = 85, MacroMesoIteration 1
+received a message from 0, tag 118
+Finished Matlab Meso Structure Design. ElementNum = 89, MacroMesoIteration 1
+received a message from 0, tag 122
+
+Finished Matlab Meso Structure Design. ElementNum = 61, MacroMesoIteration 1
+received a message from 0, tag 123
+Finished Matlab Meso Structure Design. ElementNum = 90, MacroMesoIteration 1
+received a message from 0, tag 138
+
+inished Matlab Meso Structure Design. ElementNum = 24, MacroMesoIteration 1
+received a message from 0, tag 128
+Finished Matlab Meso Structure Design. ElementNum = 25, MacroMesoIteration 1
+received a message from 0, tag 129
+Finished Matlab Meso Structure Design. ElementNum = 94, MacroMesoIteration 1
+received a message from 0, tag 132
+
+Finished Matlab Meso Structure Design. ElementNum = 53, MacroMesoIteration 1
+received a message from 0, tag 140
+
+Finished Matlab Meso Structure Design. ElementNum = 114, MacroMesoIteration 1
+received a message from 0, tag 144
+Finished Matlab Meso Structure Design. ElementNum = 116, MacroMesoIteration 1
+received a message from 0, tag 148
 Finished Matlab Meso Structure Design. ElementNum = 87, MacroMesoIteration 1
-d a message from 0, tag 223
-received a message from 0, tag 225
-received a message from 0, tag 226
-gn. ElementNum = 89, MacroMesoIteration 1
-Finished Matlab Meso Structure Design. ElementNum = 88, MacroMesoIteration 1
-received a message from 0, tag 227
-gn. ElementNum = 90, MacroMesoIteration 1
-received a message from 0, tag 337
-Finished Matlab Meso Structure Design. ElementNum = 93, MacroMesoIteration 1
-Finished Matlab Meso Structure Desireceived a message from 0, tag 231
-tion 1
-received a message from 0, tag 341
-received a message from 0, treceived a message from 0, tag 235
-gn. ElementNum = 99, MacroMesoIteration 1
-Finished Matlab Meso Structure Design. ElementNum = 98, MacroMesoIteration 1
-Finished Matlab Meso Structure Design. ElementNum = 96, MacroMesoIterareceived a message from 0, tag 239
-gn. ElementNum = 118, MacroMesoIteration 1
-Finished Matlab Meso Structreceived a message from 0, tag 243
-Finished Matlab Meso Structure Design. ElementNum = 2, MacroMesoIteratreceived a message from 0, tag 247
-g 356
-ed Matlab Meso Structure Design. ElementNum = 122, MacroMesoIteration 1
-received a message from 0, tag 369
-received a message from 0, tag 251
-ation 1
-received a message from 0, Finished Matlab Meso Structure Desireceived a message from 0, tag 255
-ation 1
-received a message from 0, tag 373
- a message from 0, tag 293
-received a message from 0, tag 272
-received a message from 0, tag 307
-received a message from 0, tag 340
-received a message from 0, tag 326
-received a message from 0, tag 352
-Finished Matlab Meso Structure Design. ElementNum = 119, MacroMesoIteration 1
-received a message from 0, tag 354
-Finished Matlab Meso Structure Design. ElementNum = 117, MacroMesoIteration 1
-received a message from 0, tag 355
-Finished Matlab Meso Structure Design. ElementNum = 142, MacroMesoIteration 1
-received a message from 0, tag 359
-Finished Matlab Meso Structure Design. ElementNum = 124, MacroMesoIteration 1
-received a message from 0, tag 360
-Finished Matlab Meso Structure Design. ElementNum = 128, MacroMesoIteration 1
-received a message from 0, tag 363
-Finished Matlab Meso Structure Design. ElementNum = 129, MacroMesoIteration 1
-received a message from 0, tag 364
-entNum = 133, MacroMesoIteration 1
-received a message from 0, tag 367
-Finished Matlab Meso Structure Design. ElementNum = 135, MacroMesoIteration 1
-received a message from 0, tag 368
-Finished Matlab Meso Structure Design. ElementNum = 123, MacroMesoIteration 1
-received a message from 0, tag 371
-Finished Matlab Meso Structure Design. ElementNum = 121, MacroMesoIteration 1
-received a message from 0, tag 372
-Finished Matlab Meso Structure Design. ElementNum = 136, MacroMesoIteration 1
-received a message from 0, tag 375
-Finished Matlab Meso Structure Design. ElementNum = 138, MacroMesoIteration 1
-received a message from 0, tag 376
-Finished Matlab Meso Structure DesiFinished Matlab Meso Structure Design. ElementNum = 141, MacroMesoIteration 1
-received a message from 0, tag 380
-Finished Matlab Meso Structure Design. ElementNum = 146, MacroMesoIteration 1
-received a message from 0, tag 383
-Finished Matlab Meso Structure Design. ElementNum = 144, MacroMesoIteration 1
-received a message from 0, tag 384
-Finished Matlab Meso Structure Design. ElementNum = 169, MacroMesoIteration 1
-received a message from 0, tag 401
-Finished Matlab Meso Structure Design. ElementNum = 150, MacroMesoIteration 1
-received a message from 0, tag 388
-Finished Matlab Meso Structure Design. ElementNum = 152, MacroMesoIteration 1
-received a message from 0, tag 391
-received a message from 0, tag 392
-gn. ElementNum = 182, MacroMesoIteration 1
-received a message from 0, tag 415
-gn. ElementNum = 156, MacroMesoIteration 1
-received a message from 0, tag 394
-received a message from 0, tag 395
+received a message from 0, tag 157
+Finished Matlab Meso Structure Design. ElementNum = 57, MacroMesoIteration 1
+received a message from 0, tag 153
+Finished Matlab Meso Structure Design. ElementNum = 51, MacroMesoIteration 1
+received a message from 0, tag 155
+Finished Matlab Meso Structure Design. ElementNum = 81, MacroMesoIteration 1
+received a message from 0, tag 167
+
+inished Matlab Meso Structure Design. ElementNum = 11, MacroMesoIteration 1
+received a message from 0, tag 162
+Finished Matlab Meso Structure Design. ElementNum = 19, MacroMesoIteration 1
+received a message from 0, tag 165
+Finished Matlab Meso Structure Design. ElementNum = 13, MacroMesoIteration 1
+received a message from 0, tag 168
+Finished Matlab Meso Structure Design. ElementNum = 154, MacroMesoIteration 1
+received a message from 0, tag 174
+inished Matlab Meso Structure Design. ElementNum = 14, MacroMesoIteration 1
+received a message from 0, tag 170
+Finished Matlab Meso Structure Design. ElementNum = 12, MacroMesoIteration 1
+received a message from 0, tag 171
 Finished Matlab Meso Structure Design. ElementNum = 159, MacroMesoIteration 1
-received a message from 0, tag 396
-Finished Matlab Meso Structure Design. ElementNum = 164, MacroMesoIteration 1
-Finished Matlab Meso Structure Design. ElementNum = 166, MacroMesoIteration 1
-received a message from 0, tag 399
-received a message from 0, tag 400
-gn. ElementNum = 1, MacroMesoIteration 1
-received a message from 0, tag 402
-3
-Finished Matlab Meso Structure Design. ElementNum = 171, MacroMesoIteration 1
-received a message from 0, tag 404
-Finished Matlab Meso Structure Design. ElementNum = 170, MacroMesoIteration 1
-received a message from 0, tag 405
-gn. ElementNum = 173, MacroMesoIteration 1
-received a message from 0, tag 408
-received a message from 0, tag 409
-Finished Matlab Meso Structure Design. ElementNum = 174, MacroMesoIteration 1
-received a message from 0, tag 410
-Finished Matlab Meso Structure Design. ElementNum = 185, MacroMesoIteration 1
-received a message from 0, tag 413
-Finished Matlab Meso Structure Design. ElementNum = 187, MacroMesoIteration 1
-received a message from 0, tag 414
-Finished Matlab Meso Structure Design. ElementNum = 183, MacroMesoIteration 1
-received a message from 0, tag 417
-Finished Matlab Meso Structure Design. ElementNum = 181, MacroMesoIteration 1
-received a message from 0, tag 418
-Finished Matlab Meso Structure Design. ElementNum = 177, MacroMesoIteration 1
-received a message from 0, tag 421
-Finished Matlab Meso Structure Design. ElementNum = 178, MacroMesoIteration 1
-received a message from 0, tag 422
-Finished Matlab Meso Structure Design. ElementNum = 189, MacroMesoIteration 1
-received a message from 0, tag 425
-Finished Matlab Meso Structure Design. ElementNum = 188, MacroMesoIteration 1
-received a message from 0, tag 426
-Finished Matlab Meso Structure Design. ElementNum = 195, MacroMesoIteration 1
-received a message from 0, tag 429
-Finished Matlab Meso Structure Design. ElementNum = 193, MacroMesoIteration 1
-received a message from 0, tag 430
-nished Matlab Meso Structure Design. ElementNum = 202, MacroMesoIteration 1
-received a message from 0, tag 442
-gn. ElementNum = 221, MacroMesoIteration 1
-received a message from 0, tag 433
-received a message from 0, tag 434
-Finished Matlab Meso Structure Design. ElementNum = 160, MacroMesoIteration 1
-received a message from 0, tag 435
-Finished Matlab Meso Structure Design. ElementNum = 305, MacroMesoIterFinished Matlab Meso Structure Design. ElementNum = 220, MacroMesoIteration 1
-received a message from 0, tag 441
+received a message from 0, tag 176Finished Matlab Meso Structure Design. ElementNum = 126, MacroMesoIteration 1
+received a message from 0, tag 178
+Finished Matlab Meso Structure Design. ElementNum = 132, MacroMesoIteration 1
+received a message from 0, tag 179
+Finished Matlab Meso Structure Design. ElementNum = 98, MacroMesoIteration 1
+received a message from 0, tag 182
+
+Finished Matlab Meso Structure Design. ElementNum = 176, MacroMesoIteration 1
+received a message from 0, tag 188
+Finished Matlab Meso Structure Design. ElementNum = 151, MacroMesoIteration 1
+received a message from 0, tag 192
+Finished Matlab Meso Structure Design. ElementNum = 91, MacroMesoIteration 1
+received a message from 0, tag 198
+
+Finished Matlab Meso Structure Design. ElementNum = 103, MacroMesoIteration 1
+received a message from 0, tag 203
+Finished Matlab Meso Structure Design. ElementNum = 147, MacroMesoIteration 1
+received a message from 0, tag 201
+Finished Matlab Meso Structure Design. ElementNum = 153, MacroMesoIteration 1
+received a message from 0, tag 206Finished Matlab Meso Structure Design. ElementNum = 142, MacroMesoIteration 1
+received a message from 0, tag 210
 Finished Matlab Meso Structure Design. ElementNum = 203, MacroMesoIteration 1
-received a message from 0, tag 444
-Finished Matlab Meso Structure Design. ElementNum = 201, MacroMesoIteration 1
-received a message from 0, tag 445
-gn. ElementNum = 228, MacroMesoIteration 1
-entNum = 227, MacroMesoIteration 1
-received a message from 0, tag 448
-Finished Matlab Meso Structure Design. ElementNum = 225, MacroMesoIteration 1
-received a message from 0, tag 449
-Finished Matlab Meso Structure Design. ElementNum = 363, MacroMesoIteration 1
-received a message from 0, tag 455
-gn. ElementNum = 301, MacroMesoIteration 1
-received a message from 0, tag 457
-Finished Matlab Meso Structure Design. ElementNum = 262, MacroMesoIteration 1
-received a message from 0, tag 460
-Finished Matlab Meso Structure Design. ElementNum = 302, MacroMesoIteration 1
-received a message from 0, tag 463
-Finished Matlab Meso Structure Design. ElementNum = 276, MacroMesoIteration 1
-received a message from 0, tag 465
-Finished Matlab Meso Structure Design. ElementNum = 350, MacroMesoIteration 1
-received a message from 0, tag 478
-Finished Matlab Meso Structure Desireceived a message from 0, tag 483
-gn. ElementNum = 287, MacroMesoIteration 1
-Finished Matlab Meso Structure DesiFinished Matlab Meso Structure Design. ElementNum = 332, MacroMesoIteration 1
-received a message from 0, tag 491
-Finished Matlab Meso Structure Design. ElementNum = 282, MacroMesoIteration 1
-received a message from 0, tag 502
-Finished Matlab Meso Structure Design. ElementNum = 288, MacroMesoIteration 1
-received a message from 0, tag 504
-Finished Matlab Meso Structure Design. ElementNum = 306, MacroMesoIteration 1
-received a message from 0, tag 509
-gn. ElementNum = 257, MacroMesoIteration 1
-Finished Matlab Meso Structure DesiFinished Matlab Meso Structure DesiFinished Matlab Meso Structure Design. ElementNum = 260, MacroMesoIteration 1
-Finished Matlab Meso Structure Design. ElementNum = 265, MacroMesoIteration 1
-received a message from 0, tag 520
-gn. ElementNum = 280, MacroMesoIteration 1
-received a message from 0, tag 521
-received a message from 0, tag 522
-Finished Matlab Meso Structure Design. ElementNum = 300, MacroMesoIteration 1
-received a message from 0, tag 524
-Finished Matlab Meso Structure Design. ElementNum = 337, MacroMesoIteration 1
-received a message from 0, tag 526
-Finished Matlab Meso Structure Design. ElementNum = 295, MacroMesoIteration 1
-received a message from 0, tag 528
-Finished Matlab Meso Structure Desireceived a message from 0, tag 533
-ation 1
-received a message from 0, tag 531
-Finished Matlab Meso Structure Design. ElementNum = 355, MacroMesoIteration 1
-received a message from 0, tag 534
-Finished Matlab Meso Structure Design. ElementNum = 231, MacroMesoIteration 1
-received a message from 0, tag 536
-Finished Matlab Meso Structure Design. ElementNum = 387, MacroMesoIteration 1
-Finished Matlab Meso Structure Design. ElementNum = 360, MacroMesoIteration 1
-received a message from 0, tag 539
-received a message from 0, tag 540
-Finished Matlab Meso Structure Design. ElementNum = 362, MacroMesoIteration 1
-received a message from 0, tag 543
-Finished Matlab Meso Structure Design. ElementNum = 364, MacroMesoIteration 1
-received a message from 0, tag 544
-Finished Matlab Meso Structure Design. ElementNum = 370, MacroMesoIteration 1
-received a message from 0, tag 547
-Finished Matlab Meso Structure Design. ElementNum = 369, MacroMesoIteration 1
-received a message from 0, tag 548
-Finished Matlab Meso Structure Design. ElementNum = 365, MacroMesoIteration 1
-received a message from 0, tag 551
-Finished Matlab Meso Structure Design. ElementNum = 366, MacroMesoIteration 1
-received a message from 0, tag 552
-Finished Matlab Meso Structure Design. ElementNum = 376, MacroMesoIteration 1
-Finished Matlab Meso Structure Design. ElementNum = 375, MacroMesoIteration 1
-received a message from 0, tag 557
-received a message from 0, tag 556
-gn. ElementNum = 391, MacroMesoIteration 1
-received a message from 0, tag 586
-Finished Matlab Meso Structure Design. ElementNum = 254, MacroMesoIteration 1
-received a message from 0, tag 560
-Finished Matlab Meso Structure Design. ElementNum = 252, MacroMesoIteration 1
-received a message from 0, tag 561
-Finished Matlab Meso Structure Design. ElementNum = 198, MacroMesoIteration 1
-received a message from 0, tag 564
-Finished Matlab Meso Structure Design. ElementNum = 196, MacroMesoIteration 1
-received a message from 0, tag 565
-Finished Matlab Meso Structure Design. ElementNum = 381, MacroMesoIteration 1
-received a message from 0, tag 568
-Finished Matlab Meso Structure Design. ElementNum = 383, MacroMesoIteration 1
-received a message from 0, tag 569
-received a message from 0, tag 572
-Finished Matlab Meso Structure Design. ElementNum = 385, MacroMesoIteration 1
-received a message from 0, tag 573
-Finished Matlab Meso Structure Design. ElementNum = 380, MacroMesoIteration 1
-received a message from 0, tag 576
-Finished Matlab Meso Structure Design. ElementNum = 398, MacroMesoIteration 1
-received a message from 0, tag 604
-Finished Matlab Meso Structure Design. ElementNum = 106, MacroMesoIteration 1
-received a message from 0, tag 584
-Finished Matlab Meso Structure Design. ElementNum = 389, MacroMesoIteration 1
-received a message from 0, tag 588
-Finished Matlab Meso Structure Design. ElementNum = 110, MacroMesoIteration 1
-received a message from 0, tag 591
-Finished Matlab Meso Structure Design. ElementNum = 107, MacroMesoIteration 1
-received a message from 0, tag 596
-Finished Matlab Meso Structure Design. ElementNum = 402, MacroMesoIteration 1
-received a message from 0, tag 599
-Finished Matlab Meso Structure Design. ElementNum = 405, MacroMesoIteration 1
-received a message from 0, tag 602
-Finished Matlab Meso Structure Design. ElementNum = 404, MacroMesoIteration 1
-received a message from 0, tag 603
-Finished Matlab Meso Structure Design. ElementNum = 399, MacroMesoIteration 1
-received a message from 0, tag 606
-Finished Matlab Meso Structure Design. ElementNum = 400, MacroMesoIteration 1
-received a message from 0, tag 607
-gn. ElementNum = 410, MacroMesoIteration 1
-received a message from 0, tag 609
-Finished Matlab Meso Structure Design. ElementNum = 409, MacroMesoIteration 1
-received a message from 0, tag 611
-Finished Matlab Meso Structure DesiFinished Matlab Meso Structure Design. ElementNum = 247, MacroMesoIteration 1
-Finished Matlab Meso Structure Design. ElementNum = 437, MacroMesoIteration 1
-received a message from 0, tag 613
-Finished Matlab Meso Structure Design. ElementNum = 441, MacroMesoIteration 1
-received a message from 0, tag 626
-Finished Matlab Meso Structure Design. ElementNum = 434, MacroMesoIteration 1
-received a message from 0, tag 617
-Finished Matlab Meso Structure Design. ElementNum = 234, MacroMesoIteration 1
-received a message from 0, tag 620
-Finished Matlab Meso Structure Design. ElementNum = 512, MacroMesoIteration 1
-received a message from 0, tag 701
-gn. ElementNum = 510, MacroMesoIteration 1
-entNum = 448, MacroMesoIteration 1
-received a message from 0, tag 624
-Finished Matlab Meso Structure Design. ElementNum = 245, MacroMesoIteration 1
-received a message from 0, tag 625
-Finished Matlab Meso Structure Design. ElementNum = 438, MacroMesoIteration 1
-received a message from 0, tag 628
-Finished Matlab Meso Structure Design. ElementNum = 439, MacroMesoIteration 1
-received a message from 0, tag 629
-Finished Matlab Meso Structure Design. ElementNum = 445, MacroMesoIteration 1
-received a message from 0, tag 632
-Finished Matlab Meso Structure Design. ElementNum = 444, MacroMesoIteration 1
-received a message from 0, tag 633
-Finished Matlab Meso Structure Design. ElementNum = 237, MacroMesoIteration 1
-received a message from 0, tag 638
-Finished Matlab Meso Structure Design. ElementNum = 236, MacroMesoIteration 1
-received a message from 0, tag 639
-Finished Matlab Meso Structure Design. ElementNum = 447, MacroMesoIteration 1
-received a message from 0, tag 642
-received a message from 0, tag 643
-gn. ElementNum = 549, MacroMesoIteration 1
-received a message from 0, tag 715
-gn. ElementNum = 540, MacroMesoIteration 1
-entNum = 452, MacroMesoIteration 1
-received a message from 0, tag 646
-Finished Matlab Meso Structure Design. ElementNum = 455, MacroMesoIteration 1
-received a message from 0, tag 650
-Finished Matlab Meso Structure Design. ElementNum = 454, MacroMesoIteration 1
-received a message from 0, tag 651
-Finished Matlab Meso Structure Design. ElementNum = 485, MacroMesoIteration 1
-received a message from 0, tag 655
-Finished Matlab Meso Structure Design. ElementNum = 481, MacroMesoIteration 1
-received a message from 0, tag 656
-Finished Matlab Meso Structure Design. ElementNum = 458, MacroMesoIteration 1
-received a message from 0, tag 662
-Finished Matlab Meso Structure Design. ElementNum = 457, MacroMesoIteration 1
-received a message from 0, tag 664
-Finished Matlab Meso Structure Design. ElementNum = 477, MacroMesoIteration 1
-received a message from 0, tag 666
-Finished Matlab Meso Structure Design. ElementNum = 514, MacroMesoIteration 1
-received a message from 0, tag 669
-Finished Matlab Meso Structure Design. ElementNum = 554, MacroMesoIteration 1
-received a message from 0, tag 723
-Finished Matlab Meso Structure Design. ElementNum = 501, MacroMesoIteration 1
-received a message from 0, tag 681
-Finished Matlab Meso Structure Design. ElementNum = 466, MacroMesoIteration 1
-received a message from 0, tag 682
-Finished Matlab Meso Structure Design. ElementNum = 482, MacroMesoIteration 1
-received a message from 0, tag 687
-gn. ElementNum = 500, MacroMesoIteration 1
-received a message from 0, tag 693
-received a message from 0, tag 692
-Finished Matlab Meso Structure Design. ElementNum = 499, MacroMesoIteration 1
-Finished Matlab Meso Structure Design. ElementNum = 492, MacroMesoIteration 1
-Finished Matlab Meso Structure Desireceived a message from 0, tag 697
-ation 1
-received a message from 0, tag 698
-Finished Matlab Meso Structure Design. ElementNum = 480, MacroMesoIteration 1
-received a message from 0, tag 699
-Finished Matlab Meso Structure Desireceived a message from 0, tag 706
-ation 1
-received a message from 0, tag 700
-received a message from 0, tag 707
-gn. ElementNum = 571, MacroMesoIteration 1
- a message from 0, tag 711
-ation 1
-received a message from 0, tag 712
-Finished Matlab Meso Structure Design. ElementNum = 546, MacroMesoIteration 1
-received a message from 0, tag 713
-Finished Matlab Meso Structure Design. ElementNum = 551, MacroMesoIteration 1
-received a message from 0, tag 719
-Finished Matlab Meso Structure Design. ElementNum = 544, MacroMesoIteration 1
-received a message from 0, tag 721
-gn. ElementNum = 576, MacroMesoIteration 1
-entNum = 556, MacroMesoIteration 1
-received a message from 0, tag 725
-Finished Matlab Meso Structure Design. ElementNum = 557, MacroMesoIteration 1
-received a message from 0, tag 726
-Finished Matlab Meso Structure Design. ElementNum = 560, MacroMesoIteration 1
-received a message from 0, tag 729
-Finished Matlab Meso Structure Design. ElementNum = 559, MacroMesoIteration 1
-received a message from 0, tag 730
-Finished Matlab Meso Structure Design. ElementNum = 563, MacroMesoIteration 1
-received a message from 0, tag 735
-Finished Matlab Meso Structure Design. ElementNum = 562, MacroMesoIteration 1
-received a message from 0, tag 736
-Finished Matlab Meso Structure Design. ElementNum = 210, MacroMesoIteration 1
-received a message from 0, tag 738
-Finished Matlab Meso Structure Design. ElementNum = 569, MacroMesoIteration 1
-received a message from 0, tag 741
-Finished Matlab Meso Structure Design. ElementNum = 566, MacroMesoIteration 1
-received a message from 0, tag 742
-received a message from 0, tag 745
-gn. ElementNum = 598, MacroMesoIteration 1
-entNum = 572, MacroMesoIteration 1
-received a message from 0, tag 746
-received a message from 0, tag 747
-gn. ElementNum = 217, MacroMesoIteration 1
-received a message from 0, tag 796
-Finished Matlab Meso Structure Design. ElementNum = 308, MacroMesoIteration 1
-received a message from 0, tag 758
-Finished Matlab Meso Structure Design. ElementNum = 591, MacroMesoIteration 1
-received a message from 0, tag 761
+received a message from 0, tag 217
+Finished Matlab Meso Structure Design. ElementNum = 202, MacroMesoIteration 1
+received a message from 0, tag 215
 Finished Matlab Meso Structure Design. ElementNum = 205, MacroMesoIteration 1
-received a message from 0, tag 763
-received a message from 0, tag 787
-Finished Matlab Meso Structure Design. ElementNum = 579, MacroMesoIteration 1
-received a message from 0, tag 767
-received a message from 0, tag 768
-gn. ElementNum = 589, MacroMesoIteration 1
-received a message from 0, tag 770
-Finished Matlab Meso Structure Design. ElementNum = 587, MacroMesoIteration 1
-received a message from 0, tag 771
-Finished Matlab Meso Structure Design. ElementNum = 586, MacroMesoIteration 1
-received a message from 0, tag 772
-Finished Matlab Meso Structure Design. ElementNum = 596, MacroMesoIteration 1
-received a message from 0, tag 774
-Finished Matlab Meso Structure Design. ElementNum = 595, MacroMesoIteration 1
-received a message from 0, tag 778
-Finished Matlab Meso Structure Design. ElementNum = 597, MacroMesoIteration 1
-received a message from 0, tag 779
-Finished Matlab Meso Structure Design. ElementNum = 248, MacroMesoIteration 1
-Finished Matlab Meso Structure Design. ElementNum = 250, MacroMesoIteration 1
-received a message from 0, tag 783
-received a message from 0, tag 784
-gn. ElementNum = 322, MacroMesoIteration 1
-received a message from 0, tag 786
-received a message from 0, tag 791
-gn. ElementNum = 314, MacroMesoIteration 1
-received a message from 0, tag 789
-Finished Matlab Meso Structure Design. ElementNum = 600, MacroMesoIteration 1
-received a message from 0, tag 794
-Finished Matlab Meso Structure Design. ElementNum = 603, MacroMesoIteration 1
-received a message from 0, tag 795
-gn. ElementNum = 241, MacroMesoIteration 1
-received a message from 0, tag 799
-received a message from 0, tag 800
-Finished Matlab Meso Structure Design. ElementNum = 323, MacroMesoIteration 1
-received a message from 0, tag 803
-Finished Matlab Meso Structure Design. ElementNum = 218, MacroMesoIteration 1
-received a message from 0, tag 804
-Finished Matlab Meso Structure Design. ElementNum = 216, MacroMesoIteration 1
-received a message from 0, tag 805
-Finished Matlab Meso Structure Design. ElementNum = 315, MacroMesoIteration 1
-received a message from 0, tag 810
+received a message from 0, tag 223
+Finished Matlab Meso Structure Design. ElementNum = 121, MacroMesoIteration 1
+received a message from 0, tag 230
+Finished Matlab Meso Structure Design. ElementNum = 135, MacroMesoIteration 1
+received a message from 0, tag 232
+Finished Matlab Meso Structure Design. ElementNum = 139, MacroMesoIteration 1
+received a message from 0, tag 233
+Finished Matlab Meso Structure Design. ElementNum = 170, MacroMesoIteration 1
+received a message from 0, tag 244
+Finished Matlab Meso Structure Design. ElementNum = 219, MacroMesoIteration 1
+received a message from 0, tag 248
+Finished Matlab Meso Structure Design. ElementNum = 226, MacroMesoIteration 1
+received a message from 0, tag 251
+Finished Matlab Meso Structure Design. ElementNum = 143, MacroMesoIteration 1
+received a message from 0, tag 252
+Finished Matlab Meso Structure Design. ElementNum = 223, MacroMesoIteration 1
+received a message from 0, tag 256
+Finished Matlab Meso Structure Design. ElementNum = 239, MacroMesoIteration 1
+received a message from 0, tag 258
+Finished Matlab Meso Structure Design. ElementNum = 247, MacroMesoIteration 1
+received a message from 0, tag 269
+Finished Matlab Meso Structure Design. ElementNum = 172, MacroMesoIteration 1
+received a message from 0, tag 271
+Finished Matlab Meso Structure Design. ElementNum = 174, MacroMesoIteration 1
+received a message from 0, tag 273
+Finished Matlab Meso Structure Design. ElementNum = 267, MacroMesoIteration 1
+received a message from 0, tag 280
+Finished Matlab Meso Structure Design. ElementNum = 193, MacroMesoIteration 1
+received a message from 0, tag 286
+Finished Matlab Meso Structure Design. ElementNum = 268, MacroMesoIteration 1
+received a message from 0, tag 296
+Finished Matlab Meso Structure Design. ElementNum = 265, MacroMesoIteration 1
+received a message from 0, tag 294
+Finished Matlab Meso Structure Design. ElementNum = 190, MacroMesoIteration 1
+received a message from 0, tag 297
+Finished Matlab Meso Structure Design. ElementNum = 189, MacroMesoIteration 1
+received a message from 0, tag 298
+Finished Matlab Meso Structure Design. ElementNum = 288, MacroMesoIteration 1
+received a message from 0, tag 307
+Finished Matlab Meso Structure Design. ElementNum = 212, MacroMesoIteration 1
+received a message from 0, tag 309
+Finished Matlab Meso Structure Design. ElementNum = 272, MacroMesoIteration 1
+received a message from 0, tag 320
+Finished Matlab Meso Structure Design. ElementNum = 290, MacroMesoIteration 1
+received a message from 0, tag 319
+Finished Matlab Meso Structure Design. ElementNum = 307, MacroMesoIteration 1
+received a message from 0, tag 326
+Finished Matlab Meso Structure Design. ElementNum = 273, MacroMesoIteration 1
+received a message from 0, tag 324
+Finished Matlab Meso Structure Design. ElementNum = 238, MacroMesoIteration 1
+received a message from 0, tag 331
+Finished Matlab Meso Structure Design. ElementNum = 234, MacroMesoIteration 1
+received a message from 0, tag 332
+Finished Matlab Meso Structure Design. ElementNum = 295, MacroMesoIteration 1
+received a message from 0, tag 342
+Finished Matlab Meso Structure Design. ElementNum = 236, MacroMesoIteration 1
+received a message from 0, tag 343
+Finished Matlab Meso Structure Design. ElementNum = 220, MacroMesoIteration 1
+received a message from 0, tag 349
 Finished Matlab Meso Structure Design. ElementNum = 310, MacroMesoIteration 1
-received a message from 0, tag 812
-Finished Matlab Meso Structure Design. ElementNum = 607, MacroMesoIteration 1
-received a message from 0, tag 816
-Finished Matlab Meso Structure Design. ElementNum = 604, MacroMesoIteration 1
-received a message from 0, tag 817
-Finished Matlab Meso Structure Design. ElementNum = 610, MacroMesoIteration 1
-received a message from 0, tag 821
-Finished Matlab Meso Structure Design. ElementNum = 618, MacroMesoIteration 1
-received a message from 0, tag 829
-gn. ElementNum = 614, MacroMesoIteration 1
-entNum = 613, MacroMesoIteration 1
-received a message from 0, tag 824
-received a message from 0, tag 825
-received a message from 0, tag 826
-Finished Matlab Meso Structure Design. ElementNum = 617, MacroMesoIteration 1
-received a message from 0, tag 827
-Finished Matlab Meso Structure Design. ElementNum = 616, MacroMesoIteration 1
-received a message from 0, tag 828
-Finished Matlab Meso Structure Design. ElementNum = 719, MacroMesoIteration 1
-received a message from 0, tag 922
-Finished Matlab Meso Structure Design. ElementNum = 718, MacroMesoIteration 1
-received a message from 0, tag 915
-Finished Matlab Meso Structure Design. ElementNum = 710, MacroMesoIteration 1
-received a message from 0, tag 839
-Finished Matlab Meso Structure Design. ElementNum = 654, MacroMesoIteration 1
-received a message from 0, tag 840
-Finished Matlab Meso Structure Design. ElementNum = 702, MacroMesoIteration 1
-received a message from 0, tag 847
-Finished Matlab Meso Structure Design. ElementNum = 660, MacroMesoIteration 1
-received a message from 0, tag 848
-Finished Matlab Meso Structure Design. ElementNum = 668, MacroMesoIteration 1
-received a message from 0, tag 856
-Finished Matlab Meso Structure Design. ElementNum = 648, MacroMesoIteration 1
-received a message from 0, tag 853
-Finished Matlab Meso Structure Design. ElementNum = 657, MacroMesoIteration 1
-received a message from 0, tag 859
-Finished Matlab Meso Structure Design. ElementNum = 688, MacroMesoIteration 1
-received a message from 0, tag 860
-Finished Matlab Meso Structure Design. ElementNum = 690, MacroMesoIteration 1
-Finished Matlab Meso Structure Design. ElementNum = 676, MacroMesoIteration 1
-received a message from 0, tag 864
-received a message from 0, tag 865
-gn. ElementNum = 665, MacroMesoIteration 1
-received a message from 0, tag 868
-gn. ElementNum = 689, MacroMesoIteration 1
-received a message from 0, tag 869
-Finished Matlab Meso Structure Design. ElementNum = 687, MacroMesoIteration 1
-received a message from 0, tag 872
-received a message from 0, tag 876
-Finished Matlab Meso Structure Design. ElementNum = 671, MacroMesoIteration 1
-received a message from 0, tag 883
-received a message from 0, tag 884
-Finished Matlab Meso Structure Design. ElementNum = 698, MacroMesoIteration 1
-received a message from 0, tag 887
-received a message from 0, tag 888
-gn. ElementNum = 653, MacroMesoIteration 1
-received a message from 0, tag 889
-Finished Matlab Meso Structure Design. ElementNum = 683, MacroMesoIteration 1
-received a message from 0, tag 894
-Finished Matlab Meso Structure Design. ElementNum = 684, MacroMesoIteration 1
-received a message from 0, tag 895
-gn. ElementNum = 693, MacroMesoIteration 1
-received a message from 0, tag 896
-received a message from 0, tag 897
-gn. ElementNum = 706, MacroMesoIteration 1
-received a message from 0, tag 900
-Finished Matlab Meso Structure Design. ElementNum = 414, MacroMesoIteration 1
-received a message from 0, tag 901
-Finished Matlab Meso Structure Design. ElementNum = 685, MacroMesoIteration 1
-received a message from 0, tag 904
-Finished Matlab Meso Structure Design. ElementNum = 707, MacroMesoIteration 1
-received a message from 0, tag 911
-Finished Matlab Meso Structure Design. ElementNum = 418, MacroMesoIteration 1
-received a message from 0, tag 914
-entNum = 713, MacroMesoIteration 1
-received a message from 0, tag 919
-Finished Matlab Meso Structure Design. ElementNum = 709, MacroMesoIteration 1
-received a message from 0, tag 920
-received a message from 0, tag 924
-Finished Matlab Meso Structure Design. ElementNum = 715, MacroMesoIteration 1
-received a message from 0, tag 925
-Finished Matlab Meso Structure Design. ElementNum = 720, MacroMesoIteration 1
-received a message from 0, tag 928
-Finished Matlab Meso Structure Design. ElementNum = 524, MacroMesoIteration 1
-received a message from 0, tag 932
-Finished Matlab Meso Structure Design. ElementNum = 761, MacroMesoIteration 1
-received a message from 0, tag 941
-gn. ElementNum = 806, MacroMesoIteration 1
-received a message from 0, tag 943
-received a message from 0, tag 944
-gn. ElementNum = 807, MacroMesoIteration 1
-Finished Matlab Meso Structure Design. ElementNum = 808, MacroMesoIteration 1
-entNum = 771, MacroMesoIteration 1
-received a message from 0, tag 950
-Finished Matlab Meso Structure Design. ElementNum = 770, MacroMesoIteration 1
-received a message from 0, tag 951
-Finished Matlab Meso Structure Design. ElementNum = 780, MacroMesoIteration 1
-received a message from 0, tag 955
-received a message from 0, tag 999
-received a message from 0, tag 958
-Finished Matlab Meso Structure Design. ElementNum = 767, MacroMesoIteration 1
-received a message from 0, tag 959
-Finished Matlab Meso Structure Design. ElementNum = 776, MacroMesoIteration 1
-received a message from 0, tag 963
-Finished Matlab Meso Structure Design. ElementNum = 790, MacroMesoIteration 1
-received a message from 0, tag 966
-
-n. ElementNum = 785, MacroMesoIteration 1
-received a message from 0, tag 968
-Finished Matlab Meso Structure DesiFinished Matlab Meso Structure Design. ElementNum = 803, MacroMesoIteration 1
-received a message from 0, tag 972
-Finished Matlab Meso Structure Design. ElementNum = 794, MacroMesoIteration 1
-received a message from 0, tag 975
-Finished Matlab Meso Structure Design. ElementNum = 795, MacroMesoIteration 1
-received a message from 0, tag 976
-received a message from 0, tag 997
-Finished Matlab Meso Structure Design. ElementNum = 809, MacroMesoIteration 1
-received a message from 0, tag 985
-Finished Matlab Meso Structure Design. ElementNum = 805, MacroMesoIteration 1
-received a message from 0, tag 986
-entNum = 813, MacroMesoIteration 1
-received a message from 0, tag 991
-Finished Matlab Meso Structure Design. ElementNum = 819, MacroMesoIteration 1
-received a message from 0, tag 995
-
-Finished Matlab Meso Structure Design. ElementNum = 824, MacroMesoIteration 1
-received a message from 0, tag 1002
-Finished Matlab Meso Structure Design. ElementNum = 820, MacroMesoIteration 1
-received a message from 0, tag 1003
+received a message from 0, tag 348
+Finished Matlab Meso Structure Design. ElementNum = 275, MacroMesoIteration 1
+received a message from 0, tag 361
+Finished Matlab Meso Structure Design. ElementNum = 258, MacroMesoIteration 1
+received a message from 0, tag 363
+Finished Matlab Meso Structure Design. ElementNum = 342, MacroMesoIteration 1
+received a message from 0, tag 367
+Finished Matlab Meso Structure Design. ElementNum = 251, MacroMesoIteration 1
+received a message from 0, tag 368
+Finished Matlab Meso Structure Design. ElementNum = 347, MacroMesoIteration 1
+received a message from 0, tag 375
+Finished Matlab Meso Structure Design. ElementNum = 352, MacroMesoIteration 1
+received a message from 0, tag 379
+Finished Matlab Meso Structure Design. ElementNum = 349, MacroMesoIteration 1
+received a message from 0, tag 388
+Finished Matlab Meso Structure Design. ElementNum = 366, MacroMesoIteration 1
+received a message from 0, tag 392
+Finished Matlab Meso Structure Design. ElementNum = 368, MacroMesoIteration 1
+received a message from 0, tag 401
+Finished Matlab Meso Structure Design. ElementNum = 316, MacroMesoIteration 1
+received a message from 0, tag 396
+Finished Matlab Meso Structure Design. ElementNum = 369, MacroMesoIteration 1
+received a message from 0, tag 408
+Finished Matlab Meso Structure Design. ElementNum = 385, MacroMesoIteration 1
+received a message from 0, tag 409
+Finished Matlab Meso Structure Design. ElementNum = 392, MacroMesoIteration 1
+received a message from 0, tag 416
+Finished Matlab Meso Structure Design. ElementNum = 391, MacroMesoIteration 1
+received a message from 0, tag 420
+Finished Matlab Meso Structure Design. ElementNum = 388, MacroMesoIteration 1
+received a message from 0, tag 422
+Finished Matlab Meso Structure Design. ElementNum = 403, MacroMesoIteration 1
+received a message from 0, tag 426
+Finished Matlab Meso Structure Design. ElementNum = 390, MacroMesoIteration 1
+received a message from 0, tag 430
+Finished Matlab Meso Structure Design. ElementNum = 300, MacroMesoIteration 1
+received a message from 0, tag 435
+Finished Matlab Meso Structure Design. ElementNum = 412, MacroMesoIteration 1
+received a message from 0, tag 440
+Finished Matlab Meso Structure Design. ElementNum = 377, MacroMesoIteration 1
+received a message from 0, tag 442
+Finished Matlab Meso Structure Design. ElementNum = 431, MacroMesoIteration 1
+received a message from 0, tag 456
+Finished Matlab Meso Structure Design. ElementNum = 426, MacroMesoIteration 1
+received a message from 0, tag 450
+Finished Matlab Meso Structure Design. ElementNum = 422, MacroMesoIteration 1
+received a message from 0, tag 460
+Finished Matlab Meso Structure Design. ElementNum = 447, MacroMesoIteration 1
+received a message from 0, tag 468
+Finished Matlab Meso Structure Design. ElementNum = 451, MacroMesoIteration 1
+received a message from 0, tag 473
+Finished Matlab Meso Structure Design. ElementNum = 416, MacroMesoIteration 1
+received a message from 0, tag 469
+Finished Matlab Meso Structure Design. ElementNum = 445, MacroMesoIteration 1
+received a message from 0, tag 476
+Finished Matlab Meso Structure Design. ElementNum = 413, MacroMesoIteration 1
+received a message from 0, tag 480
+Finished Matlab Meso Structure Design. ElementNum = 359, MacroMesoIteration 1
+received a message from 0, tag 487
+Finished Matlab Meso Structure Design. ElementNum = 338, MacroMesoIteration 1
+received a message from 0, tag 486
+Finished Matlab Meso Structure Design. ElementNum = 355, MacroMesoIteration 1
+received a message from 0, tag 489
+Finished Matlab Meso Structure Design. ElementNum = 318, MacroMesoIteration 1
+received a message from 0, tag 494
+Finished Matlab Meso Structure Design. ElementNum = 469, MacroMesoIteration 1
+received a message from 0, tag 496
+Finished Matlab Meso Structure Design. ElementNum = 438, MacroMesoIteration 1
+received a message from 0, tag 500
+Finished Matlab Meso Structure Design. ElementNum = 470, MacroMesoIteration 1
+received a message from 0, tag 503
+Finished Matlab Meso Structure Design. ElementNum = 333, MacroMesoIteration 1
+received a message from 0, tag 506
+Finished Matlab Meso Structure Design. ElementNum = 482, MacroMesoIteration 1
+received a message from 0, tag 511
+Finished Matlab Meso Structure Design. ElementNum = 483, MacroMesoIteration 1
+received a message from 0, tag 512
+Finished Matlab Meso Structure Design. ElementNum = 484, MacroMesoIteration 1
+received a message from 0, tag 513
+Finished Matlab Meso Structure Design. ElementNum = 375, MacroMesoIteration 1
+received a message from 0, tag 521
+Finished Matlab Meso Structure Design. ElementNum = 485, MacroMesoIteration 1
+received a message from 0, tag 530
+Finished Matlab Meso Structure Design. ElementNum = 459, MacroMesoIteration 1
+received a message from 0, tag 529
+Finished Matlab Meso Structure Design. ElementNum = 508, MacroMesoIteration 1
+received a message from 0, tag 536
 Finished Matlab Meso Structure Design. ElementNum = 521, MacroMesoIteration 1
-received a message from 0, tag 1006
-Finished Matlab Meso Structure Design. ElementNum = 817, MacroMesoIteration 1
-received a message from 0, tag 1010
-Finished Matlab Meso Structure Design. ElementNum = 815, MacroMesoIteration 1
-received a message from 0, tag 1011
+received a message from 0, tag 538
+Finished Matlab Meso Structure Design. ElementNum = 480, MacroMesoIteration 1
+received a message from 0, tag 552
+Finished Matlab Meso Structure Design. ElementNum = 394, MacroMesoIteration 1
+received a message from 0, tag 551
+Finished Matlab Meso Structure Design. ElementNum = 476, MacroMesoIteration 1
+received a message from 0, tag 554
+Finished Matlab Meso Structure Design. ElementNum = 530, MacroMesoIteration 1
+received a message from 0, tag 559
+Finished Matlab Meso Structure Design. ElementNum = 420, MacroMesoIteration 1
+received a message from 0, tag 562
+Finished Matlab Meso Structure Design. ElementNum = 453, MacroMesoIteration 1
+received a message from 0, tag 573
+Finished Matlab Meso Structure Design. ElementNum = 544, MacroMesoIteration 1
+received a message from 0, tag 577
+Finished Matlab Meso Structure Design. ElementNum = 564, MacroMesoIteration 1
+received a message from 0, tag 585
+Finished Matlab Meso Structure Design. ElementNum = 455, MacroMesoIteration 1
+received a message from 0, tag 587
+Finished Matlab Meso Structure Design. ElementNum = 558, MacroMesoIteration 1
+received a message from 0, tag 591
+Finished Matlab Meso Structure Design. ElementNum = 540, MacroMesoIteration 1
+received a message from 0, tag 595
+Finished Matlab Meso Structure Design. ElementNum = 496, MacroMesoIteration 1
+received a message from 0, tag 602
+Finished Matlab Meso Structure Design. ElementNum = 555, MacroMesoIteration 1
+received a message from 0, tag 612
+Finished Matlab Meso Structure Design. ElementNum = 584, MacroMesoIteration 1
+received a message from 0, tag 618
+Finished Matlab Meso Structure Design. ElementNum = 553, MacroMesoIteration 1
+received a message from 0, tag 619
+Finished Matlab Meso Structure Design. ElementNum = 494, MacroMesoIteration 1
+received a message from 0, tag 620
+Finished Matlab Meso Structure Design. ElementNum = 510, MacroMesoIteration 1
+received a message from 0, tag 622
+Finished Matlab Meso Structure Design. ElementNum = 599, MacroMesoIteration 1
+received a message from 0, tag 630
+Finished Matlab Meso Structure Design. ElementNum = 600, MacroMesoIteration 1
+received a message from 0, tag 632
+Finished Matlab Meso Structure Design. ElementNum = 605, MacroMesoIteration 1
+received a message from 0, tag 631
+Finished Matlab Meso Structure Design. ElementNum = 589, MacroMesoIteration 1
+received a message from 0, tag 635
+Finished Matlab Meso Structure Design. ElementNum = 549, MacroMesoIteration 1
+received a message from 0, tag 637
+Finished Matlab Meso Structure Design. ElementNum = 634, MacroMesoIteration 1
+received a message from 0, tag 644
 Finished Matlab Meso Structure Design. ElementNum = 536, MacroMesoIteration 1
-received a message from 0, tag 1013
-Finished Matlab Meso Structure Design. ElementNum = 535, MacroMesoIteration 1
-received a message from 0, tag 1014
-Finished Matlab Meso Structure Design. ElementNum = 911, MacroMesoIteration 1
-received a message from 0, tag 1077
-Finished Matlab Meso Structure Design. ElementNum = 886, MacroMesoIteration 1
-received a message from 0, tag 1024
-Finished Matlab Meso Structure Design. ElementNum = 901, MacroMesoIteratFinished Matlab Meso Structure Design. ElementNum = 889, MacroMesoIteration 1
-received a message from 0, tag 1030
-Finished Matlab Meso Structure Design. ElementNum = 883, MacroMesoIteration 1
-received a message from 0, tag 1033
-Finished Matlab Meso Structure Design. ElementNum = 880, MacroMesoIteration 1
-received a message from 0, tag 1034
-received a message from 0, tag 1039
-Finished Matlab Meso Structure Design. ElementNum = 858, MacroMesoIteration 1
-received a message from 0, tag 1042
-Finished Matlab Meso Structure Design. ElementNum = 857, MacroMesoIteration 1
-received a message from 0, tag 1043
-received a message from 0, tag 1095
-ion 1
-ed a message from 0, tag 1050
-Finished Matlab Meso Structure Design. ElementNum = 873, MacroMesoIteration 1
-received a message from 0, tag 1051
-Finished Matlab Meso Structure Design. ElementNum = 884, MacroMesoIteration 1
-received a message from 0, tag 1057
-Finished Matlab Meso Structure Design. ElementNum = 910, MacroMesoIteration 1
-received a message from 0, tag 1059
-Finished Matlab Meso Structure Design. ElementNum = 888, MacroMesoIteration 1
-received a message from 0, tag 1062
-received a message from 0, tag 1063
-n. ElementNum = 906, MacroMesoIteration 1
-received a message from 0, tag 1065
-Finished Matlab Meso Structure Design. ElementNum = 907, MacroMesoIteration 1
-received a message from 0, tag 1066
-Finished Matlab Meso Structure Design. ElementNum = 892, MacroMesoIteration 1
-received a message from 0, tag 1069
-Finished Matlab Meso Structure Design. ElementNum = 890, MacroMesoIteration 1
-received a message from 0, tag 1071
-n. ElementNum = 891, MacroMesoIteration 1
-received a message from 0, tag 1072
-received a message from 0, tag 1073
-Finished Matlab Meso Structure Design. ElementNum = 914, MacroMesoIteration 1
-received a message from 0, tag 1076
-Finished Matlab Meso Structure Design. ElementNum = 912, MacroMesoIteration 1
-received a message from 0, tag 1079
-Finished Matlab Meso Structure Design. ElementNum = 921, MacroMesoIteration 1
-received a message from 0, tag 1082
-Finished Matlab Meso Structure Design. ElementNum = 919, MacroMesoIteration 1
-received a message from 0, tag 1085
-Finished Matlab Meso Structure Design. ElementNum = 920, MacroMesoIteration 1
-received a message from 0, tag 1086
-Finished Matlab Meso Structure Design. ElementNum = 923, MacroMesoIteration 1
-Finished Matlab Meso Structure Design. ElementNum = 922, MacroMesoIteration 1
-received a message from 0, tag 1089
-received a message from 0, tag 1090
-received a message from 0, tag 1091
-Finished Matlab Meso Structure Design. ElementNum = 929, MacroMesoIteration 1
-received a message from 0, tag 1093
-Finished Matlab Meso Structure Design. ElementNum = 926, MacroMesoIteration 1
-received a message from 0, tag 1094
-Finished Matlab Meso Structure Design. ElementNum = 784, MacroMesoIteration 1
-received a message from 0, tag 1097
-Finished Matlab Meso Structure Design. ElementNum = 783, MacroMesoIteration 1
-received a message from 0, tag 1098
-n. ElementNum = 963, MacroMesoIteration 1
-mentNum = 798, MacroMesoIteration 1
-received a message from 0, tag 1102
-Finished Matlab Meso Structure Design. ElementNum = 800, MacroMesoIteration 1
-received a message from 0, tag 1103
-Finished Matlab Meso Structure Design. ElementNum = 748, MacroMesoIteration 1
-received a message from 0, tag 1147
-Finished Matlab Meso Structure Design. ElementNum = 745, MacroMesoIteration 1
-received a message from 0, tag 1157
-Finished Matlab Meso Structure Design. ElementNum = 632, MacroMesoIteration 1
-received a message from 0, tag 1116
-Finished Matlab Meso Structure DesigFinished Matlab Meso Structure Design. ElementNum = 749, MacroMesoIteration 1
-received a message from 0, tag 1168
-
-received a message from 0, tag 1154
-eceived a message from 0, tag 1126
-Finished Matlab Meso Structure Design. ElementNum = 985, MacroMesoIteration 1
-received a message from 0, tag 1127
-Finished Matlab Meso Structure Design. ElementNum = 986, MacroMesoIteration 1
-received a message from 0, tag 1130
-gn. ElementNum = 1008, MacroMesoIteration 1
-ntNum = 972, MacroMesoIteration 1
-received a message from 0, tag 1134
-Finished Matlab Meso Structure Design. ElementNum = 967, MacroMesoIteration 1
-received a message from 0, tag 1135
-Finished Matlab Meso Structure Design. ElementNum = 976, MacroMesoIteration 1
-received a message from 0, tag 1138
-Finished Matlab Meso Structure Design. ElementNum = 975, MacroMesoIteration 1
-received a message from 0, tag 1139
-Finished Matlab Meso Structure Design. ElementNum = 977, MacroMesoIteration 1
-received a message from 0, tag 1143
-Finished Matlab Meso Structure Design. ElementNum = 992, MacroMesoIteration 1
-received a message from 0, tag 1144
-mentNum = 991, MacroMesoIteration 1
-received a message from 0, tag 1151
-Finished Matlab Meso Structure Design. ElementNum = 995, MacroMesoIteration 1
-received a message from 0, tag 1152
-
-Finished Matlab Meso Structure Design. ElementNum = 998, MacroMesoIteration 1
-received a message from 0, tag 1160
-Finished Matlab Meso Structure Design. ElementNum = 1003, MacroMesoIteration 1
-received a message from 0, tag 1161
-Finished Matlab Meso Structure Design. ElementNum = 1013, MacroMesoIteration 1
-received a message from 0, tag 1163
-n. ElementNum = 1018, MacroMesoIteration 1
-entNum = 999, MacroMesoIteration 1
-received a message from 0, tag 1171
-Finished Matlab Meso Structure Design. ElementNum = 1016, MacroMesoIteration 1
-received a message from 0, tag 1173
-entNum = 1010, MacroMesoIteration 1
-received a message from 0, tag 1178
-Finished Matlab Meso Structure Design. ElementNum = 1011, MacroMesoIteration 1
-received a message from 0, tag 1179
-inished Matlab Meso Structure Design. ElementNum = 726, MacroMesoIteration 1
-received a message from 0, tag 1184
-Finished Matlab Meso Structure Design. ElementNum = 725, MacroMesoIteration 1
-received a message from 0, tag 1185
-Finished Matlab Meso Structure Design. ElementNum = 741, MacroMesoIteration 1
-received a message from 0, tag 1190
-received a message from 0, tag 1194
-Finished Matlab Meso Structure Design. ElementNum = 1022, MacroMesoIteration 1
-received a message from 0, tag 1202Finished Matlab Meso Structure Design. ElementNum = 747, MacroMesoIteration 1
-received a message from 0, tag 1198
-Finished Matlab Meso Structure Design. ElementNum = 1076, MacroMesoIteration 1
-received a message from 0, tag 1224
-Finished Matlab Meso Structure Design. ElementNum = 1082, MacroMesoIteration 1
-received a message from 0, tag 1231
-Finished Matlab Meso Structure Design. ElementNum = 1027, MacroMesoIteraFinished Matlab Meso Structure Design. ElementNum = 1030, MacroMesoIteration 1
-received a message from 0, tag 1213
-Finished Matlab Meso Structure Design. ElementNum = 1032, MacroMesoIteration 1
-received a message from 0, tag 1216
-entNum = 1074, MacroMesoIteration 1
-received a message from 0, tag 1221
-Finished Matlab Meso Structure Design. ElementNum = 1070, MacroMesoIteration 1
-received a message from 0, tag 1222
-n. ElementNum = 1078, MacroMesoIteration 1
-received a message from 0, tag 1226
-Finished Matlab Meso Structure Design. ElementNum = 829, MacroMesoIteration 1
-received a message from 0, tag 1229
-
-Finished Matlab Meso Structure Design. ElementNum = 855, MacroMesoIteration 1
-received a message from 0, tag 1234
-
-Finished Matlab Meso Structure Design. ElementNum = 1086, MacroMesoIteration 1
-received a message from 0, tag 1237
-Finished Matlab Meso Structure Design. ElementNum = 1085, MacroMesoIteration 1
-received a message from 0, tag 1238
-Finished Matlab Meso Structure Design. ElementNum = 1087, MacroMesoIteration 1
-Finished Matlab Meso Structure Design. ElementNum = 1088, MacroMesoIteration 1
-received a message from 0, tag 1242
-received a message from 0, tag 1243
-n. ElementNum = 844, MacroMesoIteration 1
-received a message from 0, tag 1244
-
-n. ElementNum = 1108, MacroMesoIteration 1
-entNum = 1092, MacroMesoIteration 1
-received a message from 0, tag 1248
-Finished Matlab Meso Structure Design. ElementNum = 1091, MacroMesoIteration 1
-received a message from 0, tag 1249
-Finished Matlab Meso Structure Design. ElementNum = 930, MacroMesoIteration 1
-received a message from 0, tag 1302
-
-Finished Matlab Meso Structure DesiFinished Matlab Meso Structure Design. ElementNum = 1152, MacroMesoIteration 1
-received a message from 0, tag 1318
-Finished Matlab Meso Structure Design. ElementNum = 932, MacroMesoIteration 1
-received a message from 0, tag 1322
-Finished Matlab Meso Structure Design. ElementNum = 831, MacroMesoIteration 1
-received a message from 0, tag 1272
-gn. ElementNum = 1116, MacroMesoIteration 1
-received a message from 0, tag 1274
-received a message from 0, tag 1275
-n. ElementNum = 1118, MacroMesoIteration 1
-received a message from 0, tag 1276
-n. ElementNum = 1119, MacroMesoIteration 1
-received a message from 0, tag 1277
-received a message from 0, tag 1278
-n. ElementNum = 636, MacroMesoIteration 1
-received a message from 0, tag 1279
-Finished Matlab Meso Structure Design. ElementNum = 638, MacroMesoIteration 1
-received a message from 0, tag 1281
-Finished Matlab Meso Structure Design. ElementNum = 833, MacroMesoIteration 1
-received a message from 0, tag 1286
-Finished Matlab Meso Structure Design. ElementNum = 1129, MacroMesoIteration 1
-received a message from 0, tag 1297
-n. ElementNum = 1130, MacroMesoIteration 1
-received a message from 0, tag 1295
-Finished Matlab Meso Structure Design. ElementNum = 1128, MacroMesoIteration 1
-received a message from 0, tag 1294
-received a message from 0, tag 1296
-n. ElementNum = 1123, MacroMesoIteration 1
-received a message from 0, tag 1299
-Finished Matlab Meso Structure Design. ElementNum = 1126, MacroMesoIteration 1
-Finished Matlab Meso Structure Design. ElementNum = 1127, MacroMesoIteration 1
-received a message from 0, tag 1300
-received a message from 0, tag 1301
-n. ElementNum = 851, MacroMesoIteration 1
-received a message from 0, tag 1304
-
-Finished Matlab Meso Structure Design. ElementNum = 1135, MacroMesoIteration 1
-received a message from 0, tag 1306
-Finished Matlab Meso Structure Design. ElementNum = 1132, MacroMesoIteration 1
-received a message from 0, tag 1307
-inished Matlab Meso Structure Design. ElementNum = 849, MacroMesoIteration 1
-received a message from 0, tag 1312
-Finished Matlab Meso Structure Design. ElementNum = 622, MacroMesoIteration 1
-received a message from 0, tag 1314
-
-inished Matlab Meso Structure Design. ElementNum = 1177, MacroMesoIteration 1
-received a message from 0, tag 1332Finished Matlab Meso Structure Design. ElementNum = 931, MacroMesoIteration 1
-received a message from 0, tag 1320
-
-Finished Matlab Meso Structure Design. ElementNum = 1191, MacroMesoIteration 1
-received a message from 0, tag 1327
-Finished Matlab Meso Structure Design. ElementNum = 1158, MacroMesoIteration 1
-received a message from 0, tag 1328
-Finished Matlab Meso Structure Design. ElementNum = 1185, MacroMesoIteration 1
-received a message from 0, tag 1336
-Finished Matlab Meso Structure Design. ElementNum = 1189, MacroMesoIteration 1
-received a message from 0, tag 1338
-n. ElementNum = 1188, MacroMesoIteration 1
-received a message from 0, tag 1339
-received a message from 0, tag 1340
-n. ElementNum = 946, MacroMesoIteration 1
-received a message from 0, tag 1367
-gn. ElementNum = 1178, MacroMesoIteration 1
-received a message from 0, tag 1346
-received a message from 0, tag 1347
-n. ElementNum = 940, MacroMesoIteration 1
-received a message from 0, tag 1349
-Finished Matlab Meso Structure Design. ElementNum = 936, MacroMesoIteration 1
-received a message from 0, tag 1351
-
-Finished Matlab Meso Structure Design. ElementNum = 1194, MacroMesoIteration 1
-received a message from 0, tag 1356
-Finished Matlab Meso Structure Design. ElementNum = 1193, MacroMesoIteration 1
-received a message from 0, tag 1357
-inished Matlab Meso Structure Design. ElementNum = 953, MacroMesoIteration 1
-received a message from 0, tag 1361
-Finished Matlab Meso Structure Design. ElementNum = 945, MacroMesoIteration 1
-received a message from 0, tag 1362
-
-Finished Matlab Meso Structure Design. ElementNum = 1198, MacroMesoIteration 1
-received a message from 0, tag 1365
-Finished Matlab Meso Structure Design. ElementNum = 1197, MacroMesoIteration 1
-received a message from 0, tag 1366
-inished Matlab Meso Structure Design. ElementNum = 1230, MacroMesoIteration 1
-received a message from 0, tag 1400
-inished Matlab Meso Structure Design. ElementNum = 947, MacroMesoIteration 1
-received a message from 0, tag 1374
-gn. ElementNum = 1222, MacroMesoIteration 1
-ntNum = 956, MacroMesoIteration 1
-received a message from 0, tag 1379
-Finished Matlab Meso Structure Design. ElementNum = 957, MacroMesoIteration 1
-received a message from 0, tag 1381
-Finished Matlab Meso Structure Design. ElementNum = 1101, MacroMesoIteration 1
-received a message from 0, tag 1415
-Finished Matlab Meso Structure Design. ElementNum = 1207, MacroMesoIteration 1
-received a message from 0, tag 1387
-Finished Matlab Meso Structure Design. ElementNum = 1217, MacroMesoIteration 1
-received a message from 0, tag 1397
-Finished Matlab Meso Structure Design. ElementNum = 1236, MacroMesoIteration 1
-received a message from 0, tag 1424
-received a message from 0, tag 1403
-n. ElementNum = 1214, MacroMesoIteration 1
-received a message from 0, tag 1401
-Finished Matlab Meso Structure Design. ElementNum = 1098, MacroMesoIteration 1
-received a message from 0, tag 1406
-Finished Matlab Meso Structure Design. ElementNum = 1097, MacroMesoIteration 1
-received a message from 0, tag 1407
-entNum = 1219, MacroMesoIteration 1
-received a message from 0, tag 1410
-Finished Matlab Meso Structure Design. ElementNum = 1240, MacroMesoIteration 1
-received a message from 0, tag 1428
-Finished Matlab Meso Structure Design. ElementNum = 1256, MacroMesoIteration 1
-received a message from 0, tag 1431
-Finished Matlab Meso Structure Design. ElementNum = 1102, MacroMesoIteration 1
-received a message from 0, tag 1417
-Finished Matlab Meso Structure Design. ElementNum = 1103, MacroMesoIteration 1
-received a message from 0, tag 1418
-Finished Matlab Meso Structure Design. ElementNum = 1258, MacroMesoIteration 1
-Finished Matlab Meso Structure Design. ElementNum = 1257, MacroMesoIteration 1
-entNum = 1238, MacroMesoIteration 1
-received a message from 0, tag 1426
-Finished Matlab Meso Structure Design. ElementNum = 1237, MacroMesoIteration 1
-received a message from 0, tag 1427
-Finished Matlab Meso Structure Design. ElementNum = 1318, MacroMesoIteration 1
-Finished Matlab Meso Structure Design. ElementNum = 1286, MacroMesoIteration 1
-received a message from 0, tag 1444
-Finished Matlab Meso Structure Design. ElementNum = 1287, MacroMesoIteration 1
-received a message from 0, tag 1446
-Finished Matlab Meso Structure Design. ElementNum = 1330, MacroMesoIteration 1
-Finished Matlab Meso Structure DesigFinished Matlab Meso Structure Design. ElementNum = 1037, MacroMesoIteration 1
-received a message from 0, tag 1458
-Finished Matlab Meso Structure Design. ElementNum = 1301, MacroMesoIteration 1
-received a message from 0, tag 1463
-Finished Matlab Meso Structure Design. ElementNum = 1300, MacroMesoIteration 1
-received a message from 0, tag 1464
-Finished Matlab Meso Structure Design. ElementNum = 1306, MacroMesoIteration 1
-received a message from 0, tag 1466
-Finished Matlab Meso Structure Design. ElementNum = 1307, MacroMesoIteration 1
-received a message from 0, tag 1467
-Finished Matlab Meso Structure Design. ElementNum = 1035, MacroMesoIteration 1
-received a message from 0, tag 1478
-Finished Matlab Meso Structure Design. ElementNum = 1047, MacroMesoIteration 1
-received a message from 0, tag 1479
-Finished Matlab Meso Structure Design. ElementNum = 1056, MacroMesoIteration 1
-received a message from 0, tag 1483
-Finished Matlab Meso Structure Design. ElementNum = 1051, MacroMesoIteration 1
-received a message from 0, tag 1486
-Finished Matlab Meso Structure Design. ElementNum = 1048, MacroMesoIteration 1
-received a message from 0, tag 1487
-Finished Matlab Meso Structure Design. ElementNum = 1343, MacroMesoIteration 1
-received a message from 0, tag 1526
-Finished Matlab Meso Structure Design. ElementNum = 1319, MacroMesoIteration 1
-Finished Matlab Meso Structure Design. ElementNum = 1317, MacroMesoIteration 1
-received a message from 0, tag 1496
-received a message from 0, tag 1497
-n. ElementNum = 1041, MacroMesoIteration 1
-received a message from 0, tag 1501
-Finished Matlab Meso Structure Design. ElementNum = 1066, MacroMesoIteration 1
-received a message from 0, tag 1505
-Finished Matlab Meso Structure Design. ElementNum = 1060, MacroMesoIteration 1
-received a message from 0, tag 1506
-Finished Matlab Meso Structure Design. ElementNum = 1046, MacroMesoIteration 1
-received a message from 0, tag 1509
-n. ElementNum = 1327, MacroMesoIteration 1
-received a message from 0, tag 1513
-received a message from 0, tag 1514
-Finished Matlab Meso Structure DesigFinished Matlab Meso Structure Design. ElementNum = 1363, MacroMesoIteration 1
-received a message from 0, tag 1533
-Finished Matlab Meso Structure Design. ElementNum = 1369, MacroMesoIteration 1
-Finished Matlab Meso Structure DesigFinished Matlab Meso Structure Design. ElementNum = 1339, MacroMesoIteration 1
-received a message from 0, tag 1525
-Finished Matlab Meso Structure Design. ElementNum = 1394, MacroMesoIteration 1
-received a message from 0, tag 1560
-entNum = 1368, MacroMesoIteraFinished Matlab Meso Structure Design. ElementNum = 1361, MacroMesoIteration 1
-received a message from 0, tag 1540
-Finished Matlab Meso Structure Design. ElementNum = 1373, MacroMesoIteration 1
-received a message from 0, tag 1544
-Finished Matlab Meso Structure Design. ElementNum = 1391, MacroMesoIteration 1
-received a message from 0, tag 1553
-Finished Matlab Meso Structure Design. ElementNum = 1263, MacroMesoIteration 1
-received a message from 0, tag 1603
-Finished Matlab Meso Structure Desigreceived a message from 0, tag 1568
-tion 1
-received a message from 0, tag 1565
-received a message from 0, tag 1569
-Finished Matlab Meso Structure Design. ElementNum = 1392, MacroMesoIteration 1
-received a message from 0, tag 1573
-received a message from 0, tag 1577
-Finished Matlab Meso Structure Design. ElementNum = 1156, MacroMesoIteration 1
-received a message from 0, tag 1578
-received a message from 0, tag 1588
-Finished Matlab Meso Structure Design. ElementNum = 1409, MacroMesoIteration 1
-received a message from 0, tag 1586
-Finished Matlab Meso Structure Design. ElementNum = 1408, MacroMesoIteration 1
-received a message from 0, tag 1587
-Finished Matlab Meso Structure Design. ElementNum = 1420, MacroMesoIteration 1
-received a message from 0, tag 1596
-Finished Matlab Meso Structure Design. ElementNum = 1419, MacroMesoIteration 1
-received a message from 0, tag 1597
-Finished Matlab Meso Structure Design. ElementNum = 1155, MacroMesoIteration 1
-received a message from 0, tag 1599
-Finished Matlab Meso Structure Design. ElementNum = 1428, MacroMesoIteration 1
-received a message from 0, tag 1604
-Finished Matlab Meso Structure Design. ElementNum = 1442, MacroMesoIteration 1
-received a message from 0, tag 1624
-Finished Matlab Meso Structure Design. ElementNum = 1443, MacroMesoIteration 1
-received a message from 0, tag 1629
-Finished Matlab Meso Structure Design. ElementNum = 1501, MacroMesoIteration 1
-received a message from 0, tag 1650
-Finished Matlab Meso Structure Design. ElementNum = 1507, MacroMesoIteration 1
-received a message from 0, tag 1627
-n. ElementNum = 1514, MacroMesoIteration 1
-received a message from 0, tag 1664
-Finished Matlab Meso Structure Design. ElementNum = 1479, MacroMesoIteration 1
-received a message from 0, tag 1634
-entNum = 1474, MacroMesoIteration 1
-Finished Matlab Meso Structure Design. ElementNum = 1476, MacroMesoIteration 1
-received a message from 0, tag 1639
-received a message from 0, tag 1640
-n. ElementNum = 1465, MacroMesoIteration 1
-received a message from 0, tag 1642
-Finished Matlab Meso Structure Design. ElementNum = 1467, MacroMesoIteration 1
-received a message from 0, tag 1643
-Finished Matlab Meso Structure Design. ElementNum = 1495, MacroMesoIteration 1
-Finished Matlab Meso Structure Design. ElementNum = 1531, MacroMesoIteration 1
-received a message from 0, tag 1686
-Finished Matlab Meso Structure Design. ElementNum = 1499, MacroMesoIteration 1
-received a message from 0, tag 1657
-Finished Matlab Meso Structure Design. ElementNum = 1498, MacroMesoIteration 1
-received a message from 0, tag 1658
-Finished Matlab Meso Structure Design. ElementNum = 1533, MacroMesoIteration 1
-received a message from 0, tag 1696
-Finished Matlab Meso Structure Design. ElementNum = 1515, MacroMesoIteration 1
-received a message from 0, tag 1667
-received a message from 0, tag 1670
-Finished Matlab Meso Structure Design. ElementNum = 1521, MacroMesoIteration 1
-received a message from 0, tag 1672
-n. ElementNum = 1524, MacroMesoIteration 1
-received a message from 0, tag 1675
-received a message from 0, tag 1676
-n. ElementNum = 1545, MacroMesoIteration 1
-received a message from 0, tag 1705
-Finished Matlab Meso Structure Design. ElementNum = 1405, MacroMesoIteration 1
-received a message from 0, tag 1680
-n. ElementNum = 1535, MacroMesoIteration 1
-Finished Matlab Meso Structure DesigFinished Matlab Meso Structure Design. ElementNum = 1548, MacroMesoIteration 1
-received a message from 0, tag 1724
-Finished Matlab Meso Structure Design. ElementNum = 1530, MacroMesoIteration 1
-received a message from 0, tag 1690
-Finished Matlab Meso Structure Design. ElementNum = 1249, MacroMesoIteration 1
-received a message from 0, tag 1693
-Finished Matlab Meso Structure Design. ElementNum = 1578, MacroMesoIteration 1
-received a message from 0, tag 1745
-received a message from 0, tag 1746
-tion 1
-d Matlab Meso Structure DesigFinished Matlab Meso Structure Design. ElementNum = 1537, MacroMesoIteration 1
-received a message from 0, tag 1712
-Finished Matlab Meso Structure Design. ElementNum = 1407, MacroMesoIteration 1
-received a message from 0, tag 1713
-Finished Matlab Meso Structure Design. ElementNum = 1584, MacroMesoIteration 1
-received a message from 0, tag 1750
-Finished Matlab Meso Structure Design. ElementNum = 1540, MacroMesoIteration 1
-received a message from 0, tag 1723
-Finished Matlab Meso Structure Design. ElementNum = 1551, MacroMesoIteration 1
-received a message from 0, tag 1729
-Finished Matlab Meso Structure Design. ElementNum = 1417, MacroMesoIteration 1
-received a message from 0, tag 1732
-Finished Matlab Meso Structure Design. ElementNum = 1415, MacroMesoIteration 1
-received a message from 0, tag 1733
-Finished Matlab Meso Structure Desigreceived a message from 0, tag 1739
-n. ElementNum = 1358, MacroMesoIteration 1
-received a message from 0, tag 1741
-Finished Matlab Meso Structure Design. ElementNum = 1385, MacroMesoIteration 1
-received a message from 0, tag 1774
-Finished Matlab Meso Structure Design. ElementNum = 1346, MacroMesoIteration 1
-received a message from 0, tag 1765
-Finished Matlab Meso Structure Design. ElementNum = 1608, MacroMesoIteration 1
-received a message from 0, tag 1772
-Finished Matlab Meso Structure Design. ElementNum = 1636, MacroMesoIteration 1
-received a message from 0, tag 1811
-Finished Matlab Meso Structure Design. ElementNum = 1356, MacroMesoIteration 1
-received a message from 0, tag 1780
-Finished Matlab Meso Structure Design. ElementNum = 1633, MacroMesoIteration 1
-received a message from 0, tag 1808
-Finished Matlab Meso Structure Design. ElementNum = 1645, MacroMesoIteration 1
-received a message from 0, tag 1820
-received a message from 0, tag 1826
-Finished Matlab Meso Structure Design. ElementNum = 1653, MacroMesoIteration 1
-received a message from 0, tag 1799
-Finished Matlab Meso Structure Design. ElementNum = 1655, MacroMesoIteration 1
-received a message from 0, tag 1832
-Finished Matlab Meso Structure Design. ElementNum = 1672, MacroMesoIteration 1
-received a message from 0, tag 1834
-Finished Matlab Meso Structure Design. ElementNum = 1381, MacroMesoIteration 1
-received a message from 0, tag 1812
-Finished Matlab Meso Structure Design. ElementNum = 1642, MacroMesoIteration 1
-received a message from 0, tag 1816
-received a message from 0, tag 1819
-Finished Matlab Meso Structure Design. ElementNum = 1684, MacroMesoIteration 1
-received a message from 0, tag 1844
-Finished Matlab Meso Structure Design. ElementNum = 1651, MacroMesoIteration 1
-received a message from 0, tag 1828
-n. ElementNum = 1646, MacroMesoIteration 1
-received a message from 0, tag 1830
-Finished Matlab Meso Structure Design. ElementNum = 1685, MacroMesoIteration 1
-received a message from 0, tag 1846
-Finished Matlab Meso Structure Design. ElementNum = 1712, MacroMesoIteration 1
-received a message from 0, tag 1870
-Finished Matlab Meso Structure Design. ElementNum = 1491, MacroMesoIteration 1
-received a message from 0, tag 1851
-Finished Matlab Meso Structure Design. ElementNum = 1450, MacroMesoIteration 1
-received a message from 0, tag 1857
-Finished Matlab Meso Structure Design. ElementNum = 1279, MacroMesoIteration 1
-received a message from 0, tag 1859
-Finished Matlab Meso Structure Design. ElementNum = 1721, MacroMesoIteration 1
-received a message from 0, tag 1871
-received a message from 0, tag 1888
-n. ElementNum = 1716, MacroMesoIteration 1
-received a message from 0, tag 1880
-Finished Matlab Meso Structure Design. ElementNum = 1735, MacroMesoIteration 1
-received a message from 0, tag 1893
-Finished Matlab Meso Structure Design. ElementNum = 1755, MacroMesoIteration 1
-received a message from 0, tag 1932
-Finished Matlab Meso Structure Design. ElementNum = 1481, MacroMesoIteration 1
-received a message from 0, tag 1900
-Finished Matlab Meso Structure Design. ElementNum = 1738, MacroMesoIteration 1
-received a message from 0, tag 1904
-Finished Matlab Meso Structure Design. ElementNum = 1616, MacroMesoIteration 1
-received a message from 0, tag 1908
-Finished Matlab Meso Structure Design. ElementNum = 1743, MacroMesoIteration 1
-received a message from 0, tag 1915
-Finished Matlab Meso Structure Design. ElementNum = 1748, MacroMesoIteration 1
-received a message from 0, tag 1919
-Finished Matlab Meso Structure Design. ElementNum = 1485, MacroMesoIteration 1
-received a message from 0, tag 1922
-Finished Matlab Meso Structure Design. ElementNum = 1754, MacroMesoIteration 1
-received a message from 0, tag 1925
-Finished Matlab Meso Structure Design. ElementNum = 1792, MacroMesoIteration 1
-received a message from 0, tag 1953
-Finished Matlab Meso Structure Design. ElementNum = 1553, MacroMesoIteration 1
-received a message from 0, tag 1935
-Finished Matlab Meso Structure Design. ElementNum = 1782, MacroMesoIteration 1
-received a message from 0, tag 1943
-Finished Matlab Meso Structure Design. ElementNum = 1777, MacroMesoIteration 1
-received a message from 0, tag 1946
-Finished Matlab Meso Structure Design. ElementNum = 1780, MacroMesoIteration 1
-received a message from 0, tag 1947
-received a message from 0, tag 1959
-n. ElementNum = 1795, MacroMesoIteration 1
-received a message from 0, tag 1960
-Finished Matlab Meso Structure Design. ElementNum = 1832, MacroMesoIteration 1
-received a message from 0, tag 2000
-Finished Matlab Meso Structure Design. ElementNum = 1565, MacroMesoIteration 1
-received a message from 0, tag 1966
-Finished Matlab Meso Structure Design. ElementNum = 1834, MacroMesoIteration 1
-received a message from 0, tag 2001
-Finished Matlab Meso Structure Design. ElementNum = 1820, MacroMesoIteration 1
-received a message from 0, tag 1974
-Finished Matlab Meso Structure Design. ElementNum = 1821, MacroMesoIteration 1
-received a message from 0, tag 1978
-Finished Matlab Meso Structure Design. ElementNum = 1848, MacroMesoIteration 1
-received a message from 0, tag 2019
-entNum = 1829, MacroMesoIteration 1
-received a message from 0, tag 1989
-tion 1
-received a message from 0, tag 1991
-Finished Matlab Meso Structure Design. ElementNum = 1846, MacroMesoIteration 1
-received a message from 0, tag 2020
-Finished Matlab Meso Structure Design. ElementNum = 1847, MacroMesoIteration 1
-received a message from 0, tag 2022
-Finished Matlab Meso Structure Design. ElementNum = 1599, MacroMesoIteration 1
-received a message from 0, tag 2005
-Finished Matlab Meso Structure Design. ElementNum = 1711, MacroMesoIteration 1
-received a message from 0, tag 2014
-Finished Matlab Meso Structure Design. ElementNum = 1709, MacroMesoIteration 1
-received a message from 0, tag 2015
-Finished Matlab Meso Structure Design. ElementNum = 1730, MacroMesoIteration 1
-Finished Matlab Meso Structure Design. ElementNum = 1733, MacroMesoIteration 1
-received a message from 0, tag 2029
-received a message from 0, tag 2030
-n. ElementNum = 1925, MacroMesoIteration 1
-received a message from 0, tag 2070
-Finished Matlab Meso Structure Design. ElementNum = 1682, MacroMesoIteration 1
-received a message from 0, tag 2045
-Finished Matlab Meso Structure Design. ElementNum = 1930, MacroMesoIteration 1
-received a message from 0, tag 2079
-Finished Matlab Meso Structure Design. ElementNum = 1891, MacroMesoIteration 1
-received a message from 0, tag 2051
-n. ElementNum = 1899, MacroMesoIteration 1
-received a message from 0, tag 2056
-Finished Matlab Meso Structure Design. ElementNum = 1898, MacroMesoIteration 1
-received a message from 0, tag 2086
-Finished Matlab Meso Structure Design. ElementNum = 1939, MacroMesoIteration 1
-received a message from 0, tag 2098
-Finished Matlab Meso Structure Design. ElementNum = 1659, MacroMesoIteration 1
-received a message from 0, tag 2067
-Finished Matlab Meso Structure Design. ElementNum = 1936, MacroMesoIteration 1
-received a message from 0, tag 2109
-Finished Matlab Meso Structure Design. ElementNum = 1669, MacroMesoIteration 1
-received a message from 0, tag 2080
-Finished Matlab Meso Structure Design. ElementNum = 1921, MacroMesoIteration 1
-received a message from 0, tag 2082
-Finished Matlab Meso Structure Design. ElementNum = 1666, MacroMesoIteration 1
-received a message from 0, tag 2091
-Finished Matlab Meso Structure Design. ElementNum = 1935, MacroMesoIteration 1
-received a message from 0, tag 2100
-Finished Matlab Meso Structure Design. ElementNum = 1934, MacroMesoIteration 1
-received a message from 0, tag 2103
-n. ElementNum = 1944, MacroMesoIteration 1
-received a message from 0, tag 2116
-received a message from 0, tag 2117
-Finished Matlab Meso Structure Design. ElementNum = 1946, MacroMesoIteration 1
-received a message from 0, tag 2118
-Finished Matlab Meso Structure Design. ElementNum = 1955, MacroMesoIteration 1
-received a message from 0, tag 2127
-Finished Matlab Meso Structure Design. ElementNum = 1961, MacroMesoIteration 1
-Finished Matlab Meso Structure Design. ElementNum = 1960, MacroMesoIteration 1
-received a message from 0, tag 2128
-received a message from 0, tag 2129
-n. ElementNum = 1700, MacroMesoIteration 1
-received a message from 0, tag 2134
-Finished Matlab Meso Structure Design. ElementNum = 1767, MacroMesoIteration 1
-received a message from 0, tag 2140
-Finished Matlab Meso Structure Design. ElementNum = 1802, MacroMesoIteration 1
-received a message from 0, tag 2176
-Finished Matlab Meso Structure Design. ElementNum = 1858, MacroMesoIteration 1
-received a message from 0, tag 2150
-Finished Matlab Meso Structure Design. ElementNum = 1986, MacroMesoIteraFinished Matlab Meso Structure Design. ElemFinished Matlab Meso StructurFinished Matlab Meso Structure Design. ElementNum = 1813, MacroMesoIteration 1
-received a message from 0, tag 2191
-Finished Matlab Meso Structure Design. ElementNum = 2006, MacroMesoIteration 1
-received a message from 0, tag 2172
-Finished Matlab Meso Structure Design. ElementNum = 1765, MacroMesoIteration 1
-received a message from 0, tag 2173
-Finished Matlab Meso Structure Design. ElementNum = 1761, MacroMesoIteration 1
-received a message from 0, tag 2180
-Finished Matlab Meso Structure Design. ElementNum = 1771, MacroMesoIteration 1
-received a message from 0, tag 2183
-Finished Matlab Meso Structure Design. ElementNum = 2031, MacroMesoIteration 1
-received a message from 0, tag 2190
-Finished Matlab Meso Structure Design. ElementNum = 2061, MacroMesoIteration 1
-received a message from 0, tag 2234
-Finished Matlab Meso Structure Design. ElementNum = 2065, MacroMesoIteration 1
-received a message from 0, tag 2233
-Finished Matlab Meso Structure Design. ElementNum = 2063, MacroMesoIteration 1
-received a message from 0, tag 2235
-Finished Matlab Meso Structure Design. ElementNum = 2040, MacroMesoIteration 1
-received a message from 0, tag 2212
-Finished Matlab Meso Structure Design. ElementNum = 1800, MacroMesoIteration 1
-received a message from 0, tag 2210
-Finished Matlab Meso Structure Design. ElementNum = 1870, MacroMesoIteration 1
-received a message from 0, tag 2240
-Finished Matlab Meso Structure Desigreceived a message from 0, tag 2220
-n. ElementNum = 2048, MacroMesoIteration 1
-received a message from 0, tag 2224
-Finished Matlab Meso Structure Design. ElementNum = 1879, MacroMesoIteration 1
-received a message from 0, tag 2247
-Finished Matlab Meso Structure Design. ElementNum = 2113, MacroMesoIteration 1
-received a message from 0, tag 2265
-Finished Matlab Meso Structure DesigFinished Matlab Meso Structure Design. ElementNum = 2141, MacroMesoIteration 1
-received a message from 0, tag 2280
-Finished Matlab Meso Structure Design. ElementNum = 2164, MacroMesoIteration 1
-received a message from 0, tag 2299
-Finished Matlab Meso Structure Design. ElementNum = 2148, MacroMesoIteration 1
-received a message from 0, tag 2294
-Finished Matlab Meso Structure Design. ElementNum = 1877, MacroMesoIteration 1
-Finished Matlab Meso Structure DesigFinished Matlab Meso Structure Design. ElementNum = 2145, MacroMesoIteration 1
-received a message from 0, tag 2289
-Finished Matlab Meso Structure Design. ElementNum = 2171, MacroMesoIteration 1
-received a message from 0, tag 2328
-Finished Matlab Meso Structure Design. ElementNum = 2157, MacroMesoIteration 1
-received a message from 0, tag 2305
-Finished Matlab Meso Structure Design. ElementNum = 2152, MacroMesoIteration 1
-received a message from 0, tag 2303
-Finished Matlab Meso Structure Design. ElementNum = 1969, MacroMesoIteration 1
-received a message from 0, tag 2333
-Finished Matlab Meso Structure Desigreceived a message from 0, tag 2316
-tion 1
-received a message from 0, tag 2314
-Finished Matlab Meso Structure Design. ElementNum = 1917, MacroMesoIteration 1
-received a message from 0, tag 2318
-Finished Matlab Meso Structure Design. ElementNum = 2029, MacroMesoIteration 1
-received a message from 0, tag 2320
-received a message from 0, tag 2324
-Finished Matlab Meso Structure Design. ElementNum = 2167, MacroMesoIteration 1
-received a message from 0, tag 2327
-Finished Matlab Meso Structure Design. ElementNum = 2195, MacroMesoIteration 1
-received a message from 0, tag 2341
-Finished Matlab Meso Structure Design. ElementNum = 1970, MacroMesoIteration 1
-received a message from 0, tag 2351
-n. ElementNum = 2213, MacroMesoIteration 1
-Finished Matlab Meso Structure Design. ElementNum = 2211, MacroMesoIteration 1
-received a message from 0, tag 2354
-received a message from 0, tag 2355
-n. ElementNum = 2210, MacroMesoIteration 1
-received a message from 0, tag 2358
-Finished Matlab Meso Structure DesigFinished Matlab Meso Structure Design. ElementNum = 2242, MacroMesoIteration 1
-received a message from 0, tag 2386
-Finished Matlab Meso Structure Design. ElementNum = 2026, MacroMesoIteration 1
-received a message from 0, tag 2380
-Finished Matlab Meso Structure Design. ElementNum = 2258, MacroMesoIteration 1
-received a message from 0, tag 2414
-Finished Matlab Meso Structure Design. ElementNum = 1976, MacroMesoIteration 1
-received a message from 0, tag 2382
-Finished Matlab Meso Structure Design. ElementNum = 2246, MacroMesoIteration 1
-received a message from 0, tag 2398
-Finished Matlab Meso Structure Design. ElementNum = 2085, MacroMesoIteration 1
-received a message from 0, tag 2434
-Finished Matlab Meso Structure Design. ElementNum = 2079, MacroMesoIteration 1
-received a message from 0, tag 2436
-Finished Matlab Meso Structure Design. ElementNum = 2308, MacroMesoIteration 1
-received a message from 0, tag 2453
-Finished Matlab Meso Structure Design. ElementNum = 2328, MacroMesoIteration 1
-received a message from 0, tag 2479
-Finished Matlab Meso Structure Design. ElementNum = 2073, MacroMesoIteration 1
-received a message from 0, tag 2449
-n. ElementNum = 2302, MacroMesoIteration 1
-received a message from 0, tag 2450
-Finished Matlab Meso Structure Design. ElementNum = 2125, MacroMesoIteration 1
-received a message from 0, tag 2467
-Finished Matlab Meso Structure Design. ElementNum = 2133, MacroMesoIteration 1
-received a message from 0, tag 2481
-Finished Matlab Meso Structure Design. ElementNum = 2311, MacroMesoIteration 1
-received a message from 0, tag 2465
-Finished Matlab Meso Structure Design. ElementNum = 2323, MacroMesoIteration 1
-received a message from 0, tag 2471
-Finished Matlab Meso Structure Design. ElementNum = 1907, MacroMesoIteration 1
-received a message from 0, tag 2474
-Finished Matlab Meso Structure Design. ElementNum = 2069, MacroMesoIteration 1
-received a message from 0, tag 2478
-Finished Matlab Meso Structure Design. ElementNum = 2351, MacroMesoIteration 1
-received a message from 0, tag 2493
-Finished Matlab Meso Structure Design. ElementNum = 2350, MacroMesoIteration 1
-received a message from 0, tag 2496
-Finished Matlab Meso Structure Design. ElementNum = 2372, MacroMesoIteration 1
-received a message from 0, tag 2529
-Finished Matlab Meso Structure Design. ElementNum = 2188, MacroMesoIteration 1
-received a message from 0, tag 2533
-n. ElementNum = 2128, MacroMesoIteration 1
-received a message from 0, tag 2498
-Finished Matlab Meso Structure Design. ElementNum = 2354, MacroMesoIteration 1
-received a message from 0, tag 2502
-Finished Matlab Meso Structure Design. ElementNum = 2358, MacroMesoIteration 1
-received a message from 0, tag 2510
-Finished Matlab Meso Structure Design. ElementNum = 2208, MacroMesoIteration 1
-received a message from 0, tag 2536
-Finished Matlab Meso Structure Design. ElementNum = 2366, MacroMesoIteration 1
-received a message from 0, tag 2517
-Finished Matlab Meso Structure DesigFinished Matlab Meso Structure DesigFinished Matlab Meso Structure Design. ElementNum = 2226, MacroMesoIteration 1
-received a message from 0, tag 2568
-Finished Matlab Meso Structure Design. ElementNum = 2428, MacroMesoIteration 1
-received a message from 0, tag 2581
-Finished Matlab Meso Structure Design. ElementNum = 2419, MacroMesoIteration 1
-received a message from 0, tag 2569
-Finished Matlab Meso Structure Design. ElementNum = 2015, MacroMesoIteration 1
-received a message from 0, tag 2549
-Finished Matlab Meso Structure Design. ElementNum = 2409, MacroMesoIteration 1
-received a message from 0, tag 2560
-Finished Matlab Meso Structure Design. ElementNum = 2410, MacroMesoIteration 1
-received a message from 0, tag 2565
-Finished Matlab Meso Structure Design. ElementNum = 2420, MacroMesoIteration 1
-received a message from 0, tag 2573
-Finished Matlab Meso Structure Design. ElementNum = 2427, MacroMesoIteration 1
-received a message from 0, tag 2577
-Finished Matlab Meso Structure Design. ElementNum = 2232, MacroMesoIteration 1
-received a message from 0, tag 2586
-Finished Matlab Meso Structure Design. ElementNum = 2319, MacroMesoIteration 1
-received a message from 0, tag 2589
-Finished Matlab Meso Structure Design. ElementNum = 2476, MacroMesoIteration 1
-received a message from 0, tag 2623
-Finished Matlab Meso Structure Design. ElementNum = 2475, MacroMesoIteration 1
-received a message from 0, tag 2626
-Finished Matlab Meso Structure Design. ElementNum = 2470, MacroMesoIteration 1
-received a message from 0, tag 2618
-Finished Matlab Meso Structure Design. ElementNum = 2275, MacroMesoIteration 1
-received a message from 0, tag 2634
-Finished Matlab Meso Structure Design. ElementNum = 2289, MacroMesoIteration 1
-received a message from 0, tag 2636
-n. ElementNum = 2461, MacroMesoIteration 1
-received a message from 0, tag 2608
-received a message from 0, tag 2609
-Finished Matlab Meso Structure Design. ElementNum = 2281, MacroMesoIteration 1
-received a message from 0, tag 2625
-Finished Matlab Meso Structure Design. ElementNum = 2285, MacroMesoIteration 1
-received a message from 0, tag 2639
-Finished Matlab Meso Structure Design. ElementNum = 2521, MacroMesoIteration 1
-received a message from 0, tag 2663
-Finished Matlab Meso Structure Design. ElementNum = 2297, MacroMesoIteration 1
-received a message from 0, tag 2645
-Finished Matlab Meso Structure Design. ElementNum = 2422, MacroMesoIteration 1
-received a message from 0, tag 2652
-Finished Matlab Meso Structure Design. ElementNum = 2335, MacroMesoIteration 1
-received a message from 0, tag 2689
-Finished Matlab Meso Structure Design. ElementNum = 2513, MacroMesoIteration 1
-received a message from 0, tag 2660
-Finished Matlab Meso Structure Design. ElementNum = 2505, MacroMesoIteration 1
-received a message from 0, tag 2669
-received a message from 0, tag 2717
-Finished Matlab Meso Structure Design. ElementNum = 2334, MacroMesoIteration 1
-received a message from 0, tag 2688
-received a message from 0, tag 2701
-Finished Matlab Meso Structure Design. ElementNum = 2390, MacroMesoIteration 1
-received a message from 0, tag 2730
-Finished Matlab Meso Structure Design. ElementNum = 2571, MacroMesoIteration 1
-received a message from 0, tag 2714
-Finished Matlab Meso Structure Design. ElementNum = 2576, MacroMesoIteration 1
-Finished Matlab Meso Structure Design. ElementNum = 2575, MacroMesoIteration 1
-received a message from 0, tag 2722
-Finished Matlab Meso Structure Design. ElementNum = 2402, MacroMesoIteration 1
-received a message from 0, tag 2738
-Finished Matlab Meso Structure Design. ElementNum = 2436, MacroMesoIteration 1
-received a message from 0, tag 2780
-n. ElementNum = 2618, MacroMesoIteration 1
-received a message from 0, tag 2747
-received a message from 0, tag 2748
-Finished Matlab Meso Structure Design. ElementNum = 2614, MacroMesoIteration 1
-received a message from 0, tag 2754
-Finished Matlab Meso Structure Design. ElementNum = 2448, MacroMesoIteration 1
-received a message from 0, tag 2788
-Finished Matlab Meso Structure DesigFinished Matlab Meso Structure Design. ElementNum = 2454, MacroMesoIteration 1
-received a message from 0, tag 2793
-Finished Matlab Meso Structure Design. ElementNum = 2430, MacroMesoIteration 1
-Finished Matlab Meso Structure DesigFinished Matlab Meso Structure Design. ElementNum = 2540, MacroMesoIteration 1
-received a message from 0, tag 2820
-received a message from 0, tag 2806
-Finished Matlab Meso Structure Design. ElementNum = 2446, MacroMesoIteration 1
-received a message from 0, tag 2808
-Finished Matlab Meso Structure Design. ElementNum = 2451, MacroMesoIteration 1
-received a message from 0, tag 2810
-Finished Matlab Meso Structure Design. ElementNum = 2450, MacroMesoIteration 1
-received a message from 0, tag 2811
-Finished Matlab Meso Structure Design. ElementNum = 2713, MacroMesoIteration 1
-received a message from 0, tag 2826
-Finished Matlab Meso Structure Design. ElementNum = 2711, MacroMesoIteration 1
-received a message from 0, tag 2822
-Finished Matlab Meso Structure Design. ElementNum = 2495, MacroMesoIteration 1
-received a message from 0, tag 2838
-Finished Matlab Meso Structure Design. ElementNum = 2723, MacroMesoIteration 1
-received a message from 0, tag 2845
-Finished Matlab Meso Structure Design. ElementNum = 2557, MacroMesoIteration 1
-received a message from 0, tag 2887
-Finished Matlab Meso Structure Design. ElementNum = 2564, MacroMesoIteration 1
-Finished Matlab Meso Structure Design. ElementNum = 2586, MacroMesoIteration 1
-received a message from 0, tag 2909
-Finished Matlab Meso Structure Desigreceived a message from 0, tag 2894
-tion 1
-received a message from 0, tag 2912
-received a message from 0, tag 2908
-Finished Matlab Meso Structure Design. ElementNum = 2559, MacroMesoIteration 1
-received a message from 0, tag 2907
-Finished Matlab Meso Structure Design. ElementNum = 2623, MacroMesoIteration 1
-received a message from 0, tag 2918
-Finished Matlab Meso Structure Design. ElementNum = 2595, MacroMesoIteration 1
-received a message from 0, tag 2917
-Finished Matlab Meso Structure Design. ElementNum = 2624, MacroMesoIteration 1
-received a message from 0, tag 2927
-Finished Matlab Meso Structure Design. ElementNum = 2657, MacroMesoIteration 1
-received a message from 0, tag 2967
-Finished Matlab Meso Structure Design. ElementNum = 2596, MacroMesoIteration 1
-received a message from 0, tag 2984
-Finished Matlab Meso Structure Design. ElementNum = 2670, MacroMesoIteration 1
-received a message from 0, tag 2974
-Finished Matlab Meso Structure Design. ElementNum = 2846, MacroMesoIteration 1
-Finished Matlab Meso Structure Design. ElementNum = 2845, MacroMesoIteration 1
-received a message from 0, tag 2961
-Finished Matlab Meso Structure Design. ElementNum = 2699, MacroMesoIteration 1
-received a message from 0, tag 2995
-Finished Matlab Meso Structure Design. ElementNum = 2649, MacroMesoIteration 1
-received a message from 0, tag 2981
-Finished Matlab Meso Structure Design. ElementNum = 2717, MacroMesoIteration 1
-received a message from 0, tag 3017
-Finished Matlab Meso Structure Design. ElementNum = 2690, MacroMesoIteration 1
-received a message from 0, tag 2999
-Finished Matlab Meso Structure Design. ElementNum = 2667, MacroMesoIteration 1
-received a message from 0, tag 3002
-Finished Matlab Meso Structure Design. ElementNum = 2728, MacroMesoIteration 1
-received a message from 0, tag 3014
-Finished Matlab Meso Structure Design. ElementNum = 2761, MacroMesoIteration 1
-received a message from 0, tag 3024
-Finished Matlab Meso Structure Design. ElementNum = 2547, MacroMesoIteration 1
-received a message from 0, tag 3020
-Finished Matlab Meso Structure Design. ElementNum = 2587, MacroMesoIteration 1
-received a message from 0, tag 3022
-Finished Matlab Meso Structure Design. ElementNum = 2777, MacroMesoIteration 1
-received a message from 0, tag 3037
-Finished Matlab Meso Structure Design. ElementNum = 2801, MacroMesoIteration 1
-received a message from 0, tag 3083
-Finished Matlab Meso Structure Design. ElementNum = 2948, MacroMesoIteration 1
-received a message from 0, tag 3054
-Finished Matlab Meso Structure Design. ElementNum = 2763, MacroMesoIteration 1
-received a message from 0, tag 3068
-Finished Matlab Meso Structure Design. ElementNum = 2782, MacroMesoIteration 1
-received a message from 0, tag 3079
-Finished Matlab Meso Structure Design. ElementNum = 2768, MacroMesoIteration 1
-received a message from 0, tag 3084
-Finished Matlab Meso Structure Design. ElementNum = 2849, MacroMesoIteration 1
-received a message from 0, tag 3115
-Finished Matlab Meso Structure Design. ElementNum = 2857, MacroMesoIteration 1
-received a message from 0, tag 3118
-Finished Matlab Meso Structure Design. ElementNum = 2881, MacroMesoIteration 1
-received a message from 0, tag 3139
-Finished Matlab Meso Structure Design. ElementNum = 2887, MacroMesoIteration 1
-received a message from 0, tag 12345Finished Matlab Meso Structure Design. ElementNum = 2911, MacroMesoIteration 1
+received a message from 0, tag 649
+Finished Matlab Meso Structure Design. ElementNum = 636, MacroMesoIteration 1
+received a message from 0, tag 646
+Finished Matlab Meso Structure Design. ElementNum = 554, MacroMesoIteration 1
+received a message from 0, tag 652
+Finished Matlab Meso Structure Design. ElementNum = 639, MacroMesoIteration 1
+received a message from 0, tag 657
+Finished Matlab Meso Structure Design. ElementNum = 610, MacroMesoIteration 1
+received a message from 0, tag 663
+Finished Matlab Meso Structure Design. ElementNum = 576, MacroMesoIteration 1
+received a message from 0, tag 667
+Finished Matlab Meso Structure Design. ElementNum = 578, MacroMesoIteration 1
+received a message from 0, tag 670
+Finished Matlab Meso Structure Design. ElementNum = 592, MacroMesoIteration 1
+received a message from 0, tag 675
+Finished Matlab Meso Structure Design. ElementNum = 631, MacroMesoIteration 1
+received a message from 0, tag 678
+Finished Matlab Meso Structure Design. ElementNum = 674, MacroMesoIteration 1
+received a message from 0, tag 686
+Finished Matlab Meso Structure Design. ElementNum = 591, MacroMesoIteration 1
+received a message from 0, tag 684
+Finished Matlab Meso Structure Design. ElementNum = 653, MacroMesoIteration 1
+received a message from 0, tag 697
+Finished Matlab Meso Structure Design. ElementNum = 650, MacroMesoIteration 1
+received a message from 0, tag 699
+Finished Matlab Meso Structure Design. ElementNum = 618, MacroMesoIteration 1
+received a message from 0, tag 703
+Finished Matlab Meso Structure Design. ElementNum = 621, MacroMesoIteration 1
+received a message from 0, tag 709
+Finished Matlab Meso Structure Design. ElementNum = 669, MacroMesoIteration 1
+received a message from 0, tag 712
+Finished Matlab Meso Structure Design. ElementNum = 629, MacroMesoIteration 1
+received a message from 0, tag 714
+Finished Matlab Meso Structure Design. ElementNum = 628, MacroMesoIteration 1
+received a message from 0, tag 716
+Finished Matlab Meso Structure Design. ElementNum = 619, MacroMesoIteration 1
+received a message from 0, tag 719
+Finished Matlab Meso Structure Design. ElementNum = 620, MacroMesoIteration 1
+received a message from 0, tag 720
+Finished Matlab Meso Structure Design. ElementNum = 711, MacroMesoIteration 1
+received a message from 0, tag 734
+Finished Matlab Meso Structure Design. ElementNum = 655, MacroMesoIteration 1
+received a message from 0, tag 740
+Finished Matlab Meso Structure Design. ElementNum = 658, MacroMesoIteration 1
+received a message from 0, tag 746
+Finished Matlab Meso Structure Design. ElementNum = 705, MacroMesoIteration 1
+received a message from 0, tag 754
+Finished Matlab Meso Structure Design. ElementNum = 720, MacroMesoIteration 1
+received a message from 0, tag 750
+Finished Matlab Meso Structure Design. ElementNum = 687, MacroMesoIteration 1
+received a message from 0, tag 752
+Finished Matlab Meso Structure Design. ElementNum = 649, MacroMesoIteration 1
+received a message from 0, tag 761
+Finished Matlab Meso Structure Design. ElementNum = 728, MacroMesoIteration 1
+received a message from 0, tag 779
+Finished Matlab Meso Structure Design. ElementNum = 757, MacroMesoIteration 1
+received a message from 0, tag 778
+Finished Matlab Meso Structure Design. ElementNum = 722, MacroMesoIteration 1
+received a message from 0, tag 785
+Finished Matlab Meso Structure Design. ElementNum = 668, MacroMesoIteration 1
+received a message from 0, tag 787
+Finished Matlab Meso Structure Design. ElementNum = 744, MacroMesoIteration 1
+received a message from 0, tag 794
+Finished Matlab Meso Structure Design. ElementNum = 734, MacroMesoIteration 1
+received a message from 0, tag 793
+Finished Matlab Meso Structure Design. ElementNum = 721, MacroMesoIteration 1
+received a message from 0, tag 796
+Finished Matlab Meso Structure Design. ElementNum = 733, MacroMesoIteration 1
+received a message from 0, tag 798
+Finished Matlab Meso Structure Design. ElementNum = 764, MacroMesoIteration 1
 received a message from 0, tag 123456789
-hed Matlab Meso Structure Design. ElementNum = 2905, MacroMesoIteration 1
+Finished Matlab Meso Structure Design. ElementNum = 747, MacroMesoIteration 1
 received a message from 0, tag 123456789
-Finished Matlab Meso Structure Design. ElementNum = 2863, MacroMesoIteration 1
+Finished Matlab Meso Structure Design. ElementNum = 788, MacroMesoIteration 1
 received a message from 0, tag 123456789
-Finished Matlab Meso Structure Design. ElementNum = 2873, MacroMesoIteration 1
+Finished Matlab Meso Structure Design. ElementNum = 765, MacroMesoIteration 1
 received a message from 0, tag 123456789
-Finished Matlab Meso Structure Design. ElementNum = 2894, MacroMesoIteration 1
+Finished Matlab Meso Structure Design. ElementNum = 792, MacroMesoIteration 1
 received a message from 0, tag 123456789
-Finished Matlab Meso Structure Design. ElementNum = 2734, MacroMesoIteration 1
+Finished Matlab Meso Structure Design. ElementNum = 697, MacroMesoIteration 1
 received a message from 0, tag 123456789
-Finished Matlab Meso Structure Design. ElementNum = 2954, MacroMesoIteration 1
+Finished Matlab Meso Structure Design. ElementNum = 724, MacroMesoIteration 1
 received a message from 0, tag 123456789
-Finished Matlab Meso Structure Design. ElementNum = 2929, MacroMesoIteration 1
+Finished Matlab Meso Structure Design. ElementNum = 770, MacroMesoIteration 1
 received a message from 0, tag 123456789
-Finished Matlab Meso Structure Design. ElementNum = 2995, MacroMesoIteration 1
+Finished Matlab Meso Structure Design. ElementNum = 736, MacroMesoIteration 1
 received a message from 0, tag 123456789
-Finished Matlab Meso Structure Design. ElementNum = 2965, MacroMesoIteration 1
+Finished Matlab Meso Structure Design. ElementNum = 776, MacroMesoIteration 1
 received a message from 0, tag 123456789
-Finished Matlab Meso Structure Design. ElementNum = 3002, MacroMesoIteration 1
+Finished Matlab Meso Structure Design. ElementNum = 775, MacroMesoIteration 1
 received a message from 0, tag 123456789
-Finished Matlab Meso Structure Design. ElementNum = 2986, MacroMesoIteration 1
+Finished Matlab Meso Structure Design. ElementNum = 779, MacroMesoIteration 1
 received a message from 0, tag 123456789
-ementNum = 2981, MacroMesoIteration 1
-received a message from 0, tag 123456789
-Finished Matlab Meso Structure Design. ElementNum = 3023, MacroMesoIteration 1
-received a message from 0, tag 123456789
-Finished Matlab Meso Structure Design. ElementNum = 2999, MacroMesoIteration 1
-received a message from 0, tag 123456789
-Finished Matlab Meso Structure Design. ElementNum = 2998, MacroMesoIteration 1
-received a message from 0, tag 123456789
-Finished Matlab Meso Structure Design. ElementNum = 3034, MacroMesoIteration 1
-received a message from 0, tag 123456789
-Finished Matlab Meso Structure Design. ElementNum = 3031, MacroMesoIteration 1
-received a message from 0, tag 123456789
-Finished Matlab Meso Structure Design. ElementNum = 3046, MacroMesoIteration 1
-received a message from 0, tag 123456789
-Finished Matlab Meso Structure Design. ElementNum = 3080, MacroMesoIteration 1
-received a message from 0, tag 123456789
-Finished Matlab Meso Structure Design. ElementNum = 3081, MacroMesoIteration 1
-received a message from 0, tag 123456789
-Finished Matlab Meso Structure Design. ElementNum = 3062, MacroMesoIteration 1
-received a message from 0, tag 123456789
-Finished Matlab Meso Structure Design. ElementNum = 3086, MacroMesoIteration 1
-received a message from 0, tag 123456789
-Finished Matlab Meso Structure Design. ElementNum = 3105, MacroMesoIteration 1
-received a message from 0, tag 123456789
-Finished Matlab Meso Structure Design. ElementNum = 3072, MacroMesoIteration 1
-received a message from 0, tag 123456789
-Finished Matlab Meso Structure Design. ElementNum = 3109, MacroMesoIteration 1
-received a message from 0, tag 123456789
-Finished Matlab Meso Structure Design. ElementNum = 3088, MacroMesoIteration 1
-received a message from 0, tag 123456789
-Finished Matlab Meso Structure Design. ElementNum = 3122, MacroMesoIteration 1
-received a message from 0, tag 123456789
-Finished Matlab Meso Structure Design. ElementNum = 3145, MacroMesoIteration 1
-received a message from 0, tag 123456789
-Finished Matlab Meso Structure Design. ElementNum = 3150, MacroMesoIteration 1
-received a message from 0, tag 123456789
-Finished Matlab Meso Structure Design. ElementNum = 3020, MacroMesoIteration 1
-received a message from 0, tag 123456789
-Finished Matlab Meso Structure Design. ElementNum = 3139, MacroMesoIteration 1
-received a message from 0, tag 123456789
-Finished Matlab Meso Structure Design. ElementNum = 3132, MacroMesoIteration 1
-received a message from 0, tag 123456789
-Finished Matlab Meso Structure Design. ElementNum = 3143, MacroMesoIteration 1
-received a message from 0, tag 123456789
-Finished Matlab Meso Structure Design. ElementNum = 3069, MacroMesoIteration 1
-received a message from 0, tag 123456789
-Finished Matlab Meso Structure Design. ElementNum = 3114, MacroMesoIteration 1
-received a message from 0, tag 123456789
-Finished Matlab Meso Structure Design. ElementNum = 3116, MacroMesoIteration 1
+Finished Matlab Meso Structure Design. ElementNum = 773, MacroMesoIteration 1
 received a message from 0, tag 123456789
 SUB_MASTER is now running Mode 202 Recombine everything into complete structure
+SUB_MASTER Finished
+--------
+New Macro Meso Iteration 2
+-----------
+received a message from 0, tag 1
+received a message from 0, tag 2
+received a message from 0, tag 3
+received a message from 0, tag 5
+received a message from 0, tag 6
+received a message from 0, tag 7
+received a message from 0, tag 9
+received a message from 0, tag 10
+received a message from 0, tag 11
+received a message from 0, tag 25
+received a message from 0, tag 26
+received a message from 0, tag 27
+received a message from 0, tag 29
+received a message from 0, tag 30
+received a message from 0, tag 31
+received a message from 0, tag 33
+received a message from 0, tag 34
+received a message from 0, tag 35
+received a message from 0, tag 37
+received a message from 0, tag 38
+received a message from 0, tag 39
+received a message from 0, tag 14
+received a message from 0, tag 12
+received a message from 0, tag 15
+received a message from 0, tag 45
+received a message from 0, tag 46
+received a message from 0, tag 47
+received a message from 0, tag 53
+received a message from 0, tag 54
+received a message from 0, tag 55
+received a message from 0, tag 57
+received a message from 0, tag 58
+received a message from 0, tag 59
+received a message from 0, tag 61
+received a message from 0, tag 62
+received a message from 0, tag 63
+received a message from 0, tag 42
+received a message from 0, tag 43
+received a message from 0, tag 40
+received a message from 0, tag 48
+received a message from 0, tag 50
+received a message from 0, tag 51
+ign. ElementNum = 39, MacroMesoIteration 2
+received a message from 0, tag 72
+Finished Matlab Meso Structure Design. ElementNum = 32, MacroMesoIteration 2
+received a message from 0, tag 64
+Finished Matlab Meso Structure Design. ElementNum = 29, MacroMesoIteration 2
+received a message from 0, tag 66
+Finished Matlab Meso Structure Design. ElementNum = 31, MacroMesoIteration 2
+received a message from 0, tag 67
+Finished Matlab Meso Structure Design. ElementNum = 33, MacroMesoIteration 2
+received a message from 0, tag 70
+received a message from 0, tag 71
+ign. ElementNum = 38, MacroMesoIteration 2
+received a message from 0, tag 73
+Finished Matlab Meso Structure Design. ElementNum = 36, MacroMesoIteration 2
+received a message from 0, tag 74
+Finished Matlab Meso Structure Design. ElementNum = 40, MacroMesoIteration 2
+received a message from 0received a message from 0, tag 19
+received a message from 0, tag 21
+received a message from 0, tag 23
+received a message from 0, tag 22
+ign. ElementNum = 75, MacroMesoIteration 2
+Finished Matlab Meso Structure Design. ElementNum = 72, MacroMesoIteration 2
+entNum = 70, MacroMesoIteration 2
+received a message from 0, tag 78
+Finished Matlab Meso Structure Design. ElementNum = 69, MacroMesoIteration 2
+received a message from 0, tag 79
+entNum = 73, MacroMesoIteration 2
+received a message from 0, tag 82
+Finished Matlab Meso Structure Design. ElementNum = 76, MacroMesoIteration 2
+received a message from 0, tag 84
+Finished Matlab Meso Structure Design. ElementNum = 80, MacroMesoIteration 2
+received a message from 0, tag 87
+inished Matlab Meso Structure Design. ElementNum = 3, MacroMesoIteration 2
+received a message from 0, tag 86
+
+Finished Matlab Meso Structure Design. ElementNum = 78, MacroMesoIteration 2
+received a message from 0, tag 89
+Finished Matlab Meso Structure Design. ElementNum = 53, MacroMesoIteration 2
+received a message from 0, tag 91
+inished Matlab Meso Structure Design. ElementNum = 5, MacroMesoIteration 2
+received a message from 0, tag 95
+Finished Matlab Meso Structure Design. ElementNum = 4, MacroMesoIteration 2
+received a message from 0, tag 96
+2
+inished Matlab Meso Structure Design. ElementNum = 66, MacroMesoIteration 2
+received a message from 0, tag 103
+Finished Matlab Meso Structure Design. ElementNum = 1, MacroMesoIteration 2
+received a message from 0, tag 107
+
+Finished Matlab Meso Structure Design. ElementNum = 41, MacroMesoIteration 2
+received a message from 0, tag 109
+Finished Matlab Meso Structure Design. ElementNum = 7, MacroMesoIteration 2
+received a message from 0, tag 110
+Finished Matlab Meso Structure Design. ElementNum = 8, MacroMesoIteration 2
+received a message from 0, tag 111
+
+Finished Matlab Meso Structure Design. ElementNum = 9, MacroMesoIteration 2
+received a message from 0, tag 114
+
+Finished Matlab Meso Structure Design. ElementNum = 54, MacroMesoIteration 2
+received a message from 0, tag 118
+Finished Matlab Meso Structure Design. ElementNum = 55, MacroMesoIteration 2
+received a message from 0, tag 119
+FFinished Matlab Meso Structure Design. ElementNum = 113, MacroMesoIteration 2
+received a message from 0, tag 12Finished Matlab Meso Structure Design. ElementNum = 90, MacroMesoIteration 2
+received a message from 0, tag 127
+Finished Matlab Meso Structure Design. ElementNum = 60, MacroMesoIteration 2
+received a message from 0, tag 128
+Finished Matlab Meso Structure Design. ElementNum = 94, MacroMesoIteration 2
+received a message from 0, tag 132
+Finished Matlab Meso Structure Design. ElementNum = 115, MacroMesoIteration 2
+received a message from 0, tag 137Finished Matlab Meso Structure Design. ElementNum = 101, MacroMesoIteration 2
+received a message from 0, tag 138
+Finished Matlab Meso Structure Design. ElementNum = 21, MacroMesoIteration 2
+received a message from 0, tag 147
+
+Finished Matlab Meso Structure Design. ElementNum = 68, MacroMesoIteration 2
+received a message from 0, tag 150
+
+Finished Matlab Meso Structure Design. ElementNum = 10, MacroMesoIteration 2
+received a message from 0, tag 149
+Finished Matlab Meso Structure Design. ElementNum = 11, MacroMesoIteration 2
+received a message from 0, tag 151
+Finished Matlab Meso Structure Design. ElementNum = 109, MacroMesoIteration 2
+received a message from 0, tag 153Finished Matlab Meso Structure Design. ElementNum = 103, MacroMesoIteration 2
+received a message from 0, tag 159
+inished Matlab Meso Structure Design. ElementNum = 20, MacroMesoIteration 2
+received a message from 0, tag 156
+Finished Matlab Meso Structure Design. ElementNum = 92, MacroMesoIteration 2
+received a message from 0, tag 158
+FFinished Matlab Meso Structure Design. ElementNum = 98, MacroMesoIteration 2
+received a message from 0, tag 163
+inished Matlab Meso Structure Design. ElementNum = 15, MacroMesoIteration 2
+received a message from 0, tag 164
+Finished Matlab Meso Structure Design. ElementNum = 13, MacroMesoIteration 2
+received a message from 0, tag 165
+Finished Matlab Meso Structure Design. ElementNum = 159, MacroMesoIteration 2
+received a message from 0, tag 176
+Finished Matlab Meso Structure Design. ElementNum = 155, MacroMesoIteration 2
+received a message from 0, tag 173
+Finished Matlab Meso Structure Design. ElementNum = 156, MacroMesoIteration 2
+received a message from 0, tag 174
+Finished Matlab Meso Structure Design. ElementNum = 126, MacroMesoIteration 2
+received a message from 0, tag 180
+Finished Matlab Meso Structure Design. ElementNum = 131, MacroMesoIteration 2
+received a message from 0, tag 190
+inished Matlab Meso Structure Design. ElementNum = 17, MacroMesoIteration 2
+received a message from 0, tag 184
+Finished Matlab Meso Structure Design. ElementNum = 19, MacroMesoIteration 2
+received a message from 0, tag 185
+
+Finished Matlab Meso Structure Design. ElementNum = 176, MacroMesoIteration 2
+received a message from 0, tag 196
+Finished Matlab Meso Structure Design. ElementNum = 99, MacroMesoIteration 2
+received a message from 0, tag 193
+
+Finished Matlab Meso Structure Design. ElementNum = 161, MacroMesoIteration 2
+received a message from 0, tag 195
+Finished Matlab Meso Structure Design. ElementNum = 164, MacroMesoIteration 2
+received a message from 0, tag 200
+Finished Matlab Meso Structure Design. ElementNum = 196, MacroMesoIteration 2
+received a message from 0, tag 205
+Finished Matlab Meso Structure Design. ElementNum = 203, MacroMesoIteration 2
+received a message from 0, tag 212
+Finished Matlab Meso Structure Design. ElementNum = 200, MacroMesoIteration 2
+received a message from 0, tag 214
+Finished Matlab Meso Structure Design. ElementNum = 151, MacroMesoIteration 2
+received a message from 0, tag 217
+Finished Matlab Meso Structure Design. ElementNum = 125, MacroMesoIteration 2
+received a message from 0, tag 223
+Finished Matlab Meso Structure Design. ElementNum = 124, MacroMesoIteration 2
+received a message from 0, tag 227
+Finished Matlab Meso Structure Design. ElementNum = 215, MacroMesoIteration 2
+received a message from 0, tag 235
+Finished Matlab Meso Structure Design. ElementNum = 218, MacroMesoIteration 2
+received a message from 0, tag 233
+Finished Matlab Meso Structure Design. ElementNum = 165, MacroMesoIteration 2
+received a message from 0, tag 241
+Finished Matlab Meso Structure Design. ElementNum = 138, MacroMesoIteration 2
+received a message from 0, tag 245
+Finished Matlab Meso Structure Design. ElementNum = 226, MacroMesoIteration 2
+received a message from 0, tag 252
+Finished Matlab Meso Structure Design. ElementNum = 152, MacroMesoIteration 2
+received a message from 0, tag 253
+Finished Matlab Meso Structure Design. ElementNum = 248, MacroMesoIteration 2
+received a message from 0, tag 262
+gn. ElementNum = 245, MacroMesoIteration 2
+received a message from 0, tag 256
+received a message from 0, tag 257
+gn. ElementNum = 243, MacroMesoIteration 2
+received a message from 0, tag 259
+Finished Matlab Meso Structure Design. ElementNum = 239, MacroMesoIteration 2
+received a message from 0, tag 269
+Finished Matlab Meso Structure Design. ElementNum = 241, MacroMesoIteration 2
+received a message from 0, tag 270
+Finished Matlab Meso Structure Design. ElementNum = 246, MacroMesoIteration 2
+received a message from 0, tag 271
+Finished Matlab Meso Structure Design. ElementNum = 266, MacroMesoIteration 2
+received a message from 0, tag 285
+Finished Matlab Meso Structure Design. ElementNum = 192, MacroMesoIteration 2
+received a message from 0, tag 279
+Finished Matlab Meso Structure Design. ElementNum = 190, MacroMesoIteration 2
+received a message from 0, tag 286
+Finished Matlab Meso Structure Design. ElementNum = 267, MacroMesoIteration 2
+received a message from 0, tag 288
+Finished Matlab Meso Structure Design. ElementNum = 283, MacroMesoIteration 2
+received a message from 0, tag 294
+Finished Matlab Meso Structure Design. ElementNum = 286, MacroMesoIteration 2
+received a message from 0, tag 299
+Finished Matlab Meso Structure Design. ElementNum = 284, MacroMesoIteration 2
+received a message from 0, tag 301
+Finished Matlab Meso Structure Design. ElementNum = 291, MacroMesoIteration 2
+received a message from 0, tag 305
+Finished Matlab Meso Structure Design. ElementNum = 175, MacroMesoIteration 2
+received a message from 0, tag 304
+Finished Matlab Meso Structure Design. ElementNum = 289, MacroMesoIteration 2
+received a message from 0, tag 314
+Finished Matlab Meso Structure Design. ElementNum = 183, MacroMesoIteration 2
+received a message from 0, tag 311
+Finished Matlab Meso Structure Design. ElementNum = 182, MacroMesoIteration 2
+received a message from 0, tag 312
+Finished Matlab Meso Structure Design. ElementNum = 185, MacroMesoIteration 2
+received a message from 0, tag 313
+Finished Matlab Meso Structure Design. ElementNum = 234, MacroMesoIteration 2
+received a message from 0, tag 322
+Finished Matlab Meso Structure Design. ElementNum = 254, MacroMesoIteration 2
+received a message from 0, tag 325
+Finished Matlab Meso Structure Design. ElementNum = 301, MacroMesoIteration 2
+received a message from 0, tag 331
+Finished Matlab Meso Structure Design. ElementNum = 227, MacroMesoIteration 2
+received a message from 0, tag 338
+Finished Matlab Meso Structure Design. ElementNum = 222, MacroMesoIteration 2
+received a message from 0, tag 336
+Finished Matlab Meso Structure Design. ElementNum = 276, MacroMesoIteration 2
+received a message from 0, tag 347
+Finished Matlab Meso Structure Design. ElementNum = 232, MacroMesoIteration 2
+received a message from 0, tag 346
+Finished Matlab Meso Structure Design. ElementNum = 330, MacroMesoIteration 2
+received a message from 0, tag 354
+Finished Matlab Meso Structure Design. ElementNum = 327, MacroMesoIteration 2
+received a message from 0, tag 352
+Finished Matlab Meso Structure Design. ElementNum = 311, MacroMesoIteration 2
+received a message from 0, tag 358
+Finished Matlab Meso Structure Design. ElementNum = 277, MacroMesoIteration 2
+received a message from 0, tag 363
+Finished Matlab Meso Structure Design. ElementNum = 347, MacroMesoIteration 2
+received a message from 0, tag 373
+Finished Matlab Meso Structure Design. ElementNum = 331, MacroMesoIteration 2
+received a message from 0, tag 367
+Finished Matlab Meso Structure Design. ElementNum = 255, MacroMesoIteration 2
+received a message from 0, tag 378
+Finished Matlab Meso Structure Design. ElementNum = 295, MacroMesoIteration 2
+received a message from 0, tag 385
+Finished Matlab Meso Structure Design. ElementNum = 259, MacroMesoIteration 2
+received a message from 0, tag 386
+Finished Matlab Meso Structure Design. ElementNum = 363, MacroMesoIteration 2
+received a message from 0, tag 388
+Finished Matlab Meso Structure Design. ElementNum = 364, MacroMesoIteration 2
+received a message from 0, tag 394
+Finished Matlab Meso Structure Design. ElementNum = 370, MacroMesoIteration 2
+received a message from 0, tag 390
+Finished Matlab Meso Structure Design. ElementNum = 320, MacroMesoIteration 2
+received a message from 0, tag 395
+Finished Matlab Meso Structure Design. ElementNum = 386, MacroMesoIteration 2
+received a message from 0, tag 401
+Finished Matlab Meso Structure Design. ElementNum = 279, MacroMesoIteration 2
+received a message from 0, tag 404
+Finished Matlab Meso Structure Design. ElementNum = 270, MacroMesoIteration 2
+received a message from 0, tag 407
+Finished Matlab Meso Structure Design. ElementNum = 269, MacroMesoIteration 2
+received a message from 0, tag 419
+Finished Matlab Meso Structure Design. ElementNum = 387, MacroMesoIteration 2
+received a message from 0, tag 417
+Finished Matlab Meso Structure Design. ElementNum = 384, MacroMesoIteration 2
+received a message from 0, tag 418
+Finished Matlab Meso Structure Design. ElementNum = 299, MacroMesoIteration 2
+received a message from 0, tag 424
+Finished Matlab Meso Structure Design. ElementNum = 410, MacroMesoIteration 2
+received a message from 0, tag 429
+Finished Matlab Meso Structure Design. ElementNum = 336, MacroMesoIteration 2
+received a message from 0, tag 430
+Finished Matlab Meso Structure Design. ElementNum = 408, MacroMesoIteration 2
+received a message from 0, tag 439
+Finished Matlab Meso Structure Design. ElementNum = 424, MacroMesoIteration 2
+received a message from 0, tag 446
+Finished Matlab Meso Structure Design. ElementNum = 425, MacroMesoIteration 2
+received a message from 0, tag 444
+Finished Matlab Meso Structure Design. ElementNum = 407, MacroMesoIteration 2
+received a message from 0, tag 440
+Finished Matlab Meso Structure Design. ElementNum = 429, MacroMesoIteration 2
+received a message from 0, tag 452
+Finished Matlab Meso Structure Design. ElementNum = 430, MacroMesoIteration 2
+received a message from 0, tag 454
+Finished Matlab Meso Structure Design. ElementNum = 317, MacroMesoIteration 2
+received a message from 0, tag 456
+Finished Matlab Meso Structure Design. ElementNum = 446, MacroMesoIteration 2
+received a message from 0, tag 468
+Finished Matlab Meso Structure Design. ElementNum = 445, MacroMesoIteration 2
+received a message from 0, tag 464
+Finished Matlab Meso Structure Design. ElementNum = 448, MacroMesoIteration 2
+received a message from 0, tag 471
+Finished Matlab Meso Structure Design. ElementNum = 441, MacroMesoIteration 2
+received a message from 0, tag 478
+Finished Matlab Meso Structure Design. ElementNum = 465, MacroMesoIteration 2
+received a message from 0, tag 486
+Finished Matlab Meso Structure Design. ElementNum = 464, MacroMesoIteration 2
+received a message from 0, tag 488
+Finished Matlab Meso Structure Design. ElementNum = 312, MacroMesoIteration 2
+received a message from 0, tag 494
+Finished Matlab Meso Structure Design. ElementNum = 379, MacroMesoIteration 2
+received a message from 0, tag 498
+Finished Matlab Meso Structure Design. ElementNum = 357, MacroMesoIteration 2
+received a message from 0, tag 499
+Finished Matlab Meso Structure Design. ElementNum = 374, MacroMesoIteration 2
+received a message from 0, tag 501
+Finished Matlab Meso Structure Design. ElementNum = 339, MacroMesoIteration 2
+received a message from 0, tag 511
+gn. ElementNum = 484, MacroMesoIteration 2
+received a message from 0, tag 507
+received a message from 0, tag 508
+gn. ElementNum = 488, MacroMesoIteration 2
+received a message from 0, tag 510
+Finished Matlab Meso Structure Design. ElementNum = 436, MacroMesoIteration 2
+received a message from 0, tag 520
+Finished Matlab Meso Structure Design. ElementNum = 456, MacroMesoIteration 2
+received a message from 0, tag 523
+Finished Matlab Meso Structure Design. ElementNum = 481, MacroMesoIteration 2
+received a message from 0, tag 522
+Finished Matlab Meso Structure Design. ElementNum = 395, MacroMesoIteration 2
+received a message from 0, tag 529
+Finished Matlab Meso Structure Design. ElementNum = 506, MacroMesoIteration 2
+received a message from 0, tag 533
+Finished Matlab Meso Structure Design. ElementNum = 393, MacroMesoIteration 2
+received a message from 0, tag 537
+Finished Matlab Meso Structure Design. ElementNum = 527, MacroMesoIteration 2
+received a message from 0, tag 546
+Finished Matlab Meso Structure Design. ElementNum = 459, MacroMesoIteration 2
+received a message from 0, tag 551
+Finished Matlab Meso Structure Design. ElementNum = 522, MacroMesoIteration 2
+received a message from 0, tag 554
+Finished Matlab Meso Structure Design. ElementNum = 542, MacroMesoIteration 2
+received a message from 0, tag 558
+Finished Matlab Meso Structure Design. ElementNum = 546, MacroMesoIteration 2
+received a message from 0, tag 562
+Finished Matlab Meso Structure Design. ElementNum = 544, MacroMesoIteration 2
+received a message from 0, tag 560
+Finished Matlab Meso Structure Design. ElementNum = 458, MacroMesoIteration 2
+received a message from 0, tag 567
+Finished Matlab Meso Structure Design. ElementNum = 561, MacroMesoIteration 2
+received a message from 0, tag 572
+Finished Matlab Meso Structure Design. ElementNum = 415, MacroMesoIteration 2
+received a message from 0, tag 578
+Finished Matlab Meso Structure Design. ElementNum = 437, MacroMesoIteration 2
+received a message from 0, tag 586
+Finished Matlab Meso Structure Design. ElementNum = 512, MacroMesoIteration 2
+received a message from 0, tag 582
+Finished Matlab Meso Structure Design. ElementNum = 540, MacroMesoIteration 2
+received a message from 0, tag 592
+Finished Matlab Meso Structure Design. ElementNum = 498, MacroMesoIteration 2
+received a message from 0, tag 596
+Finished Matlab Meso Structure Design. ElementNum = 439, MacroMesoIteration 2
+received a message from 0, tag 598
+Finished Matlab Meso Structure Design. ElementNum = 518, MacroMesoIteration 2
+received a message from 0, tag 603
+Finished Matlab Meso Structure Design. ElementNum = 553, MacroMesoIteration 2
+received a message from 0, tag 609
+Finished Matlab Meso Structure Design. ElementNum = 600, MacroMesoIteration 2
+received a message from 0, tag 612
+Finished Matlab Meso Structure Design. ElementNum = 511, MacroMesoIteration 2
+received a message from 0, tag 618
+Finished Matlab Meso Structure Design. ElementNum = 575, MacroMesoIteration 2
+received a message from 0, tag 624
+Finished Matlab Meso Structure Design. ElementNum = 517, MacroMesoIteration 2
+received a message from 0, tag 632
+Finished Matlab Meso Structure Design. ElementNum = 539, MacroMesoIteration 2
+received a message from 0, tag 635
+Finished Matlab Meso Structure Design. ElementNum = 595, MacroMesoIteration 2
+received a message from 0, tag 637
+Finished Matlab Meso Structure Design. ElementNum = 634, MacroMesoIteration 2
+received a message from 0, tag 642
+Finished Matlab Meso Structure Design. ElementNum = 538, MacroMesoIteration 2
+received a message from 0, tag 647
+Finished Matlab Meso Structure Design. ElementNum = 638, MacroMesoIteration 2
+received a message from 0, tag 653
+Finished Matlab Meso Structure Design. ElementNum = 551, MacroMesoIteration 2
+received a message from 0, tag 655
+Finished Matlab Meso Structure Design. ElementNum = 569, MacroMesoIteration 2
+received a message from 0, tag 658
+Finished Matlab Meso Structure Design. ElementNum = 640, MacroMesoIteration 2
+received a message from 0, tag 663
+Finished Matlab Meso Structure Design. ElementNum = 579, MacroMesoIteration 2
+received a message from 0, tag 667
+Finished Matlab Meso Structure Design. ElementNum = 592, MacroMesoIteration 2
+received a message from 0, tag 674
+Finished Matlab Meso Structure Design. ElementNum = 591, MacroMesoIteration 2
+received a message from 0, tag 677
+Finished Matlab Meso Structure Design. ElementNum = 633, MacroMesoIteration 2
+received a message from 0, tag 679
+Finished Matlab Meso Structure Design. ElementNum = 586, MacroMesoIteration 2
+received a message from 0, tag 684
+Finished Matlab Meso Structure Design. ElementNum = 673, MacroMesoIteration 2
+received a message from 0, tag 691
+Finished Matlab Meso Structure Design. ElementNum = 653, MacroMesoIteration 2
+received a message from 0, tag 693
+Finished Matlab Meso Structure Design. ElementNum = 646, MacroMesoIteration 2
+received a message from 0, tag 695
+Finished Matlab Meso Structure Design. ElementNum = 609, MacroMesoIteration 2
+received a message from 0, tag 701
+Finished Matlab Meso Structure Design. ElementNum = 615, MacroMesoIteration 2
+received a message from 0, tag 704
+Finished Matlab Meso Structure Design. ElementNum = 664, MacroMesoIteration 2
+received a message from 0, tag 707
+Finished Matlab Meso Structure Design. ElementNum = 622, MacroMesoIteration 2
+received a message from 0, tag 712
+Finished Matlab Meso Structure Design. ElementNum = 626, MacroMesoIteration 2
+received a message from 0, tag 717
+Finished Matlab Meso Structure Design. ElementNum = 663, MacroMesoIteration 2
+received a message from 0, tag 719
+Finished Matlab Meso Structure Design. ElementNum = 671, MacroMesoIteration 2
+received a message from 0, tag 724
+Finished Matlab Meso Structure Design. ElementNum = 710, MacroMesoIteration 2
+received a message from 0, tag 731
+Finished Matlab Meso Structure Design. ElementNum = 648, MacroMesoIteration 2
+received a message from 0, tag 737
+Finished Matlab Meso Structure Design. ElementNum = 695, MacroMesoIteration 2
+received a message from 0, tag 741
+Finished Matlab Meso Structure Design. ElementNum = 720, MacroMesoIteration 2
+received a message from 0, tag 748
+Finished Matlab Meso Structure Design. ElementNum = 719, MacroMesoIteration 2
+received a message from 0, tag 745
+Finished Matlab Meso Structure Design. ElementNum = 705, MacroMesoIteration 2
+received a message from 0, tag 758
+Finished Matlab Meso Structure Design. ElementNum = 657, MacroMesoIteration 2
+received a message from 0, tag 757
+Finished Matlab Meso Structure Design. ElementNum = 752, MacroMesoIteration 2
+received a message from 0, tag 768
+Finished Matlab Meso Structure Design. ElementNum = 758, MacroMesoIteration 2
+received a message from 0, tag 780
+Finished Matlab Meso Structure Design. ElementNum = 660, MacroMesoIteration 2
+received a message from 0, tag 785
+Finished Matlab Meso Structure Design. ElementNum = 760, MacroMesoIteration 2
+received a message from 0, tag 788
+Finished Matlab Meso Structure Design. ElementNum = 741, MacroMesoIteration 2
+received a message from 0, tag 789
+Finished Matlab Meso Structure Design. ElementNum = 787, MacroMesoIteration 2
+received a message from 0, tag 796
+Finished Matlab Meso Structure Design. ElementNum = 685, MacroMesoIteration 2
+received a message from 0, tag 799
+Finished Matlab Meso Structure Design. ElementNum = 704, MacroMesoIteration 2
+received a message from 0, tag 123456789
+Finished Matlab Meso Structure Design. ElementNum = 763, MacroMesoIteration 2
+received a message from 0, tag 123456789
+Finished Matlab Meso Structure Design. ElementNum = 765, MacroMesoIteration 2
+received a message from 0, tag 123456789
+Finished Matlab Meso Structure Design. ElementNum = 691, MacroMesoIteration 2
+received a message from 0, tag 123456789
+Finished Matlab Meso Structure Design. ElementNum = 792, MacroMesoIteration 2
+received a message from 0, tag 123456789
+Finished Matlab Meso Structure Design. ElementNum = 764, MacroMesoIteration 2
+received a message from 0, tag 123456789
+Finished Matlab Meso Structure Design. ElementNum = 770, MacroMesoIteration 2
+received a message from 0, tag 123456789
+Finished Matlab Meso Structure Design. ElementNum = 774, MacroMesoIteration 2
+received a message from 0, tag 123456789
+Finished Matlab Meso Structure Design. ElementNum = 733, MacroMesoIteration 2
+received a message from 0, tag 123456789
+Finished Matlab Meso Structure Design. ElementNum = 740, MacroMesoIteration 2
+received a message from 0, tag 123456789
+Finished Matlab Meso Structure Design. ElementNum = 742, MacroMesoIteration 2
+received a message from 0, tag 123456789
+Finished Matlab Meso Structure Design. ElementNum = 782, MacroMesoIteration 2
+received a message from 0, tag 123456789
+Finished Matlab Meso Structure Design. ElementNum = 779, MacroMesoIteration 2
+received a message from 0, tag 123456789
+Finished Matlab Meso Structure Design. ElementNum = 773, MacroMesoIteration 2
+received a message from 0, tag 123456789
+Finished Matlab Meso Structure Design. ElementNum = 777, MacroMesoIteration 2
+received a message from 0, tag 123456789
+Finished Matlab Meso Structure Design. ElementNum = 783, MacroMesoIteration 2
+received a message from 0, tag 123456789
+SUB_MASTER is now running Mode 202 Recombine everything into complete structure
+SUB_MASTER Finished
+--------
+New Macro Meso Iteration 3
+-----------
+received a message from 0, tag 1
+received a message from 0, tag 2
+received a message from 0, tag 3
+received a message from 0, tag 5
+received a message from 0, tag 6
+received a message from 0, tag 7
+received a message from 0, tag 9
+received a message from 0, tag 10
+received a message from 0, tag 11
+received a message from 0, tag 13
+received a message from 0, tag 14
+received a message from 0, tag 15
+received a message from 0, tag 17
+received a message from 0, tag 18
+received a message from 0, tag 19
+received a message from 0, tag 21
+received a message from 0, tag 22
+received a message from 0, tag 23
+received a message from 0, tag 25
+received a message from 0, tag 26
+received a message from 0, tag 27
+received a message from 0, tag 29
+received a message from 0, tag 30
+received a message from 0, tag 31
+received a message from 0, tag 33
+received a message from 0, tag 34
+received a message from 0, tag 35
+received a message from 0, tag 37
+received a message from 0, tag 38
+received a message from 0, tag 39
+received a message from 0, tag 41
+received a message from 0, tag 42
+received a message from 0, tag 43
+received a message from 0, tag 45
+received a message from 0, tag 46
+received a message from 0, tag 47
+received a message from 0, tag 49
+received a message from 0, tag 50
+received a message from 0, tag 51
+received a message from 0, tag 53
+received a message from 0, tag 54
+received a message from 0, tag 55
+received a message from 0, tag 57
+received a message from 0, tag 58
+received a message from 0, tag 59
+received a message from 0, tag 61
+received a message from 0, tag 62
+Finished Matlab Meso Structure Design. ElementNum = 40, MacroMesoIteration 3
+received a message from 0, tag 77
+Finished Matlab Meso Structure Design. ElementNum = 30, MacroMesoIteration 3
+received a message from 0, tag 66
+Finished Matlab Meso Structure Design. ElementNum = 29, MacroMesoIteration 3
+Finished Matlab Meso Structure Design. ElementNum = 31, MacroMesoIteration 3
+received a message from 0, tag 67
+received a message from 0, tag 68
+ign. ElementNum = 35, MacroMesoIteration 3
+received a message from 0, tag 70
+Finished Matlab Meso Structure Design. ElementNum = 33, MacroMesoIteration 3
+received a message from 0, tag 71
+Finished Matlab Meso Structure Design. ElementNum = 32, MacroMesoIteration 3
+received a message from 0, tag 72
+Finished Matlab Meso Structure Design. ElementNum = 36, MacroMesoIteration 3
+received a message from 0, tag 75
+Finished Matlab Meso Structure Design. ElementNum = 37, MacroMesoIteration 3
+received a message from 0, tag 76
+Finished Matlab Meso Structure Design. ElementNum = 77, MacroMesoIteration 3
+received a message from 0, tag 86
+Finished Matlab Meso Structure Design. ElementNum = 69, MacroMesoIteration 3
+received a message from 0, tag 79
+Finished Matlab Meso Structure Design. ElementNum = 72, MacroMesoIteration 3
+received a message from 0, tag 80
+Finished Matlab Meso Structure Design. ElementNum = 70, MacroMesoIteration 3
+received a message from 0, tag 81
+ign. ElementNum = 74, MacroMesoIteration 3
+received a message from 0, tag 83
+received a message from 0, tag 84
+Finished Matlab Meso Structure Design. ElementNum = 73, MacroMesoIteration 3
+received a message from 0, tag 85
+Finished Matlab Meso Structure Design. ElementNum = 3, MacroMesoIteration 3
+received a message from 0, tag 87
+
+Finished Matlab Meso Structure Design. ElementNum = 79, MacroMesoIteration 3
+received a message from 0, tag 89
+Finished Matlab Meso Structure Design. ElementNum = 24, MacroMesoIteration 3
+received a message from 0, tag 91
+Finished Matlab Meso Structure Design. ElementNum = 2, MacroMesoIteration 3
+received a message from 0, tag 94
+
+Finished Matlab Meso Structure Design. ElementNum = 47, MacroMesoIteration 3
+received a message from 0, tag 98
+Finished Matlab Meso Structure Design. ElementNum = 4, MacroMesoIteration 3
+received a message from 0, tag 103
+1
+Finished Matlab Meso Structure Design. ElementNum = 1, MacroMesoIteration 3
+received a message from 0, tag 106
+
+Finished Matlab Meso Structure Design. ElementNum = 42, MacroMesoIteration 3
+received a message from 0, tag 105
+Finished Matlab Meso Structure Design. ElementNum = 8, MacroMesoIteration 3
+received a message from 0, tag 107
+
+inished Matlab Meso Structure Design. ElementNum = 21, MacroMesoIteration 3
+received a message from 0, tag 113Finished Matlab Meso Structure Design. ElementNum = 12, MacroMesoIteration 3
+received a message from 0, tag 116
+Finished Matlab Meso Structure Design. ElementNum = 9, MacroMesoIteration 3
+received a message from 0, tag 119
+
+Finished Matlab Meso Structure Design. ElementNum = 89, MacroMesoIteration 3
+received a message from 0, tag 123
+
+Finished Matlab Meso Structure Design. ElementNum = 23, MacroMesoIteration 3
+received a message from 0, tag 122
+Finished Matlab Meso Structure Design. ElementNum = 53, MacroMesoIteration 3
+received a message from 0, tag 127
+
+Finished Matlab Meso Structure Design. ElementNum = 93, MacroMesoIteration 3
+received a message from 0, tag 132
+Finished Matlab Meso Structure Design. ElementNum = 114, MacroMesoIteration 3
+received a message from 0, tag 143Finished Matlab Meso Structure Design. ElementNum = 94, MacroMesoIteration 3
+received a message from 0, tag 145
+Finished Matlab Meso Structure Design. ElementNum = 60, MacroMesoIteration 3
+received a message from 0, tag 140
+Finished Matlab Meso Structure Design. ElementNum = 64, MacroMesoIteration 3
+received a message from 0, tag 148
+
+Finished Matlab Meso Structure Design. ElementNum = 66, MacroMesoIteration 3
+received a message from 0, tag 150
+Finished Matlab Meso Structure Design. ElementNum = 81, MacroMesoIteration 3
+received a message from 0, tag 153
+Finished Matlab Meso Structure Design. ElementNum = 11, MacroMesoIteration 3
+received a message from 0, tag 156
+
+inished Matlab Meso Structure Design. ElementNum = 18, MacroMesoIteration 3
+received a message from 0, tag 160
+Finished Matlab Meso Structure Design. ElementNum = 19, MacroMesoIteration 3
+received a message from 0, tag 161
+Finished Matlab Meso Structure Design. ElementNum = 16, MacroMesoIteration 3
+received a message from 0, tag 162
+Finished Matlab Meso Structure Design. ElementNum = 17, MacroMesoIteration 3
+received a message from 0, tag 163
+
+Finished Matlab Meso Structure Design. ElementNum = 90, MacroMesoIteration 3
+received a message from 0, tag 168
+Finished Matlab Meso Structure Design. ElementNum = 109, MacroMesoIteration 3
+received a message from 0, tag 173
+Finished Matlab Meso Structure Design. ElementNum = 158, MacroMesoIteration 3
+received a message from 0, tag 180
+Finished Matlab Meso Structure Design. ElementNum = 132, MacroMesoIteration 3
+received a message from 0, tag 187Finished Matlab Meso Structure Design. ElementNum = 130, MacroMesoIteration 3
+received a message from 0, tag 185
+Finished Matlab Meso Structure Design. ElementNum = 99, MacroMesoIteration 3
+received a message from 0, tag 189
+Finished Matlab Meso Structure Design. ElementNum = 110, MacroMesoIteration 3
+received a message from 0, tag 195
+Finished Matlab Meso Structure Design. ElementNum = 162, MacroMesoIteration 3
+received a message from 0, tag 193
+Finished Matlab Meso Structure Design. ElementNum = 145, MacroMesoIteration 3
+received a message from 0, tag 200
+Finished Matlab Meso Structure Design. ElementNum = 102, MacroMesoIteration 3
+received a message from 0, tag 201
+Finished Matlab Meso Structure Design. ElementNum = 146, MacroMesoIteration 3
+received a message from 0, tag 205
+Finished Matlab Meso Structure Design. ElementNum = 147, MacroMesoIteration 3
+received a message from 0, tag 211
+Finished Matlab Meso Structure Design. ElementNum = 198, MacroMesoIteration 3
+received a message from 0, tag 217
+Finished Matlab Meso Structure Design. ElementNum = 204, MacroMesoIteration 3
+received a message from 0, tag 218
+Finished Matlab Meso Structure Design. ElementNum = 207, MacroMesoIteration 3
+received a message from 0, tag 221
+Finished Matlab Meso Structure Design. ElementNum = 206, MacroMesoIteration 3
+received a message from 0, tag 223
+Finished Matlab Meso Structure Design. ElementNum = 123, MacroMesoIteration 3
+received a message from 0, tag 229
+Finished Matlab Meso Structure Design. ElementNum = 217, MacroMesoIteration 3
+received a message from 0, tag 238
+Finished Matlab Meso Structure Design. ElementNum = 136, MacroMesoIteration 3
+received a message from 0, tag 237
+Finished Matlab Meso Structure Design. ElementNum = 131, MacroMesoIteration 3
+received a message from 0, tag 240
+Finished Matlab Meso Structure Design. ElementNum = 137, MacroMesoIteration 3
+received a message from 0, tag 242
+Finished Matlab Meso Structure Design. ElementNum = 222, MacroMesoIteration 3
+received a message from 0, tag 247
+gn. ElementNum = 224, MacroMesoIteration 3
+received a message from 0, tag 244
+Finished Matlab Meso Structure Design. ElementNum = 223, MacroMesoIteration 3
+received a message from 0, tag 249
+Finished Matlab Meso Structure Design. ElementNum = 246, MacroMesoIteration 3
+received a message from 0, tag 259
+gn. ElementNum = 244, MacroMesoIteration 3
+received a message from 0, tag 258
+Finished Matlab Meso Structure Design. ElementNum = 187, MacroMesoIteration 3
+received a message from 0, tag 261
+Finished Matlab Meso Structure Design. ElementNum = 214, MacroMesoIteration 3
+received a message from 0, tag 266
+Finished Matlab Meso Structure Design. ElementNum = 215, MacroMesoIteration 3
+received a message from 0, tag 269
+Finished Matlab Meso Structure Design. ElementNum = 172, MacroMesoIteration 3
+received a message from 0, tag 272
+Finished Matlab Meso Structure Design. ElementNum = 212, MacroMesoIteration 3
+received a message from 0, tag 276
+Finished Matlab Meso Structure Design. ElementNum = 195, MacroMesoIteration 3
+received a message from 0, tag 279
+Finished Matlab Meso Structure Design. ElementNum = 268, MacroMesoIteration 3
+received a message from 0, tag 291
+Finished Matlab Meso Structure Design. ElementNum = 265, MacroMesoIteration 3
+received a message from 0, tag 289
+Finished Matlab Meso Structure Design. ElementNum = 233, MacroMesoIteration 3
+received a message from 0, tag 294
+Finished Matlab Meso Structure Design. ElementNum = 283, MacroMesoIteration 3
+received a message from 0, tag 300
+Finished Matlab Meso Structure Design. ElementNum = 267, MacroMesoIteration 3
+received a message from 0, tag 301
+Finished Matlab Meso Structure Design. ElementNum = 291, MacroMesoIteration 3
+Finished Matlab Meso Structure Design. ElementNum = 210, MacroMesoIteration 3
+received a message from 0, tag 316
+Finished Matlab Meso Structure Design. ElementNum = 211, MacroMesoIteration 3
+received a message from 0, tag 317
+Finished Matlab Meso Structure Design. ElementNum = 309, MacroMesoIteration 3
+received a message from 0, tag 330
+Finished Matlab Meso Structure Design. ElementNum = 271, MacroMesoIteration 3
+received a message from 0, tag 331
+gn. ElementNum = 190, MacroMesoIteration 3
+received a message from 0, tag 329
+Finished Matlab Meso Structure Design. ElementNum = 301, MacroMesoIteration 3
+received a message from 0, tag 336
+Finished Matlab Meso Structure Design. ElementNum = 321, MacroMesoIteration 3
+received a message from 0, tag 340
+Finished Matlab Meso Structure Design. ElementNum = 330, MacroMesoIteration 3
+received a message from 0, tag 350
+Finished Matlab Meso Structure Design. ElementNum = 326, MacroMesoIteration 3
+received a message from 0, tag 348
+Finished Matlab Meso Structure Design. ElementNum = 231, MacroMesoIteration 3
+received a message from 0, tag 355
+Finished Matlab Meso Structure Design. ElementNum = 329, MacroMesoIteration 3
+received a message from 0, tag 358
+Finished Matlab Meso Structure Design. ElementNum = 341, MacroMesoIteration 3
+received a message from 0, tag 369
+Finished Matlab Meso Structure Design. ElementNum = 293, MacroMesoIteration 3
+received a message from 0, tag 374
+Finished Matlab Meso Structure Design. ElementNum = 252, MacroMesoIteration 3
+received a message from 0, tag 380
+Finished Matlab Meso Structure Design. ElementNum = 363, MacroMesoIteration 3
+received a message from 0, tag 383
+Finished Matlab Meso Structure Design. ElementNum = 259, MacroMesoIteration 3
+received a message from 0, tag 390
+Finished Matlab Meso Structure Design. ElementNum = 369, MacroMesoIteration 3
+received a message from 0, tag 396
+Finished Matlab Meso Structure Design. ElementNum = 372, MacroMesoIteration 3
+received a message from 0, tag 400
+Finished Matlab Meso Structure Design. ElementNum = 391, MacroMesoIteration 3
+received a message from 0, tag 413
+Finished Matlab Meso Structure Design. ElementNum = 383, MacroMesoIteration 3
+received a message from 0, tag 406
+Finished Matlab Meso Structure Design. ElementNum = 401, MacroMesoIteration 3
+received a message from 0, tag 417
+Finished Matlab Meso Structure Design. ElementNum = 405, MacroMesoIteration 3
+received a message from 0, tag 419
+gn. ElementNum = 410, MacroMesoIteration 3
+entNum = 407, MacroMesoIteration 3
+received a message from 0, tag 423
+Finished Matlab Meso Structure Desireceived a message from 0, tag 426
+gn. ElementNum = 300, MacroMesoIteration 3
+received a message from 0, tag 430
+Finished Matlab Meso Structure Design. ElementNum = 279, MacroMesoIteration 3
+received a message from 0, tag 433
+Finished Matlab Meso Structure Design. ElementNum = 375, MacroMesoIteration 3
+received a message from 0, tag 437
+Finished Matlab Meso Structure Design. ElementNum = 422, MacroMesoIteration 3
+received a message from 0, tag 442
+gn. ElementNum = 423, MacroMesoIteration 3
+received a message from 0, tag 445
+received a message from 0, tag 446
+Finished Matlab Meso Structure Design. ElementNum = 426, MacroMesoIteration 3
+received a message from 0, tag 449
+Finished Matlab Meso Structure Design. ElementNum = 333, MacroMesoIteration 3
+received a message from 0, tag 454
+Finished Matlab Meso Structure Design. ElementNum = 311, MacroMesoIteration 3
+received a message from 0, tag 458
+Finished Matlab Meso Structure Design. ElementNum = 297, MacroMesoIteration 3
+received a message from 0, tag 474
+Finished Matlab Meso Structure Design. ElementNum = 445, MacroMesoIteration 3
+received a message from 0, tag 467
+Finished Matlab Meso Structure Design. ElementNum = 318, MacroMesoIteration 3
+received a message from 0, tag 475
+Finished Matlab Meso Structure Design. ElementNum = 462, MacroMesoIteration 3
+received a message from 0, tag 485
+Finished Matlab Meso Structure Design. ElementNum = 376, MacroMesoIteration 3
+received a message from 0, tag 487
+Finished Matlab Meso Structure Design. ElementNum = 464, MacroMesoIteration 3
+received a message from 0, tag 488
+Finished Matlab Meso Structure Design. ElementNum = 469, MacroMesoIterFinished Matlab Meso Structure Design. ElementNum = 356, MacroMesoIteration 3
+received a message from 0, tag 498
+ation 3
+received a message from 0, tag 499
+Finished Matlab Meso Structure Design. ElementNum = 483, MacroMesoIteration 3
+received a message from 0, tag 505
+Finished Matlab Meso Structure Design. ElementNum = 359, MacroMesoIteration 3
+received a message from 0, tag 515
+Finished Matlab Meso Structure Design. ElementNum = 490, MacroMesoIteration 3
+received a message from 0, tag 509
+gn. ElementNum = 492, MacroMesoIteration 3
+received a message from 0, tag 512
+Finished Matlab Meso Structure DesiFinished Matlab Meso Structure Design. ElementNum = 438, MacroMesoIteration 3
+received a message from 0, tag 521
+Finished Matlab Meso Structure Design. ElementNum = 507, MacroMesoIteration 3
+received a message from 0, tag 527
+Finished Matlab Meso Structure Design. ElementNum = 508, MacroMesoIteration 3
+received a message from 0, tag 534
+Finished Matlab Meso Structure Design. ElementNum = 394, MacroMesoIteration 3
+received a message from 0, tag 533
+Finished Matlab Meso Structure Design. ElementNum = 399, MacroMesoIteration 3
+received a message from 0, tag 537
+Finished Matlab Meso Structure Design. ElementNum = 530, MacroMesoIteration 3
+received a message from 0, tag 546
+Finished Matlab Meso Structure Design. ElementNum = 521, MacroMesoIteration 3
+received a message from 0, tag 549
+Finished Matlab Meso Structure Design. ElementNum = 457, MacroMesoIteration 3
+received a message from 0, tag 555
+Finished Matlab Meso Structure Design. ElementNum = 440, MacroMesoIteration 3
+received a message from 0, tag 558
+Finished Matlab Meso Structure Design. ElementNum = 474, MacroMesoIteration 3
+received a message from 0, tag 564
+Finished Matlab Meso Structure Design. ElementNum = 546, MacroMesoIteration 3
+received a message from 0, tag 566
+Finished Matlab Meso Structure Design. ElementNum = 477, MacroMesoIteration 3
+received a message from 0, tag 568
+Finished Matlab Meso Structure Design. ElementNum = 454, MacroMesoIteration 3
+received a message from 0, tag 572
+Finished Matlab Meso Structure Design. ElementNum = 558, MacroMesoIteration 3
+received a message from 0, tag 574
+Finished Matlab Meso Structure Design. ElementNum = 563, MacroMesoIteration 3
+received a message from 0, tag 578
+Finished Matlab Meso Structure Design. ElementNum = 473, MacroMesoIteration 3
+received a message from 0, tag 583
+Finished Matlab Meso Structure Design. ElementNum = 500, MacroMesoIteration 3
+received a message from 0, tag 588
+Finished Matlab Meso Structure Design. ElementNum = 533, MacroMesoIteration 3
+received a message from 0, tag 591
+Finished Matlab Meso Structure Design. ElementNum = 458, MacroMesoIteration 3
+received a message from 0, tag 596
+Finished Matlab Meso Structure Design. ElementNum = 516, MacroMesoIteration 3
+received a message from 0, tag 598
+Finished Matlab Meso Structure Design. ElementNum = 511, MacroMesoIteration 3
+received a message from 0, tag 604
+Finished Matlab Meso Structure Design. ElementNum = 493, MacroMesoIteration 3
+received a message from 0, tag 603
+Finished Matlab Meso Structure Design. ElementNum = 596, MacroMesoIteration 3
+received a message from 0, tag 610
+Finished Matlab Meso Structure Design. ElementNum = 479, MacroMesoIteration 3
+received a message from 0, tag 614
+Finished Matlab Meso Structure Design. ElementNum = 575, MacroMesoIteration 3
+received a message from 0, tag 626
+Finished Matlab Meso Structure Design. ElementNum = 498, MacroMesoIteration 3
+received a message from 0, tag 627
+Finished Matlab Meso Structure Design. ElementNum = 531, MacroMesoIteration 3
+received a message from 0, tag 628
+Finished Matlab Meso Structure Design. ElementNum = 581, MacroMesoIteration 3
+received a message from 0, tag 633
+Finished Matlab Meso Structure Design. ElementNum = 537, MacroMesoIteration 3
+received a message from 0, tag 637
+Finished Matlab Meso Structure Design. ElementNum = 588, MacroMesoIteration 3
+received a message from 0, tag 643
+Finished Matlab Meso Structure Design. ElementNum = 637, MacroMesoIteration 3
+received a message from 0, tag 648
+Finished Matlab Meso Structure Design. ElementNum = 636, MacroMesoIteration 3
+received a message from 0, tag 655
+Finished Matlab Meso Structure Design. ElementNum = 633, MacroMesoIteration 3
+received a message from 0, tag 652
+Finished Matlab Meso Structure Design. ElementNum = 639, MacroMesoIteration 3
+received a message from 0, tag 656
+Finished Matlab Meso Structure Design. ElementNum = 572, MacroMesoIteration 3
+received a message from 0, tag 661
+Finished Matlab Meso Structure Design. ElementNum = 613, MacroMesoIteration 3
+received a message from 0, tag 669
+Finished Matlab Meso Structure Design. ElementNum = 585, MacroMesoIteration 3
+received a message from 0, tag 667
+Finished Matlab Meso Structure Design. ElementNum = 584, MacroMesoIteration 3
+received a message from 0, tag 674
+Finished Matlab Meso Structure Design. ElementNum = 671, MacroMesoIteration 3
+received a message from 0, tag 679
+Finished Matlab Meso Structure Design. ElementNum = 675, MacroMesoIteration 3
+received a message from 0, tag 685
+Finished Matlab Meso Structure Design. ElementNum = 676, MacroMesoIteration 3
+received a message from 0, tag 684
+Finished Matlab Meso Structure Design. ElementNum = 673, MacroMesoIteration 3
+received a message from 0, tag 687
+Finished Matlab Meso Structure Design. ElementNum = 677, MacroMesoIteration 3
+received a message from 0, tag 695
+Finished Matlab Meso Structure Design. ElementNum = 594, MacroMesoIteration 3
+received a message from 0, tag 696
+Finished Matlab Meso Structure Design. ElementNum = 618, MacroMesoIteration 3
+received a message from 0, tag 703
+Finished Matlab Meso Structure Design. ElementNum = 616, MacroMesoIteration 3
+received a message from 0, tag 711
+Finished Matlab Meso Structure Design. ElementNum = 668, MacroMesoIteration 3
+received a message from 0, tag 708
+Finished Matlab Meso Structure Design. ElementNum = 630, MacroMesoIteration 3
+received a message from 0, tag 714
+Finished Matlab Meso Structure Design. ElementNum = 617, MacroMesoIteration 3
+received a message from 0, tag 716
+Finished Matlab Meso Structure Design. ElementNum = 627, MacroMesoIteration 3
+received a message from 0, tag 717
+Finished Matlab Meso Structure Design. ElementNum = 710, MacroMesoIteration 3
+received a message from 0, tag 730
+Finished Matlab Meso Structure Design. ElementNum = 716, MacroMesoIteration 3
+received a message from 0, tag 738
+Finished Matlab Meso Structure Design. ElementNum = 717, MacroMesoIteration 3
+received a message from 0, tag 745
+Finished Matlab Meso Structure Design. ElementNum = 649, MacroMesoIteration 3
+received a message from 0, tag 741
+Finished Matlab Meso Structure Design. ElementNum = 720, MacroMesoIteration 3
+received a message from 0, tag 748
+Finished Matlab Meso Structure Design. ElementNum = 667, MacroMesoIteration 3
+received a message from 0, tag 756
+Finished Matlab Meso Structure Design. ElementNum = 662, MacroMesoIteration 3
+received a message from 0, tag 755
+Finished Matlab Meso Structure Design. ElementNum = 694, MacroMesoIteration 3
+received a message from 0, tag 757
+Finished Matlab Meso Structure Design. ElementNum = 708, MacroMesoIteration 3
+received a message from 0, tag 760
+Finished Matlab Meso Structure Design. ElementNum = 695, MacroMesoIteration 3
+received a message from 0, tag 764
+Finished Matlab Meso Structure Design. ElementNum = 756, MacroMesoIteration 3
+received a message from 0, tag 775
+Finished Matlab Meso Structure Design. ElementNum = 684, MacroMesoIteration 3
+received a message from 0, tag 780
+Finished Matlab Meso Structure Design. ElementNum = 656, MacroMesoIteration 3
+received a message from 0, tag 786
+Finished Matlab Meso Structure Design. ElementNum = 723, MacroMesoIteration 3
+received a message from 0, tag 792
+Finished Matlab Meso Structure Design. ElementNum = 670, MacroMesoIteration 3
+received a message from 0, tag 793
+Finished Matlab Meso Structure Design. ElementNum = 726, MacroMesoIteration 3
+received a message from 0, tag 795
+Finished Matlab Meso Structure Design. ElementNum = 699, MacroMesoIteration 3
+received a message from 0, tag 123456789
+Finished Matlab Meso Structure Design. ElementNum = 795, MacroMesoIteration 3
+received a message from 0, tag 123456789
+Finished Matlab Meso Structure Design. ElementNum = 701, MacroMesoIteration 3
+received a message from 0, tag 123456789
+Finished Matlab Meso Structure Design. ElementNum = 793, MacroMesoIteration 3
+received a message from 0, tag 123456789
+Finished Matlab Meso Structure Design. ElementNum = 745, MacroMesoIteration 3
+received a message from 0, tag 123456789
+Finished Matlab Meso Structure Design. ElementNum = 765, MacroMesoIteration 3
+received a message from 0, tag 123456789
+Finished Matlab Meso Structure Design. ElementNum = 743, MacroMesoIteration 3
+received a message from 0, tag 123456789
+Finished Matlab Meso Structure Design. ElementNum = 744, MacroMesoIteration 3
+received a message from 0, tag 123456789
+Finished Matlab Meso Structure Design. ElementNum = 739, MacroMesoIteration 3
+received a message from 0, tag 123456789
+Finished Matlab Meso Structure Design. ElementNum = 738, MacroMesoIteration 3
+received a message from 0, tag 123456789
+Finished Matlab Meso Structure Design. ElementNum = 771, MacroMesoIteration 3
+received a message from 0, tag 123456789
+Finished Matlab Meso Structure Design. ElementNum = 777, MacroMesoIteration 3
+received a message from 0, tag 123456789
+Finished Matlab Meso Structure Design. ElementNum = 779, MacroMesoIteration 3
+received a message from 0, tag 123456789
+Finished Matlab Meso Structure Design. ElementNum = 774, MacroMesoIteration 3
+received a message from 0, tag 123456789
+Finished Matlab Meso Structure Design. ElementNum = 778, MacroMesoIteration 3
+received a message from 0, tag 123456789
+SUB_MASTER is now running Mode 202 Recombine everything into complete structure
+SUB_MASTER Finished
+--------
+New Macro Meso Iteration 4
+-----------

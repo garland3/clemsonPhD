@@ -462,6 +462,12 @@ classdef Optimizer
             
             theta = DV.t;
             
+%             if(mean(mean(term1Exx))<1)
+%                 multiple=1e8;
+%             else
+%                 multiple=1;
+%             end
+            
             % ---------------------------------------------------
             %
             % TARGET AVG MESO DENSITY AS CONSTRAINT.

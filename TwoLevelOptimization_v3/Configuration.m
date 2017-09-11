@@ -52,8 +52,8 @@ classdef Configuration
         % VOLUME Fraction SEttings.
         timestep = 0.05; % time step for the volume fraction update algorithm
         volFractionDamping =0.5; % 0.1
-        v1 = 0.2; % 0.8 amount of material 1 to use. default to 20%
-        v2 =0.2; %  0.2 amount of material 2 to use. default to 40%, reduced so there is less meso structures to compute
+        v1 = 0.3; % 0.8 amount of material 1 to use. default to 20%
+        v2 =0.3; %  0.2 amount of material 2 to use. default to 40%, reduced so there is less meso structures to compute
         totalVolume; % = v1+v2;
         volFractionOptiizationMethod = 2;
         minimizeTempOfMaterial1=0;
@@ -89,6 +89,7 @@ classdef Configuration
         rminExxEyy = 1.2 % smoothing radius for sensitivity smoothing.
          
         % rotation
+        simplifiedOrth_noRotation=1; % basically .turn off the rotation. 
         useRotation =1; % must be 0 for gradient material optimization
         minRotation =-pi/2;
         maxRotation = pi;
@@ -112,7 +113,7 @@ classdef Configuration
         doPlotHeatSensitivityTopology = 0;
         doPlotStress = 0;
         doPlotFinal =0 % blue, green, empty space plot
-        doPlotMetrics = 1;
+        doPlotMetrics = 0;
         doPlotConsistencyConstraintsInMetrics = 1;
         doSaveDesignVarsToCSVFile = 0; % set to 1 to write plotFinal csv file instead
         doPlotAppliedStrain = 0; % For debugging only
@@ -126,13 +127,13 @@ classdef Configuration
         doPlotAnIsotropicValues=0; % 4 plots
         
         % Exx ,Eyy , Theta (and Rho) Plot Data
-        doPlotCombinedExxEyyAndRotation = 0;
+        doPlotCombinedExxEyyAndRotation = 1;
         doIncludeRho=1;;
         doIncludeSubSystemValues=1;
         %-----------------
         
-        recvid = 1; % record video
-        maximizePlots= 1;
+        recvid = 0; % record video
+        maximizePlots= 0;
         
         % ----------------
         % Computational settings
@@ -184,7 +185,7 @@ classdef Configuration
         % ---------------------------
         % Loading cases
         % ---------------------------
-                loadingCase = [113]; % left clamped, load, middle right
+                 loadingCase = [113]; % left clamped, load, middle right
 %      loadingCase = [111 112 113]; % left clamped
 % loadingCase=[114]; %MMB beam 
 % loadingCase=[115;] bridge load. Forces down on deck and held fixed at left and right base. 
@@ -195,7 +196,7 @@ classdef Configuration
         %              loadingCase = [1];
         
         %  loadingCase = [300 301 302 303 304 305]; % shoe
-%                        loadingCase = [400 401 402 403 404 405]; % bridge
+%                         loadingCase = [400 401 402 403 404 405]; % bridge
         %            loadingCase = [404]; % bridge
         %             loadingCase = [113]; % cantilever
         %                 loadingCase = [111]; % top right, force in Y direction
@@ -266,13 +267,13 @@ classdef Configuration
                 % ------------
                 % Palmetto running case
                 % -------------------
-                obj.nelx = 80; %% 30
-                obj.nely = 40; %  15
+                obj.nelx = 40; %% 30
+                obj.nely = 20; %  15
                 obj.nelxMeso = 35; %35;
                 obj.nelyMeso =35; %35;
                 obj.terminationAverageCount = 10;
                 obj.terminationCriteria =0.001; % 0.0%
-                obj.maxFEACalls = 60;
+                obj.maxFEACalls = 200;
                 obj.maxMasterLoops = 300;
                 
 %             end
