@@ -156,5 +156,8 @@ In the C program, you specify mode 2
 ## Acknowledgments
 
 Let me know if you need help.
-If you use the code in research please cite me!
+If you use the code in research please cite me!  
+
+
+[![DOI](https://zenodo.org/badge/27772993.svg)](https://zenodo.org/badge/latestdoi/27772993)
 
